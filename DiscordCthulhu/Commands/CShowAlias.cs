@@ -18,21 +18,31 @@ namespace DiscordCthulhu {
 
             base.ExecuteCommand (e, arguments);
             if (AllowExecution (arguments)) {
-                AliasCollection.User user = Program.aliasCollection.FindUserByAlias (arguments[0]);
-                if (user != null) {
-                    if (user.aliasses.Count > 0) {
-                        await e.Channel.SendMessage ("Showing aliasses for " + user.discordAlias);
-                        string aliassesCombined = "";
-                        for (int i = 0; i < user.aliasses.Count; i++) {
-                            aliassesCombined += user.aliasses[i] + "\n";
+                List<AliasCollection.User> users = Program.aliasCollection.FindUsersByAlias (arguments[0]);
+                if (users != null) {
+                    foreach (AliasCollection.User user in users)
+                    {
+                        if (user.aliasses.Count > 0)
+                        {
+                            await e.Channel.SendMessage("Showing aliasses for " + user.discordAlias);
+                            string aliassesCombined = "";
+                            for (int i = 0; i < user.aliasses.Count; i++)
+                            {
+                                aliassesCombined += user.aliasses[i] + "\n";
+                            }
+                            await e.Channel.SendMessage(aliassesCombined);
                         }
-                        await e.Channel.SendMessage (aliassesCombined);
-                    } else {
-                        await e.Channel.SendMessage ("No aliasses for this user found.");
+                        else
+                        {
+                            await e.Channel.SendMessage("No aliasses for this user found.");
+                        }    
                     }
-                } else {
-                    await e.Channel.SendMessage ("User not found in collection.");
                 }
+                else
+                {
+                    await e.Channel.SendMessage("User not found in collection.");
+                }
+
             }
         }
     }

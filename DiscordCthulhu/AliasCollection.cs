@@ -44,15 +44,38 @@ namespace DiscordCthulhu {
             }
         }
 
-        public User FindUserByAlias (string alias) {
+        public List<User> FindUsersByAlias (string alias) {
+            List<User> foundUsers = new List<User>();
             for (int i = 0; i < users.Count; i++) {
                 if (users[i].discordAlias.ToLower () == alias.ToLower ()) {
-                    return users[i];
+                    if (!foundUsers.Contains(users[i])) foundUsers.Add(users[i]);
                 }
 
                 for (int j = 0; j < users[i].aliasses.Count; j++) {
                     if (users[i].aliasses[j].ToLower () == alias.ToLower ()) {
-                        return users[i];
+                        if (!foundUsers.Contains(users[i])) foundUsers.Add(users[i]);
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        public User FindUserByAlias(string alias)
+        {
+            List<User> foundUsers = new List<User>();
+            for (int i = 0; i < users.Count; i++)
+            {
+                if (users[i].discordAlias.ToLower() == alias.ToLower())
+                {
+                    if (!foundUsers.Contains(users[i])) foundUsers.Add(users[i]);
+                }
+
+                for (int j = 0; j < users[i].aliasses.Count; j++)
+                {
+                    if (users[i].aliasses[j].ToLower() == alias.ToLower())
+                    {
+                        if (!foundUsers.Contains(users[i])) foundUsers.Add(users[i]);
                     }
                 }
             }
