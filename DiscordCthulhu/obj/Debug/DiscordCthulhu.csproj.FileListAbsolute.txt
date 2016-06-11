@@ -33,3 +33,6 @@ C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\Nito.A
 C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\Nito.AsyncEx.Concurrent.xml
 C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\Nito.AsyncEx.Enlightenment.xml
 C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\RestSharp.xml
+D:\GitHub\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\DiscordCthulhu.exe.config
+D:\GitHub\DiscordCthulhuBot\DiscordCthulhu\obj\Debug\DiscordCthulhu.exe
+D:\GitHub\DiscordCthulhuBot\DiscordCthulhu\obj\Debug\DiscordCthulhu.pdb
