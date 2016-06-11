@@ -15,14 +15,14 @@ namespace DiscordCthulhu {
             argumentNumber = 0;
         }
 
-        public override async void ExecuteCommand ( MessageEventArgs e, List<string> arguments ) {
+        public override void ExecuteCommand ( MessageEventArgs e, List<string> arguments ) {
             base.ExecuteCommand (e, arguments);
             if (AllowExecution (arguments)) {
                 string commands = "";
                 for (int i = 0; i < Program.commands.Length; i++) {
                     commands += Program.commands[i].help + "\n";
                 }
-                await e.Channel.SendMessage (commands);
+                Program.messageControl.SendMessage(e, commands);
             }
         }
     }

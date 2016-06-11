@@ -84,6 +84,7 @@
     <Compile Include="Commands\CSetColor.cs" />
     <Compile Include="Commands\CShowAlias.cs" />
     <Compile Include="Command.cs" />
+    <Compile Include="MessageControl.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SerializationIO.cs" />

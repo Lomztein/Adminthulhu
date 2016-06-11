@@ -15,9 +15,9 @@ namespace DiscordCthulhu {
 
         public bool isAdminOnly = false;
 
-        public virtual async void ExecuteCommand ( MessageEventArgs e, List<string> arguments) {
+        public virtual void ExecuteCommand ( MessageEventArgs e, List<string> arguments) {
             if (arguments.Count > 0 && arguments[0] == "?") {
-                await e.Channel.SendMessage (help);
+                Program.messageControl.SendMessage(e, help);
             }
         }
 

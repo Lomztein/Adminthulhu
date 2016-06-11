@@ -19,7 +19,7 @@ namespace DiscordCthulhu {
             base.ExecuteCommand (e, arguments);
             if (AllowExecution (arguments)) {
                 Invite invite = await e.Server.CreateInvite (1800, 1, false, false);
-                await e.Channel.SendMessage ("Invite URL: " + invite.Url);
+                Program.messageControl.SendMessage(e, "Invite URL: " + invite.Url);
             }
         }
     }

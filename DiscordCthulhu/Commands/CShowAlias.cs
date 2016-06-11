@@ -40,7 +40,8 @@ namespace DiscordCthulhu {
                 }
                 else
                 {
-                    await e.Channel.SendMessage("User not found in collection.");
+                    Program.messageControl.SendMessage(e, "User not found in collection.");
+                    //await e.Channel.SendMessage("User not found in collection.");
                 }
 
             }

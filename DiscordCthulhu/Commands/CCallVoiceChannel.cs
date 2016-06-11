@@ -15,7 +15,7 @@ namespace DiscordCthulhu {
             argumentNumber = 2;
         }
 
-        public override async void ExecuteCommand ( MessageEventArgs e, List<string> arguments ) {
+        public override void ExecuteCommand ( MessageEventArgs e, List<string> arguments ) {
             base.ExecuteCommand (e, arguments);
             if (AllowExecution (arguments)) {
 
@@ -34,7 +34,7 @@ namespace DiscordCthulhu {
                     }
                 }
 
-                await e.Channel.SendMessage (e.User.Name + ": " + text + ", " + arguments[1]);
+                Program.messageControl.SendMessage(e, e.User.Name + ": " + text + ", " + arguments[1]);
             }
         }
     }

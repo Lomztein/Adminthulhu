@@ -15,14 +15,14 @@ namespace DiscordCthulhu {
             argumentNumber = 0;
         }
 
-        public override async void ExecuteCommand ( MessageEventArgs e, List<string> arguments ) {
+        public override void ExecuteCommand ( MessageEventArgs e, List<string> arguments ) {
             base.ExecuteCommand (e, arguments);
             if (AllowExecution (arguments)) {
                 AliasCollection.User user = Program.aliasCollection.FindUsersByAlias (e.User.Name)[0];
                 if (Program.aliasCollection.RemoveUser (user)) {
-                    await e.Channel.SendMessage ("All your aliasses has been removed from the collection.");
+                    Program.messageControl.SendMessage(e, "All your aliasses has been removed from the collection.");
                 } else {
-                    await e.Channel.SendMessage ("Couldn't find any aliasses in your name.");
+                    Program.messageControl.SendMessage(e, "Couldn't find any aliasses in your name.");
                 }
             }
         }

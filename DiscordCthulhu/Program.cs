@@ -14,8 +14,9 @@ namespace DiscordCthulhu {
             new CShowAlias (), new CClearAliasses ()
         };
 
-        public static string dataPath = "C:/Users/Lomztein/Source/Repos/DiscordCthulhuBot/DiscordCthulhu/";
+        public static string dataPath = "D:/GitHub/DiscordCthulhuBot/DiscordCthulhu/";
         public static AliasCollection aliasCollection = null;
+        public static MessageControl messageControl = null;
 
         static void Main ( string[] args ) => new Program ().Start ();
 
@@ -24,6 +25,7 @@ namespace DiscordCthulhu {
         public void Start () {
             aliasCollection = AliasCollection.Load ();
             discordClient = new DiscordClient ();
+            messageControl = new MessageControl();
 
             discordClient.MessageReceived += async ( s, e ) => {
 
@@ -45,11 +47,26 @@ namespace DiscordCthulhu {
 
                     await FindAndExecuteAsync (e, command, arguments);
                 }
+                else if (e.Message.IsAuthor)
+                {
+                    if (messageControl.messages.Count > 0)
+                    {
+                        foreach(MessageTimer messageTimer in messageControl.messages)
+                        {
+                            if (messageTimer.message == e.Message.Text)
+                            {
+                                Console.WriteLine("Removed!");
+                                messageControl.RemoveMessageTimer(messageTimer);
+                                break;
+                            }
+                        }
+                    }
+                }
 
             };
 
             discordClient.ExecuteAndWait (async () => {
-                await discordClient.Connect ("MTg5MTM0OTYzNjM4MTQwOTMw.Cjzmkw.VhiecwYf4QH1lHrtTo5JjKZGfZw");
+                await discordClient.Connect ("MTkxMjc2OTg3NjQwMzE1OTA0.Cj38Ew.FGfRQpYt0qKeAwsSbmVa28tpj6M");
             });
         }
 

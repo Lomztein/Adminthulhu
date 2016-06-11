@@ -53,7 +53,7 @@ namespace DiscordCthulhu {
                             }
 
                             await e.User.AddRoles (role);
-                            await e.Channel.SendMessage (succesText);
+                            Program.messageControl.SendMessage(e, succesText);
                         }
                     }
                 } else {
@@ -61,7 +61,7 @@ namespace DiscordCthulhu {
                     for (int i = 0; i < allowed.Length; i++) {
                         colors += allowed[i] + ", ";
                     }
-                    await e.Channel.SendMessage (failText + colors);
+                    Program.messageControl.SendMessage(e, failText + colors);
                 }
             }
         }
