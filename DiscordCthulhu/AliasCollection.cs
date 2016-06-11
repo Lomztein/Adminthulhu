@@ -47,44 +47,34 @@ namespace DiscordCthulhu {
         public List<User> FindUsersByAlias (string alias) {
             List<User> foundUsers = new List<User>();
             for (int i = 0; i < users.Count; i++) {
+
                 if (users[i].discordAlias.ToLower () == alias.ToLower ()) {
-                    if (!foundUsers.Contains(users[i])) foundUsers.Add(users[i]);
+
+                    if (!foundUsers.Contains (users[i])) {
+                        foundUsers.Add (users[i]);
+                    }
                 }
 
                 for (int j = 0; j < users[i].aliasses.Count; j++) {
                     if (users[i].aliasses[j].ToLower () == alias.ToLower ()) {
-                        if (!foundUsers.Contains(users[i])) foundUsers.Add(users[i]);
+
+                        if (!foundUsers.Contains (users[i])) {
+                            foundUsers.Add (users[i]);
+                        }
                     }
                 }
+
             }
 
-            return null;
-        }
-
-        public User FindUserByAlias(string alias)
-        {
-            List<User> foundUsers = new List<User>();
-            for (int i = 0; i < users.Count; i++)
-            {
-                if (users[i].discordAlias.ToLower() == alias.ToLower())
-                {
-                    if (!foundUsers.Contains(users[i])) foundUsers.Add(users[i]);
-                }
-
-                for (int j = 0; j < users[i].aliasses.Count; j++)
-                {
-                    if (users[i].aliasses[j].ToLower() == alias.ToLower())
-                    {
-                        if (!foundUsers.Contains(users[i])) foundUsers.Add(users[i]);
-                    }
-                }
+            if (foundUsers.Count == 0) {
+                foundUsers.Add (null);
             }
 
-            return null;
+            return foundUsers;
         }
 
         public bool AddAlias (string username, string alias) {
-            User user = FindUserByAlias (username);
+            User user = FindUsersByAlias (username)[0];
             if (user == null) {
                 users.Add (new User (username, alias));
                 Save ();
@@ -100,7 +90,7 @@ namespace DiscordCthulhu {
         }
 
         public bool RemoveAlias (string username, string alias) {
-            User user = FindUserByAlias (username);
+            User user = FindUsersByAlias (username)[0];
             if (user == null) {
                 return false;
             }

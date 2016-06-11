@@ -36,3 +36,4 @@ C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\RestSh
 D:\GitHub\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\DiscordCthulhu.exe.config
 D:\GitHub\DiscordCthulhuBot\DiscordCthulhu\obj\Debug\DiscordCthulhu.exe
 D:\GitHub\DiscordCthulhuBot\DiscordCthulhu\obj\Debug\DiscordCthulhu.pdb
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\obj\Debug\DiscordCthulhu.csprojResolveAssemblyReference.cache

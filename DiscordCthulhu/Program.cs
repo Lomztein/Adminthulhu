@@ -27,7 +27,7 @@ namespace DiscordCthulhu {
 
             discordClient.MessageReceived += async ( s, e ) => {
 
-                if (!e.Message.IsAuthor && e.Message.Text[0] == '!') {
+                if (!e.Message.IsAuthor && e.Message.Text.Length > 0 && e.Message.Text[0] == '!') {
                     string message = e.Message.Text;
 
                     string command = message.Substring (1);
