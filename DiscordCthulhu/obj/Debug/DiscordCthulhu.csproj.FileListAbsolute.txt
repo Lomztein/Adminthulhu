@@ -33,4 +33,3 @@ C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\Nito.A
 C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\Nito.AsyncEx.Concurrent.xml
 C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\Nito.AsyncEx.Enlightenment.xml
 C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\RestSharp.xml
-C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\obj\Debug\DiscordCthulhu.csprojResolveAssemblyReference.cache
