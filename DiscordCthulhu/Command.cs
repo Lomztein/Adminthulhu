@@ -252,7 +252,10 @@ namespace DiscordCthulhu {
                                     rList.Add (e.Server.FindRoles (allowed[i], true).ToList ()[0]);
                                 }
 
-                                await e.User.RemoveRoles (rList.ToArray ());
+                                int removeTries = 5;
+                                for (int i = 0; i < removeTries; i++) {
+                                    await e.User.RemoveRoles (rList.ToArray ());
+                                }
                             }
 
                             await e.User.AddRoles (role);
