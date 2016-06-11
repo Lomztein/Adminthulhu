@@ -10,11 +10,11 @@ namespace DiscordCthulhu {
 
         public static Command[] commands = new Command[] {
             new CCommandList (), new CRollTheDice (), new CCallVoiceChannel (), new CCreateInvite (),
-            new CSetColor (), new CSetGame (), new CRemoveGame (), new CSetAlias (), new CRemoveAlias (), new CShowAlias (),
-
+            new CSetColor (), new CSetGame (), new CRemoveGame (), new CSetAlias (), new CRemoveAlias (),
+            new CShowAlias (), new CClearAliasses ()
         };
 
-        public static string dataPath = "C:/Users/Lomztein/Documents/Visual Studio 2015/Projects/DiscordCthulhu/DiscordCthulhu/";
+        public static string dataPath = "C:/Users/Lomztein/Source/Repos/DiscordCthulhuBot/DiscordCthulhu/";
         public static AliasCollection aliasCollection = null;
 
         static void Main ( string[] args ) => new Program ().Start ();
@@ -49,7 +49,7 @@ namespace DiscordCthulhu {
             };
 
             discordClient.ExecuteAndWait (async () => {
-                await discordClient.Connect ("BOT TOKEN GOES HERE");
+                await discordClient.Connect ("MTg5MTM0OTYzNjM4MTQwOTMw.Cjzmkw.VhiecwYf4QH1lHrtTo5JjKZGfZw");
             });
         }
 

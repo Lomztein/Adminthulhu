@@ -16,3 +16,21 @@ c:\users\lomztein\documents\visual studio 2015\Projects\DiscordCthulhu\DiscordCt
 c:\users\lomztein\documents\visual studio 2015\Projects\DiscordCthulhu\DiscordCthulhu\bin\Debug\RestSharp.xml
 c:\users\lomztein\documents\visual studio 2015\Projects\DiscordCthulhu\DiscordCthulhu\obj\Debug\DiscordCthulhu.exe
 c:\users\lomztein\documents\visual studio 2015\Projects\DiscordCthulhu\DiscordCthulhu\obj\Debug\DiscordCthulhu.pdb
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\DiscordCthulhu.exe.config
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\obj\Debug\DiscordCthulhu.exe
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\obj\Debug\DiscordCthulhu.pdb
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\DiscordCthulhu.exe
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\DiscordCthulhu.pdb
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\Discord.Net.dll
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\Nito.AsyncEx.Concurrent.dll
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\Nito.AsyncEx.dll
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\Nito.AsyncEx.Enlightenment.dll
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\RestSharp.dll
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\WebSocket4Net.dll
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\Newtonsoft.Json.xml
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\Nito.AsyncEx.xml
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\Nito.AsyncEx.Concurrent.xml
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\Nito.AsyncEx.Enlightenment.xml
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\RestSharp.xml
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\obj\Debug\DiscordCthulhu.csprojResolveAssemblyReference.cache

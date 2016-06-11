@@ -89,5 +89,13 @@ namespace DiscordCthulhu {
                 return false;
             }
         }
+
+        public bool RemoveUser (User user) {
+            if (!users.Contains (user))
+                return false;
+            users.Remove (user);
+            Save ();
+            return true;
+        }
     }
 }
