@@ -72,11 +72,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AliasCollection.cs" />
+    <Compile Include="Commands\CFlipCoin.cs" />
     <Compile Include="Commands\CAddGame.cs" />
     <Compile Include="Commands\CCallVoiceChannel.cs" />
     <Compile Include="Commands\CClearAlias.cs" />
     <Compile Include="Commands\CCommandList.cs" />
     <Compile Include="Commands\CCreateInvite.cs" />
+    <Compile Include="Commands\CRandomGame.cs" />
     <Compile Include="Commands\CRemoveAlias.cs" />
     <Compile Include="Commands\CRemoveGame.cs" />
     <Compile Include="Commands\CRollTheDice.cs" />

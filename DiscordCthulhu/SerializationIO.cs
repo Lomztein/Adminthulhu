@@ -30,5 +30,25 @@ namespace DiscordCthulhu {
             bf.Serialize (file, obj);
             file.Close ();
         }
+
+        public static string[] LoadTextFile (string path) {
+            Console.WriteLine (path);
+            StreamReader reader = File.OpenText (path);
+
+            List<string> con = new List<string> ();
+            int maxTries = short.MaxValue;
+
+            while (true && maxTries > 0) {
+                maxTries--;
+                string loc = reader.ReadLine ();
+                if (loc == null) {
+                    break;
+                } else {
+                    con.Add (loc);
+                }
+            }
+
+            return con.ToArray ();
+        }
     }
 }

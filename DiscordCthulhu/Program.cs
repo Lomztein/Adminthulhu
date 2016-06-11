@@ -11,10 +11,10 @@ namespace DiscordCthulhu {
         public static Command[] commands = new Command[] {
             new CCommandList (), new CRollTheDice (), new CCallVoiceChannel (), new CCreateInvite (),
             new CSetColor (), new CSetGame (), new CRemoveGame (), new CSetAlias (), new CRemoveAlias (),
-            new CShowAlias (), new CClearAliasses ()
+            new CShowAlias (), new CClearAliasses (), new CFlipCoin (), new CRandomGame ()
         };
 
-        public static string dataPath = "D:/GitHub/DiscordCthulhuBot/DiscordCthulhu/";
+        public static string dataPath = "";
         public static AliasCollection aliasCollection = null;
         public static MessageControl messageControl = null;
 
@@ -26,6 +26,12 @@ namespace DiscordCthulhu {
             aliasCollection = AliasCollection.Load ();
             discordClient = new DiscordClient ();
             messageControl = new MessageControl();
+
+            dataPath = System.IO.Path.GetDirectoryName (System.Reflection.Assembly.GetExecutingAssembly ().GetName ().CodeBase);
+            dataPath = dataPath.Substring (dataPath.IndexOf ('\\') + 1);
+            dataPath += "\\";
+
+            Console.WriteLine (dataPath);
 
             discordClient.MessageReceived += async ( s, e ) => {
 
@@ -65,8 +71,11 @@ namespace DiscordCthulhu {
 
             };
 
+            string token = SerializationIO.LoadTextFile (dataPath + "bottoken.txt")[0];
+            Console.WriteLine ("Connecting using token: " + token);
+
             discordClient.ExecuteAndWait (async () => {
-                await discordClient.Connect ("MTkxMjc2OTg3NjQwMzE1OTA0.Cj38Ew.FGfRQpYt0qKeAwsSbmVa28tpj6M");
+                await discordClient.Connect ("MTg5MTM0OTYzNjM4MTQwOTMw.Cj4dng.4WCa7iLBawMecY1nxNKJvq437ko");
             });
         }
 

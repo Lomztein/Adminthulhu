@@ -55,7 +55,7 @@ namespace DiscordCthulhu
 
         public async void SendMessage(MessageEventArgs e, string message)
         {
-            Console.WriteLine("Send message");
+            Console.WriteLine("Sending: " + message);
             messages.Add(new MessageTimer(e, message, 5));
             await e.Channel.SendMessage(message);
         }
