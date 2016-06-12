@@ -17,7 +17,7 @@ namespace DiscordCthulhu {
 
         public override void ExecuteCommand ( MessageEventArgs e, List<string> arguments ) {
             base.ExecuteCommand (e, arguments);
-            if (AllowExecution (arguments)) {
+            if (AllowExecution (e, arguments)) {
 
                 List<Channel> voiceChannels = e.Server.VoiceChannels.ToList ();
 

@@ -22,7 +22,7 @@ namespace DiscordCthulhu {
 
         public override void ExecuteCommand ( MessageEventArgs e, List<string> arguments ) {
             base.ExecuteCommand (e, arguments);
-            if (AllowExecution (arguments)) {
+            if (AllowExecution (e, arguments)) {
                 Random random = new Random ();
                 Program.messageControl.SendMessage (e, quotes[random.Next (quotes.Length)]);
             }

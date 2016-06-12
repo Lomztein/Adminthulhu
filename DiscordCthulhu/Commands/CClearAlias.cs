@@ -17,7 +17,7 @@ namespace DiscordCthulhu {
 
         public override void ExecuteCommand ( MessageEventArgs e, List<string> arguments ) {
             base.ExecuteCommand (e, arguments);
-            if (AllowExecution (arguments)) {
+            if (AllowExecution (e, arguments)) {
                 AliasCollection.User user = Program.aliasCollection.FindUsersByAlias (e.User.Name)[0];
                 if (Program.aliasCollection.RemoveUser (user)) {
                     Program.messageControl.SendMessage(e, "All your aliasses has been removed from the collection.");

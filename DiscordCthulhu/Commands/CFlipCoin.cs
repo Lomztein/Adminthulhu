@@ -17,7 +17,7 @@ namespace DiscordCthulhu {
 
         public override void ExecuteCommand ( MessageEventArgs e, List<string> arguments ) {
             base.ExecuteCommand (e, arguments);
-            if (AllowExecution (arguments)) {
+            if (AllowExecution (e, arguments)) {
                 Random random = new Random ();
                 if (random.Next (2) == 0) {
                     Program.messageControl.SendMessage (e, "Your coin flipped to show heads.");

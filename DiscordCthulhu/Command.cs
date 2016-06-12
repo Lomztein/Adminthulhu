@@ -21,8 +21,19 @@ namespace DiscordCthulhu {
             }
         }
 
-        public bool AllowExecution (List<string> args) {
-            return argumentNumber == args.Count;
+        public bool AllowExecution (MessageEventArgs e, List<string> args) {
+
+            if (argumentNumber != args.Count) {
+                Program.messageControl.SendMessage (e, "Failed to execute: Wrong number of arguments.");
+                return false;
+            }
+
+            if (isAdminOnly && !e.User.GetPermissions (e.Channel).ManageChannel) {
+                Program.messageControl.SendMessage (e, "Failed to execute: Command is admin-only.");
+                return false;
+            }
+
+            return true;
         }
     }
 }

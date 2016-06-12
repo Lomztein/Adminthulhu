@@ -11,11 +11,13 @@ namespace DiscordCthulhu {
         public static Command[] commands = new Command[] {
             new CCommandList (), new CRollTheDice (), new CCallVoiceChannel (), new CCreateInvite (),
             new CSetColor (), new CSetGame (), new CRemoveGame (), new CSetAlias (), new CRemoveAlias (),
-            new CShowAlias (), new CClearAliasses (), new CFlipCoin (), new CRandomGame (), new CQuote ()
+            new CShowAlias (), new CClearAliasses (), new CFlipCoin (), new CRandomGame (), new CQuote (),
+            new CChangeScore (), new CShowScore ()
         };
 
         public static string dataPath = "";
         public static AliasCollection aliasCollection = null;
+        public static ScoreCollection scoreCollection = new ScoreCollection ();
         public static MessageControl messageControl = null;
 
         static void Main ( string[] args ) => new Program ().Start ();
@@ -24,6 +26,8 @@ namespace DiscordCthulhu {
 
         public void Start () {
             aliasCollection = AliasCollection.Load ();
+            scoreCollection.scores = ScoreCollection.Load ();
+
             discordClient = new DiscordClient ();
             messageControl = new MessageControl();
 

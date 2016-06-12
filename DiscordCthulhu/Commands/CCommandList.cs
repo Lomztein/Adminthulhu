@@ -17,7 +17,7 @@ namespace DiscordCthulhu {
 
         public override void ExecuteCommand ( MessageEventArgs e, List<string> arguments ) {
             base.ExecuteCommand (e, arguments);
-            if (AllowExecution (arguments)) {
+            if (AllowExecution (e, arguments)) {
                 string commands = "";
                 for (int i = 0; i < Program.commands.Length; i++) {
                     commands += Program.commands[i].help + "\n";

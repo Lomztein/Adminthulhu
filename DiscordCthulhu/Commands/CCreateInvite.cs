@@ -17,7 +17,7 @@ namespace DiscordCthulhu {
 
         public override async void ExecuteCommand ( MessageEventArgs e, List<string> arguments ) {
             base.ExecuteCommand (e, arguments);
-            if (AllowExecution (arguments)) {
+            if (AllowExecution (e, arguments)) {
                 Invite invite = await e.Server.CreateInvite (1800, 1, false, false);
                 Program.messageControl.SendMessage(e, "Invite URL: " + invite.Url);
             }

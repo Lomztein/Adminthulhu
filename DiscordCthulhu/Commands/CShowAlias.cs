@@ -17,7 +17,7 @@ namespace DiscordCthulhu {
         public override async void ExecuteCommand ( MessageEventArgs e, List<string> arguments ) {
 
             base.ExecuteCommand (e, arguments);
-            if (AllowExecution (arguments)) {
+            if (AllowExecution (e, arguments)) {
                 List<AliasCollection.User> users = Program.aliasCollection.FindUsersByAlias (arguments[0]);
                 if (users != null) {
                     foreach (AliasCollection.User user in users)

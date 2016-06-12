@@ -16,7 +16,7 @@ namespace DiscordCthulhu {
 
         public override void ExecuteCommand ( MessageEventArgs e, List<string> arguments ) {
             base.ExecuteCommand (e, arguments);
-            if (AllowExecution (arguments)) {
+            if (AllowExecution (e, arguments)) {
                 if (!Program.aliasCollection.RemoveAlias (e.User.Name, arguments[0])) {
                     Program.messageControl.SendMessage(e, "Failed to remove " + arguments[0] + " from your collection, as it doesn't seem to be there.");
                 } else {

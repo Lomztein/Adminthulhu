@@ -15,7 +15,7 @@ namespace DiscordCthulhu {
 
         public override async void ExecuteCommand ( MessageEventArgs e, List<string> arguments ) {
             base.ExecuteCommand (e, arguments);
-            if (AllowExecution (arguments)) {
+            if (AllowExecution (e, arguments)) {
 
                 if (CSetGame.games.Contains (arguments[0].ToUpper ())) {
                     Role[] roles = e.Server.FindRoles (arguments[0].ToUpper (), true).ToArray ();
