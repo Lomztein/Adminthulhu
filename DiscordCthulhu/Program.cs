@@ -11,7 +11,7 @@ namespace DiscordCthulhu {
         public static Command[] commands = new Command[] {
             new CCommandList (), new CRollTheDice (), new CCallVoiceChannel (), new CCreateInvite (),
             new CSetColor (), new CSetGame (), new CRemoveGame (), new CSetAlias (), new CRemoveAlias (),
-            new CShowAlias (), new CClearAliasses (), new CFlipCoin (), new CRandomGame ()
+            new CShowAlias (), new CClearAliasses (), new CFlipCoin (), new CRandomGame (), new CQuote ()
         };
 
         public static string dataPath = "";

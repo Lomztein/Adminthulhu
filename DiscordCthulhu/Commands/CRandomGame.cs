@@ -8,7 +8,7 @@ using Discord;
 namespace DiscordCthulhu {
     public class CRandomGame : Command {
 
-        string[] games = new string[] {
+        public string[] games = new string[] {
             "Overwatch",
             "Team Fortress 2",
             "Counter Strike: Global Offensive",

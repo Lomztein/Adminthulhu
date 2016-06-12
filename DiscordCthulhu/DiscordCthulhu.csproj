@@ -78,6 +78,7 @@
     <Compile Include="Commands\CClearAlias.cs" />
     <Compile Include="Commands\CCommandList.cs" />
     <Compile Include="Commands\CCreateInvite.cs" />
+    <Compile Include="Commands\CQoute.cs" />
     <Compile Include="Commands\CRandomGame.cs" />
     <Compile Include="Commands\CRemoveAlias.cs" />
     <Compile Include="Commands\CRemoveGame.cs" />
