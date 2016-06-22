@@ -8,7 +8,7 @@ using Discord;
 namespace DiscordCthulhu {
     public class CSetGame : CSetColor {
 
-        public static string[] games = new string[] { "OVERWATCH", "TF2", "GMOD" };
+        public static string[] games = new string[] { "OVERWATCH", "TF2", "GMOD", "BF3" };
 
         public CSetGame () {
             command = "addgame";

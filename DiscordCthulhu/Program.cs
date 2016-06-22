@@ -12,12 +12,20 @@ namespace DiscordCthulhu {
             new CCommandList (), new CRollTheDice (), new CCallVoiceChannel (), new CCreateInvite (),
             new CSetColor (), new CSetGame (), new CRemoveGame (), new CSetAlias (), new CRemoveAlias (),
             new CShowAlias (), new CClearAliasses (), new CFlipCoin (), new CRandomGame (), new CQuote (),
-            new CChangeScore (), new CShowScore ()
+            new CChangeScore (), new CShowScore (), new CCreateGroup (), new CCallGroup (), new CShowGroups (),
+            new CJoinGroup (), new CLeaveGroup ()
+        };
+
+        public static Phrase[] phrases = new Phrase[] {
+            new Phrase ("Neat!", "", 100, "Very!"),
+            new Phrase ("", "Nyx", 5, "*Allegedly...*"),
+            new Phrase ("", "Peacekeeper", 2, "*It's always crits..*")
         };
 
         public static string dataPath = "";
         public static AliasCollection aliasCollection = null;
         public static ScoreCollection scoreCollection = new ScoreCollection ();
+        public static PlayerGroups playerGroups;
         public static MessageControl messageControl = null;
 
         static void Main ( string[] args ) => new Program ().Start ();
@@ -25,8 +33,10 @@ namespace DiscordCthulhu {
         private DiscordClient discordClient;
 
         public void Start () {
+
             aliasCollection = AliasCollection.Load ();
             scoreCollection.scores = ScoreCollection.Load ();
+            playerGroups = PlayerGroups.Load ();
 
             discordClient = new DiscordClient ();
             messageControl = new MessageControl();
@@ -35,10 +45,9 @@ namespace DiscordCthulhu {
             dataPath = dataPath.Substring (dataPath.IndexOf ('\\') + 1);
             dataPath += "\\";
 
-            Console.WriteLine (dataPath);
-
             discordClient.MessageReceived += async ( s, e ) => {
 
+                Console.WriteLine (e.Server.Name + "/" + e.Channel.Name + "/" + e.User.Name + " says: " + e.Message.Text);
                 if (!e.Message.IsAuthor && e.Message.Text.Length > 0 && e.Message.Text[0] == '!') {
                     string message = e.Message.Text;
 
@@ -73,13 +82,15 @@ namespace DiscordCthulhu {
                     }
                 }
 
+                FindPhraseAndRespond (e);
+
             };
 
             string token = SerializationIO.LoadTextFile (dataPath + "bottoken.txt")[0];
             Console.WriteLine ("Connecting using token: " + token);
 
             discordClient.ExecuteAndWait (async () => {
-                await discordClient.Connect ("MTg5MTM0OTYzNjM4MTQwOTMw.Cj4dng.4WCa7iLBawMecY1nxNKJvq437ko");
+                await discordClient.Connect (token);
             });
         }
 
@@ -103,6 +114,12 @@ namespace DiscordCthulhu {
                 if (commands[i].command == commandName) {
                     commands[i].ExecuteCommand (e, arguements);
                 }
+            }
+        }
+
+        public void FindPhraseAndRespond (MessageEventArgs e) {
+            for (int i = 0; i < phrases.Length; i++) {
+                phrases[i].CheckAndRespond (e);
             }
         }
     }

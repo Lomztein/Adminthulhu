@@ -1,0 +1,31 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Discord;
+
+namespace DiscordCthulhu {
+    class CCreateGroup : Command {
+
+        public CCreateGroup () {
+            command = "creategroup";
+            name = "Create Group";
+            help = "\"!creategroup <groupname>\" - Creates a subgroup with the name <groupname>.";
+            isAdminOnly = true;
+        }
+
+        public override void ExecuteCommand ( MessageEventArgs e, List<string> arguments ) {
+            base.ExecuteCommand (e, arguments);
+            if (AllowExecution (e, arguments)) {
+
+                if (Program.playerGroups.CreateGroup (e, arguments[0])) {
+                    Program.messageControl.SendMessage (e, "Group " + arguments[0] + " has been created succesfully.");
+                }else {
+                    Program.messageControl.SendMessage (e, "Unable to create group: Group by that name already exists.");
+                }
+            }
+        }
+
+    }
+}

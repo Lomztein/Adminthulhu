@@ -10,7 +10,8 @@ namespace DiscordCthulhu {
 
         string[] quotes = new string[] {
             "\"Jeg syntes jeg for mindre og mindre tøj på.\" - khave, 2016",
-            "\"Some of it is actually pretty good.\" - Nyx, 2016"
+            "\"Some of it is actually pretty good.\" - Nyx, 2016",
+            "\"NEIN NEIN NEIN NEIN\" - Shewshank, 2016"
         };
 
         public CQuote () {
