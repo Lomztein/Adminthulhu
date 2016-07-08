@@ -18,7 +18,7 @@ namespace DiscordCthulhu {
 
         public static Phrase[] phrases = new Phrase[] {
             new Phrase ("Neat!", "", 100, "Very!"),
-            new Phrase ("", "Nyx", 5, "*Allegedly...*"),
+            new Phrase ("", "Nyx", 1, "*Allegedly...*"),
             new Phrase ("", "Peacekeeper", 2, "*It's always crits..*")
         };
 
@@ -72,7 +72,7 @@ namespace DiscordCthulhu {
                     {
                         foreach(MessageTimer messageTimer in messageControl.messages)
                         {
-                            if (messageTimer.message == e.Message.Text)
+                            if (messageTimer.message == e.Message.RawText)
                             {
                                 Console.WriteLine("Removed!");
                                 messageControl.RemoveMessageTimer(messageTimer);

@@ -30,7 +30,7 @@ namespace DiscordCthulhu
 
         private async void Timer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            Console.WriteLine("Send message timer");
+            Console.WriteLine("Send message timer: "  + message);
             await this.e.Channel.SendMessage(message);
         }
 
