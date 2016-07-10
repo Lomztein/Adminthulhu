@@ -76,6 +76,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AliasCollection.cs" />
+    <Compile Include="Commands\CCreateTTTGame.cs" />
     <Compile Include="Commands\CChangeScore.cs" />
     <Compile Include="Commands\CCreateGroup.cs" />
     <Compile Include="Commands\CFlipCoin.cs" />
@@ -98,6 +99,8 @@
     <Compile Include="Command.cs" />
     <Compile Include="Commands\CShowGroups.cs" />
     <Compile Include="Commands\CShowScore.cs" />
+    <Compile Include="Commands\CMakeTTTMove.cs" />
+    <Compile Include="intVector2.cs" />
     <Compile Include="MessageControl.cs" />
     <Compile Include="Phrase.cs" />
     <Compile Include="PlayerGroups.cs" />
@@ -105,6 +108,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ScoreCollection.cs" />
     <Compile Include="SerializationIO.cs" />
+    <Compile Include="TicTacToe.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
