@@ -30,7 +30,8 @@ namespace DiscordCthulhu {
             "Duck Game",
             "Toribash",
             "Robocraft",
-            "TrackMania"
+            "TrackMania",
+            "Robot Roller-Derby Disco Dodgeball"
         };
 
         public CRandomGame () {
