@@ -9,9 +9,11 @@ namespace DiscordCthulhu {
     public class CShowAlias : Command {
 
         public CShowAlias () {
+            Initialize ();
             command = "showalias";
             name = "Show Alias";
-            help = "\"!showalias <alias>\" - Finds and shows you the user that has this alias in their collection.";
+            argHelp = "<alias>";
+            help = "Finds and shows you the user that has the alias " + argHelp + " in their collection.";
         }
 
         public override async void ExecuteCommand ( MessageEventArgs e, List<string> arguments ) {

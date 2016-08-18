@@ -9,9 +9,11 @@ namespace DiscordCthulhu {
     public class CSetAlias : Command {
 
         public CSetAlias () {
+            Initialize ();
             command = "addalias";
             name = "Add Alias";
-            help = "\"!addalias <alias>\" - Adds an alias to your collection, or creates a new collection if you don't have any.";
+            argHelp = "<alias>";
+            help = "Adds an alias " + argHelp + " to your collection, or creates a new collection if you don't have any.";
         }
 
         public override void ExecuteCommand ( MessageEventArgs e, List<string> arguments ) {

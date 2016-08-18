@@ -34,9 +34,10 @@ namespace DiscordCthulhu {
         };
 
         public CRandomGame () {
+            Initialize ();
             command = "whattoplay";
             name = "What to Play?";
-            help = "\"!whattoplay\" - Select a random game out from a list, that could be played.";
+            help = "Select a random game out from a list, that could be played.";
             argumentNumber = 0;
         }
 

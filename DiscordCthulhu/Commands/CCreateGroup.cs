@@ -9,9 +9,11 @@ namespace DiscordCthulhu {
     class CCreateGroup : Command {
 
         public CCreateGroup () {
+            Initialize ();
             command = "creategroup";
             name = "Create Group";
-            help = "\"!creategroup <groupname>\" - Creates a subgroup with the name <groupname>.";
+            argHelp = "<groupname>";
+            help = "Creates a subgroup with the name " + argHelp + ".";
             isAdminOnly = true;
         }
 

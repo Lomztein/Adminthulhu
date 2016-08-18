@@ -10,9 +10,11 @@ namespace DiscordCthulhu {
     public class CChangeScore : Command {
 
         public CChangeScore () {
+            Initialize ();
             command = "changescore";
             name = "Change Score";
-            help = "\"!changescore <username>;<number>\" - Change the score of a specific player. - ADMIN ONLY";
+            argHelp = "<user>;<amount>";
+            help = "Change the score of <user> by <amount>.";
             argumentNumber = 2;
             isAdminOnly = true;
         }

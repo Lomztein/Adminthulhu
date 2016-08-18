@@ -1,19 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Discord;
+using System.IO;
 
 namespace DiscordCthulhu {
     class Program {
+
+        public static char commandChar = '!';
 
         public static Command[] commands = new Command[] {
             new CCommandList (), new CRollTheDice (), new CCallVoiceChannel (), new CCreateInvite (),
             new CSetColor (), new CSetGame (), new CRemoveGame (), new CSetAlias (), new CRemoveAlias (),
             new CShowAlias (), new CClearAliasses (), new CFlipCoin (), new CRandomGame (), new CQuote (),
             new CChangeScore (), new CShowScore (), new CCreateGroup (), new CCallGroup (), new CShowGroups (),
-            new CJoinGroup (), new CLeaveGroup (), new CCreateTTTGame (), new CMakeTTTMove ()
+            new CJoinGroup (), new CLeaveGroup (), new CDeleteGroup (), new CCreateTTTGame (), new CMakeTTTMove (),
+            new CEndTTTGame (), new CSetCommand ()
         };
 
         public static Phrase[] phrases = new Phrase[] {
@@ -27,6 +29,8 @@ namespace DiscordCthulhu {
         public static ScoreCollection scoreCollection = new ScoreCollection ();
         public static PlayerGroups playerGroups;
         public static MessageControl messageControl = null;
+        public static string commandSettingsDirectory = "Command Settings/";
+        public static string gitHubIgnoreType = ".botproperty";
 
         static void Main ( string[] args ) => new Program ().Start ();
 
@@ -38,6 +42,8 @@ namespace DiscordCthulhu {
             scoreCollection.scores = ScoreCollection.Load ();
             playerGroups = PlayerGroups.Load ();
 
+            InitializeDirectories ();
+
             discordClient = new DiscordClient ();
             messageControl = new MessageControl();
 
@@ -48,7 +54,7 @@ namespace DiscordCthulhu {
             discordClient.MessageReceived += async ( s, e ) => {
 
                 Console.WriteLine (e.Server.Name + "/" + e.Channel.Name + "/" + e.User.Name + " says: " + e.Message.Text);
-                if (!e.Message.IsAuthor && e.Message.Text.Length > 0 && e.Message.Text[0] == '!') {
+                if (!e.Message.IsAuthor && e.Message.Text.Length > 0 && e.Message.Text[0] == commandChar) {
                     string message = e.Message.Text;
 
                     string command = message.Substring (1);
@@ -86,7 +92,7 @@ namespace DiscordCthulhu {
 
             };
 
-            string token = SerializationIO.LoadTextFile (dataPath + "bottoken.txt")[0];
+            string token = SerializationIO.LoadTextFile (dataPath + "bottoken" + gitHubIgnoreType)[0];
             Console.WriteLine ("Connecting using token: " + token);
 
             discordClient.ExecuteAndWait (async () => {
@@ -105,8 +111,21 @@ namespace DiscordCthulhu {
             return trimmed;
         }
 
+        public static void InitializeDirectories () {
+            if (!Directory.Exists (dataPath + commandSettingsDirectory))
+                Directory.CreateDirectory (dataPath + commandSettingsDirectory);
+        }
+
         public Task FindAndExecuteAsync ( MessageEventArgs e, string commandName, List<string> arguements ) {
             return Task.Run (() => FindAndExecuteCommand (e, commandName, arguements));
+        }
+
+        public static Command FindCommand (string commandName) {
+            for (int i = 0; i < commands.Length; i++) {
+                if (commands[i].command.ToUpper () == commandName.ToUpper ())
+                    return commands[i];
+            }
+            return null;
         }
 
         public void FindAndExecuteCommand (MessageEventArgs e, string commandName, List<string> arguements) {

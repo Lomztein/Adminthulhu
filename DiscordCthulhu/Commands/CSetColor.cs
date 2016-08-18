@@ -22,9 +22,11 @@ namespace DiscordCthulhu {
         public string failText = "Color not found, these are the supported colors:\n";
 
         public CSetColor () {
+            Initialize ();
             command = "setcolor";
             name = "Set Color";
-            help = "\"!setcolor <colorname>\" - Sets your color to colorname, if available.";
+            argHelp = "<colorname>";
+            help = "Sets your color to " + argHelp + ", if available.";
             argumentNumber = 1;
         }
 

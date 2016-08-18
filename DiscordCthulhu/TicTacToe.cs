@@ -60,11 +60,11 @@ namespace DiscordCthulhu {
             return 0;
         }
 
-        public static void CreateGame (string playerName, MessageEventArgs e) {
+        public static void CreateGame (string playerName, MessageEventArgs e, int size) {
             if (FindPlayersGame (playerName) != null) {
                 Program.messageControl.SendMessage (e, "You already have a game in progress.");
             }else {
-                TicTacToeGame newGame = new TicTacToeGame (playerName);
+                TicTacToeGame newGame = new TicTacToeGame (playerName, size);
                 currentGames.Add (newGame);
                 Program.messageControl.SendMessage (e, "You have challenged Cthulhu to a match of Tic Tac Toe, prepare to die.");
                 Program.messageControl.SendMessage (e, newGame.Render ());
@@ -88,8 +88,11 @@ namespace DiscordCthulhu {
             public int columns = 3;
             public int rowsRequired = 3;
 
-            public TicTacToeGame (string playerName) {
+            public TicTacToeGame (string playerName, int size) {
                 owner = playerName;
+                rows = size;
+                columns = size;
+                rowsRequired = size;
                 blocks = new int[rows, columns];
             }
 
@@ -149,7 +152,13 @@ namespace DiscordCthulhu {
             }
 
             public string Render () {
-                string render = "```\n  0  1  2\n";
+                string render = "```\n ";
+                // These two loops could likely be done better, but this will do for now.
+                for (int y = 0; y < columns; y++) {
+                    render += " " + y + " ";
+                }
+
+                render += "\n";
                 for (int y = 0; y < columns; y ++) {
                     for (int x = 0; x < rows; x++) {
                         if (x == 0)

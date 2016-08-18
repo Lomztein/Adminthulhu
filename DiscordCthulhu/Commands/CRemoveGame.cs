@@ -8,9 +8,11 @@ using Discord;
 namespace DiscordCthulhu {
     public class CRemoveGame : Command {
         public CRemoveGame () {
+            Initialize ();
             command = "removegame";
             name = "Remove Game";
-            help = "\"!removegame <gamename>\" - Removes you from the list of people with this game.";
+            argHelp = "<gamename>";
+            help = "Removes you from the list of people with the game " + argHelp + ".";
         }
 
         public override async void ExecuteCommand ( MessageEventArgs e, List<string> arguments ) {

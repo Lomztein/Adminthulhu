@@ -9,9 +9,11 @@ namespace DiscordCthulhu {
     class CCallGroup : Command {
 
         public CCallGroup () {
+            Initialize ();
             command = "callgroup";
             name = "Call Group";
-            help = "\"!callgroup <groupname>;<message>\" - Calls the <groupname> subgroup if it exists.";
+            argHelp = "<groupname>";
+            help = "Calls the " + argHelp + " subgroup if it exists.";
             argumentNumber = 2;
         }
 

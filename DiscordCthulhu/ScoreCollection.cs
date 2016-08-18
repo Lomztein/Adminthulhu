@@ -33,7 +33,7 @@ namespace DiscordCthulhu {
         }
 
         public static Dictionary<string, int> Load () {
-            Dictionary<string, int> collection = SerializationIO.LoadObjectFromFile<Dictionary<string, int>> (Program.dataPath + "scores.dat");
+            Dictionary<string, int> collection = SerializationIO.LoadObjectFromFile<Dictionary<string, int>> (Program.dataPath + "scores" + Program.gitHubIgnoreType);
             if (collection == null) {
                 return new Dictionary<string, int> ();
             } else {

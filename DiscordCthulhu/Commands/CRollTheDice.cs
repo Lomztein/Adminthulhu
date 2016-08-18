@@ -9,9 +9,11 @@ namespace DiscordCthulhu {
     public class CRollTheDice : Command {
 
         public CRollTheDice () {
+            Initialize ();
             command = "rtd";
             name = "Roll the Dice";
-            help = "\"!rtd <maxvalue>\" - Rolls a dice that returns a number between one and maxnumber.";
+            argHelp = "<maxnumber>";
+            help = "Rolls a dice that returns a number between one and " + argHelp + ".";
             argumentNumber = 1;
         }
 

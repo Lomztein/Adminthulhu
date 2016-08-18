@@ -9,9 +9,11 @@ namespace DiscordCthulhu {
     public class CRemoveAlias : Command {
 
         public CRemoveAlias () {
+            Initialize ();
             command = "removealias";
             name = "Remove Alias";
-            help = "\"!removealias <alias>\" - Removes the alias from your collection.";
+            argHelp = "<alias>";
+            help = "Removes the alias " + argHelp + " from your collection.";
         }
 
         public override void ExecuteCommand ( MessageEventArgs e, List<string> arguments ) {

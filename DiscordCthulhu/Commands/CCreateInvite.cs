@@ -9,9 +9,10 @@ namespace DiscordCthulhu {
     public class CCreateInvite : Command {
 
         public CCreateInvite () {
+            Initialize ();
             command = "createinvite";
             name = "Create a Single Person Invite";
-            help = "\"!createinvite\" - Creates a single person invite to this server.";
+            help = "Creates a single person invite to this server.";
             argumentNumber = 0;
         }
 

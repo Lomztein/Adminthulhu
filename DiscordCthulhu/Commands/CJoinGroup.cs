@@ -9,9 +9,11 @@ namespace DiscordCthulhu {
     class CJoinGroup : Command {
 
         public CJoinGroup () {
+            Initialize ();
             command = "joingroup";
             name = "Join Group";
-            help = "\"!joingroup <groupname>\" - Joins the group <groupname> if it exists on this server.";
+            argHelp = "<groupname>";
+            help = "Joins the group " + argHelp + " if it exists on this server.";
         }
 
         public override void ExecuteCommand ( MessageEventArgs e, List<string> arguments ) {

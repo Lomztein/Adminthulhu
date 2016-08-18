@@ -9,9 +9,11 @@ namespace DiscordCthulhu {
     class CMakeTTTMove : Command {
 
         public CMakeTTTMove () {
+            Initialize ();
             command = "tictactoe";
             name = "Move Tic Tac Toe";
-            help = "\"!tictactoe <x>;<y>\" - Makes a move if you have a Tic Tac Toe game going with Cthulhu.";
+            argHelp = "<x>;<y>";
+            help = "Makes a move at " + argHelp + " position if you have a Tic Tac Toe game going with Cthulhu.";
             argumentNumber = 2;
         }
 

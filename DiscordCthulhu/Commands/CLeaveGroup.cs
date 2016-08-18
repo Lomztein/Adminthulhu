@@ -9,9 +9,11 @@ namespace DiscordCthulhu {
     class CLeaveGroup : Command {
 
         public CLeaveGroup () {
+            Initialize ();
             command = "leavegroup";
             name = "Leave Group";
-            help = "\"!leavegroup <groupname>\" - Leaves the group <groupname>.";
+            argHelp = "<groupname>";
+            help = "Leaves the group " + argHelp + ".";
         }
 
         public override void ExecuteCommand ( MessageEventArgs e, List<string> arguments ) {

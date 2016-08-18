@@ -77,7 +77,7 @@ namespace DiscordCthulhu {
         }
 
         public static PlayerGroups Load () {
-            PlayerGroups groups = SerializationIO.LoadObjectFromFile<PlayerGroups> (Program.dataPath + "groups.dat");
+            PlayerGroups groups = SerializationIO.LoadObjectFromFile<PlayerGroups> (Program.dataPath + "groups" + Program.gitHubIgnoreType);
 
             if (groups != null)
                 return groups;
@@ -87,7 +87,7 @@ namespace DiscordCthulhu {
         }
 
         public void Save () {
-            SerializationIO.SaveObjectToFile (Program.dataPath + "groups.dat", this);
+            SerializationIO.SaveObjectToFile (Program.dataPath + "groups" + Program.gitHubIgnoreType, this);
         }
 
         [Serializable]

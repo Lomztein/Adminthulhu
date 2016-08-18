@@ -18,9 +18,10 @@ namespace DiscordCthulhu {
         };
 
         public CQuote () {
+            Initialize ();
             command = "quote";
             name = "Quote";
-            help = "\"!quote\" - Display an incredibly meaningful quote.";
+            help = "Display an incredibly meaningful quote.";
             argumentNumber = 0;
         }
 

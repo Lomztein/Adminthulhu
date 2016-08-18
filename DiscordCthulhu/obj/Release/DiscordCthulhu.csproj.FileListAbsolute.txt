@@ -1,0 +1,17 @@
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Release\DiscordCthulhu.exe.config
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Release\DiscordCthulhu.exe
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Release\DiscordCthulhu.pdb
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Release\Discord.Net.dll
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Release\Newtonsoft.Json.dll
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Release\Nito.AsyncEx.Concurrent.dll
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Release\Nito.AsyncEx.dll
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Release\Nito.AsyncEx.Enlightenment.dll
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Release\RestSharp.dll
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Release\WebSocket4Net.dll
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Release\Newtonsoft.Json.xml
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Release\Nito.AsyncEx.xml
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Release\Nito.AsyncEx.Concurrent.xml
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Release\Nito.AsyncEx.Enlightenment.xml
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Release\RestSharp.xml
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\obj\Release\DiscordCthulhu.exe
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\obj\Release\DiscordCthulhu.pdb
