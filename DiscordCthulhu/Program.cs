@@ -15,7 +15,7 @@ namespace DiscordCthulhu {
             new CShowAlias (), new CClearAliasses (), new CFlipCoin (), new CRandomGame (), new CQuote (),
             new CChangeScore (), new CShowScore (), new CCreateGroup (), new CCallGroup (), new CShowGroups (),
             new CJoinGroup (), new CLeaveGroup (), new CDeleteGroup (), new CCreateTTTGame (), new CMakeTTTMove (),
-            new CEndTTTGame (), new CSetCommand ()
+            new CEndTTTGame (), new CSetCommand (), new CShowCredits ()
         };
 
         public static Phrase[] phrases = new Phrase[] {
