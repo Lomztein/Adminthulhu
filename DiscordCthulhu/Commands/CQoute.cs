@@ -14,7 +14,9 @@ namespace DiscordCthulhu {
             "\"NEIN NEIN NEIN NEIN\" - Shewshank, 2016",
             "\"I don't have any.\" - Nyx, 2016",
             "\"Kigger du på min søsters *Facebook*!?\" - Nyx, 2016",
-            "\"Time to wake up before you do a Lomztein\" - Lomztein, 2016"
+            "\"Time to wake up before you do a Lomztein\" - Lomztein, 2016",
+            "\"Brb finding something about eating people and fucking corpses\" - Lomztein, 2016",
+            "\":kappa:\" - Gizmo Gizmo, 2016"
         };
 
         public CQuote () {
