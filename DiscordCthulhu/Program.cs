@@ -21,7 +21,8 @@ namespace DiscordCthulhu {
         public static Phrase[] phrases = new Phrase[] {
             new Phrase ("Neat!", "", 100, "Very!"),
             new Phrase ("", "Nyx", 1, "*Allegedly...*"),
-            new Phrase ("", "Peacekeeper", 2, "*It's always crits..*")
+            new Phrase ("", "Peacekeeper", 2, "*It's always crits..*"),
+            new Phrase ("wow", "Gizmo Gizmo", 100, "INSANE AIR TIME!")
         };
 
         public static string dataPath = "";
