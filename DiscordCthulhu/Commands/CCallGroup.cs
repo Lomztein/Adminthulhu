@@ -9,7 +9,6 @@ namespace DiscordCthulhu {
     class CCallGroup : Command {
 
         public CCallGroup () {
-            Initialize ();
             command = "callgroup";
             name = "Call Group";
             argHelp = "<groupname>";

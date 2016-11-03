@@ -9,7 +9,6 @@ namespace DiscordCthulhu {
     class CJoinGroup : Command {
 
         public CJoinGroup () {
-            Initialize ();
             command = "joingroup";
             name = "Join Group";
             argHelp = "<groupname>";

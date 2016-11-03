@@ -9,7 +9,6 @@ namespace DiscordCthulhu {
     class CDeleteGroup : Command {
 
         public CDeleteGroup () {
-            Initialize ();
             command = "deletegroup";
             name = "Delete Group";
             argHelp = "<groupname>";

@@ -9,7 +9,6 @@ namespace DiscordCthulhu {
     public class CShowScore : Command {
 
         public CShowScore () {
-            Initialize ();
             command = "showscore";
             name = "Show Score";
             help = "Shows you your own score.";

@@ -32,11 +32,11 @@ namespace DiscordCthulhu {
         public static string commandSettingsDirectory = "Command Settings/";
         public static string gitHubIgnoreType = ".botproperty";
 
-        static void Main ( string[] args ) => new Program ().Start ();
+        static void Main ( string[] args ) => new Program ().Start (args);
 
         private DiscordClient discordClient;
 
-        public void Start () {
+        public void Start (string[] args) {
 
             aliasCollection = AliasCollection.Load ();
             scoreCollection.scores = ScoreCollection.Load ();
@@ -47,9 +47,16 @@ namespace DiscordCthulhu {
             discordClient = new DiscordClient ();
             messageControl = new MessageControl();
 
-            dataPath = System.IO.Path.GetDirectoryName (System.Reflection.Assembly.GetExecutingAssembly ().GetName ().CodeBase);
-            dataPath = dataPath.Substring (dataPath.IndexOf ('\\') + 1);
-            dataPath += "\\";
+            // Linux specific test
+            if (args.Length > 0) {
+                dataPath = args[0];
+            }else {
+                dataPath = System.IO.Path.GetDirectoryName (System.Reflection.Assembly.GetExecutingAssembly ().GetName ().CodeBase);
+                dataPath = dataPath.Substring (dataPath.IndexOf ('\\') + 1);
+                dataPath += "\\";
+            }
+
+            InitializeCommands ();
 
             discordClient.MessageReceived += async ( s, e ) => {
 
@@ -89,14 +96,14 @@ namespace DiscordCthulhu {
                 }
 
                 FindPhraseAndRespond (e);
-
             };
 
+            Console.WriteLine (dataPath);
             string token = SerializationIO.LoadTextFile (dataPath + "bottoken" + gitHubIgnoreType)[0];
             Console.WriteLine ("Connecting using token: " + token);
 
             discordClient.ExecuteAndWait (async () => {
-                await discordClient.Connect (token);
+                await discordClient.Connect (token, TokenType.Bot);
             });
         }
 
@@ -114,6 +121,12 @@ namespace DiscordCthulhu {
         public static void InitializeDirectories () {
             if (!Directory.Exists (dataPath + commandSettingsDirectory))
                 Directory.CreateDirectory (dataPath + commandSettingsDirectory);
+        }
+
+        public static void InitializeCommands () {
+            for (int i = 0; i < commands.Length; i++) {
+                commands[i].Initialize ();
+            }
         }
 
         public Task FindAndExecuteAsync ( MessageEventArgs e, string commandName, List<string> arguements ) {

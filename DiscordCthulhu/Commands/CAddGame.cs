@@ -11,7 +11,6 @@ namespace DiscordCthulhu {
         public static string[] games = new string[] { "OVERWATCH", "TF2", "GMOD", "BF3" };
 
         public CSetGame () {
-            Initialize ();
             command = "addgame";
             name = "Set Game";
             argHelp = "<game>";

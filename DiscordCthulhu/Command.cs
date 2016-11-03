@@ -24,7 +24,7 @@ namespace DiscordCthulhu {
         }
 
         public static Dictionary<string, List<string>> LoadSettings (string commandName) {
-            Dictionary<string, List<string>> settings = SerializationIO.LoadObjectFromFile<Dictionary<string, List<string>>> (Program.dataPath + commandName + Program.gitHubIgnoreType);
+            Dictionary<string, List<string>> settings = SerializationIO.LoadObjectFromFile<Dictionary<string, List<string>>> (Program.dataPath + Program.commandSettingsDirectory + commandName + Program.gitHubIgnoreType);
             if (settings == null) {
                 return new Dictionary<string, List<string>> ();
             } else {

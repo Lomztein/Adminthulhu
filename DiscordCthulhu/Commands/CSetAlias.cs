@@ -9,7 +9,6 @@ namespace DiscordCthulhu {
     public class CSetAlias : Command {
 
         public CSetAlias () {
-            Initialize ();
             command = "addalias";
             name = "Add Alias";
             argHelp = "<alias>";

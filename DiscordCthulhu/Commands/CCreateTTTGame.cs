@@ -9,7 +9,6 @@ namespace DiscordCthulhu {
     public class CCreateTTTGame : Command {
 
         public CCreateTTTGame () {
-            Initialize ();
             command = "starttictactoe";
             name = "Start Tic Tac Toe";
             argHelp = "<size>";

@@ -9,7 +9,6 @@ namespace DiscordCthulhu {
     class CEndTTTGame : Command {
 
         public CEndTTTGame () {
-            Initialize ();
             command = "endtictactoe";
             name = "End Tic Tac Toe Game";
             help = "Ends your current game if Tic Tac Toe, if there is one.";

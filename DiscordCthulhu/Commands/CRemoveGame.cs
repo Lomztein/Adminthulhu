@@ -8,7 +8,6 @@ using Discord;
 namespace DiscordCthulhu {
     public class CRemoveGame : Command {
         public CRemoveGame () {
-            Initialize ();
             command = "removegame";
             name = "Remove Game";
             argHelp = "<gamename>";

@@ -9,7 +9,6 @@ namespace DiscordCthulhu {
     public class CRollTheDice : Command {
 
         public CRollTheDice () {
-            Initialize ();
             command = "rtd";
             name = "Roll the Dice";
             argHelp = "<maxnumber>";

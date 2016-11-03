@@ -10,7 +10,6 @@ namespace DiscordCthulhu {
     public class CChangeScore : Command {
 
         public CChangeScore () {
-            Initialize ();
             command = "changescore";
             name = "Change Score";
             argHelp = "<user>;<amount>";

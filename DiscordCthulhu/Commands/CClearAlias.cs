@@ -9,7 +9,6 @@ namespace DiscordCthulhu {
     public class CClearAliasses : Command {
 
         public CClearAliasses () {
-            Initialize ();
             command = "clearalias";
             name = "Clear Aliassses";
             help = "Clears off all aliasses to your name.";

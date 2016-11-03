@@ -9,7 +9,6 @@ namespace DiscordCthulhu {
     public class CRemoveAlias : Command {
 
         public CRemoveAlias () {
-            Initialize ();
             command = "removealias";
             name = "Remove Alias";
             argHelp = "<alias>";

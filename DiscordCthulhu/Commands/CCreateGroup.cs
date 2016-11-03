@@ -9,7 +9,6 @@ namespace DiscordCthulhu {
     class CCreateGroup : Command {
 
         public CCreateGroup () {
-            Initialize ();
             command = "creategroup";
             name = "Create Group";
             argHelp = "<groupname>";

@@ -9,7 +9,6 @@ namespace DiscordCthulhu {
     public class CCommandList : Command {
 
         public CCommandList () {
-            Initialize ();
             command = "clist";
             name = "Command List";
             help = "Reveals a full list of all commands.";
@@ -23,6 +22,8 @@ namespace DiscordCthulhu {
 
                 List<string> toDisplay = new List<string> ();
 
+                toDisplay.Add ("```");
+
                 for (int i = 0; i < Program.commands.Length; i++) {
                     if (Program.commands[i].AvailableOnChannel (e) || Program.commands[i].alwaysEnabled)
                         toDisplay.Add (Program.commands[i].GetShortHelp ());
@@ -35,6 +36,7 @@ namespace DiscordCthulhu {
                         toDisplay.Add (Program.commands[i].GetShortHelp ());
                 }
 
+                toDisplay.Add ("```");
                 string commands = "";
                 for (int i = 0; i < toDisplay.Count; i++) {
                     commands += toDisplay[i] + "\n";

@@ -9,7 +9,6 @@ namespace DiscordCthulhu {
     class CShowGroups : Command {
 
         public CShowGroups () {
-            Initialize ();
             command = "showgroups";
             name = "Show Groups";
             help = "Shows the name of all groups on this server.";

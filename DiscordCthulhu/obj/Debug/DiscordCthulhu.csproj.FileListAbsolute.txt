@@ -52,4 +52,3 @@ D:\GitHub\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\Nito.AsyncEx.Concurrent.xml
 D:\GitHub\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\Nito.AsyncEx.Enlightenment.xml
 D:\GitHub\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\RestSharp.xml
 D:\GitHub\DiscordCthulhuBot\DiscordCthulhu\obj\Debug\DiscordCthulhu.csprojResolveAssemblyReference.cache
-C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\WolframAPI.dll

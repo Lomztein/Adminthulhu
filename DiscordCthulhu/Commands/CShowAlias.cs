@@ -9,7 +9,6 @@ namespace DiscordCthulhu {
     public class CShowAlias : Command {
 
         public CShowAlias () {
-            Initialize ();
             command = "showalias";
             name = "Show Alias";
             argHelp = "<alias>";

@@ -9,7 +9,6 @@ namespace DiscordCthulhu {
     class CLeaveGroup : Command {
 
         public CLeaveGroup () {
-            Initialize ();
             command = "leavegroup";
             name = "Leave Group";
             argHelp = "<groupname>";

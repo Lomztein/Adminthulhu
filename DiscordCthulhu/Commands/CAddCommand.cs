@@ -9,7 +9,6 @@ namespace DiscordCthulhu {
     class CSetCommand : Command {
 
         public CSetCommand () {
-            Initialize ();
             command = "setcommand";
             name = "Set Command";
             argHelp = "<commandname><enable(true/false);<allchannels(true/false)>";

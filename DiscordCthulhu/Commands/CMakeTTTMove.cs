@@ -9,7 +9,6 @@ namespace DiscordCthulhu {
     class CMakeTTTMove : Command {
 
         public CMakeTTTMove () {
-            Initialize ();
             command = "tictactoe";
             name = "Move Tic Tac Toe";
             argHelp = "<x>;<y>";

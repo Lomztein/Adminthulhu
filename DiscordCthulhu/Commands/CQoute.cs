@@ -18,7 +18,6 @@ namespace DiscordCthulhu {
         };
 
         public CQuote () {
-            Initialize ();
             command = "quote";
             name = "Quote";
             help = "Display an incredibly meaningful quote.";

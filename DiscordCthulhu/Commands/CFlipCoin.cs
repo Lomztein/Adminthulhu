@@ -9,7 +9,6 @@ namespace DiscordCthulhu {
     public class CFlipCoin : Command {
 
         public CFlipCoin () {
-            Initialize ();
             command = "flipcoin";
             name = "Flip a Coin";
             help = "Flip a coin that has an equal chance of heads or tails.";
