@@ -15,13 +15,14 @@ namespace DiscordCthulhu {
             new CShowAlias (), new CClearAliasses (), new CFlipCoin (), new CRandomGame (), new CQuote (),
             new CChangeScore (), new CShowScore (), new CCreateGroup (), new CCallGroup (), new CShowGroups (),
             new CJoinGroup (), new CLeaveGroup (), new CDeleteGroup (), new CCreateTTTGame (), new CMakeTTTMove (),
-            new CEndTTTGame (), new CSetCommand ()
+            new CEndTTTGame (), new CSetCommand (), new CShowCredits ()
         };
 
         public static Phrase[] phrases = new Phrase[] {
             new Phrase ("Neat!", "", 100, "Very!"),
             new Phrase ("", "Nyx", 1, "*Allegedly...*"),
-            new Phrase ("", "Peacekeeper", 2, "*It's always crits..*")
+            new Phrase ("", "Peacekeeper", 2, "*It's always crits..*"),
+            new Phrase ("wow!", "Gizmo Gizmo", 100, "INSANE AIR TIME!")
         };
 
         public static string dataPath = "";
