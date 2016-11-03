@@ -10,19 +10,16 @@ namespace DiscordCthulhu {
         public static char commandChar = '!';
 
         public static Command[] commands = new Command[] {
-            new CCommandList (), new CRollTheDice (), new CCallVoiceChannel (), new CCreateInvite (),
-            new CSetColor (), new CSetGame (), new CRemoveGame (), new CSetAlias (), new CRemoveAlias (),
-            new CShowAlias (), new CClearAliasses (), new CFlipCoin (), new CRandomGame (), new CQuote (),
-            new CChangeScore (), new CShowScore (), new CCreateGroup (), new CCallGroup (), new CShowGroups (),
-            new CJoinGroup (), new CLeaveGroup (), new CDeleteGroup (), new CCreateTTTGame (), new CMakeTTTMove (),
-            new CEndTTTGame (), new CSetCommand (), new CShowCredits ()
+            new CCommandList (), new CRollTheDice (), new CCallVoiceChannel (), new CSetColor (),
+            new CFlipCoin (), new CRandomGame (), new CQuote (), new CSetCommand ()
         };
 
         public static Phrase[] phrases = new Phrase[] {
             new Phrase ("Neat!", "", 100, "Very!"),
             new Phrase ("", "Nyx", 1, "*Allegedly...*"),
             new Phrase ("", "Peacekeeper", 2, "*It's always crits..*"),
-            new Phrase ("wow!", "Gizmo Gizmo", 100, "INSANE AIR TIME!")
+            new Phrase ("wow!", "Gizmo Gizmo", 100, "INSANE AIR TIME!"),
+            new Phrase ("Thx fam", "", 100, "No props.")
         };
 
         public static string dataPath = "";

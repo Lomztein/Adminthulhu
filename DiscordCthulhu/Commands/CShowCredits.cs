@@ -20,9 +20,9 @@ namespace DiscordCthulhu {
             base.ExecuteCommand (e, arguments);
             if (AllowExecution (e, arguments)) {
 
-                Program.messageControl.SendMessage (e, "Main Programmer: Marcus "Lomztein" Jensen\n" + 
-                                                    +  "Additional Programming: Frederik "Fred" Rosenberg and Victor "Nyx" Koch\n" +
-                                                    +  "This bot is created using the Discord.NET Discord Bot API for C#";
+                Program.messageControl.SendMessage (e, "Main Programmer: Marcus \"Lomztein\" Jensen\n" +
+                                                    +"Additional Programming: Frederik \"Fred\" Rosenberg and Victor \"Nyx\" Koch\n" +
+                                                    +"This bot is created using the Discord.NET Discord Bot API for C#");
             }
       }
 }
