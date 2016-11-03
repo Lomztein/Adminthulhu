@@ -19,7 +19,7 @@ namespace DiscordCthulhu {
             new Phrase ("", "Nyx", 1, "*Allegedly...*"),
             new Phrase ("", "Peacekeeper", 2, "*It's always crits..*"),
             new Phrase ("wow!", "Gizmo Gizmo", 100, "INSANE AIR TIME!"),
-            new Phrase ("Thx fam", "", 100, "No props. We Gucci")
+            new Phrase ("Thx fam", "", 100, "No props. We Gucci.")
         };
 
         public static string dataPath = "";
