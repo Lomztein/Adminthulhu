@@ -29,11 +29,13 @@ namespace DiscordCthulhu {
                         toDisplay.Add (Program.commands[i].GetShortHelp ());
                 }
 
-                toDisplay.Add ("\n**ADMIN ONLY COMMANDS**");
+                if (!e.Channel.IsPrivate) {
+                        toDisplay.Add ("\n**ADMIN ONLY COMMANDS**");
 
-                for (int i = 0; i < Program.commands.Length; i++) {
-                    if (Program.commands[i].isAdminOnly)
-                        toDisplay.Add (Program.commands[i].GetShortHelp ());
+                    for (int i = 0; i < Program.commands.Length; i++) {
+                        if (Program.commands[i].isAdminOnly)
+                            toDisplay.Add (Program.commands[i].GetShortHelp ());
+                    }
                 }
 
                 toDisplay.Add ("```");
@@ -41,6 +43,7 @@ namespace DiscordCthulhu {
                 for (int i = 0; i < toDisplay.Count; i++) {
                     commands += toDisplay[i] + "\n";
                 }
+
                 Program.messageControl.SendMessage(e, commands);
             }
         }

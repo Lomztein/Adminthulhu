@@ -41,6 +41,39 @@ namespace DiscordCthulhu
         
 
         public List<MessageTimer> messages = new List<MessageTimer>();
+        public static int maxCharacters = 2000;
+
+        // Honestly I have no clue if this works properly, as it is kind of difficult to test out.
+        private string[] SplitMessage (string message) {
+            List<string> splitted = new List<string> ();
+
+            int counted = 0;
+
+            for (int i = 0; i < message.Length; i++) {
+
+                // Give some wiggle room, to avoid any shenanagens.
+                if (counted > maxCharacters - 10) {
+
+                    int spaceSearch = counted;
+                    while (message[spaceSearch] != ' ') {
+                        spaceSearch--;
+                    }
+
+                    string substring = message.Substring (0, spaceSearch);
+                    splitted.Add (substring);
+
+                    message = message.Substring (spaceSearch);
+                    counted = 0;
+
+                    continue;
+                }
+
+                counted++;
+            }
+
+            splitted.Add (message.Substring (0, counted));
+            return splitted.ToArray ();
+        }
 
         public void RemoveMessageTimer(MessageTimer messageTimer)
         {
@@ -48,11 +81,28 @@ namespace DiscordCthulhu
             messages.Remove(messageTimer);
         }
 
-        public async void SendMessage(MessageEventArgs e, string message)
+        /// <summary>
+        /// Sends a message lol.
+        /// </summary>
+        /// <param name="Message event arguments"></param>
+        /// <param name="message"></param>
+        /// <returns The same message as is input, for laziness></returns>
+        public string SendMessage(MessageEventArgs e, string message)
         {
-            Console.WriteLine("Sending: " + message);
+            string[] messages = SplitMessage (message);
             //messages.Add(new MessageTimer(e, message, 5));
-            await e.Channel.SendMessage(message);
+            for (int i = 0; i < messages.Length; i++) {
+                AsyncSend (e, messages[i]);    
+            }
+
+            return message;
+        }
+
+        private async void AsyncSend (MessageEventArgs e, string message) {
+            Console.WriteLine ("Sending a message.");
+            if (message.Length > 0) {
+                await e.Channel.SendMessage (message);
+            }
         }
     }
 }

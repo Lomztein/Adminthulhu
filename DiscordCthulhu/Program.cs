@@ -11,7 +11,8 @@ namespace DiscordCthulhu {
 
         public static Command[] commands = new Command[] {
             new CCommandList (), new CRollTheDice (), new CCallVoiceChannel (), new CSetColor (),
-            new CFlipCoin (), new CRandomGame (), new CQuote (), new CSetCommand ()
+            new CFlipCoin (), new CRandomGame (), new CQuote (), new CSetCommand (), new CEmbolden (),
+            new CEndTheWorld ()
         };
 
         public static Phrase[] phrases = new Phrase[] {
@@ -58,7 +59,7 @@ namespace DiscordCthulhu {
 
             discordClient.MessageReceived += async ( s, e ) => {
 
-                Console.WriteLine (e.Server.Name + "/" + e.Channel.Name + "/" + e.User.Name + " says: " + e.Message.Text);
+                Console.WriteLine (GetChannelName (e) + " says: " + e.Message.Text);
                 if (!e.Message.IsAuthor && e.Message.Text.Length > 0 && e.Message.Text[0] == commandChar) {
                     string message = e.Message.Text;
 
@@ -147,9 +148,17 @@ namespace DiscordCthulhu {
             }
         }
 
-        public void FindPhraseAndRespond (MessageEventArgs e) {
+        public void FindPhraseAndRespond ( MessageEventArgs e ) {
             for (int i = 0; i < phrases.Length; i++) {
                 phrases[i].CheckAndRespond (e);
+            }
+        }
+
+        public static string GetChannelName (MessageEventArgs e) {
+            if (e.Channel.IsPrivate) {
+                return "Private message: " + e.User.Name;
+            }else {
+                return e.Server.Name + "/" + e.Channel.Name + "/" + e.User.Name;
             }
         }
     }

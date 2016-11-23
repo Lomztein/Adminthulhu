@@ -54,7 +54,9 @@ namespace DiscordCthulhu {
         }
 
         public bool AvailableOnChannel (MessageEventArgs e) {
-            if (enabledSettings.ContainsKey (e.Server.Name)) {
+            if (e.Channel.IsPrivate) {
+                return alwaysEnabled && !isAdminOnly;
+            }else if (enabledSettings.ContainsKey (e.Server.Name)) {
                 return enabledSettings[e.Server.Name].Contains (e.Channel.Name);
             }
             return false;
@@ -85,6 +87,11 @@ namespace DiscordCthulhu {
 
         public bool AllowExecution (MessageEventArgs e, List<string> args) {
 
+            if (e.Channel.IsPrivate && (isAdminOnly && !alwaysEnabled)) {
+                Program.messageControl.SendMessage (e, "Failed to execute: Not available in private chat.");
+                return false;
+            }
+
             if (argumentNumber != args.Count) {
                 if (!(args.Count == 1 && args[0] == "?"))
                     Program.messageControl.SendMessage (e, "Failed to execute: Wrong number of arguments.");
@@ -110,7 +117,7 @@ namespace DiscordCthulhu {
 
         public string GetHelp () {
             string argExists = argHelp.Length > 0 ? " " : "";
-            string text = "\"" + Program.commandChar + command + argExists + argHelp + "\" - " + help;
+            string text = "\"" + Program.commandChar + command + "\"" + argExists + argHelp + "\" - " + help;
             //if (isAdminOnly)
             //    text += " - ADMIN ONLY";
             return text;
@@ -118,7 +125,7 @@ namespace DiscordCthulhu {
 
         public string GetShortHelp () {
             string argExists = argHelp.Length > 0 ? " " : "";
-            string text = "\"" + Program.commandChar + command + argExists + argHelp;
+            string text = "\"" + Program.commandChar + command + "\"" + argExists + argHelp;
             return text;
         }
     }
