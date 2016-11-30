@@ -49,7 +49,7 @@ namespace DiscordCthulhu
 
             int counted = 0;
 
-            for (int i = 0; i < message.Length; i++) {
+            while (message.Length > 0) {
 
                 // Give some wiggle room, to avoid any shenanagens.
                 if (counted > maxCharacters - 10) {
@@ -61,17 +61,18 @@ namespace DiscordCthulhu
 
                     string substring = message.Substring (0, spaceSearch);
                     splitted.Add (substring);
-
                     message = message.Substring (spaceSearch);
-                    counted = 0;
 
-                    continue;
+                    counted = 0;
+                } else if (counted >= message.Length) {
+
+                    splitted.Add (message);
+                    message = "";
                 }
 
                 counted++;
             }
 
-            splitted.Add (message.Substring (0, counted));
             return splitted.ToArray ();
         }
 
@@ -87,21 +88,24 @@ namespace DiscordCthulhu
         /// <param name="Message event arguments"></param>
         /// <param name="message"></param>
         /// <returns The same message as is input, for laziness></returns>
-        public string SendMessage(MessageEventArgs e, string message)
-        {
+        public string SendMessage(MessageEventArgs e, string message) {
+            return SendMessage (e.Channel, message);
+        }
+
+        public string SendMessage (Channel e, string message) {
             string[] messages = SplitMessage (message);
             //messages.Add(new MessageTimer(e, message, 5));
             for (int i = 0; i < messages.Length; i++) {
-                AsyncSend (e, messages[i]);    
+                AsyncSend (e, messages[i]);
             }
 
             return message;
         }
 
-        private async void AsyncSend (MessageEventArgs e, string message) {
+        private async void AsyncSend (Channel e, string message) {
             Console.WriteLine ("Sending a message.");
             if (message.Length > 0) {
-                await e.Channel.SendMessage (message);
+                await e.SendMessage (message);
             }
         }
     }
