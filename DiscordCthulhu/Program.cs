@@ -13,7 +13,7 @@ namespace DiscordCthulhu {
         public static Command[] commands = new Command[] {
             new CCommandList (), new CRollTheDice (), new CCallVoiceChannel (), new CSetColor (),
             new CFlipCoin (), new CRandomGame (), new CQuote (), new CSetCommand (), new CEmbolden (),
-            new CEndTheWorld ()
+            new CEndTheWorld (), CConstructPlaylist ()
         };
 
         public static Phrase[] phrases = new Phrase[] {
@@ -36,7 +36,11 @@ namespace DiscordCthulhu {
         static void Main ( string[] args ) => new Program ().Start (args);
 
         private DiscordClient discordClient;
+
+        // Monster Mash data
         public static Dictionary<ulong, string> voiceChannelNames = new Dictionary<ulong, string>();
+        public static string mainTextChannelName = "main";
+        public static string dumpTextChannelName = "dump";
 
         public void Start (string[] args) {
 
@@ -102,24 +106,34 @@ namespace DiscordCthulhu {
             };
 
             discordClient.UserJoined += ( s, e ) => {
-                messageControl.SendMessage (e.Server.FindChannels("main").ToArray()[0], "**" + e.User.Name + "** has joined this server. Bid them welcome or murder them in cold blood, it's really up to you.");
+                messageControl.SendMessage (GetMainChannel (e.Server), "**" + e.User.Name + "** has joined this server. Bid them welcome or murder them in cold blood, it's really up to you.");
+
+                string[] welcomeMessage = SerializationIO.LoadTextFile (dataPath + "welcomemessage" + gitHubIgnoreType);
+                string combined = "";
+                for (int i = 0; i < welcomeMessage.Length; i++) {
+                    combined += welcomeMessage[i] + "\n";
+                }
+
+                messageControl.SendMessage (e.User, combined);
+            };
+
+            discordClient.UserLeft += ( s, e ) => {
+                messageControl.SendMessage (GetMainChannel (e.Server), "**" + e.User.Name + "** has left the server. Don't worry, they'll come crawling back soon.");
             };
 
             discordClient.UserUpdated += ( s, e ) => {
                 UpdateVoiceChannel (e.Before.VoiceChannel);
                 UpdateVoiceChannel (e.After.VoiceChannel);
 
-                Channel[] array = e.Server.FindChannels ("main").ToArray ();
-                if (array.Length == 0)
+                Channel channel = GetMainChannel (e.Server);
+                if (channel == null)
                     return;
 
-                Channel channel = array[0];
                 if (e.Before.Name != e.After.Name) {
                     messageControl.SendMessage (channel, "**"+ GetUserUpdateName (e, true) + "** has changed their name to **" + e.After.Name + "**");
                 }
 
                 if (e.Before.Nickname != e.After.Nickname) {
-                    Console.WriteLine (":" + GetUserUpdateName (e, true) + ":");
                     messageControl.SendMessage (channel, "**" + GetUserUpdateName (e, true) + "** has changed their nickname to **" + GetUserUpdateName (e, false) + "**");
                 }
             };
@@ -149,6 +163,14 @@ namespace DiscordCthulhu {
                     return e.After.Name;
                 return e.After.Nickname;
             }
+        }
+
+        public Channel GetMainChannel (Server server) {
+            Channel[] channels = server.FindChannels (mainTextChannelName).ToArray ();
+            if (channels.Length != 0)
+                return channels[0];
+
+            return null;
         }
 
         private void InitializeData () {
@@ -186,8 +208,6 @@ namespace DiscordCthulhu {
                         highestGame = value.Key;
                     }
                 }
-
-                Console.WriteLine (highestGame.Name);
 
                 if (highestGame.Name != "") {
                     voice.Edit (voiceChannelNames[voice.Id] + " - " + highestGame.Name);

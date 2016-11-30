@@ -55,7 +55,7 @@ namespace DiscordCthulhu
                 if (counted > maxCharacters - 10) {
 
                     int spaceSearch = counted;
-                    while (message[spaceSearch] != ' ') {
+                    while (message[spaceSearch] != '\n') {
                         spaceSearch--;
                     }
 
@@ -99,6 +99,14 @@ namespace DiscordCthulhu
                 AsyncSend (e, messages[i]);
             }
 
+            return message;
+        }
+
+        public string SendMessage (User e, string message) {
+            string[] split = SplitMessage (message);
+            for (int i = 0; i < split.Length; i++) {
+                e.SendMessage (split[i]);
+            }
             return message;
         }
 
