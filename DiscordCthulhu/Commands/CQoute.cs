@@ -18,7 +18,9 @@ namespace DiscordCthulhu {
             "\"Brb finding something about eating people and fucking corpses\" - Lomztein, 2016",
             "\":kappa:\" - Gizmo Gizmo, 2016",
             "\"I am deeply regretting ever taking that photo.\" - Nyx, 2016",
-            "\"Mit ultimate er kun på 80%!\" - Nyx, 2016"
+            "\"Mit ultimate er kun på 80%!\" - Nyx, 2016",
+            "\"***TILTED BEYOND REPAIR***\" - DoritoFighter231, 2016",
+            "\"Prone to bugs. Fuckbawls shitstain.\" - Lomztein, 2016"
         };
 
         public CQuote () {

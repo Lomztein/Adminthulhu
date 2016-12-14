@@ -12,9 +12,9 @@ namespace DiscordCthulhu {
         public CChangeScore () {
             command = "changescore";
             name = "Change Score";
-            argHelp = "<user>;<amount>";
-            help = "Change the score of <user> by <amount>.";
-            argumentNumber = 2;
+            argHelp = "<user>;<amount>;<reason>";
+            help = "Change the score of <user> by <amount> for <reason>.";
+            argumentNumber = 3;
             isAdminOnly = true;
         }
 
@@ -28,6 +28,11 @@ namespace DiscordCthulhu {
                     Program.scoreCollection.ChangeScore (arguments[0], number);
                     Program.messageControl.SendMessage (e, arguments[0] + " score has been changed by " + number.ToString () + ".\n" + 
                         "Their score now totals " + Program.scoreCollection.GetScore (arguments[0]) + ".");
+
+                    User user = Program.FindUserByName (e.Server, arguments[0]);
+                    if (user != null) {
+                        Program.messageControl.SendMessage (user, "Your score has been increased by " + number + " for reason: " + arguments[2]);
+                    }
                 }else {
                     Program.messageControl.SendMessage (e, "Failed to parse second argument.");
                 }

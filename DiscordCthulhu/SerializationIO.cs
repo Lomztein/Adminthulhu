@@ -19,7 +19,7 @@ namespace DiscordCthulhu {
                 file.Close ();
                 return data;
             }
-            Console.WriteLine ("Failed to load file at " + path);
+            ChatLogger.Log ("Failed to load file at " + path);
             return default (T);
         }
 
@@ -32,7 +32,7 @@ namespace DiscordCthulhu {
         }
 
         public static string[] LoadTextFile (string path) {
-            Console.WriteLine (path);
+            ChatLogger.Log (path);
             StreamReader reader = File.OpenText (path);
 
             List<string> con = new List<string> ();

@@ -13,7 +13,7 @@ namespace DiscordCthulhu {
         public int chance;
         public string response;
 
-        public void CheckAndRespond (MessageEventArgs e) {
+        public bool CheckAndRespond (MessageEventArgs e) {
 
             string message = e.Message.Text;
             string sender = e.User.Name;
@@ -25,10 +25,13 @@ namespace DiscordCthulhu {
                     if (random.Next (100) < chance || chance == 100) {
 
                         Program.messageControl.SendMessage (e, response);
+                        return true;
                     }
                 }
 
             }
+
+            return false;
         }
 
         public Phrase (string input, string us, int ch, string re) {

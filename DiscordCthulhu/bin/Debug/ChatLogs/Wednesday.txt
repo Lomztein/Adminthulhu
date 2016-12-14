@@ -1,0 +1,566 @@
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+Monster Mash/dump/Lomztein says: !join
+Monster Mash/dump/GodZilla says: Joining **Radical Red - Microsoft Visual Studio**
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+Monster Mash/dump/Lomztein says: !join
+Monster Mash/dump/GodZilla says: Joining **Radical Red**
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+1
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG**1
+2
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG**2
+3
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG**3
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+-1
+Sending a message.
+-2
+Sending a message.
+-3
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **-1
+Monster Mash/dump/Cthulhu says: **DEBUG: **-2
+Monster Mash/dump/Cthulhu says: **DEBUG: **-3
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+1
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **1
+2
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **2
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+0
+Sending a message.
+0
+Sending a message.
+0, 1
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **0
+Monster Mash/dump/Cthulhu says: **DEBUG: **0
+Monster Mash/dump/Cthulhu says: **DEBUG: **0, 1
+1, 2
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **1, 2
+2, 3
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **2, 3
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+0
+Sending a message.
+0
+Sending a message.
+0
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **0
+Monster Mash/dump/Cthulhu says: **DEBUG: **0
+Monster Mash/dump/Cthulhu says: **DEBUG: **0
+0, 1
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **0, 1
+1, 2
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **1, 2
+2, 3
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **2, 3
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+0
+Sending a message.
+0
+Sending a message.
+0
+Sending a message.
+0, 1
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **0
+Monster Mash/dump/Cthulhu says: **DEBUG: **0
+Monster Mash/dump/Cthulhu says: **DEBUG: **0
+Monster Mash/dump/Cthulhu says: **DEBUG: **0, 1
+1, 2
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **1, 2
+2, 3
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **2, 3
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+0
+Sending a message.
+0
+Sending a message.
+0
+Sending a message.
+0, 1
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **0
+Monster Mash/dump/Cthulhu says: **DEBUG: **0
+Monster Mash/dump/Cthulhu says: **DEBUG: **0
+Monster Mash/dump/Cthulhu says: **DEBUG: **0, 1
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+0, 1
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **0, 1
+1, 2
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **1, 2
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+0, 1
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **0, 1
+1, 2
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **1, 2
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+0, 1
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **0, 1
+Gorgeous Green - 2
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Gorgeous Green - 2
+Gorgeous Green - 2
+Sending a message.
+1, 2
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Gorgeous Green - 2
+Monster Mash/dump/Cthulhu says: **DEBUG: **1, 2
+Gorgeous Green - 2
+Sending a message.
+Pathetic Pink - 3
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Gorgeous Green - 2
+Monster Mash/dump/Cthulhu says: **DEBUG: **Pathetic Pink - 3
+Monster Mash/dump/Lomztein says: Thank gawd for dump
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+0, 1
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **0, 1
+Gorgeous Green - 2
+Sending a message.
+1, 2
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Gorgeous Green - 2
+Monster Mash/dump/Cthulhu says: **DEBUG: **1, 2
+Gorgeous Green - 2
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Gorgeous Green - 2
+Pathetic Pink - 3
+Sending a message.
+Gorgeous Green - 2
+Sending a message.
+2, 3
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Pathetic Pink - 3
+Monster Mash/dump/Cthulhu says: **DEBUG: **Gorgeous Green - 2
+Monster Mash/dump/Cthulhu says: **DEBUG: **2, 3
+Pathetic Pink - 3
+Sending a message.
+Adorable Amber - 4
+Sending a message.
+Gorgeous Green - 2
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Pathetic Pink - 3
+Monster Mash/dump/Cthulhu says: **DEBUG: **Adorable Amber - 4
+Monster Mash/dump/Cthulhu says: **DEBUG: **Gorgeous Green - 2
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+0, 1
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **0, 1
+Gorgeous Green - 2
+Sending a message.
+1, 2
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Gorgeous Green - 2
+Monster Mash/dump/Cthulhu says: **DEBUG: **1, 2
+Gorgeous Green - 2
+Sending a message.
+Pathetic Pink - 3
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Gorgeous Green - 2
+Monster Mash/dump/Cthulhu says: **DEBUG: **Pathetic Pink - 3
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+0, 1
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **0, 1
+Gorgeous Green - 2
+Sending a message.
+1, 2
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Gorgeous Green - 2
+Monster Mash/dump/Cthulhu says: **DEBUG: **1, 2
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+0, 1
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **0, 1
+1, 2
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **1, 2
+2, 3
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **2, 3
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+0, 3
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **0, 3
+1, 3
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **1, 3
+2, 3
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **2, 3
+2, 3
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **2, 3
+2, 3
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **2, 3
+2, 3
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **2, 3
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+0, 3
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **0, 3
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+0, 3
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **0, 3
+0, 3
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **0, 3
+0, 3
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **0, 3
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+0, 3
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **0, 3
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+0, 3
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **0, 3
+0, 3
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **0, 3
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+0, 3
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **0, 3
+0, 3
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **0, 3
+Sending a message.
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\welcomemessage.botproperty
+Monster Mash/main/Cthulhu says: **Space Jesus** has joined this server. Bid them welcome or murder them in cold blood, it's really up to you.
+Private message: Cthulhu says: Hello, and welcome to **Monster Mash**!
+
+This server is dedicated to having a chill place to hang out. We aren't dedicated to any specific game, nor do you have to be here at specific times. Monster Mash is simply a lounge wherein you can find people to join in your mighty quests of brutal slaughter.
+
+In short, we are a danish group, with the occasional international member marked with the @International role. The group was created in the olden days of 2012 by Victor "Nyx" Koch and Marcus "Lomztein" Jensen, originally on Razer Comms, but later moved to Discord due to superiorness from Discord.
+
+I am the administrative bot **Adminthulhu**. I am a horrific ancient entity of infinite power, as well as your humble servant and automated administrator. I take care of automatic tasks such as sending you this, as well as notifying people of name changes and server joins. I also dynamically change the names of voice channels, to reflect the games played within. Aside from this, I also have a few utility commands that can be found in the #rules channel. For now, try and use **!setcolor <COLORNAME>** to give yourself a colored name.
+
+I also have a funky brother named **Funkthulhu**. He can play all sort of music, and is maintained by Thorvald "The Human Toast" Kjartansson. I myself am maintained by Marcus "Lomztein" Jensen, with occasional help from the rest of the admin crew.
+
+**Rules of the Monster Mash:**
+ - Respect people, as in: Do not be a douchenozzle.
+ - NSFW/NSFL content is not allowed.
+ - Admins are litteraly gods on this plane of existance.
+ - Dankness is good.
+
+**Text Channel Overview:**
+#main - General discussion and talk of various things. Links are not embedded in here.
+#international - Kind of useless, but we like having it there.
+#suggestions - Suggest changes and improvements to the server. Admins might even listen if you are lucky.
+#links - If you want to share something out of the blue, throw it here. This is to avoid filling main with links.
+Private message: Cthulhu says: #readitonreddit - Like links, but specifically for Reddit link.
+#music - Any sweet ass jams you have should go in here.
+#rules - A rarely updated ruleset, as well as bot commands can be found here.
+#announcements - Admins use this to easily tell the entire server of new stuff happening.
+#migmig - The dankest of memes should go here. It must be atleast one dank to enter.
+#admin - Hah, you can't see this lol.
+#dump - Spam, bot interaction, any kind of stuff not covered anywhere else goes here.
+
+**Current Administrators:**
+ - Victor "Nyx" Koch
+ - Marcus "Lomztein" Jensen
+ - Micheal "Gizmo Gizmo" B�gh
+ - Younes "DrCooldude" Zakaria
+
+These can be reached by using the **@Admin** mention.
+
+**Game Specific Mentions:**
+ - @OVERWATCH
+ - @HEROES OF THE STORM
+ - @RAINBOW SIX: SIEGE
+ - @ROCKET LEAGUE
+
+
+**Off-Discord Sites:**
+ - Subreddit: https://www.reddit.com/r/MonsterMashHideout/
+ - YouTube Channel: https://www.youtube.com/channel/UCKiVIjmGiy8MZq51U4TlPKA
+ - Steam Group: https://steamcommunity.com/groups/MosterMashHideout
+1, 4
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **1, 4
+1, 4
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **1, 4
+1, 4
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **1, 4
+0, 3
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **0, 3
+0, 3
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **0, 3
+0, 3
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **0, 3
+0, 3
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **0, 3
+Sending a message.
+Monster Mash/main/Cthulhu says: **Space Jesus** has changed their nickname to **Lomzteins Testing Account**
+0, 3
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **0, 3
+Monster Mash/dump/Lomztein says: !leave
+Monster Mash/dump/GodZilla says: leaving **Radical Red - Microsoft Visual Studio**
+Monster Mash/dump/Lomztein says: Det tog længere tid end jeg ønsker at indrømme, men den fjerner nu ikke længere channels hvis den alligevel bare vil tilføje en ny i den forriges plads. Årsagen til at det tog lang tid er hovedsageligt at jeg troede jeg havde en løsning som jeg gik efter i alt for lang tid, før jeg tænkte mig om og fandt den rigtige løsning.
+
+*Story of my goddamn life.*
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+Monster Mash/dump/Lomztein says: !join
+Monster Mash/dump/GodZilla says: Joining **Beautiful Blue - Microsoft Visual Studio**
+Monster Mash/dump/Lomztein says: !leave
+Monster Mash/dump/GodZilla says: leaving **Beautiful Blue - Microsoft Visual Studio**
+Monster Mash/links/Tonald Drump says: 
+Monster Mash/suggestions/Lomztein says: Jeg tager op på skolen imorgen for at snakke med Lene, maybe I'll survive.
+Monster Mash/readitonreddit/Lomztein says: /r/tf2 om Tracer mod Scout omkring hvem der er bedst i juletøj: http://i.imgur.com/G4mAS5R.png
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+Monster Mash/suggestions/khave says: @Lomztein Universe Lene er der ikke i morgen
+Monster Mash/suggestions/Lomztein says: You whot
+Monster Mash/suggestions/khave says: Hun er der først mandag til onsdag
+Monster Mash/suggestions/Tonald Drump says: sjiiit
+Monster Mash/suggestions/Lomztein says: Så må jeg nok sende en mail
+Monster Mash/suggestions/khave says: Jeg bliver hjemme i morgen tror jeg
+Monster Mash/suggestions/khave says: mhm.

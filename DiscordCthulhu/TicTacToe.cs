@@ -97,7 +97,7 @@ namespace DiscordCthulhu {
             }
 
             public bool SetBlock (int player, int x, int y) {
-                Console.WriteLine (x + ", " + y + ", " + player + " - " + Environment.StackTrace);
+                ChatLogger.Log (x + ", " + y + ", " + player + " - " + Environment.StackTrace);
                 if (IsInsidePlayArea (x, y) && blocks[x,y] == EMTPY_ID) {
                     blocks[x, y] = player;
                     return true;
