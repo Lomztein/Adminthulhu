@@ -13,7 +13,7 @@ namespace DiscordCthulhu {
         public static Command[] commands = new Command[] {
             new CCommandList (), new CRollTheDice (), new CCallVoiceChannel (), new CSetColor (),
             new CFlipCoin (), new CRandomGame (), new CQuote (), new CSetCommand (), new CEmbolden (),
-            new CEndTheWorld ()
+            new CEndTheWorld (), new CChangeScore (), new CShowScore ()
         };
 
         public static Phrase[] phrases = new Phrase[] {
@@ -22,6 +22,11 @@ namespace DiscordCthulhu {
             new Phrase ("", "Peacekeeper", 2, "*It's always crits..*"),
             new Phrase ("wow!", "Gizmo Gizmo", 100, "INSANE AIR TIME!"),
             new Phrase ("Thx fam", "", 100, "No props. We Gucci."),
+            new Phrase ("Fuck yis", "Lomztein", 100, "Fuck no."),
+            new Phrase ("<:Serviet:255721870828109824> Privet Comrades!", "Creeperskull", 100, "Privet, federal leader!"),
+            new Phrase ("<:Serviet:255721870828109824> Privet Comrades!", "", 100, "Privet!"),
+            new Phrase ("Who is best gem?", "Nyx", 100, "*Obviously* <:Lapis:230346614064021505> ..."),
+            new Phrase ("Who is best gem?", "", 100, "Obviously <:PeriWow:230381627669348353>")
             new Phrase ("Fuck yis", "Lomztein", 100, "Fuck no."),
             new Phrase ("https://www.youtube.com/", "Twistbonk", 100, "Wow, this is some interesting conte- <:residentsleeper:257933177631277056>", "links")
         };
@@ -32,43 +37,53 @@ namespace DiscordCthulhu {
         public static PlayerGroups playerGroups;
         public static MessageControl messageControl = null;
         public static string commandSettingsDirectory = "Command Settings/";
+        public static string chatlogDirectory = "ChatLogs/";
         public static string gitHubIgnoreType = ".botproperty";
 
         static void Main ( string[] args ) => new Program ().Start (args);
 
-        private DiscordClient discordClient;
+        public static DiscordClient discordClient;
 
         // Monster Mash data
-        public static Dictionary<ulong, string> voiceChannelNames = new Dictionary<ulong, string>();
         public static string mainTextChannelName = "main";
         public static string dumpTextChannelName = "dump";
+        public static string serverName = "Monster Mash";
+        public static Server server;
+
+        // Feedback
+        public static ulong authorID = 93744415301971968;
+
+        public static ControlPanel controlPanel = null;
 
         public void Start (string[] args) {
 
-            aliasCollection = AliasCollection.Load ();
-            scoreCollection.scores = ScoreCollection.Load ();
-            playerGroups = PlayerGroups.Load ();
+            ChatLogger.Log ("Booting..");
 
             InitializeDirectories ();
-            InitializeData ();
-
-            discordClient = new DiscordClient ();
-            messageControl = new MessageControl();
 
             // Linux specific test
             if (args.Length > 0) {
                 dataPath = args[0];
-            }else {
+            } else {
                 dataPath = System.IO.Path.GetDirectoryName (System.Reflection.Assembly.GetExecutingAssembly ().GetName ().CodeBase);
                 dataPath = dataPath.Substring (dataPath.IndexOf ('\\') + 1);
                 dataPath += "\\";
             }
 
+            aliasCollection = AliasCollection.Load ();
+            scoreCollection.scores = ScoreCollection.Load ();
+            playerGroups = PlayerGroups.Load ();
+
+            discordClient = new DiscordClient ();
+            messageControl = new MessageControl();
+            controlPanel = new ControlPanel ();
+
+            InitializeData ();
             InitializeCommands ();
 
             discordClient.MessageReceived += async ( s, e ) => {
 
-                Console.WriteLine (GetChannelName (e) + " says: " + e.Message.Text);
+                ChatLogger.Log (GetChannelName (e) + " says: " + e.Message.Text);
                 if (!e.Message.IsAuthor && e.Message.Text.Length > 0 && e.Message.Text[0] == commandChar) {
                     string message = e.Message.Text;
 
@@ -95,7 +110,7 @@ namespace DiscordCthulhu {
                         {
                             if (messageTimer.message == e.Message.RawText)
                             {
-                                Console.WriteLine("Removed!");
+                                ChatLogger.Log("Removed!");
                                 messageControl.RemoveMessageTimer(messageTimer);
                                 break;
                             }
@@ -123,8 +138,10 @@ namespace DiscordCthulhu {
             };
 
             discordClient.UserUpdated += ( s, e ) => {
-                UpdateVoiceChannel (e.Before.VoiceChannel);
-                UpdateVoiceChannel (e.After.VoiceChannel);
+                AutomatedVoiceChannels.UpdateVoiceChannel (e.Before.VoiceChannel);
+                AutomatedVoiceChannels.UpdateVoiceChannel (e.After.VoiceChannel);
+                AutomatedVoiceChannels.CheckFullAndAddIf (e.Server);
+                AutomatedVoiceChannels.RemoveLeftoverChannels (e.Server);
 
                 Channel channel = GetMainChannel (e.Server);
                 if (channel == null)
@@ -139,9 +156,39 @@ namespace DiscordCthulhu {
                 }
             };
 
-            Console.WriteLine (dataPath);
+            discordClient.UserBanned += ( s, e ) => {
+                Channel channel = GetMainChannel (e.Server);
+                if (channel == null)
+                    return;
+
+                messageControl.SendMessage (channel, "**" + GetUserName (e.User) + "** has been banned from this server, they will not be missed.");
+                messageControl.SendMessage (e.User, "Sorry to tell you like this, but you have been permabanned from Monster Mash. ;-;");
+            };
+
+            discordClient.UserUnbanned += ( s, e ) => {
+                Channel channel = GetMainChannel (e.Server);
+                if (channel == null)
+                    return;
+
+                messageControl.SendMessage (channel, "**" + GetUserName (e.User) + "** has been unbanned from this server, They are once more welcome in our arms of glory.");
+                messageControl.SendMessage (e.User, "You have been unbanned from Monster Mash, we love you once more! :D");
+            };
+
+            discordClient.MessageDeleted += ( s, e ) => {
+                Channel channel = GetChannelByName (e.Server, dumpTextChannelName);
+                if (channel == null)
+                    return;
+
+                messageControl.SendMessage (channel, "In order disallow *any* secrets except for admin secrets, I'd like to tell you that **" + GetUserName (e.User) + "** just deleted a message on **" + e.Channel.Name + "**.");
+            };
+
+            discordClient.Ready += (s, e) => {
+                ChatLogger.Log ("Bot is ready and running!");
+            };
+
+            ChatLogger.Log (dataPath);
             string token = SerializationIO.LoadTextFile (dataPath + "bottoken" + gitHubIgnoreType)[0];
-            Console.WriteLine ("Connecting using token: " + token);
+            ChatLogger.Log ("Connecting using token: " + token);
 
             discordClient.ExecuteAndWait (async () => {
                 await discordClient.Connect (token, TokenType.Bot);
@@ -149,7 +196,7 @@ namespace DiscordCthulhu {
         }
 
         public string GetUserName (User user) {
-            if (user.Nickname.Length == 0)
+            if (user.Nickname == null)
                 return user.Name;
             return user.Nickname;
         }
@@ -166,56 +213,42 @@ namespace DiscordCthulhu {
             }
         }
 
-        public Channel GetMainChannel (Server server) {
-            Channel[] channels = server.FindChannels (mainTextChannelName).ToArray ();
-            if (channels.Length != 0)
-                return channels[0];
+        public static Channel GetMainChannel (Server server) {
+            return GetChannelByName (server, mainTextChannelName);
+        }
+
+        [Obsolete]
+        public static Channel GetChannelByName (Server server, string name) {
+            if (server == null)
+                return null;
+
+            Channel channel = SearchChannel (server, name);
+            return channel;
+        }
+
+        public static Channel SearchChannel (Server server, string name) {
+            IEnumerable<Channel> channels = server.AllChannels;
+            foreach (Channel channel in channels) {
+                if (channel.Name.Length >= name.Length && channel.Name.Substring (0, name.Length) == name)
+                    return channel;
+            }
 
             return null;
         }
 
         private void InitializeData () {
-            voiceChannelNames.Add (250545007797207040, "Radical Red");
-            voiceChannelNames.Add (250545037790674944, "Beautiful Blue");
-            voiceChannelNames.Add (250722068272775178, "Indigo International");
-            voiceChannelNames.Add (243685884723986432, "Funkthulhu's Funky Cave");
-            voiceChannelNames.Add (169127187897778178, "Corner of Shame");
+            AutomatedVoiceChannels.InitializeData ();
         }
 
-        private void UpdateVoiceChannel ( Channel voice ) {
-            if (voice != null) {
+        public static Server GetServer () {
+            if (server != null)
+                return server;
 
-                Dictionary<Game, int> numPlayers = new Dictionary<Game, int> ();
-                foreach (User user in voice.Users) {
+            IEnumerable<Server> servers = discordClient.FindServers (serverName);
+            if (servers.Count () != 0)
+                server = servers.ElementAt (0);
 
-                    if (user.CurrentGame.HasValue) {
-                        if (numPlayers.ContainsKey (user.CurrentGame.Value)) {
-                            numPlayers[user.CurrentGame.Value]++;
-                        }else {
-                            numPlayers.Add (user.CurrentGame.Value, 1);
-                        }
-                    }
-
-                }
-
-                int highest = int.MinValue;
-                Game highestGame = new Game ("");
-
-                for (int i = 0; i < numPlayers.Count; i++) {
-                    KeyValuePair<Game, int> value = numPlayers.ElementAt (i);
-
-                    if (value.Value > highest) {
-                        highest = value.Value;
-                        highestGame = value.Key;
-                    }
-                }
-
-                if (highestGame.Name != "") {
-                    voice.Edit (voiceChannelNames[voice.Id] + " - " + highestGame.Name);
-                } else {
-                    voice.Edit (voiceChannelNames[voice.Id]);
-                }
-            }
+            return server;
         }
 
         // I thought the TrimStart and TrimEnd functions would work like this, which they may, but I couldn't get them working. Maybe I'm just an idiot, but whatever.
@@ -230,8 +263,13 @@ namespace DiscordCthulhu {
         }
 
         public static void InitializeDirectories () {
-            if (!Directory.Exists (dataPath + commandSettingsDirectory))
-                Directory.CreateDirectory (dataPath + commandSettingsDirectory);
+            CreateAbsentDirectory (dataPath + commandSettingsDirectory);
+            CreateAbsentDirectory (dataPath + chatlogDirectory);
+        }
+
+        public static void CreateAbsentDirectory (string path) {
+            if (!Directory.Exists (path))
+                Directory.CreateDirectory (path);
         }
 
         public static void InitializeCommands () {
@@ -263,9 +301,18 @@ namespace DiscordCthulhu {
             return false;
         }
 
+        public static User FindUserByName (Server server, string username) {
+            foreach (User user in server.Users) {
+                if (user.Nickname == username)
+                    return user;
+            }
+            return null;
+        }
+
         public void FindPhraseAndRespond ( MessageEventArgs e ) {
             for (int i = 0; i < phrases.Length; i++) {
-                phrases[i].CheckAndRespond (e);
+                if (phrases[i].CheckAndRespond (e))
+                    return;
             }
         }
 

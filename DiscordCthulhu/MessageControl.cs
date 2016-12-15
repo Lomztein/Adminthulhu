@@ -25,7 +25,7 @@ namespace DiscordCthulhu
 
         private async void Timer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            Console.WriteLine("Send message timer: "  + message);
+            ChatLogger.Log("Send message timer: "  + message);
             await this.e.Channel.SendMessage(message);
         }
 
@@ -37,9 +37,6 @@ namespace DiscordCthulhu
 
     class MessageControl
     {
-
-        
-
         public List<MessageTimer> messages = new List<MessageTimer>();
         public static int maxCharacters = 2000;
 
@@ -111,7 +108,7 @@ namespace DiscordCthulhu
         }
 
         private async void AsyncSend (Channel e, string message) {
-            Console.WriteLine ("Sending a message.");
+            ChatLogger.Log ("Sending a message.");
             if (message.Length > 0) {
                 await e.SendMessage (message);
             }

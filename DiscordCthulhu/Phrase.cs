@@ -14,7 +14,7 @@ namespace DiscordCthulhu {
         public string response;
         public string channel;
 
-        public void CheckAndRespond (MessageEventArgs e) {
+        public bool CheckAndRespond (MessageEventArgs e) {
 
             string message = e.Message.Text;
             string sender = e.User.Name;

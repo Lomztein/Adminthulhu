@@ -22,6 +22,7 @@ namespace DiscordCthulhu {
         public string failText = "Color not found, these are the supported colors:\n";
 
         public CSetColor () {
+            Initialize ();
             command = "setcolor";
             name = "Set Color";
             argHelp = "<colorname>";

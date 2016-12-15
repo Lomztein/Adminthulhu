@@ -63,6 +63,8 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -76,8 +78,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AliasCollection.cs" />
+    <Compile Include="AutomatedVoiceChannels.cs" />
     <Compile Include="BotConfig.cs" />
     <Compile Include="CEmbolden.cs" />
+    <Compile Include="ChatLogger.cs" />
     <Compile Include="Commands\CAddCommand.cs" />
     <Compile Include="Commands\CCreateTTTGame.cs" />
     <Compile Include="Commands\CChangeScore.cs" />
@@ -99,6 +103,7 @@
     <Compile Include="Commands\CRemoveAlias.cs" />
     <Compile Include="Commands\CRemoveGame.cs" />
     <Compile Include="Commands\CRollTheDice.cs" />
+    <Compile Include="Commands\CSendFeedback.cs" />
     <Compile Include="Commands\CSetAlias.cs" />
     <Compile Include="Commands\CSetColor.cs" />
     <Compile Include="Commands\CShowAlias.cs" />
@@ -106,6 +111,12 @@
     <Compile Include="Commands\CShowGroups.cs" />
     <Compile Include="Commands\CShowScore.cs" />
     <Compile Include="Commands\CMakeTTTMove.cs" />
+    <Compile Include="ControlPanel.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ControlPanel.Designer.cs">
+      <DependentUpon>ControlPanel.cs</DependentUpon>
+    </Compile>
     <Compile Include="intVector2.cs" />
     <Compile Include="MessageControl.cs" />
     <Compile Include="Phrase.cs" />
@@ -119,6 +130,11 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ControlPanel.resx">
+      <DependentUpon>ControlPanel.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
