@@ -13,7 +13,7 @@ namespace DiscordCthulhu {
         public static Command[] commands = new Command[] {
             new CCommandList (), new CRollTheDice (), new CCallVoiceChannel (), new CSetColor (),
             new CFlipCoin (), new CRandomGame (), new CQuote (), new CSetCommand (), new CEmbolden (),
-            new CEndTheWorld (), CConstructPlaylist ()
+            new CEndTheWorld ()
         };
 
         public static Phrase[] phrases = new Phrase[] {
@@ -22,7 +22,8 @@ namespace DiscordCthulhu {
             new Phrase ("", "Peacekeeper", 2, "*It's always crits..*"),
             new Phrase ("wow!", "Gizmo Gizmo", 100, "INSANE AIR TIME!"),
             new Phrase ("Thx fam", "", 100, "No props. We Gucci."),
-            new Phrase ("Fuck yis", "Lomztein", 100, "Fuck no.")
+            new Phrase ("Fuck yis", "Lomztein", 100, "Fuck no."),
+            new Phrase ("https://www.youtube.com/", "Twistbonk", 100, "Wow, this is some interesting conte- <:residentsleeper:257933177631277056>", "links")
         };
 
         public static string dataPath = "";
