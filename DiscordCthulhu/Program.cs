@@ -215,13 +215,21 @@ namespace DiscordCthulhu {
             return GetChannelByName (server, mainTextChannelName);
         }
 
+        [Obsolete]
         public static Channel GetChannelByName (Server server, string name) {
             if (server == null)
                 return null;
 
-            Channel[] channels = server.FindChannels (name).ToArray ();
-            if (channels.Length != 0)
-                return channels[0];
+            Channel channel = SearchChannel (server, name);
+            return channel;
+        }
+
+        public static Channel SearchChannel (Server server, string name) {
+            IEnumerable<Channel> channels = server.AllChannels;
+            foreach (Channel channel in channels) {
+                if (channel.Name.Length >= name.Length && channel.Name.Substring (0, name.Length) == name)
+                    return channel;
+            }
 
             return null;
         }

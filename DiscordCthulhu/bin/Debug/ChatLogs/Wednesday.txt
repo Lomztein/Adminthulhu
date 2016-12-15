@@ -564,3 +564,115 @@ Monster Mash/suggestions/Tonald Drump says: sjiiit
 Monster Mash/suggestions/Lomztein says: Så må jeg nok sende en mail
 Monster Mash/suggestions/khave says: Jeg bliver hjemme i morgen tror jeg
 Monster Mash/suggestions/khave says: mhm.
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+Monster Mash/links/Lomztein says: Koden der blev skrevet i går, der håndterere automatisk tilføjet voice channels, læs kun hvis i er villige til at læse noget rodet ass kode: https://github.com/Lomztein/DiscordCthulhuBot/blob/master/DiscordCthulhu/AutomatedVoiceChannels.cs
+Monster Mash/main/Lomztein says: TFW botloggen fra en test session er stort set udelukket bootinformation.
+Monster Mash/main/Lomztein says: <:Steffen:230342218609721345>
+Monster Mash/readitonreddit/Nyx says: hvorfor er hun radiaktiv? :V
+Monster Mash/readitonreddit/Lomztein says: Fuck if I know, det giver bare mening.
+Sending a message.
+Monster Mash/dump/Cthulhu says: **WHAT THE FUCK IS A SONIC?**
+Monster Mash/readitonreddit/Tonald Drump says: Hendes backstory tror jeg er grunden til de siger det
+Monster Mash/readitonreddit/Lomztein says: Maybe
+Monster Mash/readitonreddit/Lomztein says: Eller måske burde man ikke analysere fissejokes så meget :b
+Monster Mash/links/Tonald Drump says: @Lomztein Universe
+Monster Mash/links/Lomztein says: Hvorfor tror du jeg sådan elsker jul?
+Monster Mash/links/Tonald Drump says: Because i know you
+Monster Mash/readitonreddit/Creeperskull says: jo!
+Monster Mash/readitonreddit/Creeperskull says: det er vigtigt!
+Monster Mash/links/Lomztein says: Fuck no: https://www.youtube.com/watch?v=G1Qmctlj2Vk
+Monster Mash/links/Twistbonk says: i dig it
+Monster Mash/links/The Human Toast says: https://www.youtube.com/watch?v=F-eMt3SrfFU
+Monster Mash/links/Twistbonk says: 
+Monster Mash/links/The Human Toast says: http://i.imgur.com/eEw8LYu.png
+Monster Mash/links/The Human Toast says: Har tænkt mig at se den anyway. Måske er Tommy en side character som skal få publikum til at holde med ham med en tragisk historie og alt det fis, og så dør han
+Monster Mash/links/Twistbonk says: yea den ser god ud
+Monster Mash/music/Lomztein says: @Twistbonk Har først set videoen nu, og er sgu nød til at sluge mine egne ord igen. Det var klart det meste brutale jeg nogensinde har hørt. *Det var som de tusinde flammer af helvede blev tændt af de blandede high-pitch screams fra Immortal, og low-pitched growls fra Ba'lakor, kørende over en perfekt fusion af Shylmagaghnor og Burzums musikstil.
+
+**TL;DR** I came.
+Monster Mash/music/Twistbonk says: Thank you
+Monster Mash/videoediting/khave says: bgm til næste video?
+Monster Mash/videoediting/khave says: https://www.youtube.com/watch?v=4feUSTS21-8
+Monster Mash/videoediting/Lomztein says: I vote yes.
+Monster Mash/videoediting/Lomztein says: I love it.
+Monster Mash/main/Tonald Drump says: Mei beviser i snowdown at hun er djævlen, hun siger i mens man tager en snebold op, im putting a rock in this one
+Monster Mash/readitonreddit/Tonald Drump says: nice xD
+Monster Mash/videoediting/Nyx says: I agree, although lad os lige linke den rigtige source, som af en eller anden grund ikke har fået nær så mange seer https://youtu.be/0cOAUSVBGX8
+Monster Mash/videoediting/Nyx says: I blame the the thumbnail
+Monster Mash/videoediting/Nyx says: extended version, again by the actual author :b https://youtu.be/IdzI3tmvrCc
+Monster Mash/videoediting/Tonald Drump says: That moment you write to nyx on battlenet and he ignores you and post vids here on mm instead 😦
+Monster Mash/videoediting/Nyx says: er mobile :b
+Monster Mash/videoediting/Nyx says: kommer snart
+Monster Mash/videoediting/The Human Toast says: Dat thumbnail tho
+Monster Mash/videoediting/Nyx says: ikr
+Monster Mash/readitonreddit/Nyx says: :(
+Monster Mash/videoediting/The Human Toast says: https://www.youtube.com/watch?v=WLgg2g0229g&feature=youtu.be best version
+Monster Mash/videoediting/Nyx says: haha xD
+Monster Mash/dump/Twistbonk says: !join
+Monster Mash/dump/GodZilla says: Joining **Beautiful Blue - World of Warcraft**
+Monster Mash/dump/Twistbonk says: !gm song Last Christmas
+Monster Mash/dump/GodZilla says: Currently playing: **Wham! - Last Christmas**
+Monster Mash/dump/GodZilla says: No more songs left in queue
+Monster Mash/dump/Twistbonk says: !gm song Let love be love
+Monster Mash/dump/GodZilla says: Currently playing: **Nat King Cole - Let There Be Love**
+Monster Mash/dump/Twistbonk says: !leave
+Monster Mash/dump/GodZilla says: leaving **Beautiful Blue - World of Warcraft**
+Monster Mash/dump/GodZilla says: No more songs left in queue
+Monster Mash/links/The Human Toast says: http://i.imgur.com/0i3UVKv.png
+Monster Mash/links/The Human Toast says: I am now a winston main
+Monster Mash/links/Twistbonk says: Yea it's Cool
+Monster Mash/links/The Human Toast says: http://i.imgur.com/bke1G4z.jpg
+Monster Mash/links/The Human Toast says: <:FeelsAmazingMan:234091431696924672>
+Monster Mash/links/Creeperskull says: I am now a thorbj.... nah that will never happen... The hatred runs too deep
+Monster Mash/links/The Human Toast says: I WANT THAT TORBJØRN SKIN!!!
+Monster Mash/main/The Human Toast says: @Nyx DeMayo @Gizmo Gizmo I can has join?
+Monster Mash/main/Nyx says: yis
+Monster Mash/dump/Space Jesus says: !setcolor black
+Sending a message.
+Monster Mash/dump/Cthulhu says: Color not found, these are the supported colors:
+GREEN, RED, YELLOW, BLUE, ORANGE, PINK, PURPLE, WHITE, DARKBLUE, TURQUOISE, MAGENTA, GOLD,
+Monster Mash/dump/Space Jesus says: !setcolor blakc
+Sending a message.
+Monster Mash/dump/Cthulhu says: Color not found, these are the supported colors:
+GREEN, RED, YELLOW, BLUE, ORANGE, PINK, PURPLE, WHITE, DARKBLUE, TURQUOISE, MAGENTA, GOLD,
+Monster Mash/dump/Space Jesus says: !setcolor black
+Sending a message.
+Monster Mash/dump/Cthulhu says: Color not found, these are the supported colors:
+GREEN, RED, YELLOW, BLUE, ORANGE, PINK, PURPLE, WHITE, DARKBLUE, TURQUOISE, MAGENTA, GOLD,
+Monster Mash/dump/Space Jesus says: Fuck I'm good
+Monster Mash/dump/Space Jesus says: !setcolor red
+Sending a message.
+Monster Mash/dump/Cthulhu says: Your color has now been set.
+Private message: The Human Toast says: Gør lige det her for at vise hans funktion til en ven der også laver en bot i C#
+Private message: The Human Toast says: !embolden hans is a fag
+Sending a message.
+Private message: Cthulhu says: :regional_indicator_h: :regional_indicator_a: :regional_indicator_n: :regional_indicator_s:   :regional_indicator_i: :regional_indicator_s:   :regional_indicator_a:   :regional_indicator_f: :regional_indicator_a: :regional_indicator_g:
+Monster Mash/dump/Lomztein says: !flipcoin
+Sending a message.
+Monster Mash/dump/Cthulhu says: Your coin flipped to show heads.
+Monster Mash/main/Lomztein says: !flipcoin
+Sending a message.
+Monster Mash/main/Cthulhu says: Your coin flipped to show heads.
+Monster Mash/main/Lomztein says: !flipcoin
+Sending a message.
+Monster Mash/main/Cthulhu says: Your coin flipped to show heads.
+Monster Mash/main/Lomztein says: The bot has spoken
+Monster Mash/main/Twistbonk says: !flipcoin
+Sending a message.
+Monster Mash/main/Cthulhu says: Your coin flipped to show heads.
+Monster Mash/main/Twistbonk says: !flipcoin
+Sending a message.
+Monster Mash/main/Cthulhu says: Your coin flipped to show tails.
+Monster Mash/main/Twistbonk says: !flipcoin
+Sending a message.
+Monster Mash/main/Cthulhu says: Your coin flipped to show tails.
+Monster Mash/main/Twistbonk says: !flipcoin
+Sending a message.
+Monster Mash/main/Cthulhu says: Your coin flipped to show heads.

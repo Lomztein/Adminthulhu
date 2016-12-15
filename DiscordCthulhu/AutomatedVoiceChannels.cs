@@ -157,6 +157,9 @@ namespace DiscordCthulhu {
             for (int i = 0; i < count; i++) {
                 VoiceChannel cur = channels.ElementAt (i);
 
+                if (cur.GetChannel () != null)
+                    Console.WriteLine (cur.name + " - " + cur.GetChannel().Users.Count ());
+
                 if (cur.GetChannel () != null) {
                     if (cur.GetChannel ().Users.Count () == 0) {
                         if (cur.position < addChannelsIndex) {
