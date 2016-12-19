@@ -13,7 +13,7 @@ namespace DiscordCthulhu {
             "GREEN", "RED", "YELLOW", "BLUE",
             "ORANGE", "PINK", "PURPLE", "WHITE",
             "DARKBLUE", "TURQUOISE", "MAGENTA",
-            "GOLD"
+            "GOLD", "BLACK", "DARKRED", "BROWN"
         };
 
         public bool removePrevious = true;
@@ -40,22 +40,26 @@ namespace DiscordCthulhu {
                     if (roles.Length == 1) {
                         Role role = roles[0];
 
-                        if (!role.Permissions.ManageRoles) {
+                        try {
+                            if (!role.Permissions.ManageRoles) {
 
-                            if (removePrevious) {
-                                List<Role> rList = new List<Role> ();
-                                for (int i = 0; i < allowed.Length; i++) {
-                                    rList.Add (e.Server.FindRoles (allowed[i], true).ToList ()[0]);
+                                if (removePrevious) {
+                                    List<Role> rList = new List<Role> ();
+                                    for (int i = 0; i < allowed.Length; i++) {
+                                        rList.Add (e.Server.FindRoles (allowed[i], true).ToList ()[0]);
+                                    }
+
+                                    int removeTries = 5;
+                                    for (int i = 0; i < removeTries; i++) {
+                                        await e.User.RemoveRoles (rList.ToArray ());
+                                    }
                                 }
 
-                                int removeTries = 5;
-                                for (int i = 0; i < removeTries; i++) {
-                                    await e.User.RemoveRoles (rList.ToArray ());
-                                }
+                                await e.User.AddRoles (role);
+                                Program.messageControl.SendMessage (e, succesText);
                             }
-
-                            await e.User.AddRoles (role);
-                            Program.messageControl.SendMessage(e, succesText);
+                        } catch (Exception exception) {
+                            Program.messageControl.SendMessage (e, "Error: " + exception.Message);
                         }
                     }
                 } else {

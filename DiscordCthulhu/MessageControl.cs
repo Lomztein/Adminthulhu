@@ -113,5 +113,15 @@ namespace DiscordCthulhu
                 await e.SendMessage (message);
             }
         }
+
+        public async void SendImage (Channel e, string message, string imagePath) {
+            ChatLogger.Log ("Sending an image!");
+            await e.SendMessage (message);
+            try {
+                await e.SendFile (imagePath);
+            } catch (Discord.Net.HttpException exception) {
+                await e.SendMessage ("Access denied! - " + exception.Message);
+            }
+        }
     }
 }

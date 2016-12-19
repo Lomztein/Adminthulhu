@@ -27,7 +27,8 @@ namespace DiscordCthulhu {
             "Zealot Zaffre",
             "Violent Violet",
             "Creepy Cardinal",
-            "Salty Salmon"
+            "Salty Salmon",
+            "Wanking White"
         };
 
         public static Queue<string> nameQueue = new Queue<string>();
@@ -103,21 +104,48 @@ namespace DiscordCthulhu {
             }
         }
 
+        private static bool hasChecked = false;
+        public static void AddMissingChannels (Server server) {
+            if (hasChecked)
+                return;
+
+            foreach (Channel channel in server.VoiceChannels) {
+                if (!allVoiceChannels.ContainsKey (channel.Id)) {
+                    allVoiceChannels.Add (channel.Id, new VoiceChannel (channel.Id, GetChannelDefaultName (channel.Name), allVoiceChannels.Count, channel));
+                }
+            }
+
+            hasChecked = true;
+        }
+
+        public static string GetChannelDefaultName (string channelName) {
+            int spaceAmount = 0;
+            for (int i = 0; i < channelName.Length; i++) {
+                if (channelName[i] == ' ')
+                    spaceAmount++;
+
+                if (spaceAmount == 2)
+                    return channelName.Substring (0, i);
+            }
+
+            return null;
+        }
+
         public static void RemoveLeftoverChannels (Server server) {
+            List<Channel> toDelete = new List<Channel> ();
+
             foreach (Channel channel in server.VoiceChannels) {
                 if (!defaultChannels.ContainsKey (channel.Id) && channel.Users.Count () == 0) {
-                    if (allVoiceChannels.ContainsKey (channel.Id)) {
-                        VoiceChannel vc = allVoiceChannels[channel.Id];
-                        if (vc.position < fullChannels)
-                            continue;
-
-                        nameQueue.Enqueue (vc.name);
-                    }
-
-                    temporaryChannels.Remove (channel);
-                    allVoiceChannels.Remove (channel.Id);
-                    channel.Delete ();
+                    toDelete.Add (channel);
                 }
+            }
+
+            for (int i = IsDefaultFull () ? 1 : 0; i < toDelete.Count; i++) {
+                Channel channel = toDelete[i];
+
+                temporaryChannels.Remove (channel);
+                allVoiceChannels.Remove (channel.Id);
+                channel.Delete ();
             }
 
             ResetVoiceChannelPositions (server);
@@ -148,6 +176,16 @@ namespace DiscordCthulhu {
             return result;
         }
 
+        public static bool IsDefaultFull () {
+            IEnumerable<VoiceChannel> defaultChannelsList = defaultChannels.Values.ToList ();
+            foreach (VoiceChannel channel in defaultChannelsList) {
+                if (channel.GetChannel ().Users.Count () == 0)
+                    return false;
+            }
+
+            return true;
+        }
+
         public static void CheckFullAndAddIf (Server server) {
             IEnumerable<VoiceChannel> channels = allVoiceChannels.Values.ToList ();
             int count = channels.Count ();
@@ -156,9 +194,6 @@ namespace DiscordCthulhu {
             bool allBelowFull = true;
             for (int i = 0; i < count; i++) {
                 VoiceChannel cur = channels.ElementAt (i);
-
-                if (cur.GetChannel () != null)
-                    Console.WriteLine (cur.name + " - " + cur.GetChannel().Users.Count ());
 
                 if (cur.GetChannel () != null) {
                     if (cur.GetChannel ().Users.Count () == 0) {
@@ -201,7 +236,7 @@ namespace DiscordCthulhu {
                 if (channel != null)
                     return channel;
 
-                channel = Program.GetChannelByName (Program.GetServer (), name);
+                channel = Program.SearchChannel (Program.GetServer (), name);
                 return channel;
             }
         }

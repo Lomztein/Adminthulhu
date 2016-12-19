@@ -1,0 +1,407 @@
+Monster Mash/dump/Twistbonk says: have en god weekend @Lomztein Universe
+Monster Mash/dump/Lomztein says: Wait hang on
+Monster Mash/dump/Lomztein says: Prøv at mention mig om 20 sekunder
+Monster Mash/dump/Twistbonk says: @Lomztein Universe
+Monster Mash/dump/GodZilla says: Currently playing: **Rise Against - Historia Calamitatum**
+Monster Mash/dump/Twistbonk says: !setcolor Blue
+Sending a message.
+Monster Mash/dump/Cthulhu says: Error: The server responded with error 403 (Forbidden)
+Monster Mash/dump/Twistbonk says: !setcolor DarkBlue
+Sending a message.
+Monster Mash/dump/Cthulhu says: Error: The server responded with error 403 (Forbidden)
+Monster Mash/dump/Lomztein says: Thx fam
+Sending a message.
+Monster Mash/dump/Cthulhu says: No props. We Gucci.
+Monster Mash/dump/Twistbonk says: !setcolor DarkBlue
+Sending a message.
+Monster Mash/dump/Cthulhu says: Error: The server responded with error 403 (Forbidden)
+Monster Mash/dump/Twistbonk says: @Lomztein Universe
+Monster Mash/dump/Twistbonk says: !setcolor DarkBlue
+Sending a message.
+Monster Mash/dump/Cthulhu says: Error: The server responded with error 403 (Forbidden)
+Monster Mash/dump/The Human Toast says: @Lomztein Universe http://i.imgur.com/xghV7I7.png ```if(message.author.id == "95463258181345280) {
+    message.author.channel.sendMessage("Fuck you");
+}```
+Monster Mash/main/Lomztein says: Right, men hvorfor sætter det en pris på gigabyte, i stedet for bare et månedligt beløb som ved hjemmenetværk.
+Monster Mash/main/Lomztein says: Also, @The Human Toast prøv lige !setcolor herinde
+Monster Mash/main/The Human Toast says: !setcolor gold
+Sending a message.
+Monster Mash/main/Cthulhu says: Error: The server responded with error 403 (Forbidden)
+Monster Mash/main/The Human Toast says: 😢
+Monster Mash/main/Lomztein says: Alright, skulle bare være sikker
+Monster Mash/dump/Lomztein says: Dam son
+Monster Mash/dump/GodZilla says: No more songs left in queue
+Monster Mash/dump/Lomztein says: Godt jeg har et helt framework til at tage sig af den slags stads :b
+Monster Mash/dump/The Human Toast says: !leave
+Monster Mash/dump/GodZilla says: leaving **Godlike Gold - The Division**
+Monster Mash/dump/The Human Toast says: Hvordan ville det da se ud i c#?
+Monster Mash/dump/Lomztein says: Har mit Phrase system der tager sig af det
+Monster Mash/dump/Lomztein says: Så man kan bare gøre sådan her
+Monster Mash/dump/Lomztein says: `new Phrase ("(╯°□°）╯︵ ┻━┻", 100, "Please respect tables. ┬─┬ノ(ಠ_ಠノ)")`
+Monster Mash/dump/Lomztein says: Resultat:
+Monster Mash/dump/Lomztein says: (╯°□°）╯︵ ┻━┻
+Sending a message.
+Monster Mash/dump/Cthulhu says: Please respect tables. ┬─┬ノ(ಠ_ಠノ)
+Monster Mash/dump/The Human Toast says: Nåå, på den made
+Monster Mash/dump/Lomztein says: Tallet er chancen for svar
+Monster Mash/dump/The Human Toast says: For mig er det bare ``if(message.content == "foo"){message.channel.sendMessage("bar")}``
+Monster Mash/dump/Lomztein says: Det bliver et problem at expand
+Monster Mash/dump/Lomztein says: Jeg har et framework til commands der er meget nemt, hvis lidt kedeligt at expand
+Monster Mash/dump/The Human Toast says: Ah
+Monster Mash/dump/Lomztein says: Essentielt set har jeg en Command class, som alle commands arver fra. I Program.cs har jeg så en Command[] liste der bliver gennemgået når der kommer en besked ind, og caller så ExecuteCommand på den command hvis den passer til.
+Monster Mash/dump/The Human Toast says: Yea, i get it
+Monster Mash/dump/The Human Toast says: meesa understand
+Monster Mash/dump/Twistbonk says: !setcolor DarkBlue
+Sending a message.
+Monster Mash/dump/Cthulhu says: Your color has now been set.
+Monster Mash/dump/Twistbonk says: @Lomztein Universe Thanks
+Monster Mash/dump/Lomztein says: Wait what
+Monster Mash/dump/Lomztein says: Jeg har ikke gjordt noget
+Monster Mash/dump/The Human Toast says: LOL
+Monster Mash/dump/Twistbonk says: you fixet it
+Monster Mash/dump/Lomztein says: @The Human Toast Prøv du lige
+Monster Mash/dump/The Human Toast says: !setcolor gold
+Sending a message.
+Monster Mash/dump/Cthulhu says: Your color has now been set.
+Monster Mash/dump/Lomztein says: The fuck
+Monster Mash/dump/The Human Toast says: Gimme gimme
+Monster Mash/dump/Lomztein says: What
+Monster Mash/dump/Twistbonk says: nice job @Lomztein Universe
+Monster Mash/dump/Lomztein says: `Lomztein.brain.isBroken = true;`
+Monster Mash/dump/Twistbonk says: hahaha
+Monster Mash/dump/Lomztein says: Best guess er et serverproblem, somehow
+Monster Mash/dump/Lomztein says: Gonna go cry myself to sleep
+Monster Mash/matinf/Lomztein says: @DoritoFighter231 @Tonald Drump Har i tænkt jer at være der inde indtil jorden går under?
+Sending a message.
+Monster Mash/dump/Cthulhu says: In order disallow *any* secrets except for admin secrets, I'd like to tell you that **[ERROR - NULL USER REFERENCE]** just deleted a message on **dump**.
+Monster Mash/matinf/Tonald Drump says: yes
+Sending a message.
+Monster Mash/dump/Cthulhu says: In order disallow *any* secrets except for admin secrets, I'd like to tell you that **[ERROR - NULL USER REFERENCE]** just deleted a message on **dump**.
+Monster Mash/matinf/Creeperskull says: havde faktisk glemt at jeg var der xD
+Monster Mash/matinf/Tonald Drump says: xD
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+Monster Mash/dump/Lomztein says: Well aint that strange
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+Monster Mash/dump/Lomztein says: !setcolor blak
+Sending a message.
+Monster Mash/dump/Cthulhu says: Color not found, these are the supported colors:
+GREEN, RED, YELLOW, BLUE, ORANGE, PINK, PURPLE, WHITE, DARKBLUE, TURQUOISE, MAGENTA, GOLD, BLACK,
+Monster Mash/dump/Lomztein says: !setcolor black
+Sending a message.
+Monster Mash/dump/Cthulhu says: Your color has now been set.
+Monster Mash/dump/Lomztein says: Yay
+Monster Mash/dump/Lomztein says: God farve
+Monster Mash/dump/Lomztein says: @Twistbonk Glad nu?
+Monster Mash/dump/Lomztein says: !setcolor green
+Sending a message.
+Monster Mash/dump/Cthulhu says: Your color has now been set.
+Monster Mash/dump/The Human Toast says: *plays ftb*
+Monster Mash/dump/Twistbonk says: i don't have my black color @Lomztein Universe
+Monster Mash/dump/Twistbonk says: i WANT MY BLACK COLOR
+Monster Mash/dump/Lomztein says: Brug setcolor, udde
+Monster Mash/dump/Twistbonk says: !setcolor Black
+Sending a message.
+Monster Mash/dump/Cthulhu says: Your color has now been set.
+Monster Mash/dump/Twistbonk says: not black
+Monster Mash/dump/Twistbonk says: it's grey
+Monster Mash/dump/The Human Toast says: Jo, hvis white er usynlig på light theme, så er black usynlig på dark theme
+Monster Mash/dump/The Human Toast says: tis' only fair
+Monster Mash/dump/Twistbonk says: but this is not black
+Monster Mash/dump/Twistbonk says: Thank you
+Monster Mash/dump/Twistbonk says: !setcolor DarkBlue
+Sending a message.
+Monster Mash/dump/Cthulhu says: Your color has now been set.
+Monster Mash/dump/Twistbonk says: !setcolor Black
+Sending a message.
+Monster Mash/dump/Cthulhu says: Your color has now been set.
+Monster Mash/dump/Lomztein says: Det er det sorteste du kan få
+Monster Mash/dump/The Human Toast says: Nu vi er ved at ændre farver
+Monster Mash/dump/Twistbonk says: jeg er glad
+Monster Mash/dump/The Human Toast says: Gør white en *lille* smule lysere
+Monster Mash/dump/The Human Toast says: plez
+Monster Mash/dump/The Human Toast says: mørkere*
+Sending a message.
+Monster Mash/dump/Cthulhu says: In order disallow *any* secrets except for admin secrets, I'd like to tell you that **[ERROR - NULL USER REFERENCE]** just deleted a message on **dump**.
+Monster Mash/dump/Lomztein says: Så er den jo bare default :b
+Monster Mash/dump/The Human Toast says: #ecf0f1 use this
+Monster Mash/dump/Lomztein says: Prøver
+Monster Mash/dump/Lomztein says: Wair
+Monster Mash/dump/Lomztein says: Waot
+Monster Mash/dump/Lomztein says: Fuck det er svært at skrive i den her positiono
+Monster Mash/dump/Lomztein says: Hvordan er det, Toast?
+Monster Mash/dump/The Human Toast says: !setcolor white
+Sending a message.
+Monster Mash/dump/The Human Toast says: test
+Monster Mash/dump/Cthulhu says: Your color has now been set.
+Monster Mash/dump/The Human Toast says: test
+Monster Mash/dump/The Human Toast says: Tis better
+Monster Mash/dump/The Human Toast says: !setcolor gold
+Sending a message.
+Monster Mash/dump/Cthulhu says: Your color has now been set.
+Monster Mash/matinf/Fred says: @khave Hvordan går det?
+Monster Mash/links/Exelion AI says: wut... o_0 https://www.youtube.com/watch?v=hRm-BSukPds
+Monster Mash/matinf/khave says: Jeg går i seng nu
+Monster Mash/matinf/khave says: Har 12.000 anslag
+Monster Mash/matinf/Fred says: Noice, nu mangler du bare 12000 mere. God nat 😄
+Monster Mash/matinf/khave says: Ja mere eller mindre ;)
+Godnat. Ses i morgen ikke også? ;D
+Monster Mash/dump/Nyx says: alright @Lomztein Universe am here
+Monster Mash/dump/Nyx says: wat up?
+Monster Mash/matinf/Fred says: yup det gør vi
+Monster Mash/dump/Lomztein says: Det fiksede sig selv :b
+Monster Mash/dump/Lomztein says: !setcolor var fucky, men den virker hvist nok nu
+Sending a message.
+Monster Mash/dump/Cthulhu says: Color not found, these are the supported colors:
+GREEN, RED, YELLOW, BLUE, ORANGE, PINK, PURPLE, WHITE, DARKBLUE, TURQUOISE, MAGENTA, GOLD, BLACK,
+Monster Mash/dump/Nyx says: oh okay
+Monster Mash/dump/Nyx says: sorry for rude reply, vi var *lige* blevet færdig med en kamp hvor vi havde de værste teammates to date T.T
+Monster Mash/dump/Lomztein says: Is okay
+Monster Mash/dump/Lomztein says: Var også salty as fuck selv fordi jeg ikke forstod hvad der var galt :b
+Monster Mash/dump/Nyx says: ah I see
+Monster Mash/dump/Nyx says: det lyder som en dårlig mix :P
+Monster Mash/dump/Lomztein says: Du kan lige prøve at bruge setcolor nu
+Monster Mash/dump/Lomztein says: If *you dare*
+Monster Mash/dump/Lomztein says: Unrelated, nu har vi jo praktisk talt en endeløs mængde af voice channels, så hvorfor stadig bruge private channels?
+Monster Mash/dump/The Human Toast says: I did this just to spite you!
+Monster Mash/dump/Lomztein says: How dare you
+Monster Mash/dump/Twistbonk says: 🤗
+Monster Mash/dump/Lomztein says: TFW den ikke lavede en ny channel
+Monster Mash/dump/Lomztein says: Sadface
+Monster Mash/dump/Lomztein says: *Oh boy, here I go fixing code again!*
+Monster Mash/dump/Lomztein says: Tror den fucker up fordi Nick stadig sidder derinde
+Monster Mash/dump/Lomztein says: Gotta fix this
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+Monster Mash/dump/Lomztein says: Så virker det tilsyneladende ordentligt
+Monster Mash/dump/Lomztein says: !leave
+Monster Mash/dump/GodZilla says: leaving **Beautiful Blue - Microsoft Visual Studio**
+Monster Mash/dump/Lomztein says: Hvis en channel fra en tidligere bot session stadig er der, bliver den nu tilføjet til listen af channels automatisk
+Monster Mash/dump/Lomztein says: Ikke optimalt, og en computerforsker ville nok myrde mig på grund af mængden unødvendige checks den laver
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+Monster Mash/dump/Lomztein says: Fuck
+Monster Mash/main/Lomztein says: *Nu* kører den
+Monster Mash/main/Jack0013 says: !setcolor orange
+Sending a message.
+Monster Mash/main/Cthulhu says: Your color has now been set.
+Monster Mash/main/Lomztein says: :D
+Monster Mash/main/Jack0013 says: sådan
+Monster Mash/main/Nyx says: @Gizmo Gizmo hvorfor ikke 4¼/10? ;)
+Monster Mash/main/Nyx says: men tak for input
+Monster Mash/main/Nyx says: det minder mig om LOST
+Monster Mash/main/Nyx says: har du set LOST @Gizmo Gizmo ? :D
+Monster Mash/main/Gizmo Gizmo says: nop
+Monster Mash/main/Lomztein says: Nu mangler vi bare farver på @cyberseal @martilk @Sebastianzb @SonnaheR #topKEK @TheMadcannon @TKOP og @WonderWookie 
+Og det er kun dem der eer *online* lige nu.
+
+Dam guys, vi skal væree farverige!
+Monster Mash/main/Nyx says: hvad hvis man gerne vil være grå og kedelig? :b
+Monster Mash/main/Tonald Drump says: Synes kun vi skal være hvide xD
+Monster Mash/main/Nyx says: DAMN SON, hvis du kan lide *Under the Dome* skal du se LOST! :D
+Monster Mash/main/Lomztein says: *Ingen* vil være grå og kedelig.
+
+*Ingeeeeeeen...*
+Monster Mash/main/Nyx says: Kan *meget meget kraftigt* anbefale det :D
+Monster Mash/main/Nyx says: @Tonald Drump kan støtte mig med at det er awesome :3
+Monster Mash/main/Sebastianzb says: Hvilken farve har the cool kids these days?
+Monster Mash/main/Nyx says: @Sebastianzb din ynglings ;)
+Monster Mash/main/Lomztein says: Fuck if I know, men du kan bruge "!setcolor ?" til at se hvilke der er
+Monster Mash/main/Tonald Drump says: White
+Monster Mash/main/Sebastianzb says: pff har ikke en favorit tbh xD
+Monster Mash/main/Lomztein says: !setcolor ?
+Sending a message.
+Sending a message.
+Monster Mash/main/Cthulhu says: "!setcolor" <colorname>" - Sets your color to <colorname>, if available.
+Monster Mash/main/Cthulhu says: Color not found, these are the supported colors:
+GREEN, RED, YELLOW, BLUE, ORANGE, PINK, PURPLE, WHITE, DARKBLUE, TURQUOISE, MAGENTA, GOLD, BLACK,
+Monster Mash/main/Nyx says: har vi ikke også darkred nu!
+Monster Mash/main/Tonald Drump says: @OVERWATCH anyq up for a quick game, har vidst ikke fået alle lootboxes fra arcade
+Monster Mash/main/Lomztein says: Har vi darkkred?
+Monster Mash/main/Nyx says: idk
+Monster Mash/main/Lomztein says: Hang on :b
+Monster Mash/main/Lomztein says: Den er på rollelisten
+Monster Mash/main/Nyx says: Synes Søren kommanderede om det og du skrev du addede det?
+Monster Mash/main/Sebastianzb says: Tror jeg vælger dark blue i guess
+Monster Mash/main/Lomztein says: *kommanderede*
+Monster Mash/main/Lomztein says: I see what you did
+Monster Mash/main/WonderWookie says: hvad med en Wookie brun 😛
+Monster Mash/main/Nyx says: @WonderWookie Steffen? xD
+Monster Mash/main/Lomztein says: Hang on, skal lige åbne Visual Studio for at tilføje nye farver
+Monster Mash/main/Lomztein says: @Sebastianzb Du kan bruge "!setcolor darkblue" så
+Monster Mash/main/Sebastianzb says: !setcolor darkblue
+Sending a message.
+Monster Mash/main/Cthulhu says: Your color has now been set.
+Monster Mash/main/Sebastianzb says: ah nice
+Monster Mash/main/WonderWookie says: @Nyx DeMayo nope ole
+Monster Mash/main/Lomztein says: Steffen er @Chrismas Tree Llama :b
+Monster Mash/main/Lomztein says: Han er altid en Llama
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+Monster Mash/dump/Lomztein says: Fucktest
+Monster Mash/main/Lomztein says: @WonderWookie Brun er mulig nu, du kan få den med "!setcolor brown"
+Sending a message.
+Monster Mash/main/Cthulhu says: **Tonald Drump** has changed their name to **Agesome1**
+Monster Mash/main/Agesome1 says: Facking snitch
+Monster Mash/main/Lomztein says: >:D
+Monster Mash/main/Lomztein says: Gotta have that police state
+Monster Mash/main/Agesome1 says: Snitches get stitches
+Monster Mash/main/Nyx says: @Lomztein Sorry er mobile :b
+
+*GOD* I can't wait till they add the "on mobile" status T.T
+Monster Mash/main/Lomztein says: Is kewl, har gjordt det :b
+Monster Mash/main/Lomztein says: *You've failed me for the last time..*
+Monster Mash/main/Lomztein says: *Does absolutely nothing because nothing of value was lost.*
+Monster Mash/main/Agesome1 says: Who lost you?
+Monster Mash/main/Nyx says: probably it
+Monster Mash/main/Butcher says: !setcolor gold
+Sending a message.
+Monster Mash/main/Cthulhu says: Your color has now been set.
+Monster Mash/main/Butcher says: test
+Monster Mash/main/Nyx says: 👍
+Monster Mash/main/Butcher says: :b
+Monster Mash/main/Butcher says: !setcolor turquoise
+Sending a message.
+Monster Mash/main/Cthulhu says: Your color has now been set.
+Monster Mash/main/Butcher says: test
+Monster Mash/main/Nyx says: The Division var en crashfest for mig btw, så fik aldrig spillet det ;b
+Monster Mash/main/Butcher says: xD
+Monster Mash/main/Lomztein says: Dam son, du er den første med den farve
+Monster Mash/main/Butcher says: OMG SNOWFLAKE
+Monster Mash/main/Butcher says: beholder den her
+Monster Mash/main/Butcher says: rank1 turqouse
+Monster Mash/main/Butcher says: turqoise
+Monster Mash/main/Butcher says: feelsgoodman
+Monster Mash/main/Nyx says: top 500 turquose
+Monster Mash/main/Butcher says: snowflake aka christmas confirmed
+Monster Mash/main/WonderWookie says: !setcolor brown
+Sending a message.
+Monster Mash/main/Cthulhu says: Your color has now been set.
+Monster Mash/main/WonderWookie says: awesome !
+Monster Mash/main/Exelion AI says: looks very dark red to me
+Monster Mash/main/Lomztein says: Brun er praktisk talt bare meget mørkerød :b
+Monster Mash/main/Exelion AI says: brun er bare alle farver i en
+Monster Mash/main/Exelion AI says: hvis vi snaker maling
+Monster Mash/main/Exelion AI says: ikke lys
+Monster Mash/main/Butcher says: Turqoise is bae
+Monster Mash/main/Butcher says: http://static1.puretrend.com/articles/4/71/89/4/@/808838-meme-emma-watson-fait-un-flop-avec-ce-580x0-1.jpg
+Monster Mash/main/Lomztein says: Kommer an på om det er additiv eller subtraktiv farver, eller hvad andre typer der nu er :b
+Monster Mash/matinf/Fred says: @Lomztein Universe I forget to ask
+Monster Mash/main/Lomztein says: Additiv, som er brugt i  computerer er alle farver hvid
+Monster Mash/matinf/Fred says: Skriv en email
+Monster Mash/main/Butcher says: brun er det der kommer ud af numsen
+Monster Mash/matinf/Lomztein says: **NOT FORGIVEN**
+Monster Mash/main/Butcher says: (^:
+Monster Mash/matinf/Fred says: sorry...
+Monster Mash/matinf/Lomztein says: *Forgives*
+Monster Mash/matinf/Lomztein says: Skriver en mail når jeg kommer hjem :b
+Monster Mash/main/Lomztein says: True dat.
+Monster Mash/main/Lomztein says: WonderWookie is hereby shit-tier, litteraly :b
+Monster Mash/main/Butcher says: shots
+Monster Mash/main/Lomztein says: Der er en farverolle som ikke er på listen endnu, den som bots har.
+Monster Mash/main/Butcher says: det er okay
+Monster Mash/main/Butcher says: jeg har min egen
+Monster Mash/main/Lomztein says: Emma Watson ser ud som om hun er blev slået i fjæset, kort efter hun så en person kaste op
+Monster Mash/main/Butcher says: skal du hate min wizard?
+Monster Mash/main/Lomztein says: Yes.
+Monster Mash/main/Lomztein says: >:D
+Monster Mash/main/Lomztein says: @WonderWookie Har prøvet at ændre din farve fra lortebrun til lidt mere wookie farve. Hvordan ser det ud?
+Monster Mash/main/Butcher says: https://media.tenor.co/images/bee60da7a7ced83c0825c26c79143ca0/raw
+Monster Mash/main/Butcher says: nu ligner det bare en bytur (^:
+Monster Mash/main/Butcher says: if you know hat i mean (^: (^: (^:
+Monster Mash/main/Lomztein says: (^:^)
+Private message: Lomztein says: I'm gonna use you now, because fuck you
+Private message: Lomztein says: !embolden titties
+Sending a message.
+Private message: Cthulhu says: :regional_indicator_t: :regional_indicator_i: :regional_indicator_t: :regional_indicator_t: :regional_indicator_i: :regional_indicator_e: :regional_indicator_s:
+Private message: Lomztein says: !fizzfyr13
+Sending a message.
+Private message: Cthulhu says: Command not available on this server or channel.
+Private message: Lomztein says: d-(^_^)-b

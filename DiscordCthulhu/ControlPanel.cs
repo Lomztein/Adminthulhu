@@ -42,7 +42,7 @@ namespace DiscordCthulhu {
             if (messageText.Text.Length != 0) {
 
                 foreach (Server server in Program.discordClient.Servers) {
-                    Channel channel = Program.GetChannelByName (server, channelName.Text);
+                    Channel channel = Program.SearchChannel (server, channelName.Text);
                     if (channel != null) {
                     //foreach (Channel channel in server.TextChannels) {
                         Program.messageControl.SendMessage (channel, messageText.Text);

@@ -89,6 +89,7 @@
     <Compile Include="Commands\CDeleteGroup.cs" />
     <Compile Include="Commands\CEndTheWorld.cs" />
     <Compile Include="Commands\CEndTTTGame.cs" />
+    <Compile Include="Commands\CFizzfyr.cs" />
     <Compile Include="Commands\CFlipCoin.cs" />
     <Compile Include="Commands\CAddGame.cs" />
     <Compile Include="Commands\CCallVoiceChannel.cs" />

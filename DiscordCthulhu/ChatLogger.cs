@@ -24,7 +24,7 @@ namespace DiscordCthulhu {
 
         public static void DebugLog (string message) {
             Log (message);
-            Program.messageControl.SendMessage (Program.GetChannelByName (Program.GetServer (), Program.dumpTextChannelName), "**DEBUG: **" + message);
+            Program.messageControl.SendMessage (Program.SearchChannel (Program.GetServer (), Program.dumpTextChannelName), "**DEBUG: **" + message);
         }
     }
 }

@@ -21,7 +21,7 @@ namespace DiscordCthulhu {
             string locChannel = e.Channel.Name;
 
             if (message.Length < inputText.Length)
-                return;
+                return false;
 
             if (inputText == "" || message.Substring (0, inputText.Length).ToUpper () == inputText.ToUpper ()) {
                 if (user == "" || sender.ToUpper() == user.ToUpper ()) {
@@ -31,10 +31,12 @@ namespace DiscordCthulhu {
                         if (random.Next (100) < chance || chance == 100) {
 
                             Program.messageControl.SendMessage (e, response);
+                            return true;
                         }
                     }
                 }
             }
+            return false;
         }
 
         public Phrase (string input, string us, int ch, string re, string cha) {

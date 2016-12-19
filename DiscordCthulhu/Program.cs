@@ -13,7 +13,7 @@ namespace DiscordCthulhu {
         public static Command[] commands = new Command[] {
             new CCommandList (), new CRollTheDice (), new CCallVoiceChannel (), new CSetColor (),
             new CFlipCoin (), new CRandomGame (), new CQuote (), new CSetCommand (), new CEmbolden (),
-            new CEndTheWorld (), new CChangeScore (), new CShowScore ()
+            new CEndTheWorld (), new CChangeScore (), new CShowScore (), new CFizzfyr (), new CSwiggity ()
         };
 
         public static Phrase[] phrases = new Phrase[] {
@@ -26,9 +26,10 @@ namespace DiscordCthulhu {
             new Phrase ("<:Serviet:255721870828109824> Privet Comrades!", "Creeperskull", 100, "Privet, federal leader!"),
             new Phrase ("<:Serviet:255721870828109824> Privet Comrades!", "", 100, "Privet!"),
             new Phrase ("Who is best gem?", "Nyx", 100, "*Obviously* <:Lapis:230346614064021505> ..."),
-            new Phrase ("Who is best gem?", "", 100, "Obviously <:PeriWow:230381627669348353>")
-            new Phrase ("Fuck yis", "Lomztein", 100, "Fuck no."),
-            new Phrase ("https://www.youtube.com/", "Twistbonk", 100, "Wow, this is some interesting conte- <:residentsleeper:257933177631277056>", "links")
+            new Phrase ("Who is best gem?", "", 100, "Obviously <:PeriWow:230381627669348353>"),
+            new Phrase ("https://www.reddit.com/r/overwatch", "Gizmo Gizmo", 100, "Wow, this is some very interesting conte- <:residentsleeper:257933177631277056> Zzz", "links"),
+            new Phrase ("", "khave", 2, "¯\\_(ツ)_/¯"),
+            new Phrase ("(╯°□°）╯︵ ┻━┻", 100, "Please respect tables. ┬─┬ノ(ಠ_ಠノ)")
         };
 
         public static string dataPath = "";
@@ -38,6 +39,7 @@ namespace DiscordCthulhu {
         public static MessageControl messageControl = null;
         public static string commandSettingsDirectory = "Command Settings/";
         public static string chatlogDirectory = "ChatLogs/";
+        public static string resourceDirectory = "Resources/";
         public static string gitHubIgnoreType = ".botproperty";
 
         static void Main ( string[] args ) => new Program ().Start (args);
@@ -138,6 +140,8 @@ namespace DiscordCthulhu {
             };
 
             discordClient.UserUpdated += ( s, e ) => {
+                // Maybe, just maybe put these into a single function.
+                AutomatedVoiceChannels.AddMissingChannels (e.Server);
                 AutomatedVoiceChannels.UpdateVoiceChannel (e.Before.VoiceChannel);
                 AutomatedVoiceChannels.UpdateVoiceChannel (e.After.VoiceChannel);
                 AutomatedVoiceChannels.CheckFullAndAddIf (e.Server);
@@ -175,7 +179,7 @@ namespace DiscordCthulhu {
             };
 
             discordClient.MessageDeleted += ( s, e ) => {
-                Channel channel = GetChannelByName (e.Server, dumpTextChannelName);
+                Channel channel = SearchChannel (e.Server, dumpTextChannelName);
                 if (channel == null)
                     return;
 
@@ -196,6 +200,8 @@ namespace DiscordCthulhu {
         }
 
         public string GetUserName (User user) {
+            if (user != null)
+                return "[ERROR - NULL USER REFERENCE]";
             if (user.Nickname == null)
                 return user.Name;
             return user.Nickname;
@@ -214,7 +220,7 @@ namespace DiscordCthulhu {
         }
 
         public static Channel GetMainChannel (Server server) {
-            return GetChannelByName (server, mainTextChannelName);
+            return SearchChannel (server, mainTextChannelName);
         }
 
         [Obsolete]
