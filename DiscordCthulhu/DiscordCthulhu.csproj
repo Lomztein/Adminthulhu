@@ -112,6 +112,7 @@
     <Compile Include="Commands\CShowGroups.cs" />
     <Compile Include="Commands\CShowScore.cs" />
     <Compile Include="Commands\CMakeTTTMove.cs" />
+    <Compile Include="Commands\CVoiceCommands.cs" />
     <Compile Include="ControlPanel.cs">
       <SubType>Form</SubType>
     </Compile>

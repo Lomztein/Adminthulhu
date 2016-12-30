@@ -676,3 +676,1021 @@ Monster Mash/main/Cthulhu says: Your coin flipped to show tails.
 Monster Mash/main/Twistbonk says: !flipcoin
 Sending a message.
 Monster Mash/main/Cthulhu says: Your coin flipped to show heads.
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+Monster Mash/main/Nyx says: @Creeperskull kender det alt for godt, glemmer tit når jeg putter drikkevarer og slik i vores drinks køleskab. it's great
+Monster Mash/main/Creeperskull says: Its like early christmas!
+Monster Mash/matinf/Lomztein says: Vi er nu tilbage til at være MatInf igen. We are no longer Eternal Sufferers.
+Monster Mash/matinf/Fred says: Some day we will return to being Eternal Sufferers...
+Monster Mash/matinf/Lomztein says: **BUT THAT IS NOT TODAY. WE ARE FREE FOR NOW.**
+Monster Mash/matinf/Fred says: For like 5-6 months
+Monster Mash/matinf/Lomztein says: Der er ikke meget i at have ferie hvis man frygter hvad der kommer efter :b
+Monster Mash/matinf/Fred says: Oh i'm just saying we are going to return, but i'll enjoy the holiday 😄
+Monster Mash/main/Nyx says: :D
+Monster Mash/main/Nyx says: *It's like christmas morning*
+Monster Mash/matinf/Creeperskull says: Så lykkedes det alle at aflevere?
+Monster Mash/matinf/Fred says: Tror jeg
+Monster Mash/matinf/khave says: Fik Rune lavet noget?
+Monster Mash/links/Lomztein says: Weeaboo gangster rap. This is uncomftably good.
+Monster Mash/matinf/Lomztein says: Yos, snakkede med ham til sidst, og han siger han fik færdiggjordt og afleveret
+Monster Mash/matinf/Creeperskull says: neat
+Monster Mash/matinf/khave says: cool
+Monster Mash/links/The Human Toast says: I uuuuh
+Monster Mash/links/The Human Toast says: I'm not entirely sure how to feel about that vid
+Monster Mash/links/The Human Toast says: https://www.google.dk/url?sa=t&rct=j&q=&esrc=s&source=web&cd=3&cad=rja&uact=8&ved=0ahUKEwjfgdC4xoXRAhUEMVAKHVHXCRkQtwIILjAC&url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3D4yZERI42eRU&usg=AFQjCNExeU7E4gE2KkhXDizz4hmLQDTmmw&sig2=w1J0B_7c6GN-7FVaovlOKQ
+Monster Mash/links/The Human Toast says: Them likes tho
+Monster Mash/links/Twistbonk (Division Agent) says: The like dislike http://puu.sh/sWBHm/acb6dbc255.png
+Monster Mash/matinf/Lomztein says: <:kay:256372868286251008>
+Monster Mash/main/Agesome1 says: @OVERWATCH skulle vi prøve de 6 symmetri stacks?
+Monster Mash/dump/Lomztein says: !lock
+Sending a message.
+Monster Mash/dump/Cthulhu says: Succesfully locked voice channel **Radical Red**.
+Monster Mash/main/Agesome1 says: !lock
+Sending a message.
+Monster Mash/main/Cthulhu says: Succesfully locked voice channel **Radical Red**.
+Monster Mash/main/Agesome1 says: !unlock
+Sending a message.
+Monster Mash/main/Cthulhu says: Failed to unlock voice channel **Radical Red** - It is not unlocked.
+Monster Mash/main/Agesome1 says: !lock
+Sending a message.
+Monster Mash/main/Cthulhu says: Succesfully locked voice channel **Radical Red**.
+Monster Mash/dump/Agesome1 says: !lock
+Sending a message.
+Monster Mash/dump/Cthulhu says: Succesfully locked voice channel **Radical Red**.
+Monster Mash/main/Lomztein says: Det ser ikke ud til nogen vil det. Jeg tager så tiden og fikser Adminthulhu lidt
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+Monster Mash/dump/Lomztein says: !lock
+Sending a message.
+Monster Mash/dump/Cthulhu says: Succesfully locked voice channel **Radical Red**.
+Monster Mash/dump/Lomztein says: wat
+Monster Mash/dump/Lomztein says: !unlock
+Sending a message.
+Monster Mash/dump/Cthulhu says: Succesfully unlocked voice channel **Radical Red**.
+Monster Mash/dump/Lomztein says: !join
+Monster Mash/dump/GodZilla says: Joining **Radical Red**
+Monster Mash/dump/Lomztein says: !lock
+Sending a message.
+Monster Mash/dump/Cthulhu says: Succesfully locked voice channel **Radical Red**.
+Monster Mash/dump/Lomztein says: !unlock
+Sending a message.
+Monster Mash/dump/Cthulhu says: Succesfully unlocked voice channel **Radical Red**.
+Monster Mash/dump/Lomztein says: !lock
+Sending a message.
+Monster Mash/dump/Cthulhu says: Succesfully locked voice channel **Radical Red**.
+Monster Mash/dump/Lomztein says: !kick Funkthulhu
+Sending a message.
+Private message: Cthulhu says: You don't have access to the locked voice channel **Radical Red** and have been moved to an empty one.
+Monster Mash/dump/Cthulhu says: User **Funkthulhu** succesfully kicked.
+Private message: Cthulhu says: Sorry man, but you have been kicked from voice channel **Radical Red**.
+Monster Mash/dump/Lomztein says: Heheheh..
+Monster Mash/dump/Lomztein says: !leave
+Monster Mash/dump/GodZilla says: leaving **🔒 Radical Red**
+Private message: Cthulhu says: You don't have access to the locked voice channel **Radical Red** and have been moved to an empty one.
+Private message: Cthulhu says: You don't have access to the locked voice channel **Radical Red** and have been moved to an empty one.
+Monster Mash/dump/Lomztein says: !invite Christmas
+Sending a message.
+Monster Mash/dump/Cthulhu says: Failed to invite - User **Christmas** couldn't be found on this server.
+Private message: Cthulhu says: You don't have access to the locked voice channel **Radical Red** and have been moved to an empty one.
+Monster Mash/dump/Lomztein says: !invite christmas
+Sending a message.
+Monster Mash/dump/Cthulhu says: Failed to invite - User **christmas** couldn't be found on this server.
+Monster Mash/dump/Lomztein says: Fuck
+Monster Mash/dump/Lomztein says: Hang on
+Monster Mash/dump/Lomztein says: !invite Chrismas
+Sending a message.
+Private message: Cthulhu says: **Lomztein Universe** has invited you to join the locked channel **Radical Red** on **Monster Mash**.
+Monster Mash/dump/Cthulhu says: User **Chrismas Tree Llama** succesfully invited.
+Private message: Cthulhu says: You don't have access to the locked voice channel **Radical Red** and have been moved to an empty one.
+Private message: Cthulhu says: You don't have access to the locked voice channel **Radical Red** and have been moved to an empty one.
+Private message: Cthulhu says: You don't have access to the locked voice channel **Radical Red** and have been moved to an empty one.
+Private message: Cthulhu says: You don't have access to the locked voice channel **Radical Red** and have been moved to an empty one.
+Private message: Cthulhu says: You don't have access to the locked voice channel **Radical Red** and have been moved to an empty one.
+Private message: Cthulhu says: You don't have access to the locked voice channel **Radical Red** and have been moved to an empty one.
+Private message: Cthulhu says: You don't have access to the locked voice channel **Radical Red** and have been moved to an empty one.
+Private message: Cthulhu says: You don't have access to the locked voice channel **Radical Red** and have been moved to an empty one.
+Monster Mash/dump/Lomztein says: !invite twist
+Sending a message.
+Private message: Cthulhu says: **Lomztein Universe** has invited you to join the locked channel **Radical Red** on **Monster Mash**.
+Monster Mash/dump/Cthulhu says: User **Twistbonk (Division Agent)** succesfully invited.
+Monster Mash/dump/Twistbonk (Division Agent) says: http://puu.sh/sWCkH/9dae5364f4.png
+Monster Mash/dump/Lomztein says: !kick Lomztein
+Sending a message.
+Private message: Cthulhu says: You don't have access to the locked voice channel **Radical Red** and have been moved to an empty one.
+Monster Mash/dump/Cthulhu says: User **Lomztein Universe** succesfully kicked.
+Private message: Cthulhu says: Sorry man, but you have been kicked from voice channel **Radical Red**.
+Private message: Cthulhu says: Since the previous locker left, you are now the new locker of voice channel **Radical Red**.
+Monster Mash/dump/Lomztein says: Heheh
+Private message: Cthulhu says: You don't have access to the locked voice channel **Radical Red** and have been moved to an empty one.
+Monster Mash/dump/Twistbonk (Division Agent) says: !unlock
+Sending a message.
+Monster Mash/dump/Cthulhu says: Succesfully unlocked voice channel **Radical Red**.
+Monster Mash/dump/Twistbonk (Division Agent) says: !lock
+Sending a message.
+Monster Mash/dump/Cthulhu says: Succesfully locked voice channel **Radical Red**.
+Monster Mash/dump/Twistbonk (Division Agent) says: !kick lomztein
+Sending a message.
+Private message: Cthulhu says: You don't have access to the locked voice channel **Radical Red** and have been moved to an empty one.
+Monster Mash/dump/Cthulhu says: User **Lomztein Universe** succesfully kicked.
+Private message: Cthulhu says: Sorry man, but you have been kicked from voice channel **Radical Red**.
+Private message: Cthulhu says: You don't have access to the locked voice channel **Radical Red** and have been moved to an empty one.
+Private message: Chrismas Tree Llama says: #GoFuckYourself
+Monster Mash/dump/Lomztein says: !unlock
+Sending a message.
+Monster Mash/dump/Cthulhu says: Only the person who locked this channel can do that, which is @Twistbonk (Division Agent)
+Monster Mash/dump/Twistbonk (Division Agent) says: !unlock
+Sending a message.
+Monster Mash/dump/Cthulhu says: Succesfully unlocked voice channel **Radical Red**.
+Monster Mash/dump/Lomztein says: !lock
+Sending a message.
+Monster Mash/dump/Cthulhu says: Succesfully locked voice channel **Beautiful Blue**.
+Monster Mash/dump/Lomztein says: !invite christ
+Sending a message.
+Monster Mash/dump/Cthulhu says: Failed to invite - User **christ** couldn't be found on this server.
+Private message: Cthulhu says: You don't have access to the locked channel **Beautiful Blue** and have been muted, since no free channels currently exists. Contact an admin to be unmuted.
+Monster Mash/dump/Lomztein says: !invite chris
+Sending a message.
+Private message: Cthulhu says: **Lomztein Universe** has invited you to join the locked channel **Beautiful Blue** on **Monster Mash**.
+Monster Mash/dump/Cthulhu says: User **Chrismas Tree Llama** succesfully invited.
+Monster Mash/dump/Twistbonk (Division Agent) says: !join
+Monster Mash/dump/GodZilla says: Joining **Radical Red - Overwatch**
+Monster Mash/dump/Twistbonk (Division Agent) says: !gm song Overwatch
+Monster Mash/dump/GodZilla says: Currently playing: **Christophe Beck - Overwatch**
+Monster Mash/dump/GodZilla says: No more songs left in queue
+Private message: Cthulhu says: You don't have access to the locked voice channel **Beautiful Blue** and have been moved to an empty one.
+Private message: Cthulhu says: You don't have access to the locked voice channel **Beautiful Blue** and have been moved to an empty one.
+Private message: Cthulhu says: You don't have access to the locked voice channel **Beautiful Blue** and have been moved to an empty one.
+Private message: Cthulhu says: You don't have access to the locked voice channel **Beautiful Blue** and have been moved to an empty one.
+Private message: Cthulhu says: You don't have access to the locked voice channel **Beautiful Blue** and have been moved to an empty one.
+Private message: Cthulhu says: You don't have access to the locked voice channel **Beautiful Blue** and have been moved to an empty one.
+Private message: Cthulhu says: You don't have access to the locked voice channel **Beautiful Blue** and have been moved to an empty one.
+Private message: Cthulhu says: You don't have access to the locked voice channel **Beautiful Blue** and have been moved to an empty one.
+Private message: Cthulhu says: You don't have access to the locked voice channel **Beautiful Blue** and have been moved to an empty one.
+Private message: Cthulhu says: You don't have access to the locked voice channel **Beautiful Blue** and have been moved to an empty one.
+Private message: Cthulhu says: You don't have access to the locked voice channel **Beautiful Blue** and have been moved to an empty one.
+Private message: Cthulhu says: You don't have access to the locked voice channel **Beautiful Blue** and have been moved to an empty one.
+Private message: Cthulhu says: You don't have access to the locked voice channel **Beautiful Blue** and have been moved to an empty one.
+Private message: Cthulhu says: You don't have access to the locked voice channel **Beautiful Blue** and have been moved to an empty one.
+Private message: Cthulhu says: You don't have access to the locked voice channel **Beautiful Blue** and have been moved to an empty one.
+Private message: Cthulhu says: You don't have access to the locked voice channel **Beautiful Blue** and have been moved to an empty one.
+Private message: Cthulhu says: You don't have access to the locked voice channel **Beautiful Blue** and have been moved to an empty one.
+Private message: Cthulhu says: You don't have access to the locked voice channel **Beautiful Blue** and have been moved to an empty one.
+Private message: Cthulhu says: You don't have access to the locked voice channel **Beautiful Blue** and have been moved to an empty one.
+Private message: Cthulhu says: You don't have access to the locked voice channel **Beautiful Blue** and have been moved to an empty one.
+Private message: Cthulhu says: You don't have access to the locked voice channel **Beautiful Blue** and have been moved to an empty one.
+Private message: Cthulhu says: You don't have access to the locked voice channel **Beautiful Blue** and have been moved to an empty one.
+Monster Mash/dump/Twistbonk (Division Agent) says: !join
+Monster Mash/dump/GodZilla says: Joining **Violent Violet - Europa Universalis 4**
+Monster Mash/dump/Twistbonk (Division Agent) says: !join
+Private message: Cthulhu says: You don't have access to the locked voice channel **Beautiful Blue** and have been moved to an empty one.
+Monster Mash/dump/GodZilla says: Joining **🔒 Beautiful Blue - Command and Conquer 3 - Kane's Wrath**
+Private message: Cthulhu says: You don't have access to the locked voice channel **Beautiful Blue** and have been moved to an empty one.
+Private message: Cthulhu says: You don't have access to the locked voice channel **Beautiful Blue** and have been moved to an empty one.
+Private message: Cthulhu says: You don't have access to the locked voice channel **Beautiful Blue** and have been moved to an empty one.
+Private message: Cthulhu says: You don't have access to the locked voice channel **Beautiful Blue** and have been moved to an empty one.
+Private message: Cthulhu says: You don't have access to the locked voice channel **Beautiful Blue** and have been moved to an empty one.
+Private message: Cthulhu says: You don't have access to the locked voice channel **Beautiful Blue** and have been moved to an empty one.
+Private message: Cthulhu says: You don't have access to the locked voice channel **Beautiful Blue** and have been moved to an empty one.
+Private message: Cthulhu says: You don't have access to the locked voice channel **Beautiful Blue** and have been moved to an empty one.
+Private message: Cthulhu says: You don't have access to the locked voice channel **Beautiful Blue** and have been moved to an empty one.
+Private message: Cthulhu says: You don't have access to the locked voice channel **Beautiful Blue** and have been moved to an empty one.
+Private message: Cthulhu says: You don't have access to the locked voice channel **Beautiful Blue** and have been moved to an empty one.
+Private message: Cthulhu says: You don't have access to the locked voice channel **Beautiful Blue** and have been moved to an empty one.
+Private message: Cthulhu says: You don't have access to the locked voice channel **Beautiful Blue** and have been moved to an empty one.
+Private message: Cthulhu says: You don't have access to the locked voice channel **Beautiful Blue** and have been moved to an empty one.
+Private message: Cthulhu says: You don't have access to the locked voice channel **Beautiful Blue** and have been moved to an empty one.
+Private message: Cthulhu says: You don't have access to the locked voice channel **Beautiful Blue** and have been moved to an empty one.
+Monster Mash/dump/Lomztein says: !unlock
+Sending a message.
+Monster Mash/dump/Cthulhu says: Only the person who locked this channel can do that, which is @Lomztein
+Private message: Cthulhu says: You don't have access to the locked voice channel **Beautiful Blue** and have been moved to an empty one.
+Monster Mash/dump/Lomztein says: You fucking what
+Private message: Cthulhu says: You don't have access to the locked voice channel **Beautiful Blue** and have been moved to an empty one.
+Monster Mash/dump/The Human Toast says: brb, posting to /r/shittyrobots
+Monster Mash/main/khave says: Vil i aften eller sådan noge
+Monster Mash/main/khave says: spiller comp nu
+Monster Mash/dump/Twistbonk (Division Agent) says: !lock
+Sending a message.
+Private message: Cthulhu says: Since the previous locker left, you are now the new locker of voice channel **Radical Red**.
+Monster Mash/dump/Cthulhu says: Succesfully locked voice channel **Radical Red**.
+Monster Mash/main/Nyx says: kan måske i aften, skal i bio nu 😂
+Monster Mash/dump/Twistbonk (Division Agent) says: !kick lomztein
+Sending a message.
+Monster Mash/dump/Cthulhu says: Only the person who locked this channel can do that, which is @Twistbonk (Division Agent)
+Private message: Cthulhu says: You don't have access to the locked voice channel **Beautiful Blue** and have been moved to an empty one.
+Monster Mash/main/khave says: Hvad skal du se?
+Sending a message.
+Monster Mash/main/Cthulhu says: ¯\_(ツ)_/¯
+Private message: Cthulhu says: You don't have access to the locked voice channel **Radical Red** and have been moved to an empty one.
+Monster Mash/main/khave says: Haha
+Sending a message.
+Monster Mash/main/Cthulhu says: ¯\_(ツ)_/¯
+Monster Mash/dump/The Human Toast says: ...fuck
+Monster Mash/main/khave says: Hahahaha
+Monster Mash/main/khave says: Hvad er chancerne for det!
+Private message: Cthulhu says: You don't have access to the locked voice channel **Radical Red** and have been moved to an empty one.
+Monster Mash/main/khave says: 2 gange i træk xD
+Monster Mash/links/Nyx says: hvad sker der lige for den trailer der?
+Monster Mash/links/Nyx says: er det meningen ham den depressed skal være sjov?
+Monster Mash/dump/The Human Toast says: !leave
+Monster Mash/dump/GodZilla says: **Error:** You're not in the same voice channel as I am.
+Monster Mash/dump/The Human Toast says: You fucking what
+Monster Mash/dump/The Human Toast says: !join
+Monster Mash/dump/GodZilla says: Joining **Violent Violet - Europa Universalis 4**
+Monster Mash/dump/The Human Toast says: !leave
+Monster Mash/dump/GodZilla says: leaving **Violent Violet - Europa Universalis 4**
+Monster Mash/main/Nyx says: @khave du burde spille Hearthstone med det held xD
+Monster Mash/main/khave says: haha jeg stinker til hearthstone
+Monster Mash/main/Nyx says: Jeg skal se den der Star Wars film
+Monster Mash/main/Nyx says: Rogue One, right?
+Monster Mash/links/The Human Toast says: Den skal forestille denne her emoji 😒
+Monster Mash/links/The Human Toast says: Hvilket lidt er min reaktion til den film
+Monster Mash/main/The Human Toast says: YEEEEEE BOIIII
+Monster Mash/dump/The Human Toast says: !join
+Monster Mash/dump/GodZilla says: Joining **Beautiful Blue - Europa Universalis 4**
+Monster Mash/links/Nyx says: xD
+Monster Mash/main/The Human Toast says: !gm song john williams main title
+Monster Mash/main/GodZilla says: Currently playing: **John Williams - Main Title and The Attack on the Jakku Village**
+Monster Mash/dump/The Human Toast says: !skip
+Monster Mash/dump/GodZilla says: Skipping song.
+Monster Mash/main/GodZilla says: No more songs left in queue
+Monster Mash/readitonreddit/The Human Toast says: http://i.imgur.com/jLhGABr.png
+Private message: Cthulhu says: You don't have access to the locked voice channel **Radical Red** and have been moved to an empty one.
+Monster Mash/main/Exelion AI says: hvad gør lock?
+Monster Mash/main/The Human Toast says: Prøv og join radical red
+Monster Mash/main/The Human Toast says: Og se
+Private message: Cthulhu says: You don't have access to the locked voice channel **Radical Red** and have been moved to an empty one.
+Monster Mash/main/Twistbonk (Division Agent) says: @Exelion AI Ser du aldrig announcements
+Monster Mash/main/Butcher says: !lock
+Sending a message.
+Monster Mash/main/Cthulhu says: Succesfully locked voice channel **Violent Violet**.
+Monster Mash/dump/Twistbonk (Division Agent) says: !join
+Monster Mash/dump/GodZilla says: Joining **Violent Violet**
+Monster Mash/dump/Twistbonk (Division Agent) says: !gm song hello
+Monster Mash/dump/GodZilla says: Currently playing: **Adele - Hello**
+Monster Mash/dump/GodZilla says: No more songs left in queue
+Monster Mash/dump/Twistbonk (Division Agent) says: !gm song hello
+Monster Mash/dump/GodZilla says: Currently playing: **Adele - Hello**
+Monster Mash/dump/Twistbonk (Division Agent) says: !skip
+Monster Mash/dump/GodZilla says: Skipping song.
+Monster Mash/dump/GodZilla says: No more songs left in queue
+Private message: Chrismas Tree Llama says: @Cthulhu GO FUCK YOURSELF
+Private message: Cthulhu says: You don't have access to the locked voice channel **Radical Red** and have been moved to an empty one.
+Private message: Cthulhu says: You don't have access to the locked voice channel **Radical Red** and have been moved to an empty one.
+Monster Mash/dump/Twistbonk (Division Agent) says: !lock
+Sending a message.
+Monster Mash/dump/Cthulhu says: Succesfully locked voice channel **Violent Violet**.
+Monster Mash/dump/Twistbonk (Division Agent) says: !kick Lomztein
+Sending a message.
+Monster Mash/dump/Cthulhu says: Error - The channel isn't locked.
+Monster Mash/dump/Twistbonk (Division Agent) says: !lock
+Sending a message.
+Monster Mash/dump/Cthulhu says: Succesfully locked voice channel **Violent Violet**.
+Monster Mash/dump/Twistbonk (Division Agent) says: !unlock
+Sending a message.
+Monster Mash/dump/Cthulhu says: Failed to unlock voice channel **Violent Violet** - It is not unlocked.
+Private message: Cthulhu says: You don't have access to the locked voice channel **Radical Red** and have been moved to an empty one.
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+Monster Mash/dump/Lomztein says: I seem to have run out of channels.
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+Monster Mash/dump/Lomztein says: !lock
+Sending a message.
+Monster Mash/dump/Cthulhu says: Succesfully locked voice channel **Radical Red**.
+Private message: Cthulhu says: You don't have access to the locked voice channel **Radical Red** and have been moved to an empty one.
+Private message: Cthulhu says: You don't have access to the locked voice channel **Radical Red** and have been moved to an empty one.
+Monster Mash/dump/Lomztein says: !invite fuck
+Sending a message.
+Private message: Cthulhu says: **Lomztein Universe** has invited you to join the locked channel **Radical Red** on **Monster Mash**.
+Monster Mash/dump/Cthulhu says: User **Fuck the Gremlings** succesfully invited.
+Private message: Cthulhu says: Since the previous locker left, you are now the new locker of voice channel **Radical Red**.
+Private message: Cthulhu says: Since the previous locker left, you are now the new locker of voice channel **Radical Red**.
+Monster Mash/dump/Lomztein says: Ser ud til at en stor række problemer stammede fra en enkelt funktion.
+Monster Mash/dump/Lomztein says: !callvoice violent; Prøv i lige at låse jeres channel
+Sending a message.
+Monster Mash/dump/Cthulhu says: Lomztein: @Jack0013 @Butcher @Twistbonk (Division Agent) , Prøv i lige at låse jeres channel
+Monster Mash/dump/Lomztein says: Wait shit det her er dump, det hører i sgu nok ikke
+Monster Mash/dump/Twistbonk (Division Agent) says: !lock
+Sending a message.
+Monster Mash/dump/Cthulhu says: Succesfully locked voice channel **Violent Violet**.
+Monster Mash/dump/Lomztein says: Thx
+Private message: Cthulhu says: You don't have access to the locked voice channel **Violent Violet** and have been moved to an empty one.
+Monster Mash/dump/Twistbonk (Division Agent) says: !invite lomztein
+Sending a message.
+Private message: Cthulhu says: **Twistbonk (Division Agent)** has invited you to join the locked channel **Violent Violet** on **Monster Mash**.
+Monster Mash/dump/Cthulhu says: User **Lomztein Universe** succesfully invited.
+Monster Mash/dump/Lomztein says: !kick Lomztein
+Sending a message.
+Monster Mash/dump/Cthulhu says: Only the person who locked this channel can do that, which is @Twistbonk (Division Agent)
+Private message: Cthulhu says: Since the previous locker left, you are now the new locker of voice channel **Violent Violet**.
+Monster Mash/dump/Lomztein says: !kick Lomztein
+Sending a message.
+Private message: Cthulhu says: You don't have access to the locked voice channel **Violent Violet** and have been moved to an empty one.
+Monster Mash/dump/Cthulhu says: User **Lomztein Universe** succesfully kicked.
+Private message: Cthulhu says: Sorry man, but you have been kicked from voice channel **Violent Violet**.
+Private message: Cthulhu says: Since the previous locker left, you are now the new locker of voice channel **Violent Violet**.
+Monster Mash/dump/Lomztein says: Nu burde en af jer have fået ejerskabet
+Monster Mash/dump/Lomztein says: Plz reinvite
+Monster Mash/dump/Jack0013 says: !invite lomztein
+Sending a message.
+Private message: Cthulhu says: **Jack0013** has invited you to join the locked channel **Violent Violet** on **Monster Mash**.
+Monster Mash/dump/Cthulhu says: User **Lomztein Universe** succesfully invited.
+Private message: Cthulhu says: Since the previous locker left, you are now the new locker of voice channel **Violent Violet**.
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+Monster Mash/dump/Lomztein says: !lock
+Sending a message.
+Monster Mash/dump/Cthulhu says: Succesfully locked voice channel **Beautiful Blue**.
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+Full channels: 2, Total count: 4
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 2, Total count: 4
+Full channels: 2, Total count: 3
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 2, Total count: 3
+Full channels: 3, Total count: 4
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 3, Total count: 4
+Full channels: 3, Total count: 4
+Sending a message.
+Full channels: 3, Total count: 3
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 3, Total count: 4
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 3, Total count: 3
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+Full channels: 1, Total count: 4
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 1, Total count: 4
+Full channels: 2, Total count: 3
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 2, Total count: 3
+Full channels: 1, Total count: 4
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 1, Total count: 4
+Full channels: 2, Total count: 3
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 2, Total count: 3
+Full channels: 2, Total count: 4
+Sending a message.
+Full channels: 2, Total count: 3
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 2, Total count: 4
+Full channels: 1, Total count: 4
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 2, Total count: 3
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 1, Total count: 4
+Full channels: 2, Total count: 4
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 2, Total count: 4
+Full channels: 1, Total count: 4
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 1, Total count: 4
+Full channels: 2, Total count: 4
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 2, Total count: 4
+Full channels: 2, Total count: 4
+Sending a message.
+Full channels: 2, Total count: 4
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 2, Total count: 4
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 2, Total count: 4
+Monster Mash/dump/Lomztein says: I see problem.
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+Full channels: 1, Total count: 3
+Sending a message.
+Full channels: 1, Total count: 3
+Sending a message.
+Full channels: 2, Total count: 3
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 1, Total count: 3
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 1, Total count: 3
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 2, Total count: 3
+Full channels: 1, Total count: 4
+Sending a message.
+Full channels: 1, Total count: 3
+Sending a message.
+Full channels: 1, Total count: 3
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 1, Total count: 4
+Full channels: 2, Total count: 3
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 1, Total count: 3
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 1, Total count: 3
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 2, Total count: 3
+Full channels: 1, Total count: 4
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 1, Total count: 4
+Full channels: 2, Total count: 3
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 2, Total count: 3
+Full channels: 2, Total count: 4
+Sending a message.
+Full channels: 2, Total count: 3
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 2, Total count: 4
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 2, Total count: 3
+Full channels: 1, Total count: 4
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 1, Total count: 4
+Full channels: 2, Total count: 4
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 2, Total count: 4
+Full channels: 1, Total count: 4
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 1, Total count: 4
+Full channels: 2, Total count: 4
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 2, Total count: 4
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+Full channels: 1, Total count: 2
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 1, Total count: 2
+Full channels: 2, Total count: 2
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 2, Total count: 2
+Full channels: 1, Total count: 3
+Sending a message.
+Full channels: 1, Total count: 2
+Sending a message.
+Full channels: 1, Total count: 2
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 1, Total count: 3
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 1, Total count: 2
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 1, Total count: 2
+Full channels: 2, Total count: 2
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 2, Total count: 2
+Full channels: 1, Total count: 3
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 1, Total count: 3
+Full channels: 2, Total count: 2
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 2, Total count: 2
+Full channels: 1, Total count: 3
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 1, Total count: 3
+Full channels: 2, Total count: 2
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 2, Total count: 2
+Full channels: 1, Total count: 3
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 1, Total count: 3
+Full channels: 2, Total count: 2
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 2, Total count: 2
+Full channels: 1, Total count: 3
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 1, Total count: 3
+Full channels: 2, Total count: 2
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 2, Total count: 2
+Full channels: 1, Total count: 3
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 1, Total count: 3
+Full channels: 2, Total count: 2
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 2, Total count: 2
+Full channels: 1, Total count: 3
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 1, Total count: 3
+Full channels: 2, Total count: 2
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 2, Total count: 2
+Full channels: 1, Total count: 3
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 1, Total count: 3
+Full channels: 2, Total count: 2
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 2, Total count: 2
+Full channels: 1, Total count: 3
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 1, Total count: 3
+Full channels: 2, Total count: 2
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 2, Total count: 2
+Full channels: 1, Total count: 3
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 1, Total count: 3
+Full channels: 2, Total count: 2
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 2, Total count: 2
+Full channels: 1, Total count: 3
+Sending a message.
+Full channels: 2, Total count: 2
+Sending a message.
+Full channels: 1, Total count: 3
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 1, Total count: 3
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 2, Total count: 2
+Full channels: 2, Total count: 2
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 1, Total count: 3
+Full channels: 1, Total count: 3
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 2, Total count: 2
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 1, Total count: 3
+Full channels: 2, Total count: 2
+Sending a message.
+Full channels: 2, Total count: 3
+Sending a message.
+Full channels: 2, Total count: 2
+Sending a message.
+Full channels: 1, Total count: 3
+Sending a message.
+Full channels: 2, Total count: 3
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 2, Total count: 2
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 2, Total count: 3
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 2, Total count: 2
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 1, Total count: 3
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 2, Total count: 3
+Full channels: 1, Total count: 3
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 1, Total count: 3
+Full channels: 2, Total count: 3
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 2, Total count: 3
+Full channels: 1, Total count: 3
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 1, Total count: 3
+Full channels: 2, Total count: 3
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 2, Total count: 3
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+Full channels: 2, Total count: 2
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 2, Total count: 2
+Full channels: 1, Total count: 3
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 1, Total count: 3
+Full channels: 2, Total count: 2
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 2, Total count: 2
+Full channels: 1, Total count: 3
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 1, Total count: 3
+Full channels: 2, Total count: 2
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 2, Total count: 2
+Full channels: 1, Total count: 3
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 1, Total count: 3
+Full channels: 2, Total count: 2
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 2, Total count: 2
+Full channels: 1, Total count: 3
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 1, Total count: 3
+Full channels: 2, Total count: 2
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 2, Total count: 2
+Full channels: 1, Total count: 3
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 1, Total count: 3
+Full channels: 2, Total count: 2
+Sending a message.
+Full channels: 1, Total count: 3
+Sending a message.
+Full channels: 2, Total count: 2
+Sending a message.
+Full channels: 2, Total count: 2
+Sending a message.
+Full channels: 2, Total count: 2
+Sending a message.
+Full channels: 1, Total count: 4
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 2, Total count: 2
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 1, Total count: 3
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 2, Total count: 2
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 2, Total count: 2
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 2, Total count: 2
+Full channels: 2, Total count: 3
+Sending a message.
+Full channels: 1, Total count: 3
+Sending a message.
+Full channels: 2, Total count: 3
+Sending a message.
+Full channels: 1, Total count: 3
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 1, Total count: 4
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 2, Total count: 3
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 1, Total count: 3
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 2, Total count: 3
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 1, Total count: 3
+Full channels: 2, Total count: 3
+Sending a message.
+Full channels: 1, Total count: 3
+Sending a message.
+Full channels: 2, Total count: 3
+Sending a message.
+Full channels: 1, Total count: 3
+Sending a message.
+Full channels: 2, Total count: 3
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 2, Total count: 3
+Full channels: 1, Total count: 3
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 1, Total count: 3
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 2, Total count: 3
+Full channels: 2, Total count: 3
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 1, Total count: 3
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 2, Total count: 3
+Full channels: 1, Total count: 3
+Sending a message.
+Full channels: 2, Total count: 3
+Sending a message.
+Full channels: 1, Total count: 3
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 1, Total count: 3
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 2, Total count: 3
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 1, Total count: 3
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 2, Total count: 3
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 1, Total count: 3
+Full channels: 2, Total count: 3
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 2, Total count: 3
+Full channels: 2, Total count: 3
+Sending a message.
+Full channels: 2, Total count: 3
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 2, Total count: 3
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 2, Total count: 3
+Full channels: 2, Total count: 3
+Sending a message.
+Full channels: 2, Total count: 3
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 2, Total count: 3
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 2, Total count: 3
+Full channels: 2, Total count: 3
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 2, Total count: 3
+Full channels: 2, Total count: 3
+Sending a message.
+Full channels: 2, Total count: 3
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 2, Total count: 3
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 2, Total count: 3
+Full channels: 2, Total count: 3
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 2, Total count: 3
+Full channels: 2, Total count: 3
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 2, Total count: 3
+Full channels: 2, Total count: 3
+Sending a message.
+Full channels: 2, Total count: 3
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 2, Total count: 3
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 2, Total count: 3
+Full channels: 2, Total count: 3
+Sending a message.
+Full channels: 2, Total count: 3
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 2, Total count: 3
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 2, Total count: 3
+Full channels: 2, Total count: 3
+Sending a message.
+Full channels: 2, Total count: 3
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 2, Total count: 3
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 2, Total count: 3
+Full channels: 2, Total count: 3
+Sending a message.
+Full channels: 2, Total count: 3
+Sending a message.
+Full channels: 1, Total count: 3
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 2, Total count: 3
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 2, Total count: 3
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 1, Total count: 3
+Full channels: 1, Total count: 3
+Sending a message.
+Full channels: 1, Total count: 3
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 1, Total count: 3
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 1, Total count: 3
+Full channels: 2, Total count: 3
+Sending a message.
+Full channels: 2, Total count: 3
+Sending a message.
+Full channels: 2, Total count: 3
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 2, Total count: 3
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 2, Total count: 3
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 2, Total count: 3
+Full channels: 1, Total count: 3
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 1, Total count: 3
+Full channels: 2, Total count: 3
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 2, Total count: 3
+Full channels: 2, Total count: 3
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 2, Total count: 3
+Full channels: 2, Total count: 3
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 2, Total count: 3
+Full channels: 2, Total count: 3
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 2, Total count: 3
+Full channels: 2, Total count: 3
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 2, Total count: 3
+Full channels: 2, Total count: 3
+Sending a message.
+Monster Mash/dump/Cthulhu says: **DEBUG: **Full channels: 2, Total count: 3
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+Monster Mash/dump/Fred says: Overvej at lave en check, ligesom med message
+Monster Mash/dump/Lomztein says: Tænker jeg på, skal bare lige finde ud af nogle ting
+Monster Mash/dump/Lomztein says: Problemet er at den her bug er utrolig svær at reproduce :b
+Monster Mash/dump/Lomztein says: !lock
+Sending a message.
+Monster Mash/dump/Cthulhu says: Succesfully locked voice channel **Beautiful Blue**.
+Monster Mash/dump/Space Jesus says: Oh god
+Monster Mash/dump/Lomztein says: Jeg ser en bug :b
+Monster Mash/dump/Lomztein says: Burde være i stand til at fikse det, ved at ikke lave nye channels hvis den afventer nogle
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+Monster Mash/dump/Lomztein says: !lock
+Sending a message.
+Monster Mash/dump/Cthulhu says: Succesfully locked voice channel **Beautiful Blue**.
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+Monster Mash/dump/Lomztein says: !lock
+Sending a message.
+Monster Mash/dump/Cthulhu says: Succesfully locked voice channel **Beautiful Blue**.
+Monster Mash/dump/Lomztein says: Det burde virke så godt som jeg kan få det til nu, even though det nok ender med at gå i stykker igen.
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+Monster Mash/dump/Lomztein says: Speak of the goddamn devil.
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+Monster Mash/dump/Space Jesus says: !join
+Monster Mash/dump/Space Jesus says: Fuck.
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+Monster Mash/links/Gizmo Cagemort says: https://www.youtube.com/watch?v=cb-_lmQ74qM 🐧 📢  NOOT NOOT!
+Monster Mash/dump/GodZilla says: Currently playing: **Wilco - Cold Slope**
+Monster Mash/dump/GodZilla says: Currently playing: **Wilco - King Of You**
+Monster Mash/dump/GodZilla says: Currently playing: **Wilco - Magnetized**
+Monster Mash/migmig/Lomztein says: Topkek
+Monster Mash/dump/GodZilla says: No more songs left in queue
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+Booted flag set to true.
+Monster Mash/links/Gizmo Cagemort says: yaaaas santa thorbjörn 😄
+Monster Mash/links/khave says: 

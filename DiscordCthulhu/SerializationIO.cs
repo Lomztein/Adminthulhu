@@ -39,6 +39,7 @@ namespace DiscordCthulhu {
             int maxTries = short.MaxValue;
 
             while (true && maxTries > 0) {
+                Console.WriteLine ("LoadTextFile");
                 maxTries--;
                 string loc = reader.ReadLine ();
                 if (loc == null) {

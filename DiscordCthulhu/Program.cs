@@ -13,23 +13,8 @@ namespace DiscordCthulhu {
         public static Command[] commands = new Command[] {
             new CCommandList (), new CRollTheDice (), new CCallVoiceChannel (), new CSetColor (),
             new CFlipCoin (), new CRandomGame (), new CQuote (), new CSetCommand (), new CEmbolden (),
-            new CEndTheWorld (), new CChangeScore (), new CShowScore (), new CFizzfyr (), new CSwiggity ()
-        };
-
-        public static Phrase[] phrases = new Phrase[] {
-            new Phrase ("Neat!", "", 100, "Very!"),
-            new Phrase ("", "Nyx", 1, "*Allegedly...*"),
-            new Phrase ("", "Peacekeeper", 2, "*It's always crits..*"),
-            new Phrase ("wow!", "Gizmo Gizmo", 100, "INSANE AIR TIME!"),
-            new Phrase ("Thx fam", "", 100, "No props. We Gucci."),
-            new Phrase ("Fuck yis", "Lomztein", 100, "Fuck no."),
-            new Phrase ("<:Serviet:255721870828109824> Privet Comrades!", "Creeperskull", 100, "Privet, federal leader!"),
-            new Phrase ("<:Serviet:255721870828109824> Privet Comrades!", "", 100, "Privet!"),
-            new Phrase ("Who is best gem?", "Nyx", 100, "*Obviously* <:Lapis:230346614064021505> ..."),
-            new Phrase ("Who is best gem?", "", 100, "Obviously <:PeriWow:230381627669348353>"),
-            new Phrase ("https://www.reddit.com/r/overwatch", "Gizmo Gizmo", 100, "Wow, this is some very interesting conte- <:residentsleeper:257933177631277056> Zzz", "links"),
-            new Phrase ("", "khave", 2, "¯\\_(ツ)_/¯"),
-            new Phrase ("(╯°□°）╯︵ ┻━┻", 100, "Please respect tables. ┬─┬ノ(ಠ_ಠノ)")
+            new CEndTheWorld (), new CChangeScore (), new CShowScore (), new CFizzfyr (), new CSwiggity (),
+            new CLock (), new CUnlock (), new CInvite (), new CMembers (), new CKick ()
         };
 
         public static string dataPath = "";
@@ -46,11 +31,32 @@ namespace DiscordCthulhu {
 
         public static DiscordClient discordClient;
 
-        // Monster Mash data
+        private const int BOOT_WAIT_TIME = 5;
+        private static DateTime bootedTime = new DateTime ();
+
+        // Server data
         public static string mainTextChannelName = "main";
         public static string dumpTextChannelName = "dump";
         public static string serverName = "Monster Mash";
         public static Server server;
+
+        public static Phrase[] phrases = new Phrase[] {
+            new Phrase ("!", "", 100, "Please don't use bot commands in the main channel, so we avoid spamizzle forshizzle.", mainTextChannelName),
+            new Phrase ("Neat!", "", 100, "Very!"),
+            new Phrase ("", "Nyx", 1, "*Allegedly...*"),
+            new Phrase ("", "Peacekeeper", 2, "*It's always crits..*"),
+            new Phrase ("wow!", "Gizmo Gizmo", 100, "INSANE AIR TIME!"),
+            new Phrase ("Thx fam", "", 100, "No props. We Gucci."),
+            new Phrase ("Fuck yis", "Lomztein", 100, "Fuck no."),
+            new Phrase ("<:Serviet:255721870828109824> Privet Comrades!", "Creeperskull", 100, "Privet, federal leader!"),
+            new Phrase ("<:Serviet:255721870828109824> Privet Comrades!", "", 100, "Privet!"),
+            new Phrase ("Who is best gem?", "Nyx", 100, "*Obviously* <:Lapis:230346614064021505> ..."),
+            new Phrase ("Who is best gem?", "", 100, "Obviously <:PeriWow:230381627669348353>"),
+            new Phrase ("https://www.reddit.com/r/overwatch", "Gizmo Gizmo", 100, "Wow, this is some very interesting conte- <:residentsleeper:257933177631277056> Zzz", "links"),
+            new Phrase ("", "khave", 2, "¯\\_(ツ)_/¯"),
+            new Phrase ("(╯°□°）╯︵ ┻━┻", 100, "Please respect tables. ┬─┬ノ(ಠ_ಠノ)")
+        };
+        private static List<string> allowedDeletedMessages = new List<string>();
 
         // Feedback
         public static ulong authorID = 93744415301971968;
@@ -83,6 +89,8 @@ namespace DiscordCthulhu {
             InitializeData ();
             InitializeCommands ();
 
+            bootedTime = DateTime.Now.AddSeconds (BOOT_WAIT_TIME);
+
             discordClient.MessageReceived += async ( s, e ) => {
 
                 ChatLogger.Log (GetChannelName (e) + " says: " + e.Message.Text);
@@ -102,7 +110,7 @@ namespace DiscordCthulhu {
                         }
                     }
 
-                    await FindAndExecuteAsync (e, command, arguments);
+                    FindAndExecuteCommand (e, command, arguments);
                 }
                 else if (e.Message.IsAuthor)
                 {
@@ -121,6 +129,10 @@ namespace DiscordCthulhu {
                 }
 
                 FindPhraseAndRespond (e);
+                if (e.Message.RawText[0] == commandChar) {
+                    await e.Message.Delete ();
+                    allowedDeletedMessages.Add (e.Message.RawText);
+                }
             };
 
             discordClient.UserJoined += ( s, e ) => {
@@ -139,13 +151,31 @@ namespace DiscordCthulhu {
                 messageControl.SendMessage (GetMainChannel (e.Server), "**" + e.User.Name + "** has left the server. Don't worry, they'll come crawling back soon.");
             };
 
+            discordClient.ChannelUpdated += ( s, e ) => {
+                ChatLogger.Log ("Updated channel: " + e.After.Name + " with user count: " + e.After.Users.Count ());
+                Channel sameChannel = AutomatedVoiceChannels.allVoiceChannels[e.After.Id].GetChannel ();
+
+                Console.WriteLine ("Is channel " + e.After.Name + " the same as saved: " + (sameChannel == e.After));
+                if (sameChannel != e.After) {
+                    ChatLogger.DebugLog ("**CRITICAL ERROR** - Voice channels have desynced.");
+                }
+            };
+
             discordClient.UserUpdated += ( s, e ) => {
                 // Maybe, just maybe put these into a single function.
-                AutomatedVoiceChannels.AddMissingChannels (e.Server);
-                AutomatedVoiceChannels.UpdateVoiceChannel (e.Before.VoiceChannel);
-                AutomatedVoiceChannels.UpdateVoiceChannel (e.After.VoiceChannel);
-                AutomatedVoiceChannels.CheckFullAndAddIf (e.Server);
-                AutomatedVoiceChannels.RemoveLeftoverChannels (e.Server);
+                if (FullyBooted ()) {
+                    AutomatedVoiceChannels.AddMissingChannels (e.Server);
+                    AutomatedVoiceChannels.UpdateVoiceChannel (e.Before.VoiceChannel);
+                    AutomatedVoiceChannels.UpdateVoiceChannel (e.After.VoiceChannel);
+                    AutomatedVoiceChannels.CheckFullAndAddIf (e.Server);
+                    AutomatedVoiceChannels.RemoveLeftoverChannels (e.Server);
+                }
+
+                if (e.Before.VoiceChannel != e.After.VoiceChannel) {
+                    // Voice channel change detected.
+                    Console.WriteLine ("Voice channel change detected with user " + e.After.Name);
+                    AutomatedVoiceChannels.allVoiceChannels[e.After.VoiceChannel.Id].OnUserJoined (e.After);
+                }
 
                 Channel channel = GetMainChannel (e.Server);
                 if (channel == null)
@@ -183,7 +213,11 @@ namespace DiscordCthulhu {
                 if (channel == null)
                     return;
 
-                messageControl.SendMessage (channel, "In order disallow *any* secrets except for admin secrets, I'd like to tell you that **" + GetUserName (e.User) + "** just deleted a message on **" + e.Channel.Name + "**.");
+                if (!allowedDeletedMessages.Contains (e.Message.RawText)) {
+                    messageControl.SendMessage (channel, "In order disallow *any* secrets except for admin secrets, I'd like to tell you that **" + GetUserName (e.User) + "** just had a message deleted on **" + e.Channel.Name + "**.");
+                }else {
+                    allowedDeletedMessages.Remove (e.Message.RawText);
+                }
             };
 
             discordClient.Ready += (s, e) => {
@@ -199,8 +233,20 @@ namespace DiscordCthulhu {
             });
         }
 
-        public string GetUserName (User user) {
-            if (user != null)
+        private static bool hasBooted = false;
+        public static bool FullyBooted () {
+            if (hasBooted)
+                return hasBooted;
+
+            if (DateTime.Now > bootedTime) {
+                hasBooted = true;
+                ChatLogger.Log ("Booted flag set to true.");
+            }
+            return hasBooted;
+        }
+
+        public static string GetUserName (User user) {
+            if (user == null)
                 return "[ERROR - NULL USER REFERENCE]";
             if (user.Nickname == null)
                 return user.Name;
@@ -260,11 +306,13 @@ namespace DiscordCthulhu {
         // I thought the TrimStart and TrimEnd functions would work like this, which they may, but I couldn't get them working. Maybe I'm just an idiot, but whatever.
         private string TrimSpaces (string input) {
             string trimmed = input;
-            while (trimmed[0] == ' ')
+            while (trimmed[0] == ' ') {
                 trimmed = trimmed.Substring (1);
+            }
 
-            while (trimmed[trimmed.Length - 1] == ' ')
+            while (trimmed[trimmed.Length - 1] == ' ') {
                 trimmed = trimmed.Substring (0, trimmed.Length - 1);
+            }
             return trimmed;
         }
 
@@ -282,10 +330,6 @@ namespace DiscordCthulhu {
             for (int i = 0; i < commands.Length; i++) {
                 commands[i].Initialize ();
             }
-        }
-
-        public Task FindAndExecuteAsync ( MessageEventArgs e, string commandName, List<string> arguements ) {
-            return Task.Run (() => FindAndExecuteCommand (e, commandName, arguements));
         }
 
         public static Command FindCommand (string commandName) {
@@ -309,7 +353,8 @@ namespace DiscordCthulhu {
 
         public static User FindUserByName (Server server, string username) {
             foreach (User user in server.Users) {
-                if (user.Nickname == username)
+                string name = GetUserName (user).ToLower ();
+                if (name.Length >= username.Length && name.Substring (0, username.Length) == username.ToLower ())
                     return user;
             }
             return null;

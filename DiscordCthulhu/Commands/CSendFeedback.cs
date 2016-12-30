@@ -15,7 +15,7 @@ namespace DiscordCthulhu {
             argumentNumber = 0;
         }
 
-        public override async void ExecuteCommand ( MessageEventArgs e, List<string> arguments ) {
+        public override void ExecuteCommand ( MessageEventArgs e, List<string> arguments ) {
             base.ExecuteCommand (e, arguments);
             if (AllowExecution (e, arguments)) {
                 //Program.messageControl.SendMessage (Program.discordClient., "Invite URL: " + invite.Url);

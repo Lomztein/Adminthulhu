@@ -21,8 +21,9 @@ namespace DiscordCthulhu {
         public ControlPanel () {
             formThread = new Thread (new ThreadStart (Initialize));
             formThread.Start ();
-            while (!formThread.IsAlive)
-                ;
+            while (!formThread.IsAlive) {
+                Console.WriteLine ("ControlPanel");
+            }
 
             Thread.Sleep (1);
         }

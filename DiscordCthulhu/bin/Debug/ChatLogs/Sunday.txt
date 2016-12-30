@@ -1812,3 +1812,519 @@ Monster Mash/dump/Twistbonk says: i know
 Monster Mash/dump/Twistbonk says: !setcolor Blue
 Sending a message.
 Monster Mash/dump/Cthulhu says: Error: The server responded with error 403 (Forbidden)
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+Booted flag set to true.
+Monster Mash/main/Butcher says: nogen der kender et godt mmo at heale i?
+Monster Mash/main/Butcher says: og er færdig med wow for nu 😛
+Monster Mash/main/Creeperskull says: skulle lige til at sige Guild Wars, men der er ikke en healer om sådan xd
+Monster Mash/main/Butcher says: apperently druid healer o0
+Monster Mash/main/Butcher says: men det er lidt weird
+Monster Mash/links/Creeperskull says: fik 24 boxes til jul :p
+Monster Mash/links/Creeperskull says: eller 20€ gift card
+Monster Mash/links/Creeperskull says: hvilket er 24 boxes
+Monster Mash/links/Creeperskull says: mangler kun mei winter legendary nu
+Monster Mash/links/Gizmo Gizmo says: neat!
+Sending a message.
+Monster Mash/links/Cthulhu says: Very!
+Monster Mash/links/Creeperskull says: men fuck mei
+Monster Mash/links/Gizmo Gizmo says: D:
+Monster Mash/links/Creeperskull says: jeg har allerede 2 legendary skins til hende xd
+Monster Mash/links/Creeperskull says: og er oppe på 4k coins 😮
+Monster Mash/main/Nyx says: Hvad så fik folk hvad de ønskede sig? ;) 🎁
+Monster Mash/main/Butcher says: ye boi
+Monster Mash/main/Nyx says: hvad fik du? :D
+Monster Mash/main/Butcher says: lækkert tøj og chrome cast :p
+Monster Mash/main/Butcher says: hvad med dig :p ?
+Monster Mash/main/The Human Toast says: @Lomztein Universe FTB?
+Monster Mash/main/The Human Toast says: I am boredom
+Monster Mash/main/Lomztein says: Er det ikke lidt sent til det? :b
+Monster Mash/main/The Human Toast says: Depends. Kommer jeg til at kigge på discord om halvanden time og se dig stadig online? :b
+Monster Mash/main/Lomztein says: Maybe
+Monster Mash/main/Lomztein says: Vi kan vel godt lidt
+Monster Mash/main/Lomztein says: @The Human Toast Kommer du?
+Monster Mash/dump/Lomztein says: !lock
+Sending a message.
+Monster Mash/dump/Cthulhu says: Succesfully locked voice channel **Radical Red**.
+Monster Mash/dump/Lomztein says: !lock
+Sending a message.
+Monster Mash/dump/Cthulhu says: Succesfully locked voice channel **Radical Red**.
+Monster Mash/dump/Lomztein says: !lock
+Sending a message.
+Monster Mash/dump/Cthulhu says: Succesfully locked voice channel **Radical Red**.
+Monster Mash/dump/Lomztein says: **YOU LYING SACK OF SHIT YOU WILL PAT FOR THIS.**
+Monster Mash/dump/Lomztein says: !join
+Monster Mash/dump/GodZilla says: Joining **Radical Red - FTB**
+Monster Mash/dump/Lomztein says: !gl play ;jul
+Monster Mash/dump/GodZilla says: All the songs in **jul** has been added to the queue
+Monster Mash/dump/GodZilla says: Currently playing: **Mariah Carey - All I Want for Christmas Is You**
+Monster Mash/dump/Lomztein says: !gq shuffle
+Monster Mash/dump/GodZilla says: The queue has been shuffled. Write ``!gq list`` to see the new queue
+Monster Mash/dump/The Human Toast says: !gm song l'internationale
+Monster Mash/dump/GodZilla says: **Les Choeurs de l'Armée Rouge - L'internationale** has been queued. The song is currently number 9 in the queue
+Monster Mash/dump/The Human Toast says: <:Serviet:255721870828109824>
+Monster Mash/dump/The Human Toast says: @Exelion AI FTB?!
+Monster Mash/dump/GodZilla says: Currently playing: **Psychostick - N.O.E.L.**
+Monster Mash/dump/GodZilla says: Currently playing: **Wham! - Last Christmas**
+Monster Mash/dump/Lomztein says: !gm song fetus annihilator
+Monster Mash/dump/GodZilla says: **Infant Annihilator - Decapitation Fornication** has been queued. The song is currently number 8 in the queue
+Monster Mash/dump/Lomztein says: !gq shuffle
+Monster Mash/dump/GodZilla says: The queue has been shuffled. Write ``!gq list`` to see the new queue
+Monster Mash/dump/The Human Toast says: !gq list
+Monster Mash/dump/GodZilla says: Here's a list of all the songs left in the queue:
+ ```[0]: Wham! - Last Christmas
+[1]: Infant Annihilator - Decapitation Fornication
+[2]: Idina Menzel - Let It Go (English Version)
+[3]: Dean Martin - Walking in a Winter Wonderland
+[4]: Les Choeurs de l'Armée Rouge - L'internationale
+[5]: Bing Crosby - It's Beginning to Look a Lot Like Christmas
+[6]: Skullclub - Sving Dine Dadler feat. Viggo Sommer
+[7]: The Pocket Gods - Fuck Christmas
+[8]: Pyrus - Cool Jul
+```
+Monster Mash/dump/GodZilla says: Currently playing: **Infant Annihilator - Decapitation Fornication**
+Monster Mash/dump/The Human Toast says: !gq shuffle
+Monster Mash/dump/GodZilla says: The queue has been shuffled. Write ``!gq list`` to see the new queue
+Monster Mash/dump/The Human Toast says: !gq list
+Monster Mash/dump/GodZilla says: Here's a list of all the songs left in the queue:
+ ```[0]: Infant Annihilator - Decapitation Fornication
+[1]: The Pocket Gods - Fuck Christmas
+[2]: Bing Crosby - It's Beginning to Look a Lot Like Christmas
+[3]: Skullclub - Sving Dine Dadler feat. Viggo Sommer
+[4]: Pyrus - Cool Jul
+[5]: Idina Menzel - Let It Go (English Version)
+[6]: Dean Martin - Walking in a Winter Wonderland
+[7]: Les Choeurs de l'Armée Rouge - L'internationale
+```
+Monster Mash/dump/The Human Toast says: !gq shuffle
+Monster Mash/dump/GodZilla says: The queue has been shuffled. Write ``!gq list`` to see the new queue
+Monster Mash/dump/The Human Toast says: !gq list
+Monster Mash/dump/GodZilla says: Here's a list of all the songs left in the queue:
+ ```[0]: Infant Annihilator - Decapitation Fornication
+[1]: Les Choeurs de l'Armée Rouge - L'internationale
+[2]: Idina Menzel - Let It Go (English Version)
+[3]: Dean Martin - Walking in a Winter Wonderland
+[4]: Bing Crosby - It's Beginning to Look a Lot Like Christmas
+[5]: Skullclub - Sving Dine Dadler feat. Viggo Sommer
+[6]: The Pocket Gods - Fuck Christmas
+[7]: Pyrus - Cool Jul
+```
+Monster Mash/dump/The Human Toast says: !skip
+Monster Mash/dump/GodZilla says: Skipping song.
+Monster Mash/dump/GodZilla says: Currently playing: **Les Choeurs de l'Armée Rouge - L'internationale**
+Monster Mash/dump/Lomztein says: !gm song whitechapel - I, dementia
+Monster Mash/dump/GodZilla says: **Whitechapel - I, Dementia** has been queued. The song is currently number 7 in the queue
+Monster Mash/dump/The Human Toast says: <:Serviet:255721870828109824>
+Monster Mash/dump/Lomztein says: !gq nuke
+Monster Mash/dump/GodZilla says: No more funky tunes? *sigh* fineee... *nukes the queue*
+Monster Mash/dump/GodZilla says: No more songs left in queue
+Monster Mash/dump/The Human Toast says: !gm song Les Choeurs de l'Armée Rouge - L'internationale
+Monster Mash/dump/GodZilla says: Currently playing: **Les Choeurs de l'Armée Rouge - L'internationale**
+Monster Mash/dump/Lomztein says: !gm song whitechapel - I, dementia
+Monster Mash/dump/GodZilla says: **Whitechapel - I, Dementia** has been queued. The song is currently number 1 in the queue
+Monster Mash/dump/GodZilla says: Currently playing: **Whitechapel - I, Dementia**
+Monster Mash/dump/The Human Toast says: !gm artist thrice
+Monster Mash/dump/GodZilla says: Adding **Thrice's** top 5 songs to the queue**Thrice - Black Honey** has been added to the queue
+**Thrice - Blood on the Sand** has been added to the queue
+**Thrice - Hurricane** has been added to the queue
+**Thrice - The Artist In The Ambulance** has been added to the queue
+**Thrice - The Window** has been added to the queue
+Monster Mash/dump/Lomztein says: !gm artist king 180
+Monster Mash/dump/GodZilla says: Adding **King 810's** top 5 songs to the queue**KING 810 - I Ain't Goin Back Again** has been added to the queue
+**KING 810 - Killem All** has been added to the queue
+**KING 810 - Alpha & Omega** has been added to the queue
+**KING 810 - Fat Around The Heart** has been added to the queue
+**KING 810 - Murder Murder Murder** has been added to the queue
+Monster Mash/dump/Lomztein says: !gm artist whitechapel
+Monster Mash/dump/GodZilla says: Adding **Whitechapel's** top 5 songs to the queue**Whitechapel - The Saw Is the Law** has been added to the queue
+**Whitechapel - Let Me Burn** has been added to the queue
+**Whitechapel - I, Dementia** has been added to the queue
+**Whitechapel - Our Endless War** has been added to the queue
+**Whitechapel - Mark of the Blade** has been added to the queue
+Monster Mash/dump/Lomztein says: !gm artist korplikaani
+Monster Mash/dump/Lomztein says: !gm artist shylmagoghnar
+Monster Mash/dump/GodZilla says: Adding **Shylmagoghnar's** top 5 songs to the queue**Shylmagoghnar - I Am the Abyss** has been added to the queue
+**Shylmagoghnar - Emergence** has been added to the queue
+**Shylmagoghnar - Edin in Ashes** has been added to the queue
+**Shylmagoghnar - Eternal Forest** has been added to the queue
+**Shylmagoghnar - This World Shall Fall** has been added to the queue
+Monster Mash/dump/Lomztein says: !gm artist korpiklaani
+Monster Mash/dump/GodZilla says: Adding **Korpiklaani's** top 5 songs to the queue**Korpiklaani - Vodka** has been added to the queue
+**Korpiklaani - Ievan Polkka** has been added to the queue
+**Korpiklaani - Happy Little Boozer** has been added to the queue
+**Korpiklaani - Juodaan Viinaa** has been added to the queue
+**Korpiklaani - Tequila** has been added to the queue
+Monster Mash/dump/Lomztein says: !gm artist soilwork
+Monster Mash/dump/GodZilla says: Adding **Soilwork's** top 5 songs to the queue**Soilwork - Stabbing the Drama** has been added to the queue
+**Soilwork - The Ride Majestic** has been added to the queue
+**Soilwork - Nerve** has been added to the queue
+**Soilwork - Rejection Role** has been added to the queue
+**Soilwork - Distance** has been added to the queue
+Monster Mash/dump/Lomztein says: !gm artist svartsot
+Monster Mash/dump/GodZilla says: Adding **Svartsot's** top 5 songs to the queue**Svartsot - Skønne Møer** has been added to the queue
+**Svartsot - Gravøllet** has been added to the queue
+**Svartsot - Jotunheimsfærden** has been added to the queue
+**Svartsot - Tvende Ravne** has been added to the queue
+**Svartsot - Brages Bæger** has been added to the queue
+Monster Mash/dump/Lomztein says: !gm artist illdisposed
+Monster Mash/dump/GodZilla says: Adding **Illdisposed's** top 5 songs to the queue**Illdisposed - I Believe In Me** has been added to the queue
+**Illdisposed - Dark** has been added to the queue
+**Illdisposed - Still Sane** has been added to the queue
+**Illdisposed - Now We're History** has been added to the queue
+**Illdisposed - When You Scream** has been added to the queue
+Monster Mash/dump/Lomztein says: !gm artist be'lakor
+Monster Mash/dump/GodZilla says: Adding **Be'lakor's** top 5 songs to the queue**Be'lakor - Luma** has been added to the queue
+**Be'lakor - Roots to Sever** has been added to the queue
+**Be'lakor - Abeyance** has been added to the queue
+**Be'lakor - An Ember's Arc** has been added to the queue
+**Be'lakor - Withering Strands** has been added to the queue
+Monster Mash/dump/Lomztein says: !gm artist kataklysm
+Monster Mash/dump/GodZilla says: Adding **Kataklysm's** top 5 songs to the queue**Kataklysm - Taking the World by Storm** has been added to the queue
+**Kataklysm - In Shadow & Dust** has been added to the queue
+**Kataklysm - As I Slither** has been added to the queue
+**Kataklysm - The Black Sheep** has been added to the queue
+**Kataklysm - Like Angels Weeping (The Dark)** has been added to the queue
+Monster Mash/dump/GodZilla says: Currently playing: **Thrice - Black Honey**
+Monster Mash/dump/Lomztein says: !gm artist eluvitie
+Monster Mash/dump/GodZilla says: Adding **Eluveitie's** top 5 songs to the queue**Eluveitie - Inis Mona** has been added to the queue
+**Eluveitie - The Call of the Mountains** has been added to the queue
+**Eluveitie - The Nameless** has been added to the queue
+**Eluveitie - A Rose for Epona** has been added to the queue
+**Eluveitie - King** has been added to the queue
+Monster Mash/dump/Lomztein says: !gm artist avatar
+Monster Mash/dump/GodZilla says: Adding **Avatar's** top 5 songs to the queue**Avatar - The Eagle Has Landed** has been added to the queue
+**Avatar - Hail the Apocalypse** has been added to the queue
+**Avatar - Bloody Angel** has been added to the queue
+**Avatar - Let It Burn** has been added to the queue
+**Avatar - Smells Like A Freakshow** has been added to the queue
+Monster Mash/dump/Lomztein says: !gm artist Arch enemy
+Monster Mash/dump/GodZilla says: Adding **Arch Enemy's** top 5 songs to the queue**Arch Enemy - War Eternal** has been added to the queue
+**Arch Enemy - You Will Know My Name** has been added to the queue
+**Arch Enemy - Nemesis** has been added to the queue
+**Arch Enemy - As the Pages Burn** has been added to the queue
+**Arch Enemy - No More Regrets** has been added to the queue
+Monster Mash/dump/Lomztein says: !gm artist gojira
+Monster Mash/dump/GodZilla says: Adding **Gojira's** top 5 songs to the queue**Gojira - Stranded** has been added to the queue
+**Gojira - Silvera** has been added to the queue
+**Gojira - The Shooting Star** has been added to the queue
+**Gojira - L'Enfant Sauvage** has been added to the queue
+**Gojira - The Cell** has been added to the queue
+Monster Mash/dump/Lomztein says: !gm artist omnium gatherum
+Monster Mash/dump/GodZilla says: Adding **Omnium Gatherum's** top 5 songs to the queue**Omnium Gatherum - The Pit** has been added to the queue
+**Omnium Gatherum - Ego** has been added to the queue
+**Omnium Gatherum - New Dynamic** has been added to the queue
+**Omnium Gatherum - Everfields** has been added to the queue
+**Omnium Gatherum - New World Shadows** has been added to the queue
+Monster Mash/dump/Lomztein says: !gm artist insomnium
+Monster Mash/dump/GodZilla says: Adding **Insomnium's** top 5 songs to the queue**Insomnium - While We Sleep** has been added to the queue
+**Insomnium - The Primeval Dark** has been added to the queue
+**Insomnium - Winter's Gate, Pt. 2** has been added to the queue
+**Insomnium - Mortal Share** has been added to the queue
+**Insomnium - Lose to Night** has been added to the queue
+Monster Mash/dump/Lomztein says: !gm artist bloodbath
+Monster Mash/dump/GodZilla says: Adding **Bloodbath's** top 5 songs to the queue**Bloodbath - Eaten** has been added to the queue
+**Bloodbath - At the Behest of Their Death** has been added to the queue
+**Bloodbath - Cancer of the Soul** has been added to the queue
+**Bloodbath - Outnumbering the Day** has been added to the queue
+**Bloodbath - Mock the Cross** has been added to the queue
+Monster Mash/dump/GodZilla says: Currently playing: **Thrice - Blood on the Sand**
+Monster Mash/dump/GodZilla says: Currently playing: **Thrice - Hurricane**
+Monster Mash/dump/GodZilla says: Currently playing: **Thrice - The Artist In The Ambulance**
+Monster Mash/dump/GodZilla says: Currently playing: **Thrice - The Window**
+Monster Mash/dump/GodZilla says: Currently playing: **KING 810 - I Ain't Goin Back Again**
+Monster Mash/dump/The Human Toast says: !gq nuke
+Monster Mash/dump/GodZilla says: No more funky tunes? *sigh* fineee... *nukes the queue*
+Monster Mash/dump/GodZilla says: No more songs left in queue
+Monster Mash/dump/The Human Toast says: !leave
+Monster Mash/dump/GodZilla says: leaving **Radical Red - FTB**
+Monster Mash/dump/Lomztein says: !lock
+Sending a message.
+Monster Mash/dump/Cthulhu says: Succesfully locked voice channel **Radical Red**.
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+Booted flag set to true.
+Monster Mash/main/Nyx says: @khave ikr! elsker den ^^
+Monster Mash/links/Nyx says: Hver eneste gang jeg besøger Facebook fortryder jeg det https://scontent-arn2-1.xx.fbcdn.net/v/t1.0-9/15697262_1837999119771805_1929428643107347116_n.jpg?oh=a5aac81c0ef6892176692152209c3a91&oe=58D6C988
+Monster Mash/main/khave says: Passer lige til en Ana main ;=
+Monster Mash/main/khave says: ;)
+Monster Mash/music/Lomztein says: Not sure if genius or retarded. Never the less, I was entertained.
+Monster Mash/links/Lomztein says: You gotta have those 9-Gag memes yo
+Monster Mash/links/Lomztein says: Jeg har svært ved at forestille mig en NES var mere holdbar end, lærs sige en Wii.
+Monster Mash/music/Twistbonk (Division Agent) says: yea
+Monster Mash/main/Nyx says: Haha
+Monster Mash/links/Nyx says: måske lidt, der var ikke rigtigt hardware i den bue der (udover ram extentsion), sp der er jo lidt af en cusion til skader i guess?
+Monster Mash/links/Nyx says: men det jeg fokusere mere på
+Monster Mash/links/Nyx says: "one of the most advanced consoles of All time"
+Monster Mash/links/Nyx says: wat
+Monster Mash/links/Nyx says: how?
+Monster Mash/links/Lomztein says: Da den kom ud var den vel :b
+Monster Mash/links/Lomztein says: Der er ikke lige frem meget konkurrence
+Monster Mash/main/Lomztein says: Good god. Jeg købte Planet Coaster, og det ser nu meget fedt ud - men den mængde af customizability er outright terrifying.
+Monster Mash/main/Twistbonk (Division Agent) says: Nice
+Monster Mash/main/Butcher says: @Nyx nice one
+Monster Mash/main/Butcher says: 😆
+Monster Mash/main/Nyx says: :D
+Monster Mash/main/Nyx says: *En serviet!*
+Monster Mash/main/Creeperskull says: <:Serviet:255721870828109824>
+Monster Mash/dump/The Human Toast says: !join
+Monster Mash/dump/GodZilla says: Joining **Radical Red - Stronghold Crusader 2**
+Monster Mash/dump/The Human Toast says: !gm song l'internationale
+Monster Mash/dump/GodZilla says: Currently playing: **Les Choeurs de l'Armée Rouge - L'internationale**
+Monster Mash/main/The Human Toast says: @DoritoFighter231 Kom og lyst til fransk kommunistisk musik
+Monster Mash/main/The Human Toast says: Fra den fjerde Internationale
+Monster Mash/main/Creeperskull says: fristende
+Monster Mash/main/Creeperskull says: men Epic Battle Fantasy har nu en decent soundtrack :p
+Monster Mash/dump/GodZilla says: No more songs left in queue
+Monster Mash/links/The Human Toast says: https://www.youtube.com/watch?v=VhqeNUFCyI0'
+Monster Mash/main/SonnaheR #topKEK says: ring
+Monster Mash/links/The Human Toast says: http://i.imgur.com/LIf3WzP.png
+Monster Mash/dump/The Human Toast says: !gm song we are number one
+Monster Mash/dump/GodZilla says: Currently playing: **Number One Gun - We Are**
+Monster Mash/dump/The Human Toast says: !skip
+Monster Mash/dump/GodZilla says: Skipping song.
+Monster Mash/dump/GodZilla says: No more songs left in queue
+Monster Mash/links/Gizmo Gizmo says: http://puu.sh/t0aiC/9cd49a82ba.jpg
+Monster Mash/links/The Human Toast says: http://imgur.com/rsAraz7
+Monster Mash/main/SonnaheR #topKEK says: "join
+Monster Mash/main/SonnaheR #topKEK says: !join
+Monster Mash/main/GodZilla says: Joining **Beautiful Blue**
+Monster Mash/main/Chrismas Tree Llama says: !groin
+Monster Mash/main/The Human Toast says: #dump
+Monster Mash/links/Lomztein says: https://discord.gg/0WScH7dyRewz8SuQ
+Sending a message.
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\welcomemessage.botproperty
+Monster Mash/main/Cthulhu says: **BrorNord** has joined this server. Bid them welcome or murder them in cold blood, it's really up to you.
+Private message: Cthulhu says: Hello, and welcome to **Monster Mash**!
+
+This server is dedicated to having a chill place to hang out. We aren't dedicated to any specific game, nor do you have to be here at specific times. Monster Mash is simply a lounge wherein you can find people to join in your mighty quests of brutal slaughter.
+
+In short, we are a danish group, with the occasional international member marked with the @International role. The group was created in the olden days of 2012 by Victor "Nyx" Koch and Marcus "Lomztein" Jensen, originally on Razer Comms, but later moved to Discord due to superiorness from Discord.
+
+I am the administrative bot **Adminthulhu**. I am a horrific ancient entity of infinite power, as well as your humble servant and automated administrator. I take care of automatic tasks such as sending you this, as well as notifying people of name changes and server joins. I also dynamically change the names of voice channels, to reflect the games played within. Aside from this, I also have a few utility commands that can be found in the #rules channel. For now, try and use **!setcolor <COLORNAME>** to give yourself a colored name.
+
+I also have a funky brother named **Funkthulhu**. He can play all sort of music, and is maintained by Thorvald "The Human Toast" Kjartansson. I myself am maintained by Marcus "Lomztein" Jensen, with occasional help from the rest of the admin crew.
+
+**Rules of the Monster Mash:**
+ - Respect people, as in: Do not be a douchenozzle.
+ - NSFW/NSFL content is not allowed.
+ - Admins are litteraly gods on this plane of existance.
+ - Dankness is good.
+
+**Text Channel Overview:**
+#main - General discussion and talk of various things. Links are not embedded in here.
+#international - Kind of useless, but we like having it there.
+#suggestions - Suggest changes and improvements to the server. Admins might even listen if you are lucky.
+#links - If you want to share something out of the blue, throw it here. This is to avoid filling main with links.
+Private message: Cthulhu says: #readitonreddit - Like links, but specifically for Reddit link.
+#music - Any sweet ass jams you have should go in here.
+#rules - A rarely updated ruleset, as well as bot commands can be found here.
+#announcements - Admins use this to easily tell the entire server of new stuff happening.
+#migmig - The dankest of memes should go here. It must be atleast one dank to enter.
+#admin - Hah, you can't see this lol.
+#dump - Spam, bot interaction, any kind of stuff not covered anywhere else goes here.
+
+**Current Administrators:**
+ - Victor "Nyx" Koch
+ - Marcus "Lomztein" Jensen
+ - Micheal "Gizmo Gizmo" B�gh
+ - Younes "DrCooldude" Zakaria
+
+These can be reached by using the **@Admin** mention.
+
+**Game Specific Mentions:**
+ - @OVERWATCH
+ - @HEROES OF THE STORM
+ - @RAINBOW SIX: SIEGE
+ - @ROCKET LEAGUE
+
+
+**Off-Discord Sites:**
+ - Subreddit: https://www.reddit.com/r/MonsterMashHideout/
+ - YouTube Channel: https://www.youtube.com/channel/UCKiVIjmGiy8MZq51U4TlPKA
+ - Steam Group: https://steamcommunity.com/groups/MosterMashHideout
+Monster Mash/dump/SonnaheR #topKEK says: #help
+Monster Mash/dump/The Human Toast says: !help
+Monster Mash/dump/GodZilla says: Need help? Here's a list of commands to get you started:
+
+```!help                     | Prints this list
+!join                     | Makes the bot join the voice channel you're currently in.
+!leave                    | Much like !join but makes the bot leave the channel instead
+!skip                     | Makes the bot skip the current !gmusic song being played
+
+!gl help                  | Prints instructions for "!gl" commands
+!gq help                  | Prints instructions for "!gq" commands
+!gm help                  | Prints instructions for "!gm" commands```
+Monster Mash/dump/SonnaheR #topKEK says: !help
+Monster Mash/dump/GodZilla says: Need help? Here's a list of commands to get you started:
+
+```!help                     | Prints this list
+!join                     | Makes the bot join the voice channel you're currently in.
+!leave                    | Much like !join but makes the bot leave the channel instead
+!skip                     | Makes the bot skip the current !gmusic song being played
+
+!gl help                  | Prints instructions for "!gl" commands
+!gq help                  | Prints instructions for "!gq" commands
+!gm help                  | Prints instructions for "!gm" commands```
+Monster Mash/main/BrorNord says: (╯°□°）╯︵ ┻━┻
+Sending a message.
+Monster Mash/main/Cthulhu says: Please respect tables. ┬─┬ノ(ಠ_ಠノ)
+Monster Mash/dump/The Human Toast says: !gm help
+Monster Mash/dump/GodZilla says: ```!gm help                  | Prints this list.
+!gm song #SEARCHTERM      | Makes the bot look up the #SEARCHTERM and play the song in the voice channel
+!gm album #SEARCHTERM     | Makes the bot look up the #SEARCHTERM and play the album in the voice channel.
+!gm artist #SEARCHTERM    | Makes the bot look up the #SEARCHTERM and play the artist's top 5 in the voice channel.
+```
+Sending a message.
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\welcomemessage.botproperty
+Monster Mash/main/Cthulhu says: **Frandendk** has joined this server. Bid them welcome or murder them in cold blood, it's really up to you.
+Private message: Cthulhu says: #readitonreddit - Like links, but specifically for Reddit link.
+#music - Any sweet ass jams you have should go in here.
+#rules - A rarely updated ruleset, as well as bot commands can be found here.
+#announcements - Admins use this to easily tell the entire server of new stuff happening.
+#migmig - The dankest of memes should go here. It must be atleast one dank to enter.
+#admin - Hah, you can't see this lol.
+#dump - Spam, bot interaction, any kind of stuff not covered anywhere else goes here.
+
+**Current Administrators:**
+ - Victor "Nyx" Koch
+ - Marcus "Lomztein" Jensen
+ - Micheal "Gizmo Gizmo" B�gh
+ - Younes "DrCooldude" Zakaria
+
+These can be reached by using the **@Admin** mention.
+
+**Game Specific Mentions:**
+ - @OVERWATCH
+ - @HEROES OF THE STORM
+ - @RAINBOW SIX: SIEGE
+ - @ROCKET LEAGUE
+
+
+**Off-Discord Sites:**
+ - Subreddit: https://www.reddit.com/r/MonsterMashHideout/
+ - YouTube Channel: https://www.youtube.com/channel/UCKiVIjmGiy8MZq51U4TlPKA
+ - Steam Group: https://steamcommunity.com/groups/MosterMashHideout
+Private message: Cthulhu says: Hello, and welcome to **Monster Mash**!
+
+This server is dedicated to having a chill place to hang out. We aren't dedicated to any specific game, nor do you have to be here at specific times. Monster Mash is simply a lounge wherein you can find people to join in your mighty quests of brutal slaughter.
+
+In short, we are a danish group, with the occasional international member marked with the @International role. The group was created in the olden days of 2012 by Victor "Nyx" Koch and Marcus "Lomztein" Jensen, originally on Razer Comms, but later moved to Discord due to superiorness from Discord.
+
+I am the administrative bot **Adminthulhu**. I am a horrific ancient entity of infinite power, as well as your humble servant and automated administrator. I take care of automatic tasks such as sending you this, as well as notifying people of name changes and server joins. I also dynamically change the names of voice channels, to reflect the games played within. Aside from this, I also have a few utility commands that can be found in the #rules channel. For now, try and use **!setcolor <COLORNAME>** to give yourself a colored name.
+
+I also have a funky brother named **Funkthulhu**. He can play all sort of music, and is maintained by Thorvald "The Human Toast" Kjartansson. I myself am maintained by Marcus "Lomztein" Jensen, with occasional help from the rest of the admin crew.
+
+**Rules of the Monster Mash:**
+ - Respect people, as in: Do not be a douchenozzle.
+ - NSFW/NSFL content is not allowed.
+ - Admins are litteraly gods on this plane of existance.
+ - Dankness is good.
+
+**Text Channel Overview:**
+#main - General discussion and talk of various things. Links are not embedded in here.
+#international - Kind of useless, but we like having it there.
+#suggestions - Suggest changes and improvements to the server. Admins might even listen if you are lucky.
+#links - If you want to share something out of the blue, throw it here. This is to avoid filling main with links.
+Monster Mash/dump/SonnaheR #topKEK says: !gm last christmas
+Monster Mash/main/BrorNord says: !gm big booty bitches
+Monster Mash/dump/SonnaheR #topKEK says: !play
+Monster Mash/dump/SonnaheR #topKEK says: !gm song last christmas
+Monster Mash/dump/GodZilla says: Currently playing: **Wham! - Last Christmas**
+Sending a message.
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\welcomemessage.botproperty
+Monster Mash/main/Cthulhu says: **Sebastian** has joined this server. Bid them welcome or murder them in cold blood, it's really up to you.
+Private message: Cthulhu says: Hello, and welcome to **Monster Mash**!
+
+This server is dedicated to having a chill place to hang out. We aren't dedicated to any specific game, nor do you have to be here at specific times. Monster Mash is simply a lounge wherein you can find people to join in your mighty quests of brutal slaughter.
+
+In short, we are a danish group, with the occasional international member marked with the @International role. The group was created in the olden days of 2012 by Victor "Nyx" Koch and Marcus "Lomztein" Jensen, originally on Razer Comms, but later moved to Discord due to superiorness from Discord.
+
+I am the administrative bot **Adminthulhu**. I am a horrific ancient entity of infinite power, as well as your humble servant and automated administrator. I take care of automatic tasks such as sending you this, as well as notifying people of name changes and server joins. I also dynamically change the names of voice channels, to reflect the games played within. Aside from this, I also have a few utility commands that can be found in the #rules channel. For now, try and use **!setcolor <COLORNAME>** to give yourself a colored name.
+
+I also have a funky brother named **Funkthulhu**. He can play all sort of music, and is maintained by Thorvald "The Human Toast" Kjartansson. I myself am maintained by Marcus "Lomztein" Jensen, with occasional help from the rest of the admin crew.
+
+**Rules of the Monster Mash:**
+ - Respect people, as in: Do not be a douchenozzle.
+ - NSFW/NSFL content is not allowed.
+ - Admins are litteraly gods on this plane of existance.
+ - Dankness is good.
+
+**Text Channel Overview:**
+#main - General discussion and talk of various things. Links are not embedded in here.
+#international - Kind of useless, but we like having it there.
+#suggestions - Suggest changes and improvements to the server. Admins might even listen if you are lucky.
+#links - If you want to share something out of the blue, throw it here. This is to avoid filling main with links.
+Private message: Cthulhu says: #readitonreddit - Like links, but specifically for Reddit link.
+#music - Any sweet ass jams you have should go in here.
+#rules - A rarely updated ruleset, as well as bot commands can be found here.
+#announcements - Admins use this to easily tell the entire server of new stuff happening.
+#migmig - The dankest of memes should go here. It must be atleast one dank to enter.
+#admin - Hah, you can't see this lol.
+#dump - Spam, bot interaction, any kind of stuff not covered anywhere else goes here.
+
+**Current Administrators:**
+ - Victor "Nyx" Koch
+ - Marcus "Lomztein" Jensen
+ - Micheal "Gizmo Gizmo" B�gh
+ - Younes "DrCooldude" Zakaria
+
+These can be reached by using the **@Admin** mention.
+
+**Game Specific Mentions:**
+ - @OVERWATCH
+ - @HEROES OF THE STORM
+ - @RAINBOW SIX: SIEGE
+ - @ROCKET LEAGUE
+
+
+**Off-Discord Sites:**
+ - Subreddit: https://www.reddit.com/r/MonsterMashHideout/
+ - YouTube Channel: https://www.youtube.com/channel/UCKiVIjmGiy8MZq51U4TlPKA
+ - Steam Group: https://steamcommunity.com/groups/MosterMashHideout
+Monster Mash/dump/SonnaheR #topKEK says: !gm song oa bøsser bløder lyserødt
+Monster Mash/dump/GodZilla says: **Error:** http://i.imgur.com/fJNbVWN.png
+Monster Mash/dump/SonnaheR #topKEK says: !gm song bøsser bløder lyserødt
+Monster Mash/dump/GodZilla says: **Odense Assholes - Bøsser Bløder Lyserødt** has been queued. The song is currently number 1 in the queue
+Monster Mash/dump/GodZilla says: Currently playing: **Odense Assholes - Bøsser Bløder Lyserødt**
+Monster Mash/dump/GodZilla says: No more songs left in queue
+Monster Mash/dump/BrorNord says: !gm song white christmas
+Monster Mash/dump/GodZilla says: Currently playing: **Bing Crosby - White Christmas**
+Monster Mash/dump/BrorNord says: !gm song niggers
+Monster Mash/dump/GodZilla says: **Gregory Isaacs - Nigger** has been queued. The song is currently number 1 in the queue
+Monster Mash/dump/GodZilla says: Currently playing: **Gregory Isaacs - Nigger**
+Monster Mash/dump/BrorNord says: !mg song niggers in pars
+Monster Mash/dump/GodZilla says: No more songs left in queue
+Monster Mash/dump/BrorNord says: !mg song niggers in paris
+Monster Mash/dump/BrorNord says: !mg song panda
+Monster Mash/dump/The Human Toast says: gm, ikke mg
+Monster Mash/dump/BrorNord says: -.-
+Monster Mash/dump/BrorNord says: !gm song niggers in paris
+Monster Mash/dump/GodZilla says: Currently playing: **Jay-Z - Niggas in Paris**
+Monster Mash/dump/GodZilla says: No more songs left in queue
+Monster Mash/dump/BrorNord says: !gm song panda
+Monster Mash/dump/GodZilla says: Currently playing: **Desiigner - Panda**
+Monster Mash/dump/GodZilla says: No more songs left in queue
+Monster Mash/dump/BrorNord says: !gm song vodkafjæs
+Monster Mash/dump/GodZilla says: Currently playing: **ADHD - Vodkafjæs**
+Monster Mash/dump/Lomztein says: I gutter hører noget weird musik yo
+Monster Mash/dump/GodZilla says: No more songs left in queue
+Monster Mash/links/The Human Toast says: https://www.highlandtitles.com/ Jeg overvejer det HEFTIGT.
+Monster Mash/links/The Human Toast says: Lord Toast, of... Scotland(?)
+Monster Mash/dump/BrorNord says: !gm song slem igen
+Monster Mash/dump/GodZilla says: Currently playing: **Jimilian - Slem igen (feat. Ceci Luca)**
+Monster Mash/dump/GodZilla says: No more songs left in queue
+Monster Mash/dump/BrorNord says: !gm song pong dance
+Monster Mash/dump/GodZilla says: Currently playing: **Vigiland - Pong Dance**
+Monster Mash/dump/GodZilla says: No more songs left in queue

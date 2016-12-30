@@ -12,6 +12,7 @@ namespace DiscordCthulhu {
         public static Dictionary<ulong, VoiceChannel> allVoiceChannels = new Dictionary<ulong, VoiceChannel>();
         public static List<string> awaitingChannels = new List<string>();
 
+        public static string lockIcon = "🔒 ";
         public static int addChannelsIndex = 2;
         public static int fullChannels = 0;
 
@@ -28,15 +29,21 @@ namespace DiscordCthulhu {
             "Violent Violet",
             "Creepy Cardinal",
             "Salty Salmon",
-            "Wanking White"
+            "Wanking White",
+            "Indeginous Indigo",
+            "Laughing Lime",
+            "Mangled Magenta"
         };
 
         public static Queue<string> nameQueue = new Queue<string>();
         public static List<Channel> temporaryChannels = new List<Channel> ();
+        public static VoiceChannel afkChannel = new VoiceChannel (261226771611910154, "Corner of Shame", int.MaxValue);
 
         public static void InitializeData () {
             AddDefaultChannel (250545007797207040, "Radical Red", 0);
             AddDefaultChannel (250545037790674944, "Beautiful Blue", 1);
+            AddDefaultChannel (afkChannel);
+            afkChannel.lockable = false;
 
             for (int i = 0; i < extraChannelNames.Length; i++) {
                 nameQueue.Enqueue (extraChannelNames[i]);
@@ -45,10 +52,15 @@ namespace DiscordCthulhu {
             Program.discordClient.ChannelCreated += ( s, e ) => {
                 if (awaitingChannels.Contains (e.Channel.Name)) {
 
-                    int channelPos = temporaryChannels.Count + addChannelsIndex;
+                    /*int channelPos = temporaryChannels.Count + addChannelsIndex;
 
                     temporaryChannels.Add (e.Channel);
-                    allVoiceChannels.Add (e.Channel.Id, new VoiceChannel (e.Channel.Id, e.Channel.Name, channelPos, e.Channel));
+                    allVoiceChannels.Add (e.Channel.Id, new VoiceChannel (e.Channel.Id, e.Channel.Name, channelPos));
+                    if (awaitingChannels.Remove (e.Channel.Name)) {
+                        Console.WriteLine ("Removing awaited channel from awaitingChannel: " + e.Channel.Name);
+                    }else {
+                        Console.WriteLine ("Failed to remove awaited channel " + e.Channel.Name + " - awaiting channels count: " + awaitingChannels.Count);
+                    }
 
                     IEnumerable<VoiceChannel> channels = allVoiceChannels.Values.ToList ();
                     foreach (VoiceChannel channel in channels) {
@@ -56,20 +68,33 @@ namespace DiscordCthulhu {
                             channel.position++;
                     }
 
-                    //UpdatePositions (allVoiceChannels.Values.ToList ());
+                    afkChannel.GetChannel ().Edit (null, null, int.MaxValue);*/
                 }
             };
         }
 
         private static void AddDefaultChannel (ulong id, string name, int index) {
-            VoiceChannel newChannel = new VoiceChannel (id, name, index, null);
+            VoiceChannel newChannel = new VoiceChannel (id, name, index);
 
             defaultChannels.Add (id, newChannel);
             allVoiceChannels.Add (id, newChannel);
         }
 
+        private static void AddDefaultChannel (VoiceChannel channel) {
+            defaultChannels.Add (channel.id, channel);
+            allVoiceChannels.Add (channel.id, channel);
+        }
+
         public static void UpdateVoiceChannel ( Channel voice ) {
+            Game highestGame = new Game ("");
+
             if (voice != null && allVoiceChannels.ContainsKey (voice.Id)) {
+
+                if (voice.Name == afkChannel.name)
+                    return;
+
+                if (voice.Users.Count () == 0)
+                    allVoiceChannels[voice.Id].Unlock (false);
 
                 Dictionary<Game, int> numPlayers = new Dictionary<Game, int> ();
                 foreach (User user in voice.Users) {
@@ -85,7 +110,6 @@ namespace DiscordCthulhu {
                 }
 
                 int highest = int.MinValue;
-                Game highestGame = new Game ("");
 
                 for (int i = 0; i < numPlayers.Count; i++) {
                     KeyValuePair<Game, int> value = numPlayers.ElementAt (i);
@@ -96,11 +120,13 @@ namespace DiscordCthulhu {
                     }
                 }
 
+                string lockString = allVoiceChannels[voice.Id].IsLocked () ? lockIcon : "";
                 if (highestGame.Name != "") {
-                    voice.Edit (allVoiceChannels[voice.Id].name + " - " + highestGame.Name);
+                    voice.Edit (lockString + allVoiceChannels[voice.Id].name + " - " + highestGame.Name);
                 } else {
-                    voice.Edit (allVoiceChannels[voice.Id].name);
+                    voice.Edit (lockString + allVoiceChannels[voice.Id].name);
                 }
+                allVoiceChannels[voice.Id].CheckLocker ();
             }
         }
 
@@ -111,7 +137,16 @@ namespace DiscordCthulhu {
 
             foreach (Channel channel in server.VoiceChannels) {
                 if (!allVoiceChannels.ContainsKey (channel.Id)) {
-                    allVoiceChannels.Add (channel.Id, new VoiceChannel (channel.Id, GetChannelDefaultName (channel.Name), allVoiceChannels.Count, channel));
+                    allVoiceChannels.Add (channel.Id, new VoiceChannel (channel.Id, GetChannelDefaultName (channel.Name), allVoiceChannels.Count));
+                }
+                if (channel.Name[0] == lockIcon[0]) {
+                    if (channel.Users.Count () == 0) {
+                        allVoiceChannels[channel.Id].Unlock (true);
+                    } else {
+                        User user = channel.Users.ElementAt (0);
+                        allVoiceChannels[channel.Id].Lock (user, true);
+                        Program.messageControl.SendMessage (user, "After a reboot of this bot, you have automatically been granted ownership of locked channel **" + allVoiceChannels[channel.Id].name + "**.");
+                    }
                 }
             }
 
@@ -120,11 +155,13 @@ namespace DiscordCthulhu {
 
         public static string GetChannelDefaultName (string channelName) {
             int spaceAmount = 0;
-            for (int i = 0; i < channelName.Length; i++) {
+
+            // Start at two to ignore the locked channel icon. This will cause issues with channels with very, very short names.
+            for (int i = 2; i < channelName.Length; i++) {
                 if (channelName[i] == ' ')
                     spaceAmount++;
 
-                if (spaceAmount == 2)
+                if (spaceAmount == 2 || channelName.Length < i + 1)
                     return channelName.Substring (0, i);
             }
 
@@ -142,6 +179,7 @@ namespace DiscordCthulhu {
 
             for (int i = IsDefaultFull () ? 1 : 0; i < toDelete.Count; i++) {
                 Channel channel = toDelete[i];
+                nameQueue.Enqueue (allVoiceChannels[channel.Id].name);
 
                 temporaryChannels.Remove (channel);
                 allVoiceChannels.Remove (channel.Id);
@@ -155,6 +193,9 @@ namespace DiscordCthulhu {
             IEnumerable<VoiceChannel> channels = allVoiceChannels.Values.ToList ();
 
             foreach (VoiceChannel channel in channels) {
+                if (channel == afkChannel)
+                    continue;
+
                 int sunkenPos = channel.position;
                 while (!ChannelAtPosition (channels, sunkenPos-1)) {
                     sunkenPos--;
@@ -179,43 +220,65 @@ namespace DiscordCthulhu {
         public static bool IsDefaultFull () {
             IEnumerable<VoiceChannel> defaultChannelsList = defaultChannels.Values.ToList ();
             foreach (VoiceChannel channel in defaultChannelsList) {
-                if (channel.GetChannel ().Users.Count () == 0)
+                if (afkChannel != channel && channel.GetChannel ().Users.Count () == 0)
                     return false;
             }
 
             return true;
         }
 
-        public static void CheckFullAndAddIf (Server server) {
+        public static async void CheckFullAndAddIf (Server server) {
             IEnumerable<VoiceChannel> channels = allVoiceChannels.Values.ToList ();
             int count = channels.Count ();
 
-            fullChannels = 1;
-            bool allBelowFull = true;
+            fullChannels = 0;
             for (int i = 0; i < count; i++) {
                 VoiceChannel cur = channels.ElementAt (i);
+                if (cur == afkChannel)
+                    continue;
 
                 if (cur.GetChannel () != null) {
-                    if (cur.GetChannel ().Users.Count () == 0) {
-                        if (cur.position < addChannelsIndex) {
-                            allBelowFull = false;
-                        }
-                    }else {
+                    Console.WriteLine ("VoiceChannel name: " + cur.name + ", channel name: " + cur.GetChannel ().Name + ", user count: " + cur.GetChannel ().Users.Count());
+                    if (cur.GetChannel ().Users.Count () != 0) {
                         fullChannels++;
                     }
                 }
             }
 
-            if (allBelowFull) {
-                if (nameQueue.Count > 0) {
-                    if (temporaryChannels.Count < fullChannels - addChannelsIndex) {
-                        string channelName = nameQueue.Dequeue ();
+            Console.WriteLine ("Full: " + fullChannels + ", Queue: " + nameQueue.Count + ", Awaiting: " + awaitingChannels.Count);
+            // If the amount of full channels are more than or equal to the amount of channels, add a new one.
+            if (fullChannels == count - 1) {
+                if (nameQueue.Count > 0 && awaitingChannels.Count == 0) {
+                    Console.WriteLine ("Adding a new channel!");
+                    string channelName = nameQueue.Dequeue ();
 
-                        server.CreateChannel (channelName, ChannelType.Voice);
-                        awaitingChannels.Add (channelName);
+                    Task<Channel> createTask = server.CreateChannel (channelName, ChannelType.Voice);
+                    Channel channel = await createTask;
+
+                    int channelPos = temporaryChannels.Count + addChannelsIndex;
+
+                    temporaryChannels.Add (channel);
+                    allVoiceChannels.Add (channel.Id, new VoiceChannel (channel.Id, channel.Name, channelPos));
+                    awaitingChannels.Remove (channelName);
+
+                    IEnumerable<VoiceChannel> allChannels = allVoiceChannels.Values.ToList ();
+                    foreach (VoiceChannel loc in allChannels) {
+                        if (loc.position >= channelPos && loc.GetChannel () != channel)
+                            loc.position++;
                     }
+
+                    await afkChannel.GetChannel ().Edit (null, null, int.MaxValue);
                 }
             }
+        }
+
+        public static Channel GetEmptyChannel (Server server) {
+            foreach (Channel channel in server.VoiceChannels) {
+                if (channel.Users.Count () == 0)
+                    return channel;
+            }
+
+            return null;
         }
 
         public class VoiceChannel {
@@ -223,21 +286,84 @@ namespace DiscordCthulhu {
             public ulong id;
             public string name;
             public int position;
-            public Channel channel;
+            public bool lockable = true;
 
-            public VoiceChannel (ulong _id, string n, int pos, Channel ch) {
+            public User locker;
+            public List<User> allowedUsers = new List<User>();
+
+            public VoiceChannel (ulong _id, string n, int pos) {
                 id = _id;
                 name = n;
                 position = pos;
-                channel = ch;
+                //channel = ch;
             }
 
             public Channel GetChannel () {
-                if (channel != null)
-                    return channel;
+                Channel channel = Program.SearchChannel (Program.GetServer (), name);
+                if (channel == null)
+                    // If channel still isn't found post search, search for it with a lock icon on it.
+                    channel = Program.SearchChannel (Program.GetServer (), lockIcon + name);
 
-                channel = Program.SearchChannel (Program.GetServer (), name);
                 return channel;
+            }
+
+            public bool IsLocked () {
+                return allowedUsers.Count != 0;
+            }
+
+            public void Lock (User lockingUser, bool update) {
+                if (lockable) {
+                    locker = lockingUser;
+                    allowedUsers = GetChannel ().Users.ToList ();
+                    if (update)
+                        UpdateVoiceChannel (GetChannel ());
+
+                    Console.WriteLine ("Locking " + name + " by " + lockingUser.Name);
+                }
+            }
+
+            public void Unlock (bool update) {
+                allowedUsers = new List<User> ();
+                locker = null;
+                if (update)
+                    UpdateVoiceChannel (GetChannel ());
+            }
+
+            public bool InviteUser (User sender, User user) {
+                if (!allowedUsers.Contains (user) && IsLocked ()) {
+                    allowedUsers.Add (user);
+                    Program.messageControl.SendMessage (user, "**" + Program.GetUserName (sender) + "** has invited you to join the locked channel **" + name + "** on **" + Program.serverName + "**.");
+                    return true;
+                }
+                return false;
+            }
+
+            public void RequestInvite (User requester) {
+                if (IsLocked ()) {
+                    Program.messageControl.SendMessage (locker, "**" + Program.GetUserName (requester) + "** on **" + Program.serverName + "** requests access to your locked voice channel.");
+                }
+            }
+
+            public void Kick (User user) {
+                allowedUsers.Remove (user);
+                OnUserJoined (user);
+            }
+
+            public void OnUserJoined (User user) {
+                // IsLocked is kind of redundant, but I like having it there.
+                if (IsLocked ()) {
+                    if (!allowedUsers.Contains (user)) {
+                        Program.messageControl.SendMessage (user,"Sorry man, but you do not have access to voice channel **" + name + "**.");
+                        user.Edit (null, null, afkChannel.GetChannel ());
+                    }
+                }
+            }
+
+            public void CheckLocker () {
+                if (IsLocked () && !GetChannel ().Users.Contains (locker)) {
+                    locker = GetChannel ().Users.ElementAt (0);
+                    Program.messageControl.SendMessage (locker, "Since the previous locker left, you are now the new locker of voice channel **" + name + "**.");
+                }
             }
         }
     }
