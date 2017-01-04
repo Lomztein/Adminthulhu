@@ -97,31 +97,29 @@ namespace DiscordCthulhu {
                 if (!e.Message.IsAuthor && e.Message.Text.Length > 0 && e.Message.Text[0] == commandChar) {
                     string message = e.Message.Text;
 
-                    string command = message.Substring (1);
-                    List<string> arguments = new List<string> ();
+                    if (message.Length > 0) {
 
-                    if (message.LastIndexOf (' ') != -1) {
-                        command = message.Substring (1, message.IndexOf (' ') - 1);
-                        string[] loc = message.Substring (message.IndexOf (' ') + 1).Split (';');
-                        for (int i = 0; i < loc.Length; i++) {
+                        string command = message.Substring (1);
+                        List<string> arguments = new List<string> ();
 
-                            loc[i] = TrimSpaces (loc[i]);
-                            arguments.Add (loc[i]);
+                        if (message.LastIndexOf (' ') != -1) {
+                            command = message.Substring (1, message.IndexOf (' ') - 1);
+                            string[] loc = message.Substring (message.IndexOf (' ') + 1).Split (';');
+                            for (int i = 0; i < loc.Length; i++) {
+
+                                loc[i] = TrimSpaces (loc[i]);
+                                arguments.Add (loc[i]);
+                            }
                         }
-                    }
 
-                    FindAndExecuteCommand (e, command, arguments);
-                }
-                else if (e.Message.IsAuthor)
-                {
-                    if (messageControl.messages.Count > 0)
-                    {
-                        foreach(MessageTimer messageTimer in messageControl.messages)
-                        {
-                            if (messageTimer.message == e.Message.RawText)
-                            {
-                                ChatLogger.Log("Removed!");
-                                messageControl.RemoveMessageTimer(messageTimer);
+                        FindAndExecuteCommand (e, command, arguments);
+                    }
+                } else if (e.Message.IsAuthor) {
+                    if (messageControl.messages.Count > 0) {
+                        foreach (MessageTimer messageTimer in messageControl.messages) {
+                            if (messageTimer.message == e.Message.RawText) {
+                                ChatLogger.Log ("Removed!");
+                                messageControl.RemoveMessageTimer (messageTimer);
                                 break;
                             }
                         }
@@ -129,7 +127,7 @@ namespace DiscordCthulhu {
                 }
 
                 FindPhraseAndRespond (e);
-                if (e.Message.RawText[0] == commandChar) {
+                if (e.Message.RawText.Length > 0 && e.Message.RawText[0] == commandChar) {
                     await e.Message.Delete ();
                     allowedDeletedMessages.Add (e.Message.RawText);
                 }
@@ -151,16 +149,6 @@ namespace DiscordCthulhu {
                 messageControl.SendMessage (GetMainChannel (e.Server), "**" + e.User.Name + "** has left the server. Don't worry, they'll come crawling back soon.");
             };
 
-            discordClient.ChannelUpdated += ( s, e ) => {
-                ChatLogger.Log ("Updated channel: " + e.After.Name + " with user count: " + e.After.Users.Count ());
-                Channel sameChannel = AutomatedVoiceChannels.allVoiceChannels[e.After.Id].GetChannel ();
-
-                Console.WriteLine ("Is channel " + e.After.Name + " the same as saved: " + (sameChannel == e.After));
-                if (sameChannel != e.After) {
-                    ChatLogger.DebugLog ("**CRITICAL ERROR** - Voice channels have desynced.");
-                }
-            };
-
             discordClient.UserUpdated += ( s, e ) => {
                 // Maybe, just maybe put these into a single function.
                 if (FullyBooted ()) {
@@ -173,7 +161,7 @@ namespace DiscordCthulhu {
 
                 if (e.Before.VoiceChannel != e.After.VoiceChannel) {
                     // Voice channel change detected.
-                    Console.WriteLine ("Voice channel change detected with user " + e.After.Name);
+                    ChatLogger.Log ("Voice channel change detected with user " + e.After.Name);
                     AutomatedVoiceChannels.allVoiceChannels[e.After.VoiceChannel.Id].OnUserJoined (e.After);
                 }
 
@@ -226,7 +214,7 @@ namespace DiscordCthulhu {
 
             ChatLogger.Log (dataPath);
             string token = SerializationIO.LoadTextFile (dataPath + "bottoken" + gitHubIgnoreType)[0];
-            ChatLogger.Log ("Connecting using token: " + token);
+            Console.WriteLine ("Connecting using token: " + token);
 
             discordClient.ExecuteAndWait (async () => {
                 await discordClient.Connect (token, TokenType.Bot);

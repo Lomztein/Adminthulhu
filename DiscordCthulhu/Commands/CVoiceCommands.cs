@@ -65,13 +65,13 @@ namespace DiscordCthulhu {
                     AutomatedVoiceChannels.VoiceChannel vc = AutomatedVoiceChannels.allVoiceChannels[channel.Id];
                     if (vc.IsLocked ()) {
 
-                        if (vc.locker == e.User) {
+                        if (vc.lockerID == e.User.Id) {
                             vc.Unlock (true);
                             Program.messageControl.SendMessage (e.Channel, "Succesfully unlocked voice channel **" + vc.name + "**.");
                             return;
                         }
 
-                        Program.messageControl.SendMessage (e.Channel, "Only the person who locked this channel can do that, which is " + vc.locker.Mention);
+                        Program.messageControl.SendMessage (e.Channel, "Only the person who locked this channel can do that, which is " + vc.GetLocker ().Mention);
                         return;
                     }
 
@@ -143,8 +143,8 @@ namespace DiscordCthulhu {
                     AutomatedVoiceChannels.VoiceChannel vc = AutomatedVoiceChannels.allVoiceChannels[channel.Id];
                     if (vc.IsLocked ()) {
                         string reply = "```\n";
-                        foreach (User user in vc.allowedUsers) {
-                            reply += Program.GetUserName (user) + "\n";
+                        foreach (ulong user in vc.allowedUsers) {
+                            //reply += Program.GetUserName (Program.GetServer ().GetUser (user)) + "\n";
                         }
                         reply += "```";
                         Program.messageControl.SendMessage (e.Channel, "Users allowed on your locked channel:\n" + reply);
@@ -186,14 +186,14 @@ namespace DiscordCthulhu {
                     AutomatedVoiceChannels.VoiceChannel vc = AutomatedVoiceChannels.allVoiceChannels[channel.Id];
                     if (vc.IsLocked ()) {
 
-                        if (vc.locker == e.User) {
+                        if (vc.lockerID == e.User.Id) {
                             vc.Kick (user);
                             Program.messageControl.SendMessage (e.Channel, "User **" + Program.GetUserName (user) + "** succesfully kicked.");
                             Program.messageControl.SendMessage (user, "Sorry man, but you have been kicked from voice channel **" + vc.name + "**.");
                             return;
                         }
 
-                        Program.messageControl.SendMessage (e.Channel, "Only the person who locked this channel can do that, which is " + vc.locker.Mention);
+                        Program.messageControl.SendMessage (e.Channel, "Only the person who locked this channel can do that, which is " + vc.GetLocker ().Mention);
                         return;
                     }
 

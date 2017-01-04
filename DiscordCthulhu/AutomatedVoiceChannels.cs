@@ -37,7 +37,7 @@ namespace DiscordCthulhu {
 
         public static Queue<string> nameQueue = new Queue<string>();
         public static List<Channel> temporaryChannels = new List<Channel> ();
-        public static VoiceChannel afkChannel = new VoiceChannel (261226771611910154, "Corner of Shame", int.MaxValue);
+        public static VoiceChannel afkChannel = new VoiceChannel (265832231845625858, "Corner of Shame", int.MaxValue);
 
         public static void InitializeData () {
             AddDefaultChannel (250545007797207040, "Radical Red", 0);
@@ -48,29 +48,6 @@ namespace DiscordCthulhu {
             for (int i = 0; i < extraChannelNames.Length; i++) {
                 nameQueue.Enqueue (extraChannelNames[i]);
             }
-
-            Program.discordClient.ChannelCreated += ( s, e ) => {
-                if (awaitingChannels.Contains (e.Channel.Name)) {
-
-                    /*int channelPos = temporaryChannels.Count + addChannelsIndex;
-
-                    temporaryChannels.Add (e.Channel);
-                    allVoiceChannels.Add (e.Channel.Id, new VoiceChannel (e.Channel.Id, e.Channel.Name, channelPos));
-                    if (awaitingChannels.Remove (e.Channel.Name)) {
-                        Console.WriteLine ("Removing awaited channel from awaitingChannel: " + e.Channel.Name);
-                    }else {
-                        Console.WriteLine ("Failed to remove awaited channel " + e.Channel.Name + " - awaiting channels count: " + awaitingChannels.Count);
-                    }
-
-                    IEnumerable<VoiceChannel> channels = allVoiceChannels.Values.ToList ();
-                    foreach (VoiceChannel channel in channels) {
-                        if (channel.position >= channelPos && channel.GetChannel () != e.Channel)
-                            channel.position++;
-                    }
-
-                    afkChannel.GetChannel ().Edit (null, null, int.MaxValue);*/
-                }
-            };
         }
 
         private static void AddDefaultChannel (ulong id, string name, int index) {
@@ -238,18 +215,15 @@ namespace DiscordCthulhu {
                     continue;
 
                 if (cur.GetChannel () != null) {
-                    Console.WriteLine ("VoiceChannel name: " + cur.name + ", channel name: " + cur.GetChannel ().Name + ", user count: " + cur.GetChannel ().Users.Count());
                     if (cur.GetChannel ().Users.Count () != 0) {
                         fullChannels++;
                     }
                 }
             }
 
-            Console.WriteLine ("Full: " + fullChannels + ", Queue: " + nameQueue.Count + ", Awaiting: " + awaitingChannels.Count);
             // If the amount of full channels are more than or equal to the amount of channels, add a new one.
             if (fullChannels == count - 1) {
                 if (nameQueue.Count > 0 && awaitingChannels.Count == 0) {
-                    Console.WriteLine ("Adding a new channel!");
                     string channelName = nameQueue.Dequeue ();
 
                     Task<Channel> createTask = server.CreateChannel (channelName, ChannelType.Voice);
@@ -288,8 +262,8 @@ namespace DiscordCthulhu {
             public int position;
             public bool lockable = true;
 
-            public User locker;
-            public List<User> allowedUsers = new List<User>();
+            public ulong lockerID;
+            public List<ulong> allowedUsers = new List<ulong>();
 
             public VoiceChannel (ulong _id, string n, int pos) {
                 id = _id;
@@ -299,12 +273,7 @@ namespace DiscordCthulhu {
             }
 
             public Channel GetChannel () {
-                Channel channel = Program.SearchChannel (Program.GetServer (), name);
-                if (channel == null)
-                    // If channel still isn't found post search, search for it with a lock icon on it.
-                    channel = Program.SearchChannel (Program.GetServer (), lockIcon + name);
-
-                return channel;
+                return Program.discordClient.GetChannel (id);
             }
 
             public bool IsLocked () {
@@ -313,25 +282,29 @@ namespace DiscordCthulhu {
 
             public void Lock (User lockingUser, bool update) {
                 if (lockable) {
-                    locker = lockingUser;
-                    allowedUsers = GetChannel ().Users.ToList ();
+                    lockerID = lockingUser.Id;
+
+                    List<ulong> alreadyIn = new List<ulong> ();
+                    foreach (User user in GetChannel ().Users) {
+                        alreadyIn.Add (user.Id);
+                    }
+
+                    allowedUsers = alreadyIn;
                     if (update)
                         UpdateVoiceChannel (GetChannel ());
-
-                    Console.WriteLine ("Locking " + name + " by " + lockingUser.Name);
                 }
             }
 
             public void Unlock (bool update) {
-                allowedUsers = new List<User> ();
-                locker = null;
+                allowedUsers = new List<ulong> ();
+                lockerID = 0;
                 if (update)
                     UpdateVoiceChannel (GetChannel ());
             }
 
             public bool InviteUser (User sender, User user) {
-                if (!allowedUsers.Contains (user) && IsLocked ()) {
-                    allowedUsers.Add (user);
+                if (!allowedUsers.Contains (user.Id) && IsLocked ()) {
+                    allowedUsers.Add (user.Id);
                     Program.messageControl.SendMessage (user, "**" + Program.GetUserName (sender) + "** has invited you to join the locked channel **" + name + "** on **" + Program.serverName + "**.");
                     return true;
                 }
@@ -340,29 +313,41 @@ namespace DiscordCthulhu {
 
             public void RequestInvite (User requester) {
                 if (IsLocked ()) {
-                    Program.messageControl.SendMessage (locker, "**" + Program.GetUserName (requester) + "** on **" + Program.serverName + "** requests access to your locked voice channel.");
+                    Program.messageControl.SendMessage (GetLocker (), "**" + Program.GetUserName (requester) + "** on **" + Program.serverName + "** requests access to your locked voice channel.");
                 }
             }
 
             public void Kick (User user) {
-                allowedUsers.Remove (user);
+                allowedUsers.Remove (user.Id);
                 OnUserJoined (user);
             }
 
             public void OnUserJoined (User user) {
                 // IsLocked is kind of redundant, but I like having it there.
                 if (IsLocked ()) {
-                    if (!allowedUsers.Contains (user)) {
+                    if (!allowedUsers.Contains (user.Id)) {
                         Program.messageControl.SendMessage (user,"Sorry man, but you do not have access to voice channel **" + name + "**.");
                         user.Edit (null, null, afkChannel.GetChannel ());
                     }
                 }
             }
 
+            public User GetLocker () {
+                return Program.GetServer ().GetUser (lockerID);
+            }
+
             public void CheckLocker () {
-                if (IsLocked () && !GetChannel ().Users.Contains (locker)) {
-                    locker = GetChannel ().Users.ElementAt (0);
-                    Program.messageControl.SendMessage (locker, "Since the previous locker left, you are now the new locker of voice channel **" + name + "**.");
+                bool containsLocker = false;
+                foreach (User user in GetChannel ().Users) {
+                    if (user.Id == lockerID) {
+                        containsLocker = true;
+                        break;
+                    }
+                }
+
+                if (IsLocked () && !containsLocker) {
+                    lockerID = GetChannel ().Users.ElementAt (0).Id;
+                    Program.messageControl.SendMessage (GetLocker (), "Since the previous locker left, you are now the new locker of voice channel **" + name + "**.");
                 }
             }
         }

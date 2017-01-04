@@ -1694,3 +1694,466 @@ Bot is ready and running!
 Booted flag set to true.
 Monster Mash/links/Gizmo Cagemort says: yaaaas santa thorbjörn 😄
 Monster Mash/links/khave says: 
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+Booted flag set to true.
+Updated channel: Radical Red - Microsoft Visual Studio with user count: 1
+Updated channel: Radical Red with user count: 0
+Updated channel: Radical Red - Microsoft Visual Studio with user count: 1
+Updated channel: Radical Red with user count: 0
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+Booted flag set to true.
+Updated channel: Radical Red with user count: 0
+Updated channel: Beautiful Blue with user count: 1
+Updated channel: Beautiful Blue with user count: 0
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+Voice channel change detected with user Lomztein
+Voice channel change detected with user Lomztein
+Booted flag set to true.
+Voice channel change detected with user Lomztein
+Voice channel change detected with user Lomztein
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+Booted flag set to true.
+Monster Mash/main/Lomztein says: @DrCooldude Den fulde version af botten kører nu, you may bask in his glory.
+Monster Mash/links/Agesome1 says: 
+Monster Mash/links/Agesome1 says: Rip den har været på det en time nu
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+Monster Mash/dump/Lomztein says: 
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+Monster Mash/dump/Lomztein says: 
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+Monster Mash/dump/Lomztein says: 
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+Monster Mash/dump/Lomztein says: 
+Monster Mash/dump/Lomztein says: Fixed it.
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+Booted flag set to true.
+Monster Mash/main/DrCooldude says: (╯°□°）╯︵ ┻━┻
+Sending a message.
+Monster Mash/main/Cthulhu says: Please respect tables. ┬─┬ノ(ಠ_ಠノ)
+Monster Mash/main/DrCooldude says: Nice ❤
+Monster Mash/dump/DrCooldude says: Jeg ved ikke hvad jeg kigger på
+Voice channel change detected with user DrCooldude
+Monster Mash/main/Lomztein says: @DrCooldude That aint even the coolest shit
+Voice channel change detected with user DrCooldude
+Monster Mash/main/Lomztein says: Prøv at checke voice channels ud
+Voice channel change detected with user Lomztein
+Voice channel change detected with user Lomztein
+Voice channel change detected with user Lomztein
+Voice channel change detected with user Agesome1
+Voice channel change detected with user Agesome1
+Voice channel change detected with user Agesome1
+Voice channel change detected with user Agesome1
+Voice channel change detected with user Agesome1
+Monster Mash/main/DrCooldude says: dont mind me, kom til at trykke ved en fejl lol
+Voice channel change detected with user Lomztein
+Voice channel change detected with user Lomztein
+Monster Mash/main/Lomztein says: TFW den buggede
+Monster Mash/main/DrCooldude says: er lige stået op heh
+Voice channel change detected with user Lomztein
+Voice channel change detected with user Lomztein
+Voice channel change detected with user Lomztein
+Voice channel change detected with user Lomztein
+Voice channel change detected with user Lomztein
+Voice channel change detected with user Lomztein
+Monster Mash/main/Lomztein says: Oh no, den buggede ikke, blot phantom channels
+Monster Mash/main/DrCooldude says: wow alle admins er online
+Monster Mash/main/DrCooldude says: sik
+Monster Mash/main/Lomztein says: På en eller anden måde har vi stort set altid en admin per ti personer
+Monster Mash/links/Agesome1 says: Den er stadig på 9% fbm
+Monster Mash/links/Lomztein says: <:feelsbadman:256937000295202818>
+Voice channel change detected with user The Human Toast
+Monster Mash/main/DrCooldude says: oh sheet @One "Blobman" Violence er online 💯 🙌
+Monster Mash/main/OneViolence says: Eey
+Monster Mash/dump/Lomztein says: Skulle fikse en bug, så hvad er bedre end **THE SILENCE** til at teste det?
+Monster Mash/links/Lomztein says: Jeg begynder at forstå hvorfor Minecraft crasher, når den af en eller anden måde bruger 8-9 gigs hukommelse: http://i.imgur.com/UMze53n.png
+Monster Mash/dump/DrCooldude says: o
+Monster Mash/dump/DrCooldude says: det er læge hvem
+Voice channel change detected with user Lomztein
+Sending a message.
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\welcomemessage.botproperty
+Monster Mash/main/Cthulhu says: **Hitzon** has joined this server. Bid them welcome or murder them in cold blood, it's really up to you.
+Private message: Cthulhu says: Hello, and welcome to **Monster Mash**!
+
+This server is dedicated to having a chill place to hang out. We aren't dedicated to any specific game, nor do you have to be here at specific times. Monster Mash is simply a lounge wherein you can find people to join in your mighty quests of brutal slaughter.
+
+In short, we are a danish group, with the occasional international member marked with the @International role. The group was created in the olden days of 2012 by Victor "Nyx" Koch and Marcus "Lomztein" Jensen, originally on Razer Comms, but later moved to Discord due to superiorness from Discord.
+
+I am the administrative bot **Adminthulhu**. I am a horrific ancient entity of infinite power, as well as your humble servant and automated administrator. I take care of automatic tasks such as sending you this, as well as notifying people of name changes and server joins. I also dynamically change the names of voice channels, to reflect the games played within. Aside from this, I also have a few utility commands that can be found in the #rules channel. For now, try and use **!setcolor <COLORNAME>** to give yourself a colored name.
+
+I also have a funky brother named **Funkthulhu**. He can play all sort of music, and is maintained by Thorvald "The Human Toast" Kjartansson. I myself am maintained by Marcus "Lomztein" Jensen, with occasional help from the rest of the admin crew.
+
+**Rules of the Monster Mash:**
+ - Respect people, as in: Do not be a douchenozzle.
+ - NSFW/NSFL content is not allowed.
+ - Admins are litteraly gods on this plane of existance.
+ - Dankness is good.
+
+**Text Channel Overview:**
+#main - General discussion and talk of various things. Links are not embedded in here.
+#international - Kind of useless, but we like having it there.
+#suggestions - Suggest changes and improvements to the server. Admins might even listen if you are lucky.
+#links - If you want to share something out of the blue, throw it here. This is to avoid filling main with links.
+Private message: Cthulhu says: #readitonreddit - Like links, but specifically for Reddit link.
+#music - Any sweet ass jams you have should go in here.
+#rules - A rarely updated ruleset, as well as bot commands can be found here.
+#announcements - Admins use this to easily tell the entire server of new stuff happening.
+#migmig - The dankest of memes should go here. It must be atleast one dank to enter.
+#admin - Hah, you can't see this lol.
+#dump - Spam, bot interaction, any kind of stuff not covered anywhere else goes here.
+
+**Current Administrators:**
+ - Victor "Nyx" Koch
+ - Marcus "Lomztein" Jensen
+ - Micheal "Gizmo Gizmo" B�gh
+ - Younes "DrCooldude" Zakaria
+
+These can be reached by using the **@Admin** mention.
+
+**Game Specific Mentions:**
+ - @OVERWATCH
+ - @HEROES OF THE STORM
+ - @RAINBOW SIX: SIEGE
+ - @ROCKET LEAGUE
+
+
+**Off-Discord Sites:**
+ - Subreddit: https://www.reddit.com/r/MonsterMashHideout/
+ - YouTube Channel: https://www.youtube.com/channel/UCKiVIjmGiy8MZq51U4TlPKA
+ - Steam Group: https://steamcommunity.com/groups/MosterMashHideout
+Monster Mash/main/The Human Toast says: @Hitzon 👋
+Monster Mash/main/Hitzon says: hey 😄
+Monster Mash/main/Exelion AI says: wait when did we get so many admins?
+Voice channel change detected with user Lomztein
+Voice channel change detected with user Hitzon
+Monster Mash/main/Exelion AI says: there where just two some months ago
+Voice channel change detected with user Lomztein
+Voice channel change detected with user Lomztein
+Voice channel change detected with user Hitzon
+Voice channel change detected with user Hitzon
+Monster Mash/dump/Lomztein says: !lock
+Sending a message.
+Monster Mash/dump/Cthulhu says: Succesfully locked voice channel **Radical Red**.
+Monster Mash/dump/Lomztein says: !unlock
+Sending a message.
+Monster Mash/dump/Cthulhu says: Succesfully unlocked voice channel **Radical Red**.
+Monster Mash/dump/The Human Toast says: !join
+Voice channel change detected with user GodZilla
+Monster Mash/dump/GodZilla says: Joining **Radical Red - FTB**
+Monster Mash/dump/The Human Toast says: !gm song don't stop me now
+Monster Mash/dump/GodZilla says: Currently playing: **Queen - Don't Stop Me Now (Remastered 2011)**
+Monster Mash/dump/Lomztein says: (╯°□°）╯︵ ┻━┻
+Sending a message.
+Monster Mash/dump/Cthulhu says: Please respect tables. ┬─┬ノ(ಠ_ಠノ)
+Monster Mash/dump/The Human Toast says: (╯°□°）╯︵ ┻━┻ test
+Sending a message.
+Monster Mash/dump/Cthulhu says: Please respect tables. ┬─┬ノ(ಠ_ಠノ)
+Monster Mash/dump/The Human Toast says: (╯°□°）╯︵ ┻━┻  - whoever wants to respect tables is a faggot
+Sending a message.
+Monster Mash/dump/Cthulhu says: Please respect tables. ┬─┬ノ(ಠ_ಠノ)
+Monster Mash/dump/Lomztein says: Thx fam!
+Sending a message.
+Monster Mash/dump/Cthulhu says: No props. We Gucci.
+Monster Mash/dump/The Human Toast says: Gotcha
+Monster Mash/dump/Lomztein says: https://github.com/Lomztein/DiscordCthulhuBot/blob/master/DiscordCthulhu/Phrase.cs
+Monster Mash/dump/GodZilla says: No more songs left in queue
+Voice channel change detected with user Hitzon
+Voice channel change detected with user Hitzon
+Voice channel change detected with user The Human Toast
+Voice channel change detected with user The Human Toast
+Voice channel change detected with user The Human Toast
+Monster Mash/dump/The Human Toast says: @Lomztein Universe you see?
+Voice channel change detected with user The Human Toast
+Voice channel change detected with user The Human Toast
+Voice channel change detected with user The Human Toast
+Voice channel change detected with user The Human Toast
+Voice channel change detected with user Lomztein
+Voice channel change detected with user The Human Toast
+Voice channel change detected with user Lomztein
+Voice channel change detected with user The Human Toast
+Voice channel change detected with user The Human Toast
+Voice channel change detected with user The Human Toast
+Voice channel change detected with user The Human Toast
+Voice channel change detected with user Lomztein
+Voice channel change detected with user Lomztein
+Voice channel change detected with user Lomztein
+Voice channel change detected with user Lomztein
+Voice channel change detected with user Lomztein
+Voice channel change detected with user The Human Toast
+Voice channel change detected with user The Human Toast
+Voice channel change detected with user The Human Toast
+Voice channel change detected with user The Human Toast
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+Booted flag set to true.
+Voice channel change detected with user The Human Toast
+Voice channel change detected with user The Human Toast
+Voice channel change detected with user The Human Toast
+Voice channel change detected with user The Human Toast
+Voice channel change detected with user Hitzon
+Voice channel change detected with user Hitzon
+Voice channel change detected with user The Human Toast
+Voice channel change detected with user The Human Toast
+Voice channel change detected with user Hitzon
+Voice channel change detected with user The Human Toast
+Voice channel change detected with user The Human Toast
+Voice channel change detected with user The Human Toast
+Voice channel change detected with user The Human Toast
+Voice channel change detected with user The Human Toast
+Voice channel change detected with user Hitzon
+Voice channel change detected with user Hitzon
+Voice channel change detected with user The Human Toast
+Voice channel change detected with user The Human Toast
+Voice channel change detected with user The Human Toast
+Voice channel change detected with user The Human Toast
+Voice channel change detected with user The Human Toast
+Monster Mash/dump/The Human Toast says: https://gfycat.com/IllegalPhysicalKingbird @Lomztein Universe
+Monster Mash/dump/Hitzon says: 
+Monster Mash/dump/Hitzon says: 
+Monster Mash/dump/Hitzon says: 
+Monster Mash/dump/Hitzon says: 
+Monster Mash/links/Agesome1 says: Wow
+Monster Mash/dump/The Human Toast says: https://www.reddit.com/r/discordapp/comments/5m0jd8/dont_you_wish_your_admin_bot_was_hot_like_ours/
+Monster Mash/links/Agesome1 says: Hvor slemt ville det være at genstarte min pc imens den defragmentere?
+Monster Mash/dump/Hitzon says: 
+Monster Mash/dump/Hitzon says: 
+Monster Mash/dump/The Human Toast says: !gm song don't you wish your girlfriend was hot like me
+Monster Mash/dump/GodZilla says: **Error:** http://i.imgur.com/fJNbVWN.png
+Monster Mash/dump/The Human Toast says: !gm song the pussycat dolls don't cha
+Monster Mash/dump/GodZilla says: Currently playing: **The Pussycat Dolls - Don't Cha**
+Monster Mash/dump/Hitzon says: 
+Monster Mash/dump/Hitzon says: 
+Monster Mash/dump/Hitzon says: 
+Monster Mash/dump/Hitzon says: 
+Monster Mash/links/The Human Toast says: http://openhosting.com/pricing/#113+/,500,512,0,0,1,10,/,/,/,1,0,0,0,mia-p
+Monster Mash/dump/Hitzon says: 
+Monster Mash/dump/Hitzon says: 
+Monster Mash/dump/Lomztein says: !gm song children of bodom - oops i did it again
+Monster Mash/dump/GodZilla says: **Britney Spears - Oops!...I Did It Again** has been queued. The song is currently number 1 in the queue
+Monster Mash/dump/Hitzon says: 
+Monster Mash/dump/Lomztein says: !gm song Children of Bodom - Oops! I did it again
+Monster Mash/dump/GodZilla says: **Britney Spears - Oops!...I Did It Again** has been queued. The song is currently number 2 in the queue
+Monster Mash/dump/Hitzon says: 
+Monster Mash/dump/Lomztein says: Could you ont
+Monster Mash/dump/Lomztein says: !gm song children of bodom
+Monster Mash/dump/GodZilla says: **Children Of Bodom - Everytime I Die** has been queued. The song is currently number 3 in the queue
+Monster Mash/dump/GodZilla says: Currently playing: **Britney Spears - Oops!...I Did It Again**
+Monster Mash/main/Agesome1 says: Guys, hvor slemt vil det være at force min computer til at slukke midt i en diskfragmentering, den har stået på 9% i godt over 2 timer nu
+Monster Mash/main/Nyx says: ayyyyy!
+Monster Mash/main/Nyx says: diskfragmentering?
+Monster Mash/main/Nyx says: burde ikke betyde meget
+Monster Mash/main/Gizmo Gizmo says: jaer, at bogstavelig talt slette alt på harddisken 😛
+Voice channel change detected with user Hitzon
+Monster Mash/main/Nyx says: @Agesome1 http://letmegooglethat.com/?q=turning+off+computer+during+disk+defragmentation
+Monster Mash/main/Agesome1 says: Tried that
+Monster Mash/main/Nyx says: oh
+Monster Mash/main/Nyx says: fair enough xD
+Monster Mash/main/DrCooldude says: @Agesome1 sidst jeg afbrød min computer under defragmentering fuckede det min harddisk op
+Monster Mash/main/DrCooldude says: men idk
+Monster Mash/main/DrCooldude says: det var tilbage i 2008 det skete lmao
+Monster Mash/main/Agesome1 says: xD
+Monster Mash/main/Agesome1 says: 9 år siden
+Monster Mash/dump/GodZilla says: Currently playing: **Britney Spears - Oops!...I Did It Again**
+Monster Mash/main/Agesome1 says: Kan ikke spille nemlig, og som det billede jeg sendte i links har den været på siden da
+Monster Mash/main/Agesome1 says: Men det er mit hdd den defrsgger, hvor jeg intet har på, har alt på ssd
+Monster Mash/main/DrCooldude says: hm, tænkte at det sikkert ikke vil gøre noget så 😃
+Monster Mash/main/DrCooldude says: men tager ingen ansvar for noget :p
+Monster Mash/dump/GodZilla says: Currently playing: **Children Of Bodom - Everytime I Die**
+Monster Mash/dump/The Human Toast says: !gm artist thrice
+Monster Mash/dump/GodZilla says: Adding **Thrice's** top 5 songs to the queue**Thrice - Black Honey** has been added to the queue
+**Thrice - Blood on the Sand** has been added to the queue
+**Thrice - Hurricane** has been added to the queue
+**Thrice - The Artist In The Ambulance** has been added to the queue
+**Thrice - The Window** has been added to the queue
+Monster Mash/main/Agesome1 says: Im gonna try, and is it fucks Up, im sueing you!!!!! xD
+Monster Mash/main/DrCooldude says: riperino
+Monster Mash/main/DrCooldude says: good luck tho 👶
+Monster Mash/main/Agesome1 says: Nothing wrong yet
+Monster Mash/dump/GodZilla says: Currently playing: **Thrice - Black Honey**
+Monster Mash/main/DrCooldude says: tænkte at det værste der kunne ske er bare at computeren kører CHKDSK eller noget
+Monster Mash/main/Agesome1 says: Den skrev bare tryk på en random knap inden for x tid for at skippe defragmentering
+Monster Mash/main/DrCooldude says: Var det lidt a-la sådan en skærm? http://www.question-defense.com/wp-content/uploads/2010/06/windows-7-chkdsk-every-boot.gif
+Monster Mash/main/DrCooldude says: måske var det bare CHKDSK der startede op, og ikke diskdefragmentering. Defrag er typisk noget man manuelt kører 😃
+Monster Mash/dump/GodZilla says: Currently playing: **Thrice - Blood on the Sand**
+Monster Mash/main/DrCooldude says: Hvis det er tilfældet, så bør det være fint nok at skippe. Selvom det ikke er nødvendigvis anbefalet.
+Voice channel change detected with user DrCooldude
+Voice channel change detected with user DrCooldude
+Monster Mash/main/Agesome1 says: Nope, den lignede den jeg sendte i links, hvor der står 9%, teksten var bare tryk på en knap inden får x atnal sekunder for at skippe
+Monster Mash/main/Agesome1 says: Har skippet
+Monster Mash/main/Agesome1 says: fuck that sjit
+Monster Mash/main/Agesome1 says: never again
+Monster Mash/dump/GodZilla says: Currently playing: **Thrice - Hurricane**
+Monster Mash/main/DrCooldude says: ah, I see
+Monster Mash/main/DrCooldude says: meh fuck it bare skip det lort 😂
+Voice channel change detected with user The Human Toast
+Monster Mash/dump/GodZilla says: Currently playing: **Thrice - The Artist In The Ambulance**
+Voice channel change detected with user Lomztein
+Monster Mash/international/Nyx says: so uuuh @Spectral Maheswaran @Lomztein Universe I just watched all the new leaks
+Monster Mash/international/Nyx says: and uuuuh
+Monster Mash/international/Nyx says: yea
+Monster Mash/dump/GodZilla says: Currently playing: **Thrice - The Window**
+Monster Mash/international/Gizmo Gizmo says: SPOILER ALERT
+Monster Mash/international/Nyx says: I'm not saying anything :P
+Monster Mash/international/Nyx says: EVERYONE DIES
+Monster Mash/international/Nyx says: fuck i slipped
+Monster Mash/international/Gizmo Gizmo says: LAPIS FALLS IN LOVE WITH STEVEN
+Monster Mash/international/Nyx says: NO
+Monster Mash/international/Gizmo Gizmo says: <:kappa:231415605121646592>
+Monster Mash/international/Spectral says: AMETHYST WAS PINK DIAMOND ALL ALONG
+Monster Mash/international/Nyx says: ALSO LION OR SOMETHING
+Monster Mash/international/Nyx says: CO PINK DIAMOND!
+Monster Mash/international/DrCooldude says: AERITH DIES
+Monster Mash/international/The Human Toast says: SNAPE KILLS DUMBLEDORE
+Monster Mash/international/Spectral says: SNAPE KILLS DUMBLEDORE
+Monster Mash/international/Spectral says: lol
+Monster Mash/international/Nyx says: LOL
+Monster Mash/international/Nyx says: HOW COULD YOU TWO
+Monster Mash/international/The Human Toast says: 👀
+Monster Mash/international/Nyx says: 👀
+Monster Mash/international/Nyx says: wow this emoji
+Monster Mash/international/DrCooldude says: T E L E P A T H Y
+Monster Mash/international/Gizmo Gizmo says: <:Mercywat:234087600078454784>
+Monster Mash/international/DrCooldude says: 🌴
+Monster Mash/international/Nyx says: @Spectral Maheswaran you should totes watch it though
+Monster Mash/international/Nyx says: I mean, why wait?
+Monster Mash/international/Spectral says: Well
+Monster Mash/international/Spectral says: Exams
+Monster Mash/international/Nyx says: well that's fair
+Monster Mash/international/Spectral says: Also I'm not at home, laptop screen not good enough #24inchmasterrace
+Monster Mash/international/Spectral says: Maybe this weekend though
+Monster Mash/dump/GodZilla says: No more songs left in queue
+Monster Mash/international/Nyx says: :D
+Monster Mash/international/Nyx says: can't wait to hear reactions
+Monster Mash/main/DrCooldude says: @Lomztein Universe sidder faktisk og overvejer at få fat i et webcam, så vi kan holde en kæmpe circlejerk den dag hvor Discord introducerer videochat
+Monster Mash/international/Nyx says: seriously these episodes are fucking great
+Monster Mash/main/Nyx says: xD
+Monster Mash/main/The Human Toast says: Hvis du vil have literal circlejerk så bare gå på omegle
+Monster Mash/international/Lomztein says: Can confirm, have watched, episodes are awesome!
+Monster Mash/international/Lomztein says: *And slightly dystopian*
+Voice channel change detected with user Lomztein
+Monster Mash/main/Nyx says: THERE'S AN OASIS BRAWL! :D
+Monster Mash/international/Nyx says: aww shit
+Monster Mash/dump/Lomztein says: !leave
+Voice channel change detected with user GodZilla
+Monster Mash/dump/GodZilla says: leaving **Radical Red - FTB Infinity Lite**
+Voice channel change detected with user Lomztein
+Monster Mash/international/Nyx says: didn't you think that thing where the thing happened was awesome?
+Monster Mash/international/Nyx says: @Lomztein Universe ?
+Voice channel change detected with user Lomztein
+Voice channel change detected with user Lomztein
+Monster Mash/international/Lomztein says: That thing that happened was incredibly cool
+Monster Mash/international/Nyx says: IKR
+Monster Mash/international/Lomztein says: Interesting new perspectives on those specific characters
+Monster Mash/international/Nyx says: oh yea
+Monster Mash/international/Nyx says: I like the 🎶 as well
+Monster Mash/international/Gizmo Gizmo says: and that *new gem* guy!
+Monster Mash/international/Nyx says: the what now
+Monster Mash/international/Lomztein says: Totes
+Monster Mash/international/Gizmo Gizmo says: <:kappa:231415605121646592>
+Monster Mash/international/Nyx says: Steven 2.0
+Monster Mash/international/Lomztein says: I came buckets
+Monster Mash/international/Lomztein says: Litteraly buckets
+Monster Mash/international/Nyx says: Steven 2: electric gregaloo
+Monster Mash/international/Lomztein says: Like 2 of them
+Monster Mash/international/Nyx says: damn
+Monster Mash/international/Nyx says: *TWO WHOLE BUCKETS?!*
+Monster Mash/international/Lomztein says: >Steven 2: Electric Geregaloo
+Monster Mash/international/Lomztein says: *FTFY*
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty

@@ -300,3 +300,300 @@ Monster Mash/dump/Twistbonk says: !gm song survivor
 Monster Mash/dump/GodZilla says: **Survivor - Eye of the Tiger** has been queued. The song is currently number 1 in the queue
 Monster Mash/dump/GodZilla says: Currently playing: **Survivor - Eye of the Tiger**
 Monster Mash/dump/GodZilla says: No more songs left in queue
+Monster Mash/dump/Lomztein says: Det skal jeg nok få set på, på et tidspunkt
+Updated channel: Gorgeous Green with user count: 0
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+Monster Mash/dump/Lomztein says: @khave Måske virker det bedre nu, men jeg er ikke 100% sikker
+Monster Mash/dump/Frandendk says: !gm song stamp on the ground
+Monster Mash/dump/GodZilla says: Currently playing: **ItaloBrothers - Stamp on the Ground (Radio Edit)**
+Booted flag set to true.
+Updated channel: Radical Red - Microsoft Visual Studio with user count: 1
+Updated channel: Gorgeous Green with user count: 0
+Updated channel: Corner of Shame with user count: 1
+Monster Mash/dump/Lomztein says: !lock
+Sending a message.
+Updated channel: 🔒 Radical Red - Microsoft Visual Studio with user count: 1
+Monster Mash/dump/Cthulhu says: Succesfully locked voice channel **Radical Red**.
+Monster Mash/dump/Lomztein says: !kick Lomztein
+Sending a message.
+Monster Mash/dump/Cthulhu says: User **Lomztein Cage-un** succesfully kicked.
+Private message: Cthulhu says: Sorry man, but you have been kicked from voice channel **Radical Red**.
+Monster Mash/dump/Lomztein says: lolol
+Monster Mash/dump/Lomztein says: wait what
+Updated channel: Radical Red with user count: 0
+Updated channel: Gorgeous Green - Microsoft Visual Studio with user count: 1
+Updated channel: Gorgeous Green with user count: 0
+Updated channel: Radical Red - Microsoft Visual Studio with user count: 1
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+Monster Mash/dump/Lomztein says: !lock
+Sending a message.
+Updated channel: 🔒 Radical Red - Microsoft Visual Studio with user count: 1
+Monster Mash/dump/Cthulhu says: Succesfully locked voice channel **Radical Red**.
+Monster Mash/dump/Lomztein says: !members
+Monster Mash/dump/Lomztein says: Well fuck
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+Booted flag set to true.
+Updated channel: 🔒 Radical Red - Microsoft Visual Studio with user count: 1
+Private message: Cthulhu says: After a reboot of this bot, you have automatically been granted ownership of locked channel **Radical Red**.
+Updated channel: 🔒 Radical Red - Microsoft Visual Studio with user count: 2
+Private message: Cthulhu says: Sorry man, but you do not have access to voice channel **Radical Red**.
+Updated channel: 🔒 Radical Red - Microsoft Visual Studio with user count: 1
+Updated channel: 🔒 Radical Red - Microsoft Visual Studio with user count: 1
+Updated channel: 🔒 Radical Red - Microsoft Visual Studio with user count: 1
+Updated channel: 🔒 Radical Red - Microsoft Visual Studio with user count: 1
+Updated channel: 🔒 Radical Red - Microsoft Visual Studio with user count: 1
+Updated channel: 🔒 Radical Red - Microsoft Visual Studio with user count: 1
+Updated channel: 🔒 Radical Red - Microsoft Visual Studio with user count: 1
+Monster Mash/dump/Lomztein says: !invite Fuck
+Sending a message.
+Private message: Cthulhu says: **Lomztein Cage-un** has invited you to join the locked channel **Radical Red** on **Monster Mash**.
+Monster Mash/dump/Cthulhu says: User **Fuck the Gremlings** succesfully invited.
+Updated channel: 🔒 Radical Red - Microsoft Visual Studio with user count: 2
+Monster Mash/dump/Lomztein says: !members
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+Monster Mash/dump/Lomztein says: !members
+Sending a message.
+Monster Mash/dump/Cthulhu says: Error - The channel isn't locked.
+Monster Mash/dump/Lomztein says: !heuh
+Booted flag set to true.
+Updated channel: 🔒 Radical Red - Microsoft Visual Studio with user count: 1
+Updated channel: 🔒 Radical Red - Microsoft Visual Studio with user count: 1
+Private message: Cthulhu says: After a reboot of this bot, you have automatically been granted ownership of locked channel **Radical Red**.
+Updated channel: 🔒 Radical Red - Microsoft Visual Studio with user count: 2
+Private message: Cthulhu says: Sorry man, but you do not have access to voice channel **Radical Red**.
+Updated channel: 🔒 Radical Red - Microsoft Visual Studio with user count: 1
+Updated channel: 🔒 Radical Red - Microsoft Visual Studio with user count: 1
+Updated channel: 🔒 Radical Red - Microsoft Visual Studio with user count: 1
+Updated channel: 🔒 Radical Red - Microsoft Visual Studio with user count: 1
+Updated channel: 🔒 Radical Red - Microsoft Visual Studio with user count: 1
+Updated channel: 🔒 Radical Red - Microsoft Visual Studio with user count: 1
+Updated channel: 🔒 Radical Red - Microsoft Visual Studio with user count: 1
+Monster Mash/dump/Lomztein says: !members
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+Booted flag set to true.
+Updated channel: 🔒 Radical Red - Microsoft Visual Studio with user count: 2
+Updated channel: 🔒 Radical Red - Microsoft Visual Studio with user count: 2
+Private message: Cthulhu says: After a reboot of this bot, you have automatically been granted ownership of locked channel **Radical Red**.
+Monster Mash/dump/Lomztein says: !members
+Sending a message.
+Monster Mash/dump/Cthulhu says: Users allowed on your locked channel:
+```
+Lomztein Cage-un
+Fuck the Gremlings
+```
+Monster Mash/dump/GodZilla says: No more songs left in queue
+Monster Mash/dump/Lomztein says: !kick fuck
+Sending a message.
+Updated channel: 🔒 Radical Red - Microsoft Visual Studio with user count: 1
+Updated channel: 🔒 Radical Red - Microsoft Visual Studio with user count: 1
+Private message: Cthulhu says: Sorry man, but you do not have access to voice channel **Radical Red**.
+Updated channel: 🔒 Radical Red - Microsoft Visual Studio with user count: 1
+Updated channel: 🔒 Radical Red - Microsoft Visual Studio with user count: 1
+Updated channel: 🔒 Radical Red - Microsoft Visual Studio with user count: 1
+Updated channel: 🔒 Radical Red - Microsoft Visual Studio with user count: 1
+Updated channel: 🔒 Radical Red - Microsoft Visual Studio with user count: 1
+Monster Mash/dump/Cthulhu says: User **Fuck the Gremlings** succesfully kicked.
+Private message: Cthulhu says: Sorry man, but you have been kicked from voice channel **Radical Red**.
+Monster Mash/dump/Lomztein says: >:D
+Monster Mash/dump/Lomztein says: !invite fuck
+Sending a message.
+Private message: Cthulhu says: **Lomztein Cage-un** has invited you to join the locked channel **Radical Red** on **Monster Mash**.
+Monster Mash/dump/Cthulhu says: User **Fuck the Gremlings** succesfully invited.
+Updated channel: 🔒 Radical Red - Microsoft Visual Studio with user count: 2
+Updated channel: 🔒 Radical Red with user count: 1
+Private message: Cthulhu says: Since the previous locker left, you are now the new locker of voice channel **Radical Red**.
+Updated channel: 🔒 Radical Red - Microsoft Visual Studio with user count: 2
+Updated channel: 🔒 Radical Red - Microsoft Visual Studio with user count: 1
+Private message: Cthulhu says: Since the previous locker left, you are now the new locker of voice channel **Radical Red**.
+Updated channel: Radical Red with user count: 0
+Monster Mash/dump/Lomztein says: Det virker til at virke bedre nu
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+Booted flag set to true.
+Monster Mash/dump/Frandendk says: !gm song frame of mind
+Monster Mash/dump/GodZilla says: Currently playing: **Tristam & Braken - Frame of Mind**
+Updated channel: Beautiful Blue - Path of Exile with user count: 4
+Updated channel: Beautiful Blue - Path of Exile with user count: 4
+Monster Mash/dump/GodZilla says: No more songs left in queue
+Monster Mash/main/khave says: @SonnaheR #topKEK fgt
+Updated channel: Beautiful Blue - Path of Exile with user count: 3
+Updated channel: Beautiful Blue - Path of Exile with user count: 4
+Monster Mash/links/khave says: https://www.youtube.com/watch?v=rfKVKmqzCIs
+Monster Mash/main/khave says: @SonnaheR #topKEK http://www.veteranboosters.com/overwatch/
+Monster Mash/main/khave says: Her efter aftale
+Monster Mash/main/khave says: <:kappa:231415605121646592>
+Monster Mash/dump/SonnaheR #topKEK says: !gm artist nik og jay
+Monster Mash/dump/GodZilla says: Adding **Nik & Jay's** top 5 songs to the queue**Nik & Jay - Novembervej** has been added to the queue
+**Nik & Jay - Hot!** has been added to the queue
+**Nik & Jay - Et Sidste Kys (feat. Julie Bertelsen)** has been added to the queue
+**Nik & Jay - Magisk** has been added to the queue
+**Nik & Jay - Boing!** has been added to the queue
+Monster Mash/dump/GodZilla says: Currently playing: **Nik & Jay - Novembervej**
+Monster Mash/main/Lomztein says: Jesus, er der legit folk der betaler andre for at spille ens spil for en?
+Monster Mash/dump/GodZilla says: Currently playing: **Nik & Jay - Hot!**
+Monster Mash/main/khave says: Ja
+Monster Mash/main/khave says: så de kan komme højere rank
+Monster Mash/main/khave says: fordi de fortjener det lol
+Monster Mash/main/Lomztein says: For så at få tæv af de spillere der legit er kommet der op?
+Monster Mash/main/khave says: eller at lade vær med at spille
+Monster Mash/main/khave says: så de kan sige at de er kommet så højt
+Monster Mash/main/Lomztein says: Gettin' all dem gurls.
+Updated channel: Beautiful Blue - Path of Exile with user count: 5
+Monster Mash/dump/GodZilla says: Currently playing: **Nik & Jay - Et Sidste Kys (feat. Julie Bertelsen)**
+Updated channel: Beautiful Blue - Path of Exile with user count: 5
+Updated channel: Beautiful Blue - Path of Exile with user count: 5
+Monster Mash/dump/GodZilla says: Currently playing: **Nik & Jay - Magisk**
+Monster Mash/main/BrorNord says: https://www.youtube.com/watch?v=u-46GTL5IQY
+Monster Mash/main/BrorNord says: !gm song bubbibjørn
+Sending a message.
+Monster Mash/main/Cthulhu says: Please don't use bot commands in the main channel, so we avoid spamizzle forshizzle.
+Monster Mash/main/GodZilla says: **Error:** http://i.imgur.com/fJNbVWN.png
+Monster Mash/dump/BrorNord says: !gm song bubbi bjørn dansk
+Monster Mash/dump/GodZilla says: **Error:** http://i.imgur.com/fJNbVWN.png
+Monster Mash/main/Lomztein says: I came.
+Monster Mash/dump/BrorNord says: !gm song danish dub
+Monster Mash/dump/GodZilla says: **Danish - 7 Days (Jake Twell Dub)** has been queued. The song is currently number 2 in the queue
+Monster Mash/dump/GodZilla says: Currently playing: **Nik & Jay - Boing!**
+Monster Mash/dump/BrorNord says: !gm https://www.youtube.com/watch?v=u-46GTL5IQY
+Monster Mash/dump/BrorNord says: !gm song https://www.youtube.com/watch?v=u-46GTL5IQY
+Monster Mash/dump/GodZilla says: **Error:** http://i.imgur.com/fJNbVWN.png
+Monster Mash/dump/GodZilla says: Currently playing: **Danish - 7 Days (Jake Twell Dub)**
+Monster Mash/dump/BrorNord says: !skip
+Monster Mash/dump/BrorNord says: !gm song Bubbibjørn sangen
+Monster Mash/dump/GodZilla says: **Error:** http://i.imgur.com/fJNbVWN.png
+Monster Mash/dump/SonnaheR #topKEK says: !gm song bubbibjørn
+Monster Mash/dump/GodZilla says: **Error:** http://i.imgur.com/fJNbVWN.png
+Monster Mash/dump/SonnaheR #topKEK says: !gm artist joey moe
+Monster Mash/dump/BrorNord says: !gm song Luftens Helte
+Updated channel: Beautiful Blue - Path of Exile with user count: 5
+Updated channel: Beautiful Blue - Path of Exile with user count: 5
+Monster Mash/dump/GodZilla says: **Error:** http://i.imgur.com/fJNbVWN.png
+Monster Mash/dump/GodZilla says: Adding **Joey Moe's** top 5 songs to the queue**Joey Moe - Million** has been added to the queue
+**Joey Moe - Smukkest På En Søndag** has been added to the queue
+**Joey Moe - Klar På Mig Nu** has been added to the queue
+**Joey Moe - Hvis Det Ik' Skal Være Os** has been added to the queue
+**Joey Moe - Elsk Mig Nu** has been added to the queue
+Monster Mash/dump/GodZilla says: Currently playing: **Joey Moe - Million**
+Updated channel: Beautiful Blue - Path of Exile with user count: 5
+Updated channel: Beautiful Blue - Path of Exile with user count: 5
+Monster Mash/dump/BrorNord says: !gm song tale spin
+Monster Mash/dump/GodZilla says: **Jeremy Olander - Tale Spin [ABGT196]** has been queued. The song is currently number 5 in the queue
+Monster Mash/dump/BrorNord says: !gm song talespion
+Monster Mash/dump/GodZilla says: **4 Strings - Take Me Away (Into The Night) 2006 (Mac Zimms Remix)** has been queued. The song is currently number 6 in the queue
+Monster Mash/dump/BrorNord says: (╯°□°）╯︵ ┻━┻
+Sending a message.
+Monster Mash/dump/Cthulhu says: Please respect tables. ┬─┬ノ(ಠ_ಠノ)
+Monster Mash/dump/GodZilla says: Currently playing: **Joey Moe - Smukkest På En Søndag**
+Monster Mash/dump/GodZilla says: Currently playing: **Joey Moe - Klar På Mig Nu**
+Updated channel: Beautiful Blue - Path of Exile with user count: 5
+Updated channel: Beautiful Blue - Path of Exile with user count: 5
+Updated channel: Beautiful Blue - Path of Exile with user count: 5
+Updated channel: Beautiful Blue - Path of Exile with user count: 5
+Monster Mash/dump/GodZilla says: Currently playing: **Joey Moe - Hvis Det Ik' Skal Være Os**
+Monster Mash/dump/GodZilla says: Currently playing: **Joey Moe - Elsk Mig Nu**
+Monster Mash/dump/GodZilla says: Currently playing: **Jeremy Olander - Tale Spin [ABGT196]**
+Monster Mash/dump/BrorNord says: !skip
+Monster Mash/dump/GodZilla says: Skipping song.
+Monster Mash/dump/GodZilla says: Currently playing: **4 Strings - Take Me Away (Into The Night) 2006 (Mac Zimms Remix)**
+Monster Mash/dump/BrorNord says: !gm song take me on
+Monster Mash/dump/GodZilla says: **a-ha - Take On Me** has been queued. The song is currently number 1 in the queue
+Monster Mash/dump/BrorNord says: !skip
+Monster Mash/dump/GodZilla says: Skipping song.
+Monster Mash/dump/GodZilla says: Currently playing: **a-ha - Take On Me**
+Monster Mash/dump/GodZilla says: No more songs left in queue
+Monster Mash/dump/BrorNord says: !song artist kato
+Monster Mash/dump/BrorNord says: !gm artist kato
+Monster Mash/dump/GodZilla says: Adding **Kato's** top 5 songs to the queue**Kato - We On (feat. Jarren Benton, Pounds, Dizzy Wright)** has been added to the queue
+**KATO - Dumt På Dig (Radio Edit) (feat. TopGunn)** has been added to the queue
+**KATO - Turn The Lights Off (Radio Edit) (feat. Jon)** has been added to the queue
+**KATO - Sjus (Radio Edit) (feat. Ida Corr, Camille Jones & Johnson)** has been added to the queue
+**KATO - Hey Shorty (Yeah Yeah Part II) (Radio Edit) (feat. U$O & Johnson)** has been added to the queue
+Monster Mash/dump/GodZilla says: Currently playing: **Kato - We On (feat. Jarren Benton, Pounds, Dizzy Wright)**
+Monster Mash/dump/GodZilla says: Currently playing: **KATO - Dumt På Dig (Radio Edit) (feat. TopGunn)**
+Monster Mash/dump/GodZilla says: Currently playing: **KATO - Turn The Lights Off (Radio Edit) (feat. Jon)**
+Monster Mash/dump/GodZilla says: Currently playing: **KATO - Sjus (Radio Edit) (feat. Ida Corr, Camille Jones & Johnson)**
+Monster Mash/dump/GodZilla says: Currently playing: **KATO - Hey Shorty (Yeah Yeah Part II) (Radio Edit) (feat. U$O & Johnson)**
+Monster Mash/dump/GodZilla says: No more songs left in queue
+Monster Mash/dump/Frandendk says: !gm song trendemøller
+Monster Mash/dump/GodZilla says: **Error:** http://i.imgur.com/fJNbVWN.png
+Monster Mash/dump/SonnaheR #topKEK says: !gm artist lady gaga
+Monster Mash/dump/GodZilla says: Adding **Lady Gaga's** top 5 songs to the queue**Lady Gaga - Applause** has been added to the queue
+**Lady Gaga - Just Dance (feat. Colby O'Donis)** has been added to the queue
+**Lady Gaga - Poker Face** has been added to the queue
+**Lady Gaga - Perfect Illusion** has been added to the queue
+**Lady Gaga - Million Reasons** has been added to the queue
+Monster Mash/dump/GodZilla says: Currently playing: **Lady Gaga - Applause**
+Monster Mash/dump/GodZilla says: Currently playing: **Lady Gaga - Just Dance (feat. Colby O'Donis)**
+Monster Mash/readitonreddit/Lomztein says: Just putting this here: http://i.imgur.com/7cwAN33.png
+Monster Mash/readitonreddit/Lomztein says: Fuck jeg elsker det her /r/AskReddit thread: https://www.reddit.com/r/AskReddit/comments/5l4q4a/if_it_ever_turns_out_were_inside_a_simulation/
+Monster Mash/dump/GodZilla says: Currently playing: **Lady Gaga - Poker Face**
+Monster Mash/readitonreddit/Lomztein says: Det er outright inspirerende.
+Booting..
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\aliasses.dat
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\scores.botproperty
+Failed to load file at C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\groups.botproperty
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Debug\bottoken.botproperty
+Connecting using token: MTkyNzA3ODIyODc2NjIyODUw.CxW0Xg.gXnaIbfJfbkmODiLVA9RtMbfqxw
+Bot is ready and running!
+Booted flag set to true.
+Updated channel: Beautiful Blue - Path of Exile with user count: 2
+Updated channel: Beautiful Blue - Path of Exile with user count: 2
+Updated channel: Beautiful Blue with user count: 1
+Updated channel: Beautiful Blue - Path of Exile with user count: 2
+Monster Mash/main/khave says: Ja sikkert.
+Monster Mash/main/The Human Toast says: Det er en yderst sjov følelse at få glattet sit hår for første gang
+Monster Mash/main/The Human Toast says: @Lomztein can you relate
+Monster Mash/main/The Human Toast says: ?
+Monster Mash/main/Lomztein says: Nope
+Monster Mash/main/Lomztein says: Har aldrig glattet hår
+Monster Mash/main/Lomztein says: Am naturally fabouless
+Monster Mash/main/The Human Toast says: Du burde
+Monster Mash/main/The Human Toast says: Jeg følte mit estrogen niveau stige mens det blev glattet på mig
+Monster Mash/main/Lomztein says: *Did you grow bewbs?* <:boobs:232877640304951306>
+Monster Mash/main/The Human Toast says: Dog ikke
