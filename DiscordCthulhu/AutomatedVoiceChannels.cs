@@ -325,7 +325,7 @@ namespace DiscordCthulhu {
             public void OnUserJoined (User user) {
                 // IsLocked is kind of redundant, but I like having it there.
                 if (IsLocked ()) {
-                    if (!allowedUsers.Contains (user.Id)) {
+                    if (!allowedUsers.Contains (user.Id) && !user.ServerPermissions.ManageChannels) {
                         Program.messageControl.SendMessage (user,"Sorry man, but you do not have access to voice channel **" + name + "**.");
                         user.Edit (null, null, afkChannel.GetChannel ());
                     }
