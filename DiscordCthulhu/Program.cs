@@ -14,7 +14,7 @@ namespace DiscordCthulhu {
             new CCommandList (), new CRollTheDice (), new CCallVoiceChannel (), new CSetColor (),
             new CFlipCoin (), new CRandomGame (), new CQuote (), new CSetCommand (), new CEmbolden (),
             new CEndTheWorld (), new CChangeScore (), new CShowScore (), new CFizzfyr (), new CSwiggity (),
-            new CLock (), new CUnlock (), new CInvite (), new CMembers (), new CKick ()
+            new VoiceCommands (), new EventCommands ()
         };
 
         public static string dataPath = "";
@@ -22,6 +22,7 @@ namespace DiscordCthulhu {
         public static ScoreCollection scoreCollection = new ScoreCollection ();
         public static PlayerGroups playerGroups;
         public static MessageControl messageControl = null;
+        public static AutomatedEventHandling automatedEventHandling;
         public static string commandSettingsDirectory = "Command Settings/";
         public static string chatlogDirectory = "ChatLogs/";
         public static string resourceDirectory = "Resources/";
@@ -56,7 +57,7 @@ namespace DiscordCthulhu {
             new Phrase ("", "khave", 2, "¯\\_(ツ)_/¯"),
             new Phrase ("(╯°□°）╯︵ ┻━┻", 100, "Please respect tables. ┬─┬ノ(ಠ_ಠノ)")
         };
-        private static List<string> allowedDeletedMessages = new List<string>();
+        public static List<string> allowedDeletedMessages = new List<string>();
 
         // Feedback
         public static ulong authorID = 93744415301971968;
@@ -81,6 +82,7 @@ namespace DiscordCthulhu {
             aliasCollection = AliasCollection.Load ();
             scoreCollection.scores = ScoreCollection.Load ();
             playerGroups = PlayerGroups.Load ();
+            automatedEventHandling = new AutomatedEventHandling ();
 
             discordClient = new DiscordClient ();
             messageControl = new MessageControl();
@@ -99,20 +101,11 @@ namespace DiscordCthulhu {
 
                     if (message.Length > 0) {
 
-                        string command = message.Substring (1);
-                        List<string> arguments = new List<string> ();
+                        message = message.Substring (1);
+                        string command = "";
+                        List<string> arguments = ConstructArguments (message, out command);
 
-                        if (message.LastIndexOf (' ') != -1) {
-                            command = message.Substring (1, message.IndexOf (' ') - 1);
-                            string[] loc = message.Substring (message.IndexOf (' ') + 1).Split (';');
-                            for (int i = 0; i < loc.Length; i++) {
-
-                                loc[i] = TrimSpaces (loc[i]);
-                                arguments.Add (loc[i]);
-                            }
-                        }
-
-                        FindAndExecuteCommand (e, command, arguments);
+                        FindAndExecuteCommand (e, command, arguments, commands);
                     }
                 } else if (e.Message.IsAuthor) {
                     if (messageControl.messages.Count > 0) {
@@ -162,7 +155,9 @@ namespace DiscordCthulhu {
                 if (e.Before.VoiceChannel != e.After.VoiceChannel) {
                     // Voice channel change detected.
                     ChatLogger.Log ("Voice channel change detected with user " + e.After.Name);
-                    AutomatedVoiceChannels.allVoiceChannels[e.After.VoiceChannel.Id].OnUserJoined (e.After);
+                    if (e.After.VoiceChannel != null) {
+                        AutomatedVoiceChannels.allVoiceChannels[e.After.VoiceChannel.Id].OnUserJoined (e.After);
+                    }
                 }
 
                 Channel channel = GetMainChannel (e.Server);
@@ -233,6 +228,28 @@ namespace DiscordCthulhu {
             return hasBooted;
         }
 
+        public static List<string> ConstructArguments (string fullCommand, out string command) {
+            string toSplit = fullCommand.Substring (fullCommand.IndexOf (' ') + 1);
+            List<string> arguments = new List<string> ();
+            command = "";
+
+            if (fullCommand.LastIndexOf (' ') != -1) {
+                // FEEL THE SPAGHETTI.
+                command = fullCommand.Substring (0, fullCommand.Substring(1).IndexOf (' ') + 1);
+                string[] loc = toSplit.Split (';');
+                for (int i = 0; i < loc.Length; i++) {
+        
+                    loc[i] = TrimSpaces (loc[i]);
+                    arguments.Add (loc[i]);
+                }
+            }else {
+                command = fullCommand;
+            }
+
+            Console.WriteLine (command);
+            return arguments;
+        }
+
         public static string GetUserName (User user) {
             if (user == null)
                 return "[ERROR - NULL USER REFERENCE]";
@@ -284,15 +301,19 @@ namespace DiscordCthulhu {
             if (server != null)
                 return server;
 
-            IEnumerable<Server> servers = discordClient.FindServers (serverName);
-            if (servers.Count () != 0)
-                server = servers.ElementAt (0);
+            if (discordClient != null) {
+                IEnumerable<Server> servers = discordClient.FindServers (serverName);
+                if (servers.Count () != 0)
+                    server = servers.ElementAt (0);
+            }else {
+                return null;
+            }
 
             return server;
         }
 
         // I thought the TrimStart and TrimEnd functions would work like this, which they may, but I couldn't get them working. Maybe I'm just an idiot, but whatever.
-        private string TrimSpaces (string input) {
+        private static string TrimSpaces (string input) {
             string trimmed = input;
             while (trimmed[0] == ' ') {
                 trimmed = trimmed.Substring (1);
@@ -328,10 +349,10 @@ namespace DiscordCthulhu {
             return null;
         }
 
-        public bool FindAndExecuteCommand (MessageEventArgs e, string commandName, List<string> arguements) {
-            for (int i = 0; i < commands.Length; i++) {
-                if (commands[i].command == commandName) {
-                    commands[i].ExecuteCommand (e, arguements);
+        public static bool FindAndExecuteCommand (MessageEventArgs e, string commandName, List<string> arguements, Command[] commandList) {
+            for (int i = 0; i < commandList.Length; i++) {
+                if (commandList[i].command == commandName) {
+                    commandList[i].ExecuteCommand (e, arguements);
                     return true;
                 }
             }

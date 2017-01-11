@@ -78,6 +78,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AliasCollection.cs" />
+    <Compile Include="AutomatedEventHandling.cs" />
     <Compile Include="AutomatedVoiceChannels.cs" />
     <Compile Include="BotConfig.cs" />
     <Compile Include="CEmbolden.cs" />
@@ -99,6 +100,7 @@
     <Compile Include="Commands\CCallGroup.cs" />
     <Compile Include="Commands\CJoinGroup.cs" />
     <Compile Include="Commands\CLeaveGroup.cs" />
+    <Compile Include="Commands\CommandSet.cs" />
     <Compile Include="Commands\CQoute.cs" />
     <Compile Include="Commands\CRandomGame.cs" />
     <Compile Include="Commands\CRemoveAlias.cs" />
@@ -127,6 +129,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ScoreCollection.cs" />
     <Compile Include="SerializationIO.cs" />
+    <Compile Include="SpamCountermeasures.cs" />
     <Compile Include="TicTacToe.cs" />
   </ItemGroup>
   <ItemGroup>

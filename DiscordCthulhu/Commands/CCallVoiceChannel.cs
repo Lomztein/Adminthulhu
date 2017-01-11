@@ -10,7 +10,7 @@ namespace DiscordCthulhu {
 
         public CCallVoiceChannel () {
             Initialize ();
-            command = "callvoice";
+            command = "call";
             name = "Mention Voice Channel";
             argHelp = "<voicechannel>";
             help = "Mentions all members in " + argHelp + ".";

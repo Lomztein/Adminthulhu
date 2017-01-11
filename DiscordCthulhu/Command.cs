@@ -111,7 +111,7 @@ namespace DiscordCthulhu {
             return true;
         }
 
-        public void Initialize () {
+        public virtual void Initialize () {
             enabledSettings = LoadSettings (command);
         }
 

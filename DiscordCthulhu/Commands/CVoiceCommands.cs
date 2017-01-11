@@ -7,6 +7,16 @@ using Discord;
 
 // I highly advice against reading this. It is incredibly ugly and unoptimized.
 namespace DiscordCthulhu {
+
+    public class VoiceCommands : CommandSet {
+        public VoiceCommands () {
+            Initialize ();
+            command = "voice";
+            name = "Voice Commands";
+            help = "A set of commands specifically for voice channels.";
+            commandsInSet = new Command[] { new CLock (), new CUnlock (), new CInvite (), new CMembers (), new CKick (), new CCallVoiceChannel () };
+        }
+    }
     class CLock : Command {
 
         public CLock () {
@@ -187,6 +197,10 @@ namespace DiscordCthulhu {
                     if (vc.IsLocked ()) {
 
                         if (vc.lockerID == e.User.Id) {
+                            if (user.ServerPermissions.ManageChannels) {
+                                Program.messageControl.SendMessage (e.Channel, "Nice try, but you can't kick admins >:D.");
+                                return;
+                            }
                             vc.Kick (user);
                             Program.messageControl.SendMessage (e.Channel, "User **" + Program.GetUserName (user) + "** succesfully kicked.");
                             Program.messageControl.SendMessage (user, "Sorry man, but you have been kicked from voice channel **" + vc.name + "**.");
