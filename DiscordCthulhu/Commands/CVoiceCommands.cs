@@ -10,7 +10,6 @@ namespace DiscordCthulhu {
 
     public class VoiceCommands : CommandSet {
         public VoiceCommands () {
-            Initialize ();
             command = "voice";
             name = "Voice Commands";
             help = "A set of commands specifically for voice channels.";
@@ -20,7 +19,6 @@ namespace DiscordCthulhu {
     class CLock : Command {
 
         public CLock () {
-            Initialize ();
             command = "lock";
             name = "Lock Voice Channel";
             help = "locks your current voice channel.";
@@ -59,7 +57,6 @@ namespace DiscordCthulhu {
     class CUnlock : Command {
 
         public CUnlock () {
-            Initialize ();
             command = "unlock";
             name = "Unlock Voice Channel";
             help = "unlocks your current voice channel if locked.";
@@ -97,7 +94,6 @@ namespace DiscordCthulhu {
     class CInvite : Command {
 
         public CInvite () {
-            Initialize ();
             command = "invite";
             name = "Invite User";
             argHelp = "<username>";
@@ -136,7 +132,6 @@ namespace DiscordCthulhu {
     class CMembers : Command {
 
         public CMembers () {
-            Initialize ();
             command = "members";
             name = "Member List";
             help = "Display list of members of your locked voice channel.";
@@ -173,7 +168,6 @@ namespace DiscordCthulhu {
     class CKick : Command {
 
         public CKick () {
-            Initialize ();
             command = "kick";
             name = "Kick Member";
             argHelp = "<username>";

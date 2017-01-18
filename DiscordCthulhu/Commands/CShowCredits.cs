@@ -9,7 +9,6 @@ namespace DiscordCthulhu {
     public class CShowCredits : Command {
 
         public CShowCredits () {
-            Initialize ();
             command = "showcredits";
             name = "Show Creidts";
             help = "Shows the people behind the bot.";

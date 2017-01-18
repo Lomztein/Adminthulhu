@@ -13,6 +13,7 @@ namespace DiscordCthulhu {
         public string help = null;
         public string argHelp = "";
         public int argumentNumber = 1;
+        public string helpPrefix = Program.commandChar.ToString ();
 
         public bool isAdminOnly = false;
         public bool alwaysEnabled = false;
@@ -115,17 +116,17 @@ namespace DiscordCthulhu {
             enabledSettings = LoadSettings (command);
         }
 
-        public string GetHelp () {
+        public virtual string GetHelp () {
             string argExists = argHelp.Length > 0 ? " " : "";
-            string text = "\"" + Program.commandChar + command + "\"" + argExists + argHelp + "\" - " + help;
+            string text = helpPrefix + command + " " + argExists + argHelp + " - " + help;
             //if (isAdminOnly)
             //    text += " - ADMIN ONLY";
             return text;
         }
 
-        public string GetShortHelp () {
+        public virtual string GetShortHelp () {
             string argExists = argHelp.Length > 0 ? " " : "";
-            string text = "\"" + Program.commandChar + command + "\"" + argExists + argHelp;
+            string text = helpPrefix + command + argExists + argHelp;
             return text;
         }
     }

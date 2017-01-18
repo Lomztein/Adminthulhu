@@ -9,7 +9,6 @@ namespace DiscordCthulhu {
     class CFizzfyr : Command {
 
         public CFizzfyr () {
-            Initialize ();
             command = "fizzfyr13";
             name = "Fizzfyr13";
             help = "Get litteraly the sexiest picture in existance.";
@@ -27,7 +26,6 @@ namespace DiscordCthulhu {
     class CSwiggity : Command {
 
         public CSwiggity () {
-            Initialize ();
             command = "swiggity";
             name = "Swiggity";
             help = "Swiggity swooty I'm coming for dat booty!";

@@ -11,7 +11,7 @@ namespace DiscordCthulhu {
         public static char commandChar = '!';
 
         public static Command[] commands = new Command[] {
-            new CCommandList (), new CRollTheDice (), new CCallVoiceChannel (), new CSetColor (),
+            new CCommandList (), new CSetColor (), new CRollTheDice (),
             new CFlipCoin (), new CRandomGame (), new CQuote (), new CSetCommand (), new CEmbolden (),
             new CEndTheWorld (), new CChangeScore (), new CShowScore (), new CFizzfyr (), new CSwiggity (),
             new VoiceCommands (), new EventCommands ()
@@ -66,10 +66,6 @@ namespace DiscordCthulhu {
 
         public void Start (string[] args) {
 
-            ChatLogger.Log ("Booting..");
-
-            InitializeDirectories ();
-
             // Linux specific test
             if (args.Length > 0) {
                 dataPath = args[0];
@@ -78,6 +74,10 @@ namespace DiscordCthulhu {
                 dataPath = dataPath.Substring (dataPath.IndexOf ('\\') + 1);
                 dataPath += "\\";
             }
+            dataPath.Replace ("\\", "/");
+
+            InitializeDirectories ();
+            ChatLogger.Log ("Booting..");
 
             aliasCollection = AliasCollection.Load ();
             scoreCollection.scores = ScoreCollection.Load ();
@@ -86,7 +86,7 @@ namespace DiscordCthulhu {
 
             discordClient = new DiscordClient ();
             messageControl = new MessageControl();
-            controlPanel = new ControlPanel ();
+            //controlPanel = new ControlPanel (); Removed due to being practically useless.
 
             InitializeData ();
             InitializeCommands ();
@@ -246,7 +246,6 @@ namespace DiscordCthulhu {
                 command = fullCommand;
             }
 
-            Console.WriteLine (command);
             return arguments;
         }
 
@@ -314,6 +313,9 @@ namespace DiscordCthulhu {
 
         // I thought the TrimStart and TrimEnd functions would work like this, which they may, but I couldn't get them working. Maybe I'm just an idiot, but whatever.
         private static string TrimSpaces (string input) {
+            if (input.Length == 0)
+                return " ";
+
             string trimmed = input;
             while (trimmed[0] == ' ') {
                 trimmed = trimmed.Substring (1);

@@ -13,6 +13,8 @@ C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Release\Nito
 C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Release\Nito.AsyncEx.Concurrent.xml
 C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Release\Nito.AsyncEx.Enlightenment.xml
 C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\bin\Release\RestSharp.xml
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\obj\Release\DiscordCthulhu.ControlPanel.resources
+C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\obj\Release\DiscordCthulhu.csproj.GenerateResource.Cache
 C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\obj\Release\DiscordCthulhu.exe
 C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\obj\Release\DiscordCthulhu.pdb
 C:\Users\Lomztein\Source\Repos\DiscordCthulhuBot\DiscordCthulhu\obj\Release\DiscordCthulhu.csprojResolveAssemblyReference.cache

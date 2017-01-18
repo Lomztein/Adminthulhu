@@ -77,7 +77,7 @@ namespace DiscordCthulhu {
             if (Program.discordClient != null && Program.GetServer () != null) {
                 foreach (ulong id in remindEvent.eventMemberIDs) {
                     User user = Program.GetServer ().GetUser (id);
-                    Program.messageControl.SendMessage (user, "**REMINDER:** You have an upcoming event on **" + Program.serverName + "** coming soon, this " + remindEvent.eventTime.DayOfWeek.ToString () + " at " + remindEvent.eventTime.ToString ());
+                    Program.messageControl.SendMessage (user, "**REMINDER:** You have an upcoming event **" + remindEvent.eventName + "** on **" + Program.serverName + "** coming soon, this " + remindEvent.eventTime.DayOfWeek.ToString () + " at " + remindEvent.eventTime.ToString ());
                 }
                 remindEvent.lastRemind = DateTime.Now;
                 SaveEvents ();
@@ -144,7 +144,7 @@ namespace DiscordCthulhu {
             command = "event";
             name = "Event Command Set";
             help = "A set of commands about events.";
-            commandsInSet = new Command[] { new CCreateEvent (), new CCancelEvent (), new CEditEvent (), new CJoinEvent (), new CLeaveEvent (), new CEventList () };
+            commandsInSet = new Command[] { new CCreateEvent (), new CCancelEvent (), new CEditEvent (), new CJoinEvent (), new CLeaveEvent (), new CEventList (), new CEventMembers () };
         }
     }
 
@@ -153,7 +153,7 @@ namespace DiscordCthulhu {
         public CCreateEvent () {
             command = "create";
             name = "Create a new event";
-            argHelp = "<name>;<date>";
+            argHelp = "<name>;<date>;<desc>";
             help = "Creates a new event on this server. Date format being D-M-Y H:M:S";
             argumentNumber = 3;
         }
@@ -163,7 +163,7 @@ namespace DiscordCthulhu {
             if (AllowExecution (e, arguments)) {
                 DateTime parse;
                 if (DateTime.TryParse (arguments[1], out parse)) {
-                    AutomatedEventHandling.upcomingEvents.Add (new AutomatedEventHandling.Event (arguments[0], parse));
+                    AutomatedEventHandling.upcomingEvents.Add (new AutomatedEventHandling.Event (arguments[0], parse, arguments[2]));
                     Program.messageControl.SendMessage (e, "Succesfully created event **" + arguments[0] + "** at " + parse.ToString ());
                     AutomatedEventHandling.SaveEvents ();
                 }else {
@@ -203,10 +203,10 @@ namespace DiscordCthulhu {
         public CEditEvent () {
             command = "edit";
             name = "Edit Event";
-            argHelp = "<name><newname><newdesc><newtime>";
+            argHelp = "<name>;<newname>;<newdesc>;<newtime>";
             help = "Edits event event <name>";
             isAdminOnly = true;
-            argumentNumber = 1;
+            argumentNumber = 4;
         }
 
         public override void ExecuteCommand ( MessageEventArgs e, List<string> arguments ) {
@@ -297,7 +297,7 @@ namespace DiscordCthulhu {
                 string combinedEvents = "Upcoming events are: ```";
                 if (AutomatedEventHandling.upcomingEvents.Count != 0) {
                     foreach (AutomatedEventHandling.Event eve in AutomatedEventHandling.upcomingEvents) {
-                        combinedEvents += "\n" + eve.eventName + " - " + eve.eventTime;
+                        combinedEvents += "\n" + eve.eventName + " - " + eve.eventTime + " - " + eve.eventDescription;
                     }
                 }else {
                     combinedEvents += "Nothing, add something! :D";
@@ -305,6 +305,39 @@ namespace DiscordCthulhu {
                 
                 combinedEvents += "```";
                 Program.messageControl.SendMessage (e, combinedEvents);
+            }
+        }
+    }
+
+    public class CEventMembers : Command {
+        public CEventMembers () {
+            command = "members";
+            name = "List Members";
+            argHelp = "<name>";
+            help = "List all members in event <name>.";
+            argumentNumber = 1;
+        }
+
+        public override void ExecuteCommand ( MessageEventArgs e, List<string> arguments ) {
+            base.ExecuteCommand (e, arguments);
+            if (AllowExecution (e, arguments)) {
+                AutomatedEventHandling.Event locEvent = AutomatedEventHandling.FindEvent (arguments[0]);
+                if (locEvent != null) {
+
+                    string combinedMembers = "Event members are: ```";
+                    if (AutomatedEventHandling.upcomingEvents.Count != 0) {
+                        foreach (ulong user in locEvent.eventMemberIDs) {
+                            combinedMembers += "\n" + Program.GetUserName (Program.GetServer ().GetUser (user));
+                        }
+                    } else {
+                        combinedMembers += "Nobody, why don't you join? :D";
+                    }
+
+                    combinedMembers += "```";
+                    Program.messageControl.SendMessage (e, combinedMembers);
+                }else {
+                    Program.messageControl.SendMessage (e, "Failed to show event member list - event **" + arguments[0] + "** not found.");
+                }
             }
         }
     }
