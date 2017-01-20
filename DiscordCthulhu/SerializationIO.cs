@@ -32,14 +32,12 @@ namespace DiscordCthulhu {
         }
 
         public static string[] LoadTextFile (string path) {
-            ChatLogger.Log (path);
             StreamReader reader = File.OpenText (path);
 
             List<string> con = new List<string> ();
             int maxTries = short.MaxValue;
 
             while (true && maxTries > 0) {
-                Console.WriteLine ("LoadTextFile");
                 maxTries--;
                 string loc = reader.ReadLine ();
                 if (loc == null) {
@@ -50,6 +48,11 @@ namespace DiscordCthulhu {
             }
 
             return con.ToArray ();
+        }
+
+        public static void SaveTextFile (string path, params string[] text) {
+            // tfw the method I was going to write already exists. Still going to put it in SerializationIO to centralize file saving and loading.
+            File.AppendAllLines (path, text);
         }
     }
 }

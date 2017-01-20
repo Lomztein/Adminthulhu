@@ -44,8 +44,6 @@ namespace DiscordCthulhu {
                 string command = "";
 
                 List<string> newArguments = Program.ConstructArguments (secondayCommand, out command);
-
-                ChatLogger.DebugLog (message);
                 Program.FindAndExecuteCommand (e, command, newArguments, commandsInSet);
             }
         }

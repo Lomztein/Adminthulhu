@@ -14,6 +14,7 @@ namespace DiscordCthulhu {
             new CCommandList (), new CSetColor (), new CRollTheDice (),
             new CFlipCoin (), new CRandomGame (), new CQuote (), new CSetCommand (), new CEmbolden (),
             new CEndTheWorld (), new CChangeScore (), new CShowScore (), new CFizzfyr (), new CSwiggity (),
+            new CAddHeader (),
             new VoiceCommands (), new EventCommands ()
         };
 
@@ -22,7 +23,7 @@ namespace DiscordCthulhu {
         public static ScoreCollection scoreCollection = new ScoreCollection ();
         public static PlayerGroups playerGroups;
         public static MessageControl messageControl = null;
-        public static AutomatedEventHandling automatedEventHandling;
+        public static Clock clock;
         public static string commandSettingsDirectory = "Command Settings/";
         public static string chatlogDirectory = "ChatLogs/";
         public static string resourceDirectory = "Resources/";
@@ -82,7 +83,7 @@ namespace DiscordCthulhu {
             aliasCollection = AliasCollection.Load ();
             scoreCollection.scores = ScoreCollection.Load ();
             playerGroups = PlayerGroups.Load ();
-            automatedEventHandling = new AutomatedEventHandling ();
+            clock = new Clock ();
 
             discordClient = new DiscordClient ();
             messageControl = new MessageControl();

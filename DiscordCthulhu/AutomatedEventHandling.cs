@@ -8,7 +8,7 @@ using Discord;
 
 namespace DiscordCthulhu {
     // Not to be confused with C# events, this class handles planned day events for Discord servers.
-    public class AutomatedEventHandling {
+    public class AutomatedEventHandling : IClockable {
 
         public static Thread timeThread;
         public static List<Event> upcomingEvents = new List<Event>();
@@ -18,16 +18,6 @@ namespace DiscordCthulhu {
 
         public static string eventFileName = "events";
 
-        public AutomatedEventHandling () {
-            timeThread = new Thread (new ThreadStart (Initialize));
-            timeThread.Start ();
-            while (!timeThread.IsAlive) {
-                ChatLogger.Log ("Initializing timing thread..");
-            }
-
-            Thread.Sleep (1);
-        }
-
         public static void SaveEvents () {
             SerializationIO.SaveObjectToFile (Program.dataPath + eventFileName + Program.gitHubIgnoreType, upcomingEvents);
         }
@@ -36,40 +26,32 @@ namespace DiscordCthulhu {
             upcomingEvents = SerializationIO.LoadObjectFromFile<List<Event>> (Program.dataPath + eventFileName + Program.gitHubIgnoreType);
         }
 
-        public void Initialize () {
-            LoadEvents ();
-            if (upcomingEvents == null)
-                upcomingEvents = new List<Event> ();
+        public void Initialize (DateTime now) {
+        }
 
-            while (timeThread.IsAlive) {
-                DateTime now = DateTime.Now;
+        public void OnSecondPassed ( DateTime now ) {
+            List<Event> toRemove = new List<Event> ();
+            foreach (Event e in upcomingEvents) {
+                if (e.eventState == Event.EventState.Awaiting) {
+                    if (e.eventTime < now) {
+                        StartEvent (e);
 
-                List<Event> toRemove = new List<Event> ();
-                foreach (Event e in upcomingEvents) {
-                    if (e.eventState == Event.EventState.Awaiting) {
-                        if (e.eventTime < now) {
-                            StartEvent (e);
+                        toRemove.Add (e);
+                        SaveEvents ();
+                    }
 
-                            toRemove.Add (e);
-                            SaveEvents ();
-                        }
-
-                        // If there is less than two day before the event, remind all members at midday.
-                        if (e.eventTime.AddDays (-2) < now) {
-                            DateTime remindTime = new DateTime (now.Year, now.Month, now.Day, 12, 00, 0);
-                            if (remindTime < now && e.lastRemind.Day != remindTime.Day) {
-                                SendEventReminders (e);
-                            }
+                    // If there is less than two day before the event, remind all members at midday.
+                    if (e.eventTime.AddDays (-2) < now) {
+                        DateTime remindTime = new DateTime (now.Year, now.Month, now.Day, 12, 00, 0);
+                        if (remindTime < now && e.lastRemind.Day != remindTime.Day) {
+                            SendEventReminders (e);
                         }
                     }
                 }
-
-                foreach (Event r in toRemove)
-                    upcomingEvents.Remove (r);
-
-                Thread.Sleep (checkDelay);
-                lastMesauredTime = now;
             }
+
+            foreach (Event r in toRemove)
+                upcomingEvents.Remove (r);
         }
 
         public static void SendEventReminders ( Event remindEvent ) {
@@ -114,6 +96,15 @@ namespace DiscordCthulhu {
                     return e;
             }
             return null;
+        }
+
+        public void OnMinutePassed ( DateTime time ) {
+        }
+
+        public void OnHourPassed ( DateTime time ) {
+        }
+
+        public void OnDayPassed ( DateTime time ) {
         }
 
         [Serializable]
