@@ -134,6 +134,7 @@
     <Compile Include="SerializationIO.cs" />
     <Compile Include="SpamCountermeasures.cs" />
     <Compile Include="TicTacToe.cs" />
+    <Compile Include="UserSettings.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

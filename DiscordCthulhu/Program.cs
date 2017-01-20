@@ -15,7 +15,7 @@ namespace DiscordCthulhu {
             new CFlipCoin (), new CRandomGame (), new CQuote (), new CSetCommand (), new CEmbolden (),
             new CEndTheWorld (), new CChangeScore (), new CShowScore (), new CFizzfyr (), new CSwiggity (),
             new CAddHeader (),
-            new VoiceCommands (), new EventCommands ()
+            new VoiceCommands (), new EventCommands (), new UserSettingsCommands ()
         };
 
         public static string dataPath = "";
@@ -91,6 +91,7 @@ namespace DiscordCthulhu {
 
             InitializeData ();
             InitializeCommands ();
+            UserSettings.Initialize ();
 
             bootedTime = DateTime.Now.AddSeconds (BOOT_WAIT_TIME);
 

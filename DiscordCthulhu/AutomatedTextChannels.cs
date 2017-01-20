@@ -36,13 +36,6 @@ namespace DiscordCthulhu {
         }
 
         public void OnDayPassed ( DateTime time ) {
-            Channel mainChannel = Program.GetMainChannel (Program.GetServer ());
-
-            Random random = new Random ();
-            int number = random.Next (headers.Count);
-
-            string topic = headers[number];
-            mainChannel.Edit (null, topic, null);
         }
 
         public void OnHourPassed ( DateTime time ) {
@@ -52,6 +45,13 @@ namespace DiscordCthulhu {
         }
 
         public void OnSecondPassed ( DateTime time ) {
+            Channel mainChannel = Program.GetMainChannel (Program.GetServer ());
+
+            Random random = new Random ();
+            int number = random.Next (headers.Count);
+
+            string topic = headers[number];
+            mainChannel.Edit (null, topic, null);
         }
     }
 

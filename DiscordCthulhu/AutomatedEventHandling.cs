@@ -41,10 +41,12 @@ namespace DiscordCthulhu {
                     }
 
                     // If there is less than two day before the event, remind all members at midday.
-                    if (e.eventTime.AddDays (-2) < now) {
-                        DateTime remindTime = new DateTime (now.Year, now.Month, now.Day, 12, 00, 0);
-                        if (remindTime < now && e.lastRemind.Day != remindTime.Day) {
-                            SendEventReminders (e);
+                    foreach (ulong userID in e.eventMemberIDs) {
+                        if (e.eventTime.AddDays (UserSettings.GetSetting<int>(userID, "EventRemindTime, ", 2)) < now) {
+                            DateTime remindTime = new DateTime (now.Year, now.Month, now.Day, 12, 00, 0);
+                            if (remindTime < now && e.lastRemind[userID].Day != remindTime.Day) {
+                                SendEventReminder (userID, e);
+                            }
                         }
                     }
                 }
@@ -54,14 +56,12 @@ namespace DiscordCthulhu {
                 upcomingEvents.Remove (r);
         }
 
-        public static void SendEventReminders ( Event remindEvent ) {
+        public static void SendEventReminder ( ulong userID, Event remindEvent ) {
             // Make sure discordClient is ready before sending any reminders.
             if (Program.discordClient != null && Program.GetServer () != null) {
-                foreach (ulong id in remindEvent.eventMemberIDs) {
-                    User user = Program.GetServer ().GetUser (id);
-                    Program.messageControl.SendMessage (user, "**REMINDER:** You have an upcoming event **" + remindEvent.eventName + "** on **" + Program.serverName + "** coming soon, this " + remindEvent.eventTime.DayOfWeek.ToString () + " at " + remindEvent.eventTime.ToString ());
-                }
-                remindEvent.lastRemind = DateTime.Now;
+                User user = Program.GetServer ().GetUser (userID);
+                Program.messageControl.SendMessage (user, "**REMINDER:** You have an upcoming event **" + remindEvent.eventName + "** on **" + Program.serverName + "** coming soon, this " + remindEvent.eventTime.DayOfWeek.ToString () + " at " + remindEvent.eventTime.ToString ());
+                remindEvent.lastRemind[userID] = DateTime.Now;
                 SaveEvents ();
             }
         }
@@ -117,7 +117,7 @@ namespace DiscordCthulhu {
             public enum EventState { Awaiting, InProgress, Ended }
             public EventState eventState = EventState.Awaiting;
 
-            public DateTime lastRemind;
+            public Dictionary<ulong, DateTime> lastRemind;
 
             public List<ulong> eventMemberIDs = new List<ulong>();
 
