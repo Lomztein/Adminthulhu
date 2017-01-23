@@ -12,7 +12,7 @@ namespace DiscordCthulhu {
         public DateTime lastMesauredTime;
         public int checkDelay = 1000; // The time between each check in milliseconds.
 
-        public IClockable[] clockables = new IClockable[] {new AutomatedEventHandling (), new AutomatedTextChannels ()};
+        public IClockable[] clockables = new IClockable[] {new AutomatedEventHandling (), new AutomatedTextChannels (), new UserActivityMonitor ()};
 
         public Clock () {
             timeThread = new Thread (new ThreadStart (Initialize));

@@ -19,7 +19,11 @@ namespace DiscordCthulhu {
                 return;
 
             Console.WriteLine (message);
-            File.AppendAllLines (Program.dataPath + Program.chatlogDirectory + DateTime.Today.DayOfWeek.ToString () + ".txt",new string[] { message });
+            try {
+                File.AppendAllLines (Program.dataPath + Program.chatlogDirectory + DateTime.Today.DayOfWeek.ToString () + ".txt", new string[] { message });
+            } catch (Exception e) {
+                Console.WriteLine ("Failed to write to log file: " + e.ToString ());
+            }
         }
 
         public static void DebugLog (string message) {
