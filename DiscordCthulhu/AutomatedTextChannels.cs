@@ -36,6 +36,13 @@ namespace DiscordCthulhu {
         }
 
         public void OnDayPassed ( DateTime time ) {
+            Channel mainChannel = Program.GetMainChannel (Program.GetServer ());
+
+            Random random = new Random ();
+            int number = random.Next (headers.Count);
+
+            string topic = headers[number];
+            mainChannel.Edit (null, topic, null);
         }
 
         public void OnHourPassed ( DateTime time ) {
@@ -45,13 +52,6 @@ namespace DiscordCthulhu {
         }
 
         public void OnSecondPassed ( DateTime time ) {
-            Channel mainChannel = Program.GetMainChannel (Program.GetServer ());
-
-            Random random = new Random ();
-            int number = random.Next (headers.Count);
-
-            string topic = headers[number];
-            mainChannel.Edit (null, topic, null);
         }
     }
 
@@ -74,6 +74,28 @@ namespace DiscordCthulhu {
                 SerializationIO.SaveTextFile (filePath, arguments[0]);
 
                 Program.messageControl.SendMessage (e, "Succesfully added header to list of additional headers!");
+            }
+        }
+    }
+
+    public class CShowHeaders : Command {
+
+        public CShowHeaders () {
+            command = "showheaders";
+            name = "Show Header";
+            help = "Shows all current possible headers of the main channel.";
+            argumentNumber = 0;
+        }
+
+        public override void ExecuteCommand ( MessageEventArgs e, List<string> arguments ) {
+            base.ExecuteCommand (e, arguments);
+            if (AllowExecution (e, arguments)) {
+                string complete = "```";
+                foreach (string h in AutomatedTextChannels.headers) {
+                    complete += "\n" + h;
+                }
+                complete += "```";
+                Program.messageControl.SendMessage (e, "All current possible headers are: " + complete);
             }
         }
     }

@@ -77,7 +77,7 @@ namespace DiscordCthulhu {
                 }
                 string startText = "Hey" + mentions + "!\nWe're starting the **" + startingEvent.eventName + "** now!";
                 if (startingEvent.eventDescription.Length != 0) {
-                    startText += "´" + startingEvent.eventDescription + "´";
+                    startText += "\n`" + startingEvent.eventDescription + "`";
                 }
 
                 Program.messageControl.SendMessage (

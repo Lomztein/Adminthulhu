@@ -14,7 +14,7 @@ namespace DiscordCthulhu {
             new CCommandList (), new CSetColor (), new CRollTheDice (),
             new CFlipCoin (), new CRandomGame (), new CQuote (), new CSetCommand (), new CEmbolden (),
             new CEndTheWorld (), new CChangeScore (), new CShowScore (), new CFizzfyr (), new CSwiggity (),
-            new CAddHeader (),
+            new CAddHeader (), new CShowHeaders (),
             new VoiceCommands (), new EventCommands (), new UserSettingsCommands ()
         };
 
