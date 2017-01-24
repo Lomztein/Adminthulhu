@@ -218,6 +218,20 @@ namespace DiscordCthulhu {
             });
         }
 
+        public static async void SecureAddRole (User user, Role role) {
+            while (!user.HasRole (role)) {
+                ChatLogger.Log ("Adding role to " + user.Name + " - " + role.Name);
+                await (user.AddRoles (role));
+            }
+        }
+
+        public static async void SecureRemoveRole ( User user, Role role ) {
+            while (user.HasRole (role)) {
+                ChatLogger.Log ("Removing role from " + user.Name + " - " + role.Name);
+                await (user.RemoveRoles (role));
+            }
+        }
+
         private static bool hasBooted = false;
         public static bool FullyBooted () {
             if (hasBooted)

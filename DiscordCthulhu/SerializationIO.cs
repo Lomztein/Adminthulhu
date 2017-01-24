@@ -24,11 +24,15 @@ namespace DiscordCthulhu {
         }
 
         public static void SaveObjectToFile (string fileName, object obj) {
-            BinaryFormatter bf = new BinaryFormatter ();
-            FileStream file = File.Create (fileName);
+            try {
+                BinaryFormatter bf = new BinaryFormatter ();
+                FileStream file = File.Create (fileName);
 
-            bf.Serialize (file, obj);
-            file.Close ();
+                bf.Serialize (file, obj);
+                file.Close ();
+            } catch (Exception e) {
+                ChatLogger.DebugLog ("Error: Failed to save file: " + e.Message);
+            }
         }
 
         public static string[] LoadTextFile (string path) {
