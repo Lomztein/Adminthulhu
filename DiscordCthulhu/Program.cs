@@ -15,7 +15,7 @@ namespace DiscordCthulhu {
             new CFlipCoin (), new CRandomGame (), new CQuote (), new CSetCommand (), new CEmbolden (),
             new CEndTheWorld (), new CChangeScore (), new CShowScore (), new CFizzfyr (), new CSwiggity (),
             new CAddHeader (),
-            new VoiceCommands (), new EventCommands (), new UserSettingsCommands ()
+            new VoiceCommands (), new EventCommands (), new UserSettingsCommands (), new DebugCommands (),
         };
 
         public static string dataPath = "";
@@ -222,6 +222,7 @@ namespace DiscordCthulhu {
             while (!user.HasRole (role)) {
                 ChatLogger.Log ("Adding role to " + user.Name + " - " + role.Name);
                 await (user.AddRoles (role));
+                await Task.Delay (5000);
             }
         }
 
@@ -229,6 +230,7 @@ namespace DiscordCthulhu {
             while (user.HasRole (role)) {
                 ChatLogger.Log ("Removing role from " + user.Name + " - " + role.Name);
                 await (user.RemoveRoles (role));
+                await Task.Delay (5000);
             }
         }
 

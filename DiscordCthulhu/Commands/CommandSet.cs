@@ -23,6 +23,7 @@ namespace DiscordCthulhu {
                 c.helpPrefix = helpPrefix + command + " ";
                 c.Initialize ();
                 c.enabledSettings = enabledSettings;
+                c.isAdminOnly = isAdminOnly;
             }
         }
 
