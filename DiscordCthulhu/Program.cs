@@ -218,16 +218,29 @@ namespace DiscordCthulhu {
             });
         }
 
+        private static int maxTries = 5;
         public static async void SecureAddRole (User user, Role role) {
+            int tries = 0;
             while (!user.HasRole (role)) {
+                if (tries > maxTries) {
+                    messageControl.SendMessage (SearchChannel (GetServer (), dumpTextChannelName), "Error - tried to add role too many times.");
+                    break;
+                }
+                tries++;
                 ChatLogger.Log ("Adding role to " + user.Name + " - " + role.Name);
                 await (user.AddRoles (role));
             }
         }
 
         public static async void SecureRemoveRole ( User user, Role role ) {
+            int tries = 0;
             while (user.HasRole (role)) {
+                if (tries > maxTries) {
+                    messageControl.SendMessage (SearchChannel (GetServer (), dumpTextChannelName), "Error - tried to remove role too many times.");
+                    break;
+                }
                 ChatLogger.Log ("Removing role from " + user.Name + " - " + role.Name);
+                tries++;
                 await (user.RemoveRoles (role));
             }
         }
