@@ -118,10 +118,9 @@ namespace DiscordCthulhu {
             }
 
             // This might be heavy on the server during midnights.
-            if (user.HasRole (toAdd[0])) {
-                user.AddRoles (toAdd.ToArray ());
-            }else {
+            if (!user.HasRole (toAdd[0])) {
                 ChatLogger.Log ("Adding role " + toAdd[0].Name + " to user " + user.Name);
+                user.AddRoles (toAdd.ToArray ());
             }
 
             bool missingAny = false;
