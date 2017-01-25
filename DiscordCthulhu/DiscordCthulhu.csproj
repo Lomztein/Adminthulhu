@@ -84,6 +84,7 @@
     <Compile Include="BotConfig.cs" />
     <Compile Include="CEmbolden.cs" />
     <Compile Include="ChatLogger.cs" />
+    <Compile Include="DebugCommands.cs" />
     <Compile Include="Clock.cs" />
     <Compile Include="Commands\CAddCommand.cs" />
     <Compile Include="Commands\CCreateTTTGame.cs" />

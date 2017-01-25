@@ -58,7 +58,7 @@ namespace DiscordCthulhu {
             if (e.Channel.IsPrivate) {
                 return alwaysEnabled && !isAdminOnly;
             }else if (enabledSettings.ContainsKey (e.Server.Name)) {
-                return enabledSettings[e.Server.Name].Contains (e.Channel.Name);
+                return enabledSettings[e.Server.Name].Contains (e.Channel.Name) || isAdminOnly;
             }
             return false;
         }

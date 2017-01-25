@@ -11,6 +11,9 @@ namespace DiscordCthulhu {
     public class UserActivityMonitor : IClockable {
 
         public static Dictionary<ulong, DateTime> userActivity;
+        public static Dictionary<ulong, DateTime> lastUserUpdate = new Dictionary<ulong, DateTime>();
+        public static int minTimeBetweenUpdates = 10;
+
         public static string activityFileName = "useractivity";
 
         private static int activeThresholdDays = 7;
@@ -27,10 +30,12 @@ namespace DiscordCthulhu {
             Booted ();
         }
 
-        void Booted () {
+        async void Booted () {
             while (Program.GetServer () == null) {
-                Thread.Sleep (1000);
+                await Task.Delay (1000);
             }
+
+            await Task.Delay (5000);
 
             IEnumerable<User> users = Program.GetServer ().Users;
             foreach (User u in users) {
@@ -40,7 +45,7 @@ namespace DiscordCthulhu {
             }
 
             Program.discordClient.MessageReceived += ( s, e ) => {
-                RecordActivity (e.User.Id, e.Message.Timestamp, true);
+                RecordActivity (e.User.Id, DateTime.Now, true);
             };
 
             Program.discordClient.UserUpdated += ( s, e ) => {
@@ -49,9 +54,9 @@ namespace DiscordCthulhu {
                         RecordActivity (e.After.Id, DateTime.Now, true);
                     }
                 }
-
-                OnDayPassed (DateTime.Now);
             };
+
+            OnDayPassed (DateTime.Now);
         }
 
         public static void RecordActivity ( ulong userID, DateTime time, bool single ) {
@@ -65,7 +70,7 @@ namespace DiscordCthulhu {
             Role activeRole = Program.GetServer ().GetRole (activeUserRole);
             Role presentRole = Program.GetServer ().GetRole (presentUserRole);
             Role inactiveRole = Program.GetServer ().GetRole (inactiveUserRole);
-            UpdateUser (userID, time, activeRole, presentRole, inactiveRole);
+            UpdateUser (userID, activeRole, presentRole, inactiveRole);
 
             if (single) {
                 SerializationIO.SaveObjectToFile (Program.dataPath + activityFileName + Program.gitHubIgnoreType, userActivity);
@@ -78,13 +83,18 @@ namespace DiscordCthulhu {
             Role inactiveRole = Program.GetServer ().GetRole (inactiveUserRole);
 
             foreach (ulong id in userActivity.Keys) {
-                UpdateUser (id, time, activeRole, presentRole, inactiveRole);
+                UpdateUser (id, activeRole, presentRole, inactiveRole);
             }
 
             SerializationIO.SaveObjectToFile (Program.dataPath + activityFileName + Program.gitHubIgnoreType, userActivity);
         }
 
-        private static void UpdateUser ( ulong id, DateTime time, Role activeRole, Role presentRole, Role inactiveRole ) {
+        private static void UpdateUser ( ulong id, Role activeRole, Role presentRole, Role inactiveRole ) {
+            DateTime time = DateTime.Now;
+
+            if (lastUserUpdate.ContainsKey (id) && time < lastUserUpdate[id])
+                return;
+
             DateTime lastActivity = userActivity[id];
             User user = Program.GetServer ().GetUser (id);
 
@@ -96,28 +106,39 @@ namespace DiscordCthulhu {
                 toAdd.Add (activeRole);
                 toRemove.Add (presentRole);
                 toRemove.Add (inactiveRole);
-            }
-
-            if (lastActivity < time.AddDays (-activeThresholdDays) &&
+            } else if (lastActivity < time.AddDays (-activeThresholdDays) &&
                 lastActivity > time.AddDays (-presentThresholdDays)) {
                 toAdd.Add (presentRole);
                 toRemove.Add (activeRole);
                 toRemove.Add (inactiveRole);
-            }
-
-            if (lastActivity < time.AddDays (-presentThresholdDays)) {
+            } else if (lastActivity < time.AddDays (-presentThresholdDays)) {
                 toAdd.Add (inactiveRole);
                 toRemove.Add (presentRole);
                 toRemove.Add (activeRole);
             }
 
             // This might be heavy on the server during midnights.
-            foreach (Role r in toAdd) {
-                Program.SecureAddRole (user, r);
+            if (user.HasRole (toAdd[0])) {
+                user.AddRoles (toAdd.ToArray ());
+            }else {
+                ChatLogger.Log ("Adding role " + toAdd[0].Name + " to user " + user.Name);
             }
 
+            bool missingAny = false;
             foreach (Role r in toRemove) {
-                Program.SecureRemoveRole (user, r);
+                if (!user.HasRole (r)) {
+                    missingAny = true;
+                }else {
+                    ChatLogger.Log ("Removing role " + r.Name + " from user " + user.Name);
+                }
+            }
+            if (missingAny)
+                user.RemoveRoles (toRemove.ToArray ());
+
+            if (lastUserUpdate.ContainsKey (id)) {
+                lastUserUpdate[id] = time.AddSeconds (minTimeBetweenUpdates);
+            } else {
+                lastUserUpdate.Add (id, time.AddSeconds (minTimeBetweenUpdates));
             }
         }
 
