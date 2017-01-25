@@ -77,4 +77,26 @@ namespace DiscordCthulhu {
             }
         }
     }
+
+    public class CShowHeaders : Command {
+
+        public CShowHeaders () {
+            command = "showheaders";
+            name = "Show Header";
+            help = "Shows all current possible headers of the main channel.";
+            argumentNumber = 0;
+        }
+
+        public override void ExecuteCommand ( MessageEventArgs e, List<string> arguments ) {
+            base.ExecuteCommand (e, arguments);
+            if (AllowExecution (e, arguments)) {
+                string complete = "```";
+                foreach (string h in AutomatedTextChannels.headers) {
+                    complete += "\n" + h;
+                }
+                complete += "```";
+                Program.messageControl.SendMessage (e, "All current possible headers are: " + complete);
+            }
+        }
+    }
 }
