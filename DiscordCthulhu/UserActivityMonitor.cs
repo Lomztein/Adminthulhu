@@ -89,7 +89,7 @@ namespace DiscordCthulhu {
             SerializationIO.SaveObjectToFile (Program.dataPath + activityFileName + Program.gitHubIgnoreType, userActivity);
         }
 
-        private static void UpdateUser ( ulong id, Role activeRole, Role presentRole, Role inactiveRole ) {
+        private static async void UpdateUser ( ulong id, Role activeRole, Role presentRole, Role inactiveRole ) {
             DateTime time = DateTime.Now;
 
             if (lastUserUpdate.ContainsKey (id) && time < lastUserUpdate[id])
@@ -120,7 +120,7 @@ namespace DiscordCthulhu {
             // This might be heavy on the server during midnights.
             if (!user.HasRole (toAdd[0])) {
                 ChatLogger.Log ("Adding role " + toAdd[0].Name + " to user " + user.Name);
-                user.AddRoles (toAdd.ToArray ());
+                await user.AddRoles (toAdd.ToArray ());
             }
 
             bool missingAny = false;
@@ -132,7 +132,7 @@ namespace DiscordCthulhu {
                 }
             }
             if (missingAny)
-                user.RemoveRoles (toRemove.ToArray ());
+                await user.RemoveRoles (toRemove.ToArray ());
 
             if (lastUserUpdate.ContainsKey (id)) {
                 lastUserUpdate[id] = time.AddSeconds (minTimeBetweenUpdates);

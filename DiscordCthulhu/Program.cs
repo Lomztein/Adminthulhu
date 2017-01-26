@@ -15,7 +15,7 @@ namespace DiscordCthulhu {
             new CFlipCoin (), new CRandomGame (), new CQuote (), new CSetCommand (), new CEmbolden (),
             new CEndTheWorld (), new CChangeScore (), new CShowScore (), new CFizzfyr (), new CSwiggity (),
             new CAddHeader (), new CShowHeaders (),
-            new VoiceCommands (), new EventCommands (), new UserSettingsCommands (), new DebugCommands (),
+            new VoiceCommands (), new EventCommands (), new UserSettingsCommands (), new DebugCommands (), new HangmanCommands (),
         };
 
         public static string dataPath = "";

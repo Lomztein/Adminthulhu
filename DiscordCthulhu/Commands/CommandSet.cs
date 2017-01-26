@@ -40,12 +40,14 @@ namespace DiscordCthulhu {
                 // Standard command format is !command arg1;arg2;arg3
                 // Commandset format is !command secondaryCommand arg1;arg2;arg3
                 // Would it be possible to have commandSets within commandSets?
-                string message = this.command + " " + arguments[0];
-                string secondayCommand = message.Substring (message.IndexOf (' ') + 1);
-                string command = "";
+                if (arguments.Count != 0) {
+                    string message = this.command + " " + arguments[0];
+                    string secondayCommand = message.Substring (message.IndexOf (' ') + 1);
+                    string command = "";
 
-                List<string> newArguments = Program.ConstructArguments (secondayCommand, out command);
-                Program.FindAndExecuteCommand (e, command, newArguments, commandsInSet);
+                    List<string> newArguments = Program.ConstructArguments (secondayCommand, out command);
+                    Program.FindAndExecuteCommand (e, command, newArguments, commandsInSet);
+                }
             }
         }
 

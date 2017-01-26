@@ -124,6 +124,7 @@
     <Compile Include="ControlPanel.Designer.cs">
       <DependentUpon>ControlPanel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Hangman.cs" />
     <Compile Include="IClockable.cs" />
     <Compile Include="intVector2.cs" />
     <Compile Include="MessageControl.cs" />
