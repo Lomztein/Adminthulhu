@@ -19,9 +19,9 @@ namespace DiscordCthulhu {
         private static int activeThresholdDays = 7;
         private static int presentThresholdDays = 30;
 
-        private static ulong activeUserRole = 273017450390487041;
-        private static ulong presentUserRole = 273017481600434186;
-        private static ulong inactiveUserRole = 273017511468072960;
+        private static string activeUserRole = "Active!";
+        private static string presentUserRole = "Present";
+        private static string inactiveUserRole = "Inactive :(";
 
         public void Initialize ( DateTime time ) {
             userActivity = SerializationIO.LoadObjectFromFile<Dictionary<ulong, DateTime>> (Program.dataPath + activityFileName + Program.gitHubIgnoreType);
@@ -67,9 +67,9 @@ namespace DiscordCthulhu {
             }
 
             // Well that got ugly.
-            Role activeRole = Program.GetServer ().GetRole (activeUserRole);
-            Role presentRole = Program.GetServer ().GetRole (presentUserRole);
-            Role inactiveRole = Program.GetServer ().GetRole (inactiveUserRole);
+            Role activeRole = Program.GetServer ().FindRoles (activeUserRole).FirstOrDefault ();
+            Role presentRole = Program.GetServer ().FindRoles (presentUserRole).FirstOrDefault ();
+            Role inactiveRole = Program.GetServer ().FindRoles (inactiveUserRole).FirstOrDefault ();
             UpdateUser (userID, activeRole, presentRole, inactiveRole);
 
             if (single) {
@@ -78,9 +78,9 @@ namespace DiscordCthulhu {
         }
 
         public void OnDayPassed ( DateTime time ) {
-            Role activeRole = Program.GetServer ().GetRole (activeUserRole);
-            Role presentRole = Program.GetServer ().GetRole (presentUserRole);
-            Role inactiveRole = Program.GetServer ().GetRole (inactiveUserRole);
+            Role activeRole = Program.GetServer ().FindRoles (activeUserRole).FirstOrDefault ();
+            Role presentRole = Program.GetServer ().FindRoles (presentUserRole).FirstOrDefault ();
+            Role inactiveRole = Program.GetServer ().FindRoles (inactiveUserRole).FirstOrDefault ();
 
             foreach (ulong id in userActivity.Keys) {
                 UpdateUser (id, activeRole, presentRole, inactiveRole);
@@ -125,10 +125,9 @@ namespace DiscordCthulhu {
 
             bool missingAny = false;
             foreach (Role r in toRemove) {
-                if (!user.HasRole (r)) {
-                    missingAny = true;
-                }else {
+                if (user.HasRole (r)) {
                     ChatLogger.Log ("Removing role " + r.Name + " from user " + user.Name);
+                    missingAny = true;
                 }
             }
             if (missingAny)
