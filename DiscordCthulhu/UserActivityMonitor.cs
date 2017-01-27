@@ -123,6 +123,7 @@ namespace DiscordCthulhu {
                 await user.AddRoles (toAdd.ToArray ());
             }
 
+            await Task.Delay (10000);
             bool missingAny = false;
             foreach (Role r in toRemove) {
                 if (user.HasRole (r)) {
