@@ -107,11 +107,14 @@ namespace DiscordCthulhu
             return message;
         }
 
-        private async void AsyncSend (Channel e, string message) {
+        public async Task<Message> AsyncSend (Channel e, string message) {
             ChatLogger.Log ("Sending a message.");
             if (message.Length > 0) {
-                await e.SendMessage (message);
+                Task<Message> messageTask = e.SendMessage (message);
+                await messageTask;
+                return messageTask.Result;
             }
+            return null;
         }
 
         public async void SendImage (Channel e, string message, string imagePath) {

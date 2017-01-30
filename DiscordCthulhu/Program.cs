@@ -152,6 +152,11 @@ namespace DiscordCthulhu {
                     AutomatedVoiceChannels.UpdateVoiceChannel (e.After.VoiceChannel);
                     AutomatedVoiceChannels.CheckFullAndAddIf (e.Server);
                     AutomatedVoiceChannels.RemoveLeftoverChannels (e.Server);
+
+                    if (e.Before.VoiceChannel != null)
+                    Console.WriteLine ("Before: " + e.Before.VoiceChannel.Users.Count ());
+                    if (e.After.VoiceChannel != null)
+                    Console.WriteLine ("After: " + e.After.VoiceChannel.Users.Count ());
                 }
 
                 if (e.Before.VoiceChannel != e.After.VoiceChannel) {

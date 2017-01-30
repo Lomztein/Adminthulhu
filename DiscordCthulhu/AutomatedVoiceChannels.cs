@@ -62,7 +62,7 @@ namespace DiscordCthulhu {
             allVoiceChannels.Add (channel.id, channel);
         }
 
-        public static void UpdateVoiceChannel ( Channel voice ) {
+        public static async void UpdateVoiceChannel ( Channel voice ) {
             Game highestGame = new Game ("");
 
             if (voice != null && allVoiceChannels.ContainsKey (voice.Id)) {
@@ -98,10 +98,11 @@ namespace DiscordCthulhu {
                 }
 
                 string lockString = allVoiceChannels[voice.Id].IsLocked () ? lockIcon : "";
+                // Trying to optimize API calls here, just to spare those poor souls at the Discord API HQ stuff
                 if (highestGame.Name != "") {
-                    voice.Edit (lockString + allVoiceChannels[voice.Id].name + " - " + highestGame.Name);
+                    await voice.Edit (lockString + allVoiceChannels[voice.Id].name + " - " + highestGame.Name);
                 } else {
-                    voice.Edit (lockString + allVoiceChannels[voice.Id].name);
+                    await voice.Edit (lockString + allVoiceChannels[voice.Id].name);
                 }
                 allVoiceChannels[voice.Id].CheckLocker ();
             }

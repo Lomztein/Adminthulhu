@@ -44,7 +44,7 @@ namespace DiscordCthulhu {
         public bool GuessLetter (MessageEventArgs e, char letter) {
             Channel channel = e.Channel;
             Program.messageControl.SendMessage (channel, Program.GetUserName (e.User) + " guessed the letter **" + letter + "**.");
-            if (letterWhitelist.Contains (letter)) {
+            if (!letterWhitelist.Contains (letter)) {
                 Program.messageControl.SendMessage (channel, "Error: No numbers or special characters allowed.");
                 return false;
             }

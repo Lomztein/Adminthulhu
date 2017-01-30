@@ -81,6 +81,8 @@
     <Compile Include="AutomatedEventHandling.cs" />
     <Compile Include="AutomatedTextChannels.cs" />
     <Compile Include="AutomatedVoiceChannels.cs" />
+    <Compile Include="AutomatedWeeklyEvent.cs" />
+    <Compile Include="Birthsdays.cs" />
     <Compile Include="BotConfig.cs" />
     <Compile Include="CEmbolden.cs" />
     <Compile Include="ChatLogger.cs" />

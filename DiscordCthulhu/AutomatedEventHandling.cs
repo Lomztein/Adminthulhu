@@ -135,7 +135,7 @@ namespace DiscordCthulhu {
             command = "event";
             name = "Event Command Set";
             help = "A set of commands about events.";
-            commandsInSet = new Command[] { new CCreateEvent (), new CCancelEvent (), new CEditEvent (), new CJoinEvent (), new CLeaveEvent (), new CEventList (), new CEventMembers () };
+            commandsInSet = new Command[] { new CCreateEvent (), new CCancelEvent (), new CEditEvent (), new CJoinEvent (), new CLeaveEvent (), new CEventList (), new CEventMembers (), new AutomatedWeeklyEvent.CEventVote () };
         }
     }
 
