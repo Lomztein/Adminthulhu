@@ -10,17 +10,22 @@ namespace DiscordCthulhu {
     class SerializationIO {
 
         public static T LoadObjectFromFile<T> ( string path ) {
-            if (File.Exists (path)) {
+            try {
+                if (File.Exists (path)) {
 
-                BinaryFormatter bf = new BinaryFormatter ();
-                FileStream file = File.Open (path, FileMode.Open);
+                    BinaryFormatter bf = new BinaryFormatter ();
+                    FileStream file = File.Open (path, FileMode.Open);
 
-                T data = (T)bf.Deserialize (file);
-                file.Close ();
-                return data;
+                    T data = (T)bf.Deserialize (file);
+                    file.Close ();
+                    return data;
+                }
+                ChatLogger.Log ("Failed to load file at " + path);
+                return default (T);
+            } catch (Exception e) {
+                ChatLogger.DebugLog ("Error: " + e.Message);
+                return default (T);
             }
-            ChatLogger.Log ("Failed to load file at " + path);
-            return default (T);
         }
 
         public static void SaveObjectToFile (string fileName, object obj) {

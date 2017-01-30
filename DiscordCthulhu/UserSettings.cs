@@ -67,7 +67,7 @@ namespace DiscordCthulhu {
             command = "usersettings";
             name = "User Settings Command Set";
             help = "A set of commands about user settings.";
-            commandsInSet = new Command[] { new CReminderTime (), new CSetBirthsday (), new CSetAlias () };
+            commandsInSet = new Command[] { new CReminderTime (), new CSetBirthday (), new CSetAlias () };
         }
 
         public class CReminderTime : Command {
@@ -94,13 +94,13 @@ namespace DiscordCthulhu {
             }
         }
 
-        public class CSetBirthsday : Command {
+        public class CSetBirthday : Command {
 
-            public CSetBirthsday () {
-                command = "setbirthsday";
-                name = "Set Birthsday";
+            public CSetBirthday () {
+                command = "setbirthday";
+                name = "Set Birthday";
                 argHelp = "<date>";
-                help = "Set your birthsday date to " + argHelp + ", so we know when to congratulate you!";
+                help = "Set your birthday date to " + argHelp + ", so we know when to congratulate you!";
                 argumentNumber = 1;
             }
 
@@ -109,10 +109,10 @@ namespace DiscordCthulhu {
                 if (AllowExecution (e, arguments)) {
                     DateTime parse;
                     if (DateTime.TryParse (arguments[0], out parse)) {
-                        Birthsdays.SetBirthsday (e.User.Id, parse);
-                        Program.messageControl.SendMessage (e, "You have succesfully set your birthsday to **" + parse.ToString () + "**.");
+                        Birthdays.SetBirthday (e.User.Id, parse);
+                        Program.messageControl.SendMessage (e, "You have succesfully set your birthday to **" + parse.ToString () + "**.");
                     } else {
-                        Program.messageControl.SendMessage (e, "Failed to set birthsday - could not parse date.");
+                        Program.messageControl.SendMessage (e, "Failed to set birthday - could not parse date.");
                     }
                 }
             }

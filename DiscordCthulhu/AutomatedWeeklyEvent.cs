@@ -35,7 +35,7 @@ namespace DiscordCthulhu {
             }
         }
 
-        public void SaveData () {
+        public static void SaveData () {
             SerializationIO.SaveObjectToFile (Program.dataPath + votesFileName + Program.gitHubIgnoreType, votes);
         }
 
@@ -80,6 +80,7 @@ namespace DiscordCthulhu {
             DateTime now = DateTime.Now;
             DateTime eventDay = new DateTime (now.Year, now.Month, now.Day, eventHour, 0, 0).AddDays (daysBetween);
             AutomatedEventHandling.upcomingEvents.Add (new AutomatedEventHandling.Event ("Friday Event", eventDay, highestGame.name + " has been chosen by vote!"));
+            UpdateVoteMessage (false);
         }
 
         private void BeginNewVote () {
@@ -104,6 +105,7 @@ namespace DiscordCthulhu {
             }
 
             UpdateVoteMessage (false);
+            SaveData ();
         }
 
         public static async void UpdateVoteMessage ( bool forceNew ) {
@@ -116,11 +118,11 @@ namespace DiscordCthulhu {
             text += "```\n";
             if (status == WeeklyEventStatus.Waiting) {
                 text += "**VOTING HAS ENDED.**";
-            }else {
+            } else {
                 text += "**Vote using `!event vote <id>` to vote!**";
             }
 
-            Channel channel = Program.SearchChannel (Program.GetServer (), "dump");
+            Channel channel = Program.SearchChannel (Program.GetServer (), "announcements");
             Message message = channel.GetMessage (votingMessageID);
 
             /*if (message == null || forceNew || votingMessageID == 0) {
@@ -130,7 +132,7 @@ namespace DiscordCthulhu {
                 Console.WriteLine (task.Result.Id);
                 votingMessageID = task.Result.Id;
             } else {*/
-                await message.Edit (text);
+            await message.Edit (text);
             //}
         }
 
@@ -143,6 +145,7 @@ namespace DiscordCthulhu {
             }
         }
 
+        [Serializable]
         public class Vote {
             public ulong voterID;
             public int votedGameID = -1;
