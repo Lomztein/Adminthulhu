@@ -9,14 +9,43 @@ namespace DiscordCthulhu {
 
     public class AutomatedWeeklyEvent : IClockable {
 
-        public static Game[] games = new Game[] { new Game ("Overwatch"), new Game ("GMod"), new Game ("Counter Strike: GO") , new Game ("Team Fortress 2") , new Game ("Dodgeball") , new Game ("Rocket League") };
+        public static Game[] allGames = new Game[] {
+            new Game ("Overwatch"),
+            new Game ("GMod"),
+            new Game ("Counter Strike: GO"),
+            new Game ("Team Fortress 2"),
+            new Game ("Dodgeball"),
+            new Game ("Rocket League"),
+            new Game ("Guns of Icarus"),
+            new Game ("Rocket League"),
+            new Game ("Brawlshalla"),
+            new Game ("Battlefield"),
+            new Game ("Left 4 Dead 2"),
+            new Game ("PlanetSide 2"),
+            new Game ("RollerCoaster Tycoon 2 Multiplayer"),
+            new Game ("Killing Floor"),
+            new Game ("Tribes: Ascend"),
+            new Game ("Quake Live"),
+            new Game ("Air Brawl"),
+            new Game ("Duck Game"),
+            new Game ("Toribash"),
+            new Game ("Robocraft"),
+            new Game ("TrackMania"),
+            new Game ("Robot Roller-Derby Disco Dodgeball"),
+        };
+
+        public static Game[] games;
         public static List<Vote> votes;
 
         public static string votesFileName = "votes";
+        public static string allGamesFileName = "allgames";
+        public static string gamesFileName = "games";
 
         public static string eventDay = "friday";
         public static string voteEndDay = "wednesday";
         public static int daysBetween = 2;
+
+        public static int gamesPerWeek = 10;
 
         public enum WeeklyEventStatus { Voting, Waiting }
         public static WeeklyEventStatus status = WeeklyEventStatus.Voting;
@@ -25,18 +54,27 @@ namespace DiscordCthulhu {
 
         public int eventHour = 20;
 
-        public void Initialize ( DateTime time ) {
-            votes = SerializationIO.LoadObjectFromFile<List<Vote>> (Program.dataPath + votesFileName + Program.gitHubIgnoreType);
+        public async void Initialize ( DateTime time ) {
+            votes = SerializationIO.LoadObjectFromFile<List<Vote>> (Program.dataPath + Program.eventDirectory + votesFileName + Program.gitHubIgnoreType);
+            games = SerializationIO.LoadObjectFromFile<Game[]> (Program.dataPath + Program.eventDirectory + gamesFileName + Program.gitHubIgnoreType);
+
             if (votes == null)
                 votes = new List<Vote> ();
 
-            foreach (Vote vote in votes) {
-                games[vote.votedGameID].votes++;
+            foreach (Vote v in votes) {
+                Console.WriteLine (games[v.votedGameID].name);
             }
+
+            while (Program.GetServer () == null)
+                await Task.Delay (1000);
+
+            if (games == null)
+                BeginNewVote ();
         }
 
         public static void SaveData () {
-            SerializationIO.SaveObjectToFile (Program.dataPath + votesFileName + Program.gitHubIgnoreType, votes);
+            SerializationIO.SaveObjectToFile (Program.dataPath + Program.eventDirectory + votesFileName + Program.gitHubIgnoreType, votes);
+            SerializationIO.SaveObjectToFile (Program.dataPath + Program.eventDirectory + gamesFileName + Program.gitHubIgnoreType, games);
         }
 
         public void OnDayPassed ( DateTime time ) {
@@ -79,29 +117,70 @@ namespace DiscordCthulhu {
 
             DateTime now = DateTime.Now;
             DateTime eventDay = new DateTime (now.Year, now.Month, now.Day, eventHour, 0, 0).AddDays (daysBetween);
-            AutomatedEventHandling.upcomingEvents.Add (new AutomatedEventHandling.Event ("Friday Event", eventDay, highestGame.name + " has been chosen by vote!"));
+            AutomatedEventHandling.CreateEvent ("Friday Event", eventDay, highestGame.name + " has been chosen by vote!");
+
+            Channel mainChannel = Program.GetMainChannel (Program.GetServer ());
+            Program.messageControl.SendMessage (mainChannel, "The game for this fridays event has been chosen by vote: **" + highestGame.name + "**! It can be joined using command `!event join friday event`");
+
+            foreach (Vote vote in votes) {
+                if (highestGame == games[vote.votedGameID]) {
+                    User user = Program.GetServer ().GetUser (vote.voterID);
+                    // AutomatedEventHandling seriously lacks wrapper functions.
+                    Program.messageControl.AskQuestion (user, "The friday event you voted for has won, do you want to join the event?",
+                        delegate () {
+                            AutomatedEventHandling.JoinEvent (vote.voterID, "friday event");
+                            Program.messageControl.SendMessage (user, "You have joined the friday event succesfully!"); 
+                        } ); }
+
+                }
+
             UpdateVoteMessage (false);
         }
 
         private void BeginNewVote () {
             status = WeeklyEventStatus.Voting;
+
+            List<Game> possibilities = allGames.ToList ();
+            Random rand = new Random ();
+            games = new Game[gamesPerWeek];
+
+            for (int i = 0; i < games.Length; i++) {
+                int index = rand.Next (0, possibilities.Count);
+                games[i] = possibilities[index];
+                possibilities.RemoveAt (index);
+            }
+
             foreach (Game game in games)
                 game.votes = 0;
 
             votes = new List<Vote> ();
             UpdateVoteMessage (true);
+
+            Channel mainChannel = Program.GetMainChannel (Program.GetServer ());
+            Program.messageControl.SendMessage (mainChannel, "A new vote for next friday event has begun, see pinned messages in <#188106821154766848> for votesheet.");
+
+            SaveData ();
         }
 
         public static void VoteForGame ( MessageEventArgs e, ulong userID, int id ) {
-            Vote vote = votes.Find (x => x.voterID == userID);
+            Vote vote = null;
+            foreach (Vote v in votes) {
+                if (v.voterID == userID) {
+                    vote = v;
+                    break;
+                }
+            }
 
+            // If user has not voted yet, create new vote.
             if (vote == null) {
                 vote = new Vote (userID, id);
                 games[id].votes++;
                 votes.Add (vote);
             } else {
+                // Else, swap votes.
                 games[vote.votedGameID].votes--;
-                games[id].votes++;
+                vote.votedGameID = id;
+                games[vote.votedGameID].votes++;
             }
 
             UpdateVoteMessage (false);
@@ -109,12 +188,12 @@ namespace DiscordCthulhu {
         }
 
         public static async void UpdateVoteMessage ( bool forceNew ) {
-            string text = "Vote for this " + eventDay + "'s event!```\n";
+            string text = "Vote for this " + eventDay + "s event!```\n";
             int index = 0;
             foreach (Game game in games) {
-                text += index + " - " + game.name + " - " + game.votes.ToString () + " votes.\n";
+                text += (index + 1) + " - " + game.name + " - " + game.votes.ToString () + " votes.\n";
                 index++;
-            }
+            }   
             text += "```\n";
             if (status == WeeklyEventStatus.Waiting) {
                 text += "**VOTING HAS ENDED.**";
@@ -136,6 +215,7 @@ namespace DiscordCthulhu {
             //}
         }
 
+        [Serializable]
         public class Game {
             public string name;
             public int votes;
@@ -155,31 +235,36 @@ namespace DiscordCthulhu {
                 votedGameID = _votedGameID;
             }
         }
+    }
 
-        public class CEventVote : Command {
-            public CEventVote () {
-                command = "vote";
-                name = "Vote for Event";
-                argHelp = "<id>";
-                help = "Vote for the next friday event!";
-                argumentNumber = 1;
-            }
+    public class CEventVote : Command {
+        public CEventVote () {
+            command = "vote";
+            name = "Vote for Event";
+            argHelp = "<id>";
+            help = "Vote for the next friday event!";
+            argumentNumber = 1;
+        }
 
-            public override void ExecuteCommand ( MessageEventArgs e, List<string> arguments ) {
-                base.ExecuteCommand (e, arguments);
-                if (AllowExecution (e, arguments)) {
+        public override void ExecuteCommand ( MessageEventArgs e, List<string> arguments ) {
+            base.ExecuteCommand (e, arguments);
+            if (AllowExecution (e, arguments)) {
+                if (AutomatedWeeklyEvent.status == AutomatedWeeklyEvent.WeeklyEventStatus.Voting) {
                     int parse;
                     if (int.TryParse (arguments[0], out parse)) {
-                        bool withinRange = parse >= 0 && parse < games.Length;
+                        bool withinRange = parse > 0 && parse <= AutomatedWeeklyEvent.games.Length;
+
                         if (withinRange) {
-                            VoteForGame (e, e.User.Id, parse);
-                            Program.messageControl.SendMessage (e, "Succesfully voted for the upcoming friday event.");
+                            AutomatedWeeklyEvent.VoteForGame (e, e.User.Id, parse - 1);
+                            Program.messageControl.SendMessage (e, "Succesfully voted for **" + AutomatedWeeklyEvent.games[parse - 1].name + "**, in the upcoming friday event.");
                         } else {
-                            Program.messageControl.SendMessage (e, "Failed to vote - outside range ( 0-" + (games.Length - 1) + ").");
+                            Program.messageControl.SendMessage (e, "Failed to vote - outside range ( 1-" + (AutomatedWeeklyEvent.games.Length) + " ).");
                         }
                     } else {
                         Program.messageControl.SendMessage (e, "Failed to vote - could not parse vote.");
                     }
+                } else {
+                    Program.messageControl.SendMessage (e, "Failed to vote - voting not in progress.");
                 }
             }
         }

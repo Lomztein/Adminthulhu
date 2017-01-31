@@ -27,6 +27,7 @@ namespace DiscordCthulhu {
         public static string commandSettingsDirectory = "Command Settings/";
         public static string chatlogDirectory = "ChatLogs/";
         public static string resourceDirectory = "Resources/";
+        public static string eventDirectory = "Event/";
         public static string gitHubIgnoreType = ".botproperty";
 
         static void Main ( string[] args ) => new Program ().Start (args);
@@ -54,7 +55,7 @@ namespace DiscordCthulhu {
             new Phrase ("<:Serviet:255721870828109824> Privet Comrades!", "", 100, "Privet!"),
             new Phrase ("Who is best gem?", "Nyx", 100, "*Obviously* <:Lapis:230346614064021505> ..."),
             new Phrase ("Who is best gem?", "", 100, "Obviously <:PeriWow:230381627669348353>"),
-            new Phrase ("https://www.reddit.com/r/overwatch", "Gizmo Gizmo", 100, "Wow, this is some very interesting conte- <:residentsleeper:257933177631277056> Zzz", "links"),
+            new Phrase ("https://www.youtube.com/", "Gizmo Gizmo", 100, "Wow, this is some very interesting conte- <:residentsleeper:257933177631277056> Zzz", "links"),
             new Phrase ("", "khave", 2, "¯\\_(ツ)_/¯"),
             new Phrase ("(╯°□°）╯︵ ┻━┻", 100, "Please respect tables. ┬─┬ノ(ಠ_ಠノ)")
         };
@@ -366,6 +367,8 @@ namespace DiscordCthulhu {
         public static void InitializeDirectories () {
             CreateAbsentDirectory (dataPath + commandSettingsDirectory);
             CreateAbsentDirectory (dataPath + chatlogDirectory);
+            CreateAbsentDirectory (dataPath + chatlogDirectory);
+            CreateAbsentDirectory (dataPath + eventDirectory);
         }
 
         public static void CreateAbsentDirectory (string path) {

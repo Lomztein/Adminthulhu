@@ -73,6 +73,28 @@ namespace DiscordCthulhu
             return splitted.ToArray ();
         }
 
+        public MessageControl () {
+            Program.discordClient.MessageReceived += CheckForQuestions;
+        }
+
+        private void CheckForQuestions ( object sender, MessageEventArgs e ) {
+            if (askedUsers.ContainsKey (e.User.Id)) {
+                bool didAnswer = false;
+                if (e.Message.RawText == "y") {
+                    askedUsers[e.User.Id][0] ();
+                    didAnswer = true;
+                }else if (e.Message.RawText == "n") {
+                    didAnswer = true;
+                }
+                if (didAnswer) {
+                    askedUsers[e.User.Id].Remove (askedUsers[e.User.Id][0]);
+                    if (askedUsers[e.User.Id].Count == 0) {
+                        askedUsers.Remove (e.User.Id);
+                    }
+                }
+            }
+        }
+
         public void RemoveMessageTimer(MessageTimer messageTimer)
         {
             messageTimer.StopTimer();
@@ -124,6 +146,27 @@ namespace DiscordCthulhu
                 await e.SendFile (imagePath);
             } catch (Discord.Net.HttpException exception) {
                 await e.SendMessage ("Access denied! - " + exception.Message);
+            }
+        }
+
+        public Dictionary<ulong, List<Action>> askedUsers = new Dictionary<ulong, List<Action>>();
+
+        public async void AskQuestion (User user, string question, Action ifYes) {
+            SendMessage (user, question + " (y/n)");
+
+            if (!askedUsers.ContainsKey (user.Id)) {
+                askedUsers.Add (user.Id, new List<Action> ());
+            }
+            askedUsers[user.Id].Add (ifYes);
+
+            await Task.Delay (30 * 1000);
+
+            if (askedUsers.ContainsKey (user.Id)) {
+                askedUsers[user.Id].Remove (ifYes);
+                if (askedUsers[user.Id].Count == 0) {
+                    askedUsers.Remove (user.Id);
+                    SendMessage (user, "Question timed out after 30 seconds.");
+                }
             }
         }
     }

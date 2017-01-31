@@ -33,14 +33,13 @@ namespace DiscordCthulhu {
             List<Event> toRemove = new List<Event> ();
             foreach (Event e in upcomingEvents) {
                 if (e.eventState == Event.EventState.Awaiting) {
-                    if (e.eventTime < now) {
+                    if (now > e.eventTime) {
                         StartEvent (e);
 
                         toRemove.Add (e);
                         SaveEvents ();
                     }
 
-                    // If there is less than two day before the event, remind all members at midday.
                     foreach (ulong userID in e.eventMemberIDs) {
                         if (e.eventTime.AddDays (UserSettings.GetSetting<int>(userID, "EventRemindTime, ", 2)) < now) {
                             DateTime remindTime = new DateTime (now.Year, now.Month, now.Day, 12, 00, 0);
@@ -62,11 +61,11 @@ namespace DiscordCthulhu {
                 User user = Program.GetServer ().GetUser (userID);
                 Program.messageControl.SendMessage (user, "**REMINDER:** You have an upcoming event **" + remindEvent.eventName + "** on **" + Program.serverName + "** coming soon, this " + remindEvent.eventTime.DayOfWeek.ToString () + " at " + remindEvent.eventTime.ToString ());
                 remindEvent.lastRemind[userID] = DateTime.Now;
-                SaveEvents ();
             }
         }
 
         public static void StartEvent ( Event startingEvent ) {
+            ChatLogger.Log ("Starting event: " + startingEvent.eventName + "!");
             startingEvent.eventState = Event.EventState.Ended;
 
             if (startingEvent.eventMemberIDs.Count != 0) {
@@ -88,6 +87,7 @@ namespace DiscordCthulhu {
                     Program.GetMainChannel (Program.GetServer ()),
                     "Event **" + startingEvent.eventName + "** cancelled, since no one showed up. :(");
             }
+
         }
 
         public static Event FindEvent (string eventName) {
@@ -98,10 +98,20 @@ namespace DiscordCthulhu {
             return null;
         }
 
+        public static void JoinEvent (ulong userID, string eventName) {
+            Event e = FindEvent (eventName);
+            e.eventMemberIDs.Add (userID);
+        }
+
+        public static void CreateEvent (string eventName, DateTime date, string description = null) {
+            upcomingEvents.Add (new Event (eventName, date, description));
+        }
+
         public void OnMinutePassed ( DateTime time ) {
         }
 
         public void OnHourPassed ( DateTime time ) {
+            SaveEvents ();
         }
 
         public void OnDayPassed ( DateTime time ) {
@@ -125,6 +135,8 @@ namespace DiscordCthulhu {
                 eventName = name;
                 eventTime = time;
                 eventDescription = description;
+
+                eventState = EventState.Awaiting;
             }
 
         }
@@ -135,7 +147,7 @@ namespace DiscordCthulhu {
             command = "event";
             name = "Event Command Set";
             help = "A set of commands about events.";
-            commandsInSet = new Command[] { new CCreateEvent (), new CCancelEvent (), new CEditEvent (), new CJoinEvent (), new CLeaveEvent (), new CEventList (), new CEventMembers (), new AutomatedWeeklyEvent.CEventVote () };
+            commandsInSet = new Command[] { new CCreateEvent (), new CCancelEvent (), new CEditEvent (), new CJoinEvent (), new CLeaveEvent (), new CEventList (), new CEventMembers (), new CEventVote () };
         }
     }
 
