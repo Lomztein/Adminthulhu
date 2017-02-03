@@ -95,6 +95,12 @@ namespace DiscordCthulhu {
             if (lastUserUpdate.ContainsKey (id) && time < lastUserUpdate[id])
                 return;
 
+            if (lastUserUpdate.ContainsKey (id)) {
+                lastUserUpdate[id] = time.AddSeconds (minTimeBetweenUpdates);
+            } else {
+                lastUserUpdate.Add (id, time.AddSeconds (minTimeBetweenUpdates));
+            }
+
             DateTime lastActivity = userActivity[id];
             User user = Program.GetServer ().GetUser (id);
 
@@ -117,27 +123,17 @@ namespace DiscordCthulhu {
                 toRemove.Add (activeRole);
             }
 
+            foreach (Role r in toRemove) {
+                if (user.HasRole (r)) {
+                    ChatLogger.Log ("Removing role " + r.Name + " from user " + user.Name);
+                    await user.RemoveRoles (r);
+                }
+            }
+
             // This might be heavy on the server during midnights.
             if (!user.HasRole (toAdd[0])) {
                 ChatLogger.Log ("Adding role " + toAdd[0].Name + " to user " + user.Name);
                 await user.AddRoles (toAdd.ToArray ());
-            }
-
-            await Task.Delay (10000);
-            bool missingAny = false;
-            foreach (Role r in toRemove) {
-                if (user.HasRole (r)) {
-                    ChatLogger.Log ("Removing role " + r.Name + " from user " + user.Name);
-                    missingAny = true;
-                }
-            }
-            if (missingAny)
-                await user.RemoveRoles (toRemove.ToArray ());
-
-            if (lastUserUpdate.ContainsKey (id)) {
-                lastUserUpdate[id] = time.AddSeconds (minTimeBetweenUpdates);
-            } else {
-                lastUserUpdate.Add (id, time.AddSeconds (minTimeBetweenUpdates));
             }
         }
 
