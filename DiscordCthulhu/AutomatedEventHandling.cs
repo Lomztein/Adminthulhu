@@ -24,9 +24,12 @@ namespace DiscordCthulhu {
 
         public static void LoadEvents () {
             upcomingEvents = SerializationIO.LoadObjectFromFile<List<Event>> (Program.dataPath + eventFileName + Program.gitHubIgnoreType);
+            if (upcomingEvents == null)
+                upcomingEvents = new List<Event> ();
         }
 
         public void Initialize (DateTime now) {
+            LoadEvents ();
         }
 
         public void OnSecondPassed ( DateTime now ) {
@@ -101,10 +104,12 @@ namespace DiscordCthulhu {
         public static void JoinEvent (ulong userID, string eventName) {
             Event e = FindEvent (eventName);
             e.eventMemberIDs.Add (userID);
+            SaveEvents ();
         }
 
         public static void CreateEvent (string eventName, DateTime date, string description = null) {
             upcomingEvents.Add (new Event (eventName, date, description));
+            SaveEvents ();
         }
 
         public void OnMinutePassed ( DateTime time ) {
@@ -166,9 +171,8 @@ namespace DiscordCthulhu {
             if (AllowExecution (e, arguments)) {
                 DateTime parse;
                 if (DateTime.TryParse (arguments[1], out parse)) {
-                    AutomatedEventHandling.upcomingEvents.Add (new AutomatedEventHandling.Event (arguments[0], parse, arguments[2]));
+                    AutomatedEventHandling.CreateEvent (arguments[0], parse, arguments[2]);
                     Program.messageControl.SendMessage (e, "Succesfully created event **" + arguments[0] + "** at " + parse.ToString ());
-                    AutomatedEventHandling.SaveEvents ();
                 }else {
                     Program.messageControl.SendMessage (e, "Failed to create event, could not parse time.");
                 }
