@@ -99,10 +99,9 @@ namespace DiscordCthulhu {
 
                 string lockString = allVoiceChannels[voice.Id].IsLocked () ? lockIcon : "";
                 // Trying to optimize API calls here, just to spare those poor souls at the Discord API HQ stuff
-                if (highestGame.Name != "") {
-                    await voice.Edit (lockString + allVoiceChannels[voice.Id].name + " - " + highestGame.Name);
-                } else {
-                    await voice.Edit (lockString + allVoiceChannels[voice.Id].name);
+                string newName = highestGame.Name != "" ? lockString + allVoiceChannels[voice.Id].name + " - " + highestGame.Name : lockString + allVoiceChannels[voice.Id].name;
+                if (voice.Name != newName) {
+                    await voice.Edit (newName);
                 }
                 allVoiceChannels[voice.Id].CheckLocker ();
             }

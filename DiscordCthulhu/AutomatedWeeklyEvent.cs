@@ -15,7 +15,6 @@ namespace DiscordCthulhu {
             new Game ("Counter Strike: GO"),
             new Game ("Team Fortress 2"),
             new Game ("Dodgeball"),
-            new Game ("Rocket League"),
             new Game ("Guns of Icarus"),
             new Game ("Rocket League"),
             new Game ("Brawlshalla"),
@@ -45,12 +44,14 @@ namespace DiscordCthulhu {
         public static string voteEndDay = "wednesday";
         public static int daysBetween = 2;
 
+        public static int votesPerPerson = 3;
         public static int gamesPerWeek = 10;
 
         public enum WeeklyEventStatus { Voting, Waiting }
         public static WeeklyEventStatus status = WeeklyEventStatus.Voting;
+        public static Game highestGame = null;
 
-        public static ulong votingMessageID = 275577439600508928;
+        public static ulong votingMessageID = 276023604892663808;
 
         public int eventHour = 20;
 
@@ -105,7 +106,7 @@ namespace DiscordCthulhu {
         private void CountVotes () {
             status = WeeklyEventStatus.Waiting;
 
-            Game highestGame = null;
+            highestGame = null;
             int highestVote = int.MinValue;
 
             foreach (Game game in games) {
@@ -122,17 +123,24 @@ namespace DiscordCthulhu {
             Channel mainChannel = Program.GetMainChannel (Program.GetServer ());
             Program.messageControl.SendMessage (mainChannel, "The game for this fridays event has been chosen by vote: **" + highestGame.name + "**! It can be joined using command `!event join friday event`");
 
+            List<ulong> processed = new List<ulong> ();
             foreach (Vote vote in votes) {
-                if (highestGame == games[vote.votedGameID]) {
+                if (processed.Contains (vote.voterID))
+                    continue;
+
+                if (highestGame != games[vote.votedGameID]) {
                     User user = Program.GetServer ().GetUser (vote.voterID);
                     // AutomatedEventHandling seriously lacks wrapper functions.
-                    Program.messageControl.AskQuestion (user, "The friday event you voted for has won, do you want to join the event?",
+                    Program.messageControl.AskQuestion (user, "The friday event you voted for sadly lost to **" + highestGame.name + "** , do you want to join the event anyways?",
                         delegate () {
                             AutomatedEventHandling.JoinEvent (vote.voterID, "friday event");
                             Program.messageControl.SendMessage (user, "You have joined the friday event succesfully!"); 
-                        } ); }
-
+                        } );
+                }else {
+                    AutomatedEventHandling.JoinEvent (vote.voterID, "friday event");
                 }
+                processed.Add (vote.voterID);
+            }
 
             UpdateVoteMessage (false);
         }
@@ -140,6 +148,7 @@ namespace DiscordCthulhu {
         private void BeginNewVote () {
             status = WeeklyEventStatus.Voting;
 
+            highestGame = null;
             List<Game> possibilities = allGames.ToList ();
             Random rand = new Random ();
             games = new Game[gamesPerWeek];
@@ -162,29 +171,50 @@ namespace DiscordCthulhu {
             SaveData ();
         }
 
-        public static void VoteForGame ( MessageEventArgs e, ulong userID, int id ) {
-            Vote vote = null;
-            foreach (Vote v in votes) {
-                if (v.voterID == userID) {
-                    vote = v;
-                    break;
+        public static bool VoteForGame ( MessageEventArgs e, ulong userID, int id ) {
+            List<Vote> userVotes = new List<Vote> ();
+
+            foreach (Vote vote in votes) {
+                if (vote.voterID == userID)
+                    userVotes.Add (vote);
+            }
+
+            if (userVotes.Count >= votesPerPerson) {
+                Program.messageControl.SendMessage (e, "You've already voted for " + votesPerPerson + " games, you'll have to remove one to vote using `!event removevote <id>`, before you can place another.");
+                return false;
+            }
+
+            foreach (Vote v in userVotes) {
+                if (v.votedGameID == id) {
+                    Program.messageControl.SendMessage (e, "You've already voted for **" + games[id].name + "**. You can't vote for the same game more than once.");
+                    return false;
                 }
             }
 
-            // If user has not voted yet, create new vote.
-            if (vote == null) {
-                vote = new Vote (userID, id);
-                games[id].votes++;
-                votes.Add (vote);
-            } else {
-                // Else, swap votes.
-                games[vote.votedGameID].votes--;
-                vote.votedGameID = id;
-                games[vote.votedGameID].votes++;
-            }
+            Program.messageControl.SendMessage (e, "Succesfully voted for **" + games[id].name + "**, in the upcoming friday event.");
+            votes.Add (new Vote (userID, id));
+            games[id].votes++;
 
             UpdateVoteMessage (false);
             SaveData ();
+
+            return true;
+        }
+
+        public static bool RemoveVote (MessageEventArgs e, ulong userID, int gameID) {
+            Vote vote = votes.Find (x => x.voterID == userID && x.votedGameID == gameID);
+            if (vote == null) {
+                Program.messageControl.SendMessage (e,"Failed to remove vote, you haven't voted for **" + games[gameID].name + "**");
+                return false;
+            }else {
+                votes.Remove (vote);
+                Program.messageControl.SendMessage (e, "Succesfully removed vote from **" + games[gameID].name + "**.");
+            }
+
+            games[gameID].votes--;
+            UpdateVoteMessage (false);
+            SaveData ();
+            return true;
         }
 
         public static async void UpdateVoteMessage ( bool forceNew ) {
@@ -196,9 +226,9 @@ namespace DiscordCthulhu {
             }   
             text += "```\n";
             if (status == WeeklyEventStatus.Waiting) {
-                text += "**VOTING HAS ENDED.**";
+                text += "**VOTING HAS ENDED, " + highestGame.name + " HAS WON THE VOTE.**";
             } else {
-                text += "**Vote using `!event vote <id>` to vote!**";
+                text += "**Vote using `!event vote <id>` to vote. You can vote 3 times, and also remove votes using `!event removevote <id>`!**";
             }
 
             Channel channel = Program.SearchChannel (Program.GetServer (), "announcements");
@@ -256,7 +286,6 @@ namespace DiscordCthulhu {
 
                         if (withinRange) {
                             AutomatedWeeklyEvent.VoteForGame (e, e.User.Id, parse - 1);
-                            Program.messageControl.SendMessage (e, "Succesfully voted for **" + AutomatedWeeklyEvent.games[parse - 1].name + "**, in the upcoming friday event.");
                         } else {
                             Program.messageControl.SendMessage (e, "Failed to vote - outside range ( 1-" + (AutomatedWeeklyEvent.games.Length) + " ).");
                         }
@@ -265,6 +294,38 @@ namespace DiscordCthulhu {
                     }
                 } else {
                     Program.messageControl.SendMessage (e, "Failed to vote - voting not in progress.");
+                }
+            }
+        }
+    }
+
+    public class CRemoveVote : Command {
+        public CRemoveVote () {
+            command = "removevote";
+            name = "Remove vote for Event";
+            argHelp = "<id>";
+            help = "Remove a vote for the next friday event.";
+            argumentNumber = 1;
+        }
+
+        public override void ExecuteCommand ( MessageEventArgs e, List<string> arguments ) {
+            base.ExecuteCommand (e, arguments);
+            if (AllowExecution (e, arguments)) {
+                if (AutomatedWeeklyEvent.status == AutomatedWeeklyEvent.WeeklyEventStatus.Voting) {
+                    int parse;
+                    if (int.TryParse (arguments[0], out parse)) {
+                        bool withinRange = parse > 0 && parse <= AutomatedWeeklyEvent.games.Length;
+
+                        if (withinRange) {
+                            AutomatedWeeklyEvent.RemoveVote (e, e.User.Id, parse - 1);
+                        } else {
+                            Program.messageControl.SendMessage (e, "Failed to remove vote - outside range ( 1-" + (AutomatedWeeklyEvent.games.Length) + " ).");
+                        }
+                    } else {
+                        Program.messageControl.SendMessage (e, "Failed to remove vote - could not parse vote.");
+                    }
+                } else {
+                    Program.messageControl.SendMessage (e, "Failed to remove vote - voting not in progress.");
                 }
             }
         }
