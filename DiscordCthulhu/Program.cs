@@ -16,6 +16,7 @@ namespace DiscordCthulhu {
             new CEndTheWorld (), new CChangeScore (), new CShowScore (), new CFizzfyr (), new CSwiggity (),
             new CAddHeader (), new CShowHeaders (),
             new VoiceCommands (), new EventCommands (), new UserSettingsCommands (), new DebugCommands (), new HangmanCommands (),
+            new GameCommands ()
         };
 
         public static string dataPath = "";
@@ -93,6 +94,7 @@ namespace DiscordCthulhu {
             InitializeData ();
             InitializeCommands ();
             UserSettings.Initialize ();
+            UserGameMonitor.Initialize ();
 
             bootedTime = DateTime.Now.AddSeconds (BOOT_WAIT_TIME);
 
@@ -148,24 +150,27 @@ namespace DiscordCthulhu {
             discordClient.UserUpdated += ( s, e ) => {
                 // Maybe, just maybe put these into a single function.
                 if (FullyBooted ()) {
-                    AutomatedVoiceChannels.AddMissingChannels (e.Server);
+
+                    if (e.Before.VoiceChannel != e.After.VoiceChannel) {
+                        // Voice channel change detected.
+                        ChatLogger.Log ("Voice channel change detected with user " + e.After.Name);
+
+                        AutomatedVoiceChannels.AddMissingChannels (e.Server);
+                        AutomatedVoiceChannels.CheckFullAndAddIf (e.Server);
+                        AutomatedVoiceChannels.RemoveLeftoverChannels (e.Server);
+
+                        if (e.After.VoiceChannel != null) {
+                            AutomatedVoiceChannels.allVoiceChannels[e.After.VoiceChannel.Id].OnUserJoined (e.After);
+                        }
+                    }
+
                     AutomatedVoiceChannels.UpdateVoiceChannel (e.Before.VoiceChannel);
                     AutomatedVoiceChannels.UpdateVoiceChannel (e.After.VoiceChannel);
-                    AutomatedVoiceChannels.CheckFullAndAddIf (e.Server);
-                    AutomatedVoiceChannels.RemoveLeftoverChannels (e.Server);
 
                     if (e.Before.VoiceChannel != null)
                     Console.WriteLine ("Before: " + e.Before.VoiceChannel.Users.Count ());
                     if (e.After.VoiceChannel != null)
                     Console.WriteLine ("After: " + e.After.VoiceChannel.Users.Count ());
-                }
-
-                if (e.Before.VoiceChannel != e.After.VoiceChannel) {
-                    // Voice channel change detected.
-                    ChatLogger.Log ("Voice channel change detected with user " + e.After.Name);
-                    if (e.After.VoiceChannel != null) {
-                        AutomatedVoiceChannels.allVoiceChannels[e.After.VoiceChannel.Id].OnUserJoined (e.After);
-                    }
                 }
 
                 Channel channel = GetMainChannel (e.Server);
@@ -237,6 +242,14 @@ namespace DiscordCthulhu {
                 await (user.AddRoles (role));
                 await Task.Delay (5000);
             }
+        }
+
+        public static List<User> ForceGetUsers (Channel channel) {
+            List<User> result = new List<User> ();
+            foreach (User u in channel.Users) {
+                result.Add (GetServer ().GetUser (u.Id));
+            }
+            return result;
         }
 
         public static async void SecureRemoveRole ( User user, Role role ) {

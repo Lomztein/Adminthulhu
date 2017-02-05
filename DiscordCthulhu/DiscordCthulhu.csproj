@@ -97,7 +97,6 @@
     <Compile Include="Commands\CEndTTTGame.cs" />
     <Compile Include="Commands\CFizzfyr.cs" />
     <Compile Include="Commands\CFlipCoin.cs" />
-    <Compile Include="Commands\CAddGame.cs" />
     <Compile Include="Commands\CCallVoiceChannel.cs" />
     <Compile Include="Commands\CClearAlias.cs" />
     <Compile Include="Commands\CCommandList.cs" />
@@ -109,7 +108,6 @@
     <Compile Include="Commands\CQoute.cs" />
     <Compile Include="Commands\CRandomGame.cs" />
     <Compile Include="Commands\CRemoveAlias.cs" />
-    <Compile Include="Commands\CRemoveGame.cs" />
     <Compile Include="Commands\CRollTheDice.cs" />
     <Compile Include="Commands\CSendFeedback.cs" />
     <Compile Include="Commands\CSetAlias.cs" />
@@ -139,6 +137,7 @@
     <Compile Include="SpamCountermeasures.cs" />
     <Compile Include="TicTacToe.cs" />
     <Compile Include="UserActivityMonitor.cs" />
+    <Compile Include="UserGameMonitor.cs" />
     <Compile Include="UserSettings.cs" />
   </ItemGroup>
   <ItemGroup>

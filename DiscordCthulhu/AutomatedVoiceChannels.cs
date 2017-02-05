@@ -74,7 +74,8 @@ namespace DiscordCthulhu {
                     allVoiceChannels[voice.Id].Unlock (false);
 
                 Dictionary<Game, int> numPlayers = new Dictionary<Game, int> ();
-                foreach (User user in voice.Users) {
+                List<User> users = Program.ForceGetUsers (voice);
+                foreach (User user in users) {
 
                     if (user.CurrentGame.HasValue) {
                         if (numPlayers.ContainsKey (user.CurrentGame.Value)) {
@@ -100,6 +101,7 @@ namespace DiscordCthulhu {
                 string lockString = allVoiceChannels[voice.Id].IsLocked () ? lockIcon : "";
                 // Trying to optimize API calls here, just to spare those poor souls at the Discord API HQ stuff
                 string newName = highestGame.Name != "" ? lockString + allVoiceChannels[voice.Id].name + " - " + highestGame.Name : lockString + allVoiceChannels[voice.Id].name;
+                Console.WriteLine (newName);
                 if (voice.Name != newName) {
                     await voice.Edit (newName);
                 }
@@ -215,7 +217,8 @@ namespace DiscordCthulhu {
                     continue;
 
                 if (cur.GetChannel () != null) {
-                    if (cur.GetChannel ().Users.Count () != 0) {
+                    Channel channel = cur.GetChannel ();
+                    if (Program.ForceGetUsers (channel).Count != 0) {
                         fullChannels++;
                     }
                 }
@@ -313,7 +316,12 @@ namespace DiscordCthulhu {
 
             public void RequestInvite (User requester) {
                 if (IsLocked ()) {
-                    Program.messageControl.SendMessage (GetLocker (), "**" + Program.GetUserName (requester) + "** on **" + Program.serverName + "** requests access to your locked voice channel.");
+                    Program.messageControl.AskQuestion (GetLocker (), "**" + Program.GetUserName (requester) + "** on **" + Program.serverName + "** requests access to your locked voice channel.",
+                        delegate () {
+                            allowedUsers.Add (requester.Id);
+                            Program.messageControl.SendMessage (requester, "Your request to join **" + name + "** has been accepted.");
+                            Program.messageControl.SendMessage (GetLocker (), "Succesfully accepted requiest.");
+                        } );
                 }
             }
 

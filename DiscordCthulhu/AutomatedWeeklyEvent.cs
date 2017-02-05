@@ -167,6 +167,7 @@ namespace DiscordCthulhu {
 
             Channel mainChannel = Program.GetMainChannel (Program.GetServer ());
             Program.messageControl.SendMessage (mainChannel, "A new vote for next friday event has begun, see pinned messages in <#188106821154766848> for votesheet.");
+            
 
             SaveData ();
         }
