@@ -89,7 +89,7 @@ namespace DiscordCthulhu {
 
             discordClient = new DiscordClient ();
             messageControl = new MessageControl();
-            //controlPanel = new ControlPanel (); Removed due to being practically useless.
+            //controlPanel = new ControlPanel (); //Removed due to being practically useless.
 
             InitializeData ();
             InitializeCommands ();
