@@ -15,13 +15,13 @@ namespace DiscordCthulhu {
             argumentNumber = 0;
         }
 
-        public override void ExecuteCommand ( MessageEventArgs e, List<string> arguments ) {
+        public override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
             base.ExecuteCommand (e, arguments);
             if (AllowExecution (e, arguments)) {
 
-                if (Program.playerGroups.groups.ContainsKey (e.Server.Name)) {
+                if (Program.playerGroups.groups.ContainsKey (e.SocketGuild.Name)) {
                     string toSend = "Groups on this server: \n\n";
-                    List<PlayerGroups.Group> groups = Program.playerGroups.groups[e.Server.Name];
+                    List<PlayerGroups.Group> groups = Program.playerGroups.groups[e.SocketGuild.Name];
                     for (int i = 0; i < groups.Count; i++) {
                         toSend += groups[i].groupName + " - " + groups[i].memberMentions.Count + " members.\n";
                     }

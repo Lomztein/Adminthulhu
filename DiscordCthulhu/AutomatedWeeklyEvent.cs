@@ -172,7 +172,7 @@ namespace DiscordCthulhu {
             SaveData ();
         }
 
-        public static bool VoteForGame ( MessageEventArgs e, ulong userID, int id ) {
+        public static bool VoteForGame ( SocketMessage e, ulong userID, int id ) {
             List<Vote> userVotes = new List<Vote> ();
 
             foreach (Vote vote in votes) {
@@ -202,7 +202,7 @@ namespace DiscordCthulhu {
             return true;
         }
 
-        public static bool RemoveVote (MessageEventArgs e, ulong userID, int gameID) {
+        public static bool RemoveVote (SocketMessage e, ulong userID, int gameID) {
             Vote vote = votes.Find (x => x.voterID == userID && x.votedGameID == gameID);
             if (vote == null) {
                 Program.messageControl.SendMessage (e,"Failed to remove vote, you haven't voted for **" + games[gameID].name + "**");
@@ -233,10 +233,10 @@ namespace DiscordCthulhu {
             }
 
             Channel channel = Program.SearchChannel (Program.GetServer (), "announcements");
-            Message message = channel.GetMessage (votingMessageID);
+            Content message = channel.GetMessage (votingMessageID);
 
             /*if (message == null || forceNew || votingMessageID == 0) {
-                Task<Message> task = Program.messageControl.AsyncSend (channel, text);
+                Task<Content> task = Program.messageControl.AsyncSend (channel, text);
                 await task;
 
                 Console.WriteLine (task.Result.Id);
@@ -277,7 +277,7 @@ namespace DiscordCthulhu {
             argumentNumber = 1;
         }
 
-        public override void ExecuteCommand ( MessageEventArgs e, List<string> arguments ) {
+        public override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
             base.ExecuteCommand (e, arguments);
             if (AllowExecution (e, arguments)) {
                 if (AutomatedWeeklyEvent.status == AutomatedWeeklyEvent.WeeklyEventStatus.Voting) {
@@ -309,7 +309,7 @@ namespace DiscordCthulhu {
             argumentNumber = 1;
         }
 
-        public override void ExecuteCommand ( MessageEventArgs e, List<string> arguments ) {
+        public override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
             base.ExecuteCommand (e, arguments);
             if (AllowExecution (e, arguments)) {
                 if (AutomatedWeeklyEvent.status == AutomatedWeeklyEvent.WeeklyEventStatus.Voting) {

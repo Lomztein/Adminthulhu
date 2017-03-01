@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Discord;
+using Discord.WebSocket;
 
 namespace DiscordCthulhu {
     public static class SpamCountermeasures {
@@ -19,13 +20,13 @@ namespace DiscordCthulhu {
         /// </summary>
         /// <param name="message"></param>
         /// <returns></returns>
-        public static bool OnMessageRecieved (MessageEventArgs message) {
+        public static bool OnMessageRecieved (SocketMessage message) {
             // First, add the message to the log.
             if (messageLog.ContainsKey (message.User.Id)) {
-                messageLog[message.User.Id].Add (new MessageObject (message.Message.RawText));
+                messageLog[message.User.Id].Add (new MessageObject (message.Content.RawText));
             }else {
                 messageLog.Add (message.User.Id, new List<MessageObject> ());
-                messageLog[message.User.Id].Add (new MessageObject (message.Message.RawText));
+                messageLog[message.User.Id].Add (new MessageObject (message.Content.RawText));
             }
 
             // Loop through log and remove entries that are too old:
@@ -44,14 +45,14 @@ namespace DiscordCthulhu {
             int userMessages = 0;
             foreach (MessageObject obj in messageLog[message.User.Id]) {
                 userMessages++;
-                if (obj.rawText == message.Message.RawText)
+                if (obj.rawText == message.Content.RawText)
                     sameMessages++;
             }
 
             if (userMessages > maxUserMessages || sameMessages > maxSameMessages) {
                 Program.messageControl.SendMessage (message.User, "Spam detected, please wait a few seconds before sending a message. This is arguably the most useless feature of this bot.");
-                Program.allowedDeletedMessages.Add (message.Message.RawText);
-                message.Message.Delete ();
+                Program.allowedDeletedMessages.Add (message.Content.RawText);
+                message.Content.Delete ();
                 return true;
             }
 

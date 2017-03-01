@@ -27,7 +27,7 @@ namespace DiscordCthulhu {
             }
         }
 
-        public override void ExecuteCommand ( MessageEventArgs e, List<string> arguments ) {
+        public override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
             if (arguments.Count > 0 && arguments[0] == "?") {
                 // Display all commands within command.
                 string commands = "Commands in the **" + command + "** command set:\n```";

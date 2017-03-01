@@ -23,7 +23,7 @@ namespace DiscordCthulhu {
                 ChatLogger.Log ("Failed to load file at " + path);
                 return default (T);
             } catch (Exception e) {
-                ChatLogger.DebugLog ("Error: " + e.Message);
+                ChatLogger.DebugLog ("Error: " + e.Content);
                 return default (T);
             }
         }
@@ -36,7 +36,7 @@ namespace DiscordCthulhu {
                 bf.Serialize (file, obj);
                 file.Close ();
             } catch (Exception e) {
-                ChatLogger.DebugLog ("Error: Failed to save file: " + e.Message);
+                ChatLogger.DebugLog ("Error: Failed to save file: " + e.Content);
             }
         }
 

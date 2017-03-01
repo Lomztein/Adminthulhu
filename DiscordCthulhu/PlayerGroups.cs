@@ -30,12 +30,12 @@ namespace DiscordCthulhu {
             return null;
         }
 
-        public bool CreateGroup (MessageEventArgs e, string groupName) {
-            if (!groups.ContainsKey (e.Server.Name))
-                groups.Add (e.Server.Name, new List<Group> ());
+        public bool CreateGroup (SocketMessage e, string groupName) {
+            if (!groups.ContainsKey (e.SocketGuild.Name))
+                groups.Add (e.SocketGuild.Name, new List<Group> ());
 
-            if (FindGroupByName (e.Server.Name, groupName) == null) {
-                groups[e.Server.Name].Add (new Group (groupName, e.User.Mention));
+            if (FindGroupByName (e.SocketGuild.Name, groupName) == null) {
+                groups[e.SocketGuild.Name].Add (new Group (groupName, e.User.Mention));
                 Save ();
                 return true;
             }
@@ -43,8 +43,8 @@ namespace DiscordCthulhu {
             return false;
         }
 
-        public bool JoinGroup (MessageEventArgs e, string groupName) {
-            Group group = FindGroupByName (e.Server.Name, groupName);
+        public bool JoinGroup (SocketMessage e, string groupName) {
+            Group group = FindGroupByName (e.SocketGuild.Name, groupName);
             if (!IsUserMember (group, e.User.Mention) && group != null) {
                 group.AddMember (e.User.Mention);
                 Save ();
@@ -54,13 +54,13 @@ namespace DiscordCthulhu {
             return false;
         }
 
-        public bool LeaveGroup (MessageEventArgs e, string groupName) {
-            Group group = FindGroupByName (e.Server.Name, groupName);
+        public bool LeaveGroup (SocketMessage e, string groupName) {
+            Group group = FindGroupByName (e.SocketGuild.Name, groupName);
             if (IsUserMember (group, e.User.Mention)) {
                 group.RemoveMember (e.User.Mention);
 
                 if (group.memberMentions.Count == 0)
-                    groups[e.Server.Name].Remove (group);
+                    groups[e.SocketGuild.Name].Remove (group);
 
                 Save ();
                 return true;

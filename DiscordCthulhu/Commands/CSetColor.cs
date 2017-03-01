@@ -29,12 +29,12 @@ namespace DiscordCthulhu {
             argumentNumber = 1;
         }
 
-        public override async void ExecuteCommand ( MessageEventArgs e, List<string> arguments ) {
+        public override async void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
             base.ExecuteCommand (e, arguments);
             if (AllowExecution (e, arguments)) {
 
                 if (allowed.Contains (arguments[0].ToUpper ())) {
-                    Role[] roles = e.Server.FindRoles (arguments[0].ToUpper (), true).ToArray ();
+                    Role[] roles = e.SocketGuild.FindRoles (arguments[0].ToUpper (), true).ToArray ();
 
                     if (roles.Length == 1) {
                         Role role = roles[0];
@@ -45,7 +45,7 @@ namespace DiscordCthulhu {
                                 if (removePrevious) {
                                     List<Role> rList = new List<Role> ();
                                     for (int i = 0; i < allowed.Length; i++) {
-                                        rList.Add (e.Server.FindRoles (allowed[i], true).ToList ()[0]);
+                                        rList.Add (e.SocketGuild.FindRoles (allowed[i], true).ToList ()[0]);
                                     }
 
                                     int removeTries = 5;
@@ -58,7 +58,7 @@ namespace DiscordCthulhu {
                                 Program.messageControl.SendMessage (e, succesText);
                             }
                         } catch (Exception exception) {
-                            Program.messageControl.SendMessage (e, "Error: " + exception.Message);
+                            Program.messageControl.SendMessage (e, "Error: " + exception.Content);
                         }
                     }
                 } else {

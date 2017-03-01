@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Discord;
+using Discord.WebSocket;
 
 namespace DiscordCthulhu {
     public static class AutomatedVoiceChannels {
@@ -36,7 +37,7 @@ namespace DiscordCthulhu {
         };
 
         public static Queue<string> nameQueue = new Queue<string>();
-        public static List<Channel> temporaryChannels = new List<Channel> ();
+        public static List<SocketVoiceChannel> temporaryChannels = new List<SocketVoiceChannel> ();
         public static VoiceChannel afkChannel = new VoiceChannel (265832231845625858, "Corner of Shame", int.MaxValue);
 
         public static void InitializeData () {
@@ -62,8 +63,8 @@ namespace DiscordCthulhu {
             allVoiceChannels.Add (channel.id, channel);
         }
 
-        public static async void UpdateVoiceChannel ( Channel voice ) {
-            Game highestGame = new Game ("");
+        public static async void UpdateVoiceChannel ( SocketVoiceChannel voice ) {
+            Game highestGame = new Game ("", "", StreamType.NotStreaming);
 
             if (voice != null && allVoiceChannels.ContainsKey (voice.Id)) {
 
@@ -74,14 +75,14 @@ namespace DiscordCthulhu {
                     allVoiceChannels[voice.Id].Unlock (false);
 
                 Dictionary<Game, int> numPlayers = new Dictionary<Game, int> ();
-                List<User> users = Program.ForceGetUsers (voice);
-                foreach (User user in users) {
+                List<SocketGuildUser> users = Program.ForceGetUsers (voice);
+                foreach (SocketGuildUser user in users) {
 
-                    if (user.CurrentGame.HasValue) {
-                        if (numPlayers.ContainsKey (user.CurrentGame.Value)) {
-                            numPlayers[user.CurrentGame.Value]++;
+                    if (user.Game.HasValue) {
+                        if (numPlayers.ContainsKey (user.Game.Value)) {
+                            numPlayers[user.Game.Value]++;
                         } else {
-                            numPlayers.Add (user.CurrentGame.Value, 1);
+                            numPlayers.Add (user.Game.Value, 1);
                         }
                     }
 
@@ -103,14 +104,14 @@ namespace DiscordCthulhu {
                 string newName = highestGame.Name != "" ? lockString + allVoiceChannels[voice.Id].name + " - " + highestGame.Name : lockString + allVoiceChannels[voice.Id].name;
                 Console.WriteLine (newName);
                 if (voice.Name != newName) {
-                    await voice.Edit (newName);
+                    await voice.ModifyAsync (new Action<VoiceChannelProperties> ((target) => target.));
                 }
                 allVoiceChannels[voice.Id].CheckLocker ();
             }
         }
 
         private static bool hasChecked = false;
-        public static void AddMissingChannels (Server server) {
+        public static void AddMissingChannels (SocketGuild server) {
             if (hasChecked)
                 return;
 
@@ -147,7 +148,7 @@ namespace DiscordCthulhu {
             return null;
         }
 
-        public static void RemoveLeftoverChannels (Server server) {
+        public static void RemoveLeftoverChannels (SocketGuild server) {
             List<Channel> toDelete = new List<Channel> ();
 
             foreach (Channel channel in server.VoiceChannels) {
@@ -168,7 +169,7 @@ namespace DiscordCthulhu {
             ResetVoiceChannelPositions (server);
         }
 
-        private static void ResetVoiceChannelPositions ( Server e ) {
+        private static void ResetVoiceChannelPositions ( SocketGuild e ) {
             IEnumerable<VoiceChannel> channels = allVoiceChannels.Values.ToList ();
 
             foreach (VoiceChannel channel in channels) {
@@ -206,7 +207,7 @@ namespace DiscordCthulhu {
             return true;
         }
 
-        public static async void CheckFullAndAddIf (Server server) {
+        public static async void CheckFullAndAddIf (SocketGuild server) {
             IEnumerable<VoiceChannel> channels = allVoiceChannels.Values.ToList ();
             int count = channels.Count ();
 
@@ -249,7 +250,7 @@ namespace DiscordCthulhu {
             }
         }
 
-        public static Channel GetEmptyChannel (Server server) {
+        public static Channel GetEmptyChannel (SocketGuild server) {
             foreach (Channel channel in server.VoiceChannels) {
                 if (channel.Users.Count () == 0)
                     return channel;

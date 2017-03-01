@@ -24,7 +24,7 @@ namespace DiscordCthulhu {
                 argumentNumber = 1;
             }
 
-            public async override void ExecuteCommand ( MessageEventArgs e, List<string> arguments ) {
+            public async override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
                 base.ExecuteCommand (e, arguments);
                 if (AllowExecution (e, arguments)) {
                     ulong parse;
@@ -34,7 +34,6 @@ namespace DiscordCthulhu {
                             await Task.Delay (1000);
                             UserActivityMonitor.userActivity.Remove (user.Id);
                             UserActivityMonitor.lastUserUpdate.Remove (user.Id);
-                            UserActivityMonitor.RecordActivity (user.Id, DateTime.Now.AddMonths (-6), true);
                             Program.messageControl.SendMessage (e, "Succesfully reset activity of " + Program.GetUserName (user));
                         }else {
                             Program.messageControl.SendMessage (e, "Failed to reset - could not find user.");

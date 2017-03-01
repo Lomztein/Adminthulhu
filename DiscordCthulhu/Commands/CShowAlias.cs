@@ -15,7 +15,7 @@ namespace DiscordCthulhu {
             help = "Finds and shows you the user that has the alias " + argHelp + " in their collection.";
         }
 
-        public override async void ExecuteCommand ( MessageEventArgs e, List<string> arguments ) {
+        public override async void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
 
             base.ExecuteCommand (e, arguments);
             if (AllowExecution (e, arguments)) {

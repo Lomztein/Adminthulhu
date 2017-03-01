@@ -60,7 +60,7 @@ namespace DiscordCthulhu {
             int age = 0;
             try {
                 age = DateTime.MinValue.Add (DateTime.Now - date.day).Year - DateTime.MinValue.Year;
-            } catch (IndexOutOfRangeException e) {
+            } catch (IndexOutOfRangeException) {
                 Console.WriteLine (user.Name + " has somehow set their birthday to be before now. wat.");
             }
 

@@ -15,7 +15,7 @@ namespace DiscordCthulhu {
             help = "Adds an alias " + argHelp + " to your collection, or creates a new collection if you don't have any.";
         }
 
-        public override void ExecuteCommand ( MessageEventArgs e, List<string> arguments ) {
+        public override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
             base.ExecuteCommand (e, arguments);
             if (AllowExecution (e, arguments)) {
                 if (!Program.aliasCollection.AddAlias (e.User.Name, arguments[0])) {

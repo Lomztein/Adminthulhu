@@ -18,7 +18,7 @@ namespace DiscordCthulhu {
             isAdminOnly = true;
         }
 
-        public override void ExecuteCommand ( MessageEventArgs e, List<string> arguments ) {
+        public override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
             base.ExecuteCommand (e, arguments);
             if (AllowExecution (e, arguments)) {
                 int number;
@@ -29,7 +29,7 @@ namespace DiscordCthulhu {
                     Program.messageControl.SendMessage (e, arguments[0] + " score has been changed by " + number.ToString () + ".\n" + 
                         "Their score now totals " + Program.scoreCollection.GetScore (arguments[0]) + ".");
 
-                    User user = Program.FindUserByName (e.Server, arguments[0]);
+                    User user = Program.FindUserByName (e.SocketGuild, arguments[0]);
                     if (user != null) {
                         Program.messageControl.SendMessage (user, "Your score has been increased by " + number + " for reason: " + arguments[2]);
                     }

@@ -27,7 +27,7 @@ namespace DiscordCthulhu {
         public static char[] playerChars = new char[] { ' ', 'O', 'X'};
 
         // Returns -1 if no game, 0 if the game continues, 1 if player victory and 2 if bot victory.
-        public static int MakeMove (string playerName, int x, int y, MessageEventArgs e) {
+        public static int MakeMove (string playerName, int x, int y, SocketMessage e) {
             TicTacToeGame game = FindPlayersGame (playerName);
             if (game == null) {
                 Program.messageControl.SendMessage (e, "You have no game in progress currently, start a new one if you want to play.");
@@ -60,7 +60,7 @@ namespace DiscordCthulhu {
             return 0;
         }
 
-        public static void CreateGame (string playerName, MessageEventArgs e, int size) {
+        public static void CreateGame (string playerName, SocketMessage e, int size) {
             if (FindPlayersGame (playerName) != null) {
                 Program.messageControl.SendMessage (e, "You already have a game in progress.");
             }else {

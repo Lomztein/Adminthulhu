@@ -15,10 +15,10 @@ namespace DiscordCthulhu {
             argumentNumber = 0;
         }
 
-        public override async void ExecuteCommand ( MessageEventArgs e, List<string> arguments ) {
+        public override async void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
             base.ExecuteCommand (e, arguments);
             if (AllowExecution (e, arguments)) {
-                Invite invite = await e.Server.CreateInvite (1800, 1, false, false);
+                Invite invite = await e.SocketGuild.CreateInvite (1800, 1, false, false);
                 Program.messageControl.SendMessage(e, "Invite URL: " + invite.Url);
             }
         }

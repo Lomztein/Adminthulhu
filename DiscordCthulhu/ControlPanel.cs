@@ -42,7 +42,7 @@ namespace DiscordCthulhu {
         private void button1_Click ( object sender, EventArgs e ) {
             if (messageText.Text.Length != 0) {
 
-                foreach (Server server in Program.discordClient.Servers) {
+                foreach (SocketGuild server in Program.discordClient.Servers) {
                     Channel channel = Program.SearchChannel (server, channelName.Text);
                     if (channel != null) {
                     //foreach (Channel channel in server.TextChannels) {

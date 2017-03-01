@@ -15,7 +15,7 @@ namespace DiscordCthulhu {
             help = "Removes the alias " + argHelp + " from your collection.";
         }
 
-        public override void ExecuteCommand ( MessageEventArgs e, List<string> arguments ) {
+        public override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
             base.ExecuteCommand (e, arguments);
             if (AllowExecution (e, arguments)) {
                 if (!Program.aliasCollection.RemoveAlias (e.User.Name, arguments[0])) {

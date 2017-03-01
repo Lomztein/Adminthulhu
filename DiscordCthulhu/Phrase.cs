@@ -14,9 +14,9 @@ namespace DiscordCthulhu {
         public string response;
         public string channel;
 
-        public bool CheckAndRespond (MessageEventArgs e) {
+        public bool CheckAndRespond (SocketMessage e) {
 
-            string message = e.Message.Text;
+            string message = e.Content.Text;
             string sender = e.User.Name;
             string locChannel = e.Channel.Name;
 

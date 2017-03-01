@@ -16,11 +16,11 @@ namespace DiscordCthulhu {
             argumentNumber = 2;
         }
 
-        public override void ExecuteCommand ( MessageEventArgs e, List<string> arguments ) {
+        public override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
             base.ExecuteCommand (e, arguments);
             if (AllowExecution (e, arguments)) {
 
-                PlayerGroups.Group group = Program.playerGroups.FindGroupByName (e.Server.Name, arguments[0]);
+                PlayerGroups.Group group = Program.playerGroups.FindGroupByName (e.SocketGuild.Name, arguments[0]);
 
                 if (group != null) {
                     string toSend = "Calling group " + group.groupName + ": ";

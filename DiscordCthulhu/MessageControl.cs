@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Timers;
 using System.Threading.Tasks;
+using Discord.WebSocket;
+using Discord.Rest;
 
 namespace DiscordCthulhu
 {
@@ -12,9 +14,9 @@ namespace DiscordCthulhu
     {
         public string message { get; }
         private Timer timer;
-        MessageEventArgs e;
+        SocketMessage e;
 
-        public MessageTimer(MessageEventArgs e, string message, int delay)
+        public MessageTimer(SocketMessage e, string message, int delay)
         {
             this.message = message;
             this.e = e;
@@ -26,7 +28,7 @@ namespace DiscordCthulhu
         private async void Timer_Elapsed(object sender, ElapsedEventArgs e)
         {
             ChatLogger.Log("Send message timer: "  + message);
-            await this.e.Channel.SendMessage(message);
+            await this.e.Channel.SendMessageAsync(message);
         }
 
         public void StopTimer()
@@ -77,22 +79,24 @@ namespace DiscordCthulhu
             Program.discordClient.MessageReceived += CheckForQuestions;
         }
 
-        private void CheckForQuestions ( object sender, MessageEventArgs e ) {
-            if (askedUsers.ContainsKey (e.User.Id)) {
+        private Task CheckForQuestions ( SocketMessage e ) {
+            if (askedUsers.ContainsKey (e.Author.Id)) {
                 bool didAnswer = false;
-                if (e.Message.RawText == "y") {
-                    askedUsers[e.User.Id][0] ();
+                if (e.Content == "y") {
+                    askedUsers[e.Author.Id][0] ();
                     didAnswer = true;
-                }else if (e.Message.RawText == "n") {
+                }else if (e.Content == "n") {
                     didAnswer = true;
                 }
                 if (didAnswer) {
-                    askedUsers[e.User.Id].Remove (askedUsers[e.User.Id][0]);
-                    if (askedUsers[e.User.Id].Count == 0) {
-                        askedUsers.Remove (e.User.Id);
+                    askedUsers[e.Author.Id].Remove (askedUsers[e.Author.Id][0]);
+                    if (askedUsers[e.Author.Id].Count == 0) {
+                        askedUsers.Remove (e.Author.Id);
                     }
                 }
             }
+
+            return Task.CompletedTask;
         }
 
         public void RemoveMessageTimer(MessageTimer messageTimer)
@@ -104,14 +108,14 @@ namespace DiscordCthulhu
         /// <summary>
         /// Sends a message lol.
         /// </summary>
-        /// <param name="Message event arguments"></param>
+        /// <param name="Content event arguments"></param>
         /// <param name="message"></param>
         /// <returns The same message as is input, for laziness></returns>
-        public string SendMessage(MessageEventArgs e, string message) {
+        public string SendMessage(SocketMessage e, string message) {
             return SendMessage (e.Channel, message);
         }
 
-        public string SendMessage (Channel e, string message) {
+        public string SendMessage ( ISocketMessageChannel e, string message ) {
             string[] messages = SplitMessage (message);
             //messages.Add(new MessageTimer(e, message, 5));
             for (int i = 0; i < messages.Length; i++) {
@@ -121,37 +125,37 @@ namespace DiscordCthulhu
             return message;
         }
 
-        public string SendMessage (User e, string message) {
+        public async void SendMessage (SocketGuildUser e, string message) {
             string[] split = SplitMessage (message);
+
+            Task<RestDMChannel> channel = e.CreateDMChannelAsync ();
+            RestDMChannel result = await channel;
+
             for (int i = 0; i < split.Length; i++) {
-                e.SendMessage (split[i]);
+                await result.SendMessageAsync (split[i]);
             }
-            return message;
         }
 
-        public async Task<Message> AsyncSend (Channel e, string message) {
+        public async void AsyncSend ( ISocketMessageChannel e, string message) {
             ChatLogger.Log ("Sending a message.");
             if (message.Length > 0) {
-                Task<Message> messageTask = e.SendMessage (message);
+                Task<RestUserMessage> messageTask = e.SendMessageAsync (message);
                 await messageTask;
-                return messageTask.Result;
             }
-            return null;
         }
 
-        public async void SendImage (Channel e, string message, string imagePath) {
+        public async void SendImage (SocketTextChannel e, string message, string imagePath) {
             ChatLogger.Log ("Sending an image!");
-            await e.SendMessage (message);
             try {
-                await e.SendFile (imagePath);
+                await e.SendFileAsync (imagePath, message);
             } catch (Discord.Net.HttpException exception) {
-                await e.SendMessage ("Access denied! - " + exception.Message);
+                await e.SendMessageAsync ("Access denied! - " + exception.Message);
             }
         }
 
         public Dictionary<ulong, List<Action>> askedUsers = new Dictionary<ulong, List<Action>>();
 
-        public async void AskQuestion (User user, string question, Action ifYes) {
+        public async void AskQuestion (SocketGuildUser user, string question, Action ifYes) {
             SendMessage (user, question + " (y/n)");
 
             if (!askedUsers.ContainsKey (user.Id)) {

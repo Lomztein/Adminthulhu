@@ -15,11 +15,11 @@ namespace DiscordCthulhu {
             help = "Leaves the group " + argHelp + ".";
         }
 
-        public override void ExecuteCommand ( MessageEventArgs e, List<string> arguments ) {
+        public override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
             base.ExecuteCommand (e, arguments);
             if (AllowExecution (e, arguments)) {
 
-                PlayerGroups.Group group = Program.playerGroups.FindGroupByName (e.Server.Name, arguments[0]);
+                PlayerGroups.Group group = Program.playerGroups.FindGroupByName (e.SocketGuild.Name, arguments[0]);
                 if (Program.playerGroups.LeaveGroup (e, arguments[0])) {
                     Program.messageControl.SendMessage (e, "You have left the group " + arguments[0]);
                     if (group == null) {

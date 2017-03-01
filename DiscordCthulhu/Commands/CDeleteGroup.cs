@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Discord;
+using Discord.WebSocket;
 
 namespace DiscordCthulhu {
     class CDeleteGroup : Command {
@@ -17,13 +18,13 @@ namespace DiscordCthulhu {
             isAdminOnly = true;
         }
 
-        public override void ExecuteCommand ( MessageEventArgs e, List<string> arguments ) {
+        public override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
             base.ExecuteCommand (e, arguments);
             if (AllowExecution (e, arguments)) {
 
-                PlayerGroups.Group group = Program.playerGroups.FindGroupByName (e.Server.Name, arguments[0]);
+                PlayerGroups.Group group = Program.playerGroups.FindGroupByName (e.SocketGuild.Name, arguments[0]);
                 if (group != null) {
-                    Program.playerGroups.groups[e.Server.Name].Remove (group);
+                    Program.playerGroups.groups[e.SocketGuild.Name].Remove (group);
                     Program.messageControl.SendMessage (e, "Group \"" + arguments[0] + "\" succesfully deleted.");
                 }else {
                     Program.messageControl.SendMessage (e, "Group \"" + arguments[0] + "\" not found.");

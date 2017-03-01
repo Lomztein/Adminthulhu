@@ -41,7 +41,7 @@ namespace DiscordCthulhu {
             guessedLetters = new List<char> ();
         }
 
-        public bool GuessLetter (MessageEventArgs e, char letter) {
+        public bool GuessLetter (SocketMessage e, char letter) {
             Channel channel = e.Channel;
             Program.messageControl.SendMessage (channel, Program.GetUserName (e.User) + " guessed the letter **" + letter + "**.");
             if (!letterWhitelist.Contains (letter)) {
@@ -109,7 +109,7 @@ namespace DiscordCthulhu {
                 argumentNumber = 1;
             }
 
-            public override void ExecuteCommand ( MessageEventArgs e, List<string> arguments ) {
+            public override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
                 base.ExecuteCommand (e, arguments);
                 if (AllowExecution (e, arguments)) {
                     if (Hangman.currentGame == null) {
@@ -145,7 +145,7 @@ namespace DiscordCthulhu {
                 argumentNumber = 1;
             }
 
-            public override void ExecuteCommand ( MessageEventArgs e, List<string> arguments ) {
+            public override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
                 base.ExecuteCommand (e, arguments);
                 if (AllowExecution (e, arguments)) {
                     if (Hangman.currentGame == null) {
@@ -169,7 +169,7 @@ namespace DiscordCthulhu {
                 argumentNumber = 0;
             }
 
-            public override void ExecuteCommand ( MessageEventArgs e, List<string> arguments ) {
+            public override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
                 base.ExecuteCommand (e, arguments);
                 if (AllowExecution (e, arguments)) {
                     if (Hangman.currentGame == null) {
@@ -194,7 +194,7 @@ namespace DiscordCthulhu {
                 argumentNumber = 0;
             }
 
-            public override void ExecuteCommand ( MessageEventArgs e, List<string> arguments ) {
+            public override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
                 base.ExecuteCommand (e, arguments);
                 if (AllowExecution (e, arguments)) {
                     if (Hangman.currentGame == null) {

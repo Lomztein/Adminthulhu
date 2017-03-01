@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Discord;
+using Discord.WebSocket;
 
 namespace DiscordCthulhu {
     public class Command {
@@ -18,7 +19,7 @@ namespace DiscordCthulhu {
         public bool isAdminOnly = false;
         public bool alwaysEnabled = false;
 
-        public Dictionary<string, List<string>> enabledSettings = new Dictionary<string, List<string>>();
+        public Dictionary<ulong, List<string>> enabledSettings = new Dictionary<ulong, List<string>>();
 
         public void SaveSettings () {
             SerializationIO.SaveObjectToFile (Program.dataPath + Program.commandSettingsDirectory + command + Program.gitHubIgnoreType, enabledSettings);
@@ -36,57 +37,59 @@ namespace DiscordCthulhu {
         // Add and remove commands functions are very similar, however they are too different
         // for a general function to really be worth it.
 
-        public void AddToChannel (MessageEventArgs e, bool allChannels) {
-            if (!enabledSettings.ContainsKey (e.Server.Name))
-                enabledSettings.Add (e.Server.Name, new List<string> ());
+        public void AddToChannel (SocketMessage e, bool allChannels) {
+            SocketGuild guild = (e.Channel as SocketGuildChannel).Guild;
+            if (!enabledSettings.ContainsKey (guild.Id))
+                enabledSettings.Add (guild.Id, new List<string> ());
 
             if (allChannels) {
-                Channel[] channels = e.Server.TextChannels.ToArray ();
+                SocketTextChannel[] channels = guild.TextChannels.ToArray ();
                 for (int i = 0; i < channels.Length; i++) {
-                    if (!enabledSettings[e.Server.Name].Contains (channels[i].Name))
-                        enabledSettings[e.Server.Name].Add (channels[i].Name);
+                    if (!enabledSettings[guild.Id].Contains (channels[i].Name))
+                        enabledSettings[guild.Id].Add (channels[i].Name);
                 }
             } else {
-                if (!enabledSettings[e.Server.Name].Contains (e.Channel.Name))
-                    enabledSettings[e.Server.Name].Add (e.Channel.Name);
+                if (!enabledSettings[guild.Id].Contains (e.Channel.Name))
+                    enabledSettings[guild.Id].Add (e.Channel.Name);
             }
 
             SaveSettings ();
         }
 
-        public bool AvailableOnChannel (MessageEventArgs e) {
-            if (e.Channel.IsPrivate) {
+        public bool AvailableOnChannel (SocketMessage e) {
+            SocketGuild guild = (e.Channel as SocketGuildChannel).Guild;
+            if ((e.Channel as SocketDMChannel) != null) {
                 return alwaysEnabled && !isAdminOnly;
-            }else if (enabledSettings.ContainsKey (e.Server.Name)) {
-                return enabledSettings[e.Server.Name].Contains (e.Channel.Name) || isAdminOnly;
+            }else if (enabledSettings.ContainsKey (guild.Id)) {
+                return enabledSettings[guild.Id].Contains (e.Channel.Name) || isAdminOnly;
             }
             return false;
         }
 
-        public void RemoveFromChannel (MessageEventArgs e, bool allChannels) {
-            if (enabledSettings.ContainsKey (e.Server.Name)) {
+        public void RemoveFromChannel (SocketMessage e, bool allChannels) {
+            if (enabledSettings.ContainsKey (e.SocketGuild.Name)) {
                 if (allChannels) {
-                    Channel[] channels = e.Server.TextChannels.ToArray ();
+                    Channel[] channels = e.SocketGuild.TextChannels.ToArray ();
                     for (int i = 0; i < channels.Length; i++) {
-                        if (enabledSettings[e.Server.Name].Contains (channels[i].Name))
-                            enabledSettings[e.Server.Name].Remove (channels[i].Name);
+                        if (enabledSettings[e.SocketGuild.Name].Contains (channels[i].Name))
+                            enabledSettings[e.SocketGuild.Name].Remove (channels[i].Name);
                     }
                 } else {
-                    if (enabledSettings[e.Server.Name].Contains (e.Channel.Name))
-                        enabledSettings[e.Server.Name].Remove (e.Channel.Name);
+                    if (enabledSettings[e.SocketGuild.Name].Contains (e.Channel.Name))
+                        enabledSettings[e.SocketGuild.Name].Remove (e.Channel.Name);
                 }
             }
 
             SaveSettings ();
         }
 
-        public virtual void ExecuteCommand ( MessageEventArgs e, List<string> arguments) {
+        public virtual void ExecuteCommand ( SocketMessage e, List<string> arguments) {
             if (arguments.Count > 0 && arguments[0] == "?") {
                 Program.messageControl.SendMessage(e, GetHelp ());
             }
         }
 
-        public bool AllowExecution (MessageEventArgs e, List<string> args) {
+        public bool AllowExecution (SocketMessage e, List<string> args) {
 
             if (e.Channel.IsPrivate && (isAdminOnly && !alwaysEnabled)) {
                 Program.messageControl.SendMessage (e, "Failed to execute: Not available in private chat.");

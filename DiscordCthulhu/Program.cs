@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Discord;
 using System.IO;
 using System.Linq;
+using Discord.WebSocket;
 
 namespace DiscordCthulhu {
     class Program {
@@ -33,16 +34,16 @@ namespace DiscordCthulhu {
 
         static void Main ( string[] args ) => new Program ().Start (args);
 
-        public static DiscordClient discordClient;
+        public static DiscordSocketClient discordClient;
 
         private const int BOOT_WAIT_TIME = 5;
         private static DateTime bootedTime = new DateTime ();
 
-        // Server data
+        // SocketGuild data
         public static string mainTextChannelName = "main";
         public static string dumpTextChannelName = "dump";
         public static string serverName = "Monster Mash";
-        public static Server server;
+        public static SocketGuild server;
 
         public static Phrase[] phrases = new Phrase[] {
             new Phrase ("!", "", 100, "Please don't use bot commands in the main channel, so we avoid spamizzle forshizzle.", mainTextChannelName),
@@ -87,7 +88,7 @@ namespace DiscordCthulhu {
             playerGroups = PlayerGroups.Load ();
             clock = new Clock ();
 
-            discordClient = new DiscordClient ();
+            discordClient = new DiscordSocketClient ();
             messageControl = new MessageControl();
             //controlPanel = new ControlPanel (); //Removed due to being practically useless.
 
@@ -98,11 +99,11 @@ namespace DiscordCthulhu {
 
             bootedTime = DateTime.Now.AddSeconds (BOOT_WAIT_TIME);
 
-            discordClient.MessageReceived += async ( s, e ) => {
+            discordClient.MessageReceived += ( e ) => {
 
-                ChatLogger.Log (GetChannelName (e) + " says: " + e.Message.Text);
-                if (!e.Message.IsAuthor && e.Message.Text.Length > 0 && e.Message.Text[0] == commandChar) {
-                    string message = e.Message.Text;
+                ChatLogger.Log (GetChannelName (e) + " says: " + e.Content);
+                if (e.Author != discordClient.CurrentUser  && e.Content.Length > 0 && e.Content[0] == commandChar) {
+                    string message = e.Content;
 
                     if (message.Length > 0) {
 
@@ -112,10 +113,10 @@ namespace DiscordCthulhu {
 
                         FindAndExecuteCommand (e, command, arguments, commands);
                     }
-                } else if (e.Message.IsAuthor) {
+                } else if (e.Author == discordClient.CurrentUser) {
                     if (messageControl.messages.Count > 0) {
                         foreach (MessageTimer messageTimer in messageControl.messages) {
-                            if (messageTimer.message == e.Message.RawText) {
+                            if (messageTimer.message == e.Content) {
                                 ChatLogger.Log ("Removed!");
                                 messageControl.RemoveMessageTimer (messageTimer);
                                 break;
@@ -125,14 +126,17 @@ namespace DiscordCthulhu {
                 }
 
                 FindPhraseAndRespond (e);
-                if (e.Message.RawText.Length > 0 && e.Message.RawText[0] == commandChar) {
-                    await e.Message.Delete ();
-                    allowedDeletedMessages.Add (e.Message.RawText);
+
+                if (e.Content.Length > 0 && e.Content[0] == commandChar) {
+                    e.DeleteAsync ();
+                    allowedDeletedMessages.Add (e.Content);
                 }
+
+                return Task.CompletedTask;
             };
 
-            discordClient.UserJoined += ( s, e ) => {
-                messageControl.SendMessage (GetMainChannel (e.Server), "**" + e.User.Name + "** has joined this server. Bid them welcome or murder them in cold blood, it's really up to you.");
+            discordClient.UserJoined += ( e ) => {
+                messageControl.SendMessage (GetMainChannel (e.Guild), "**" + e.Username + "** has joined this server. Bid them welcome or murder them in cold blood, it's really up to you.");
 
                 string[] welcomeMessage = SerializationIO.LoadTextFile (dataPath + "welcomemessage" + gitHubIgnoreType);
                 string combined = "";
@@ -140,24 +144,30 @@ namespace DiscordCthulhu {
                     combined += welcomeMessage[i] + "\n";
                 }
 
-                messageControl.SendMessage (e.User, combined);
-            };
+                messageControl.SendMessage (e, combined);
 
-            discordClient.UserLeft += ( s, e ) => {
-                messageControl.SendMessage (GetMainChannel (e.Server), "**" + e.User.Name + "** has left the server. Don't worry, they'll come crawling back soon.");
+                return Task.CompletedTask;
+            }
+
+            discordClient.UserLeft += ( e ) => {
+                messageControl.SendMessage (GetMainChannel (e.Guild), "**" + GetUserName (e) + "** has left the server. Don't worry, they'll come crawling back soon.");
+                return Task.CompletedTask;
             };
 
             discordClient.UserUpdated += ( s, e ) => {
+                SocketGuildUser guildUser = (e as SocketGuildUser);
+                SocketGuild guild = guildUser.Guild;
+
                 // Maybe, just maybe put these into a single function.
                 if (FullyBooted ()) {
 
-                    if (e.Before.VoiceChannel != e.After.VoiceChannel) {
+                    if (guildUser.VoiceChannel != null) {
                         // Voice channel change detected.
-                        ChatLogger.Log ("Voice channel change detected with user " + e.After.Name);
+                        ChatLogger.Log ("Voice channel change detected with user " + guildUser.Username);
 
-                        AutomatedVoiceChannels.AddMissingChannels (e.Server);
-                        AutomatedVoiceChannels.CheckFullAndAddIf (e.Server);
-                        AutomatedVoiceChannels.RemoveLeftoverChannels (e.Server);
+                        AutomatedVoiceChannels.AddMissingChannels (guild);
+                        AutomatedVoiceChannels.CheckFullAndAddIf (guild);
+                        AutomatedVoiceChannels.RemoveLeftoverChannels (guild);
 
                         if (e.After.VoiceChannel != null) {
                             AutomatedVoiceChannels.allVoiceChannels[e.After.VoiceChannel.Id].OnUserJoined (e.After);
@@ -167,13 +177,14 @@ namespace DiscordCthulhu {
                     AutomatedVoiceChannels.UpdateVoiceChannel (e.Before.VoiceChannel);
                     AutomatedVoiceChannels.UpdateVoiceChannel (e.After.VoiceChannel);
 
-                    if (e.Before.VoiceChannel != null)
+
+                    if (e. != null)
                     Console.WriteLine ("Before: " + e.Before.VoiceChannel.Users.Count ());
                     if (e.After.VoiceChannel != null)
                     Console.WriteLine ("After: " + e.After.VoiceChannel.Users.Count ());
                 }
 
-                Channel channel = GetMainChannel (e.Server);
+                Channel channel = GetMainChannel (e.SocketGuild);
                 if (channel == null)
                     return;
 
@@ -184,10 +195,12 @@ namespace DiscordCthulhu {
                 if (e.Before.Nickname != e.After.Nickname) {
                     messageControl.SendMessage (channel, "**" + GetUserUpdateName (e, true) + "** has changed their nickname to **" + GetUserUpdateName (e, false) + "**");
                 }
+
+                return Task.CompletedTask;
             };
 
             discordClient.UserBanned += ( s, e ) => {
-                Channel channel = GetMainChannel (e.Server);
+                Channel channel = GetMainChannel (e.SocketGuild);
                 if (channel == null)
                     return;
 
@@ -196,7 +209,7 @@ namespace DiscordCthulhu {
             };
 
             discordClient.UserUnbanned += ( s, e ) => {
-                Channel channel = GetMainChannel (e.Server);
+                Channel channel = GetMainChannel (e.SocketGuild);
                 if (channel == null)
                     return;
 
@@ -205,14 +218,14 @@ namespace DiscordCthulhu {
             };
 
             discordClient.MessageDeleted += ( s, e ) => {
-                Channel channel = SearchChannel (e.Server, dumpTextChannelName);
+                Channel channel = SearchChannel (e.SocketGuild, dumpTextChannelName);
                 if (channel == null)
                     return;
 
-                if (!allowedDeletedMessages.Contains (e.Message.RawText)) {
+                if (!allowedDeletedMessages.Contains (e.Content.RawText)) {
                     messageControl.SendMessage (channel, "In order disallow *any* secrets except for admin secrets, I'd like to tell you that **" + GetUserName (e.User) + "** just had a message deleted on **" + e.Channel.Name + "**.");
                 }else {
-                    allowedDeletedMessages.Remove (e.Message.RawText);
+                    allowedDeletedMessages.Remove (e.Content.RawText);
                 }
             };
 
@@ -299,6 +312,10 @@ namespace DiscordCthulhu {
             return arguments;
         }
 
+        public static SocketGuild GetServer (SocketChannel channel) {
+            return (channel as SocketGuildChannel).Guild;
+        }
+
         public static string GetUserName (User user) {
             if (user == null)
                 return "[ERROR - NULL USER REFERENCE]";
@@ -319,12 +336,12 @@ namespace DiscordCthulhu {
             }
         }
 
-        public static Channel GetMainChannel (Server server) {
+        public static Channel GetMainChannel (SocketGuild server) {
             return SearchChannel (server, mainTextChannelName);
         }
 
         [Obsolete]
-        public static Channel GetChannelByName (Server server, string name) {
+        public static Channel GetChannelByName (SocketGuild server, string name) {
             if (server == null)
                 return null;
 
@@ -332,7 +349,7 @@ namespace DiscordCthulhu {
             return channel;
         }
 
-        public static Channel SearchChannel (Server server, string name) {
+        public static Channel SearchChannel (SocketGuild server, string name) {
             IEnumerable<Channel> channels = server.AllChannels;
             foreach (Channel channel in channels) {
                 if (channel.Name.Length >= name.Length && channel.Name.Substring (0, name.Length) == name)
@@ -346,12 +363,12 @@ namespace DiscordCthulhu {
             AutomatedVoiceChannels.InitializeData ();
         }
 
-        public static Server GetServer () {
+        public static SocketGuild GetServer () {
             if (server != null)
                 return server;
 
             if (discordClient != null) {
-                IEnumerable<Server> servers = discordClient.FindServers (serverName);
+                IEnumerable<SocketGuild> servers = discordClient.FindServers (serverName);
                 if (servers.Count () != 0)
                     server = servers.ElementAt (0);
             }else {
@@ -403,7 +420,7 @@ namespace DiscordCthulhu {
             return null;
         }
 
-        public static bool FindAndExecuteCommand (MessageEventArgs e, string commandName, List<string> arguements, Command[] commandList) {
+        public static bool FindAndExecuteCommand (SocketMessage e, string commandName, List<string> arguements, Command[] commandList) {
             for (int i = 0; i < commandList.Length; i++) {
                 if (commandList[i].command == commandName) {
                     commandList[i].ExecuteCommand (e, arguements);
@@ -414,7 +431,7 @@ namespace DiscordCthulhu {
             return false;
         }
 
-        public static User FindUserByName (Server server, string username) {
+        public static User FindUserByName (SocketGuild server, string username) {
             foreach (User user in server.Users) {
                 string name = GetUserName (user).ToLower ();
                 if (name.Length >= username.Length && name.Substring (0, username.Length) == username.ToLower ())
@@ -423,18 +440,18 @@ namespace DiscordCthulhu {
             return null;
         }
 
-        public void FindPhraseAndRespond ( MessageEventArgs e ) {
+        public void FindPhraseAndRespond ( SocketMessage e ) {
             for (int i = 0; i < phrases.Length; i++) {
                 if (phrases[i].CheckAndRespond (e))
                     return;
             }
         }
 
-        public static string GetChannelName (MessageEventArgs e) {
+        public static string GetChannelName (SocketMessage e) {
             if (e.Channel.IsPrivate) {
                 return "Private message: " + e.User.Name;
             }else {
-                return e.Server.Name + "/" + e.Channel.Name + "/" + e.User.Name;
+                return e.SocketGuild.Name + "/" + e.Channel.Name + "/" + e.User.Name;
             }
         }
     }
