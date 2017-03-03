@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Discord;
+using Discord.WebSocket;
 
 namespace DiscordCthulhu {
 
@@ -16,10 +17,10 @@ namespace DiscordCthulhu {
             while (Program.GetServer () == null)
                 await Task.Delay (1000);
 
-            IEnumerable<User> users = Program.GetServer ().Users;
+            IEnumerable<SocketGuildUser> users = Program.GetServer ().Users;
             birthdays = new List<Date> ();
 
-            foreach (User u in users) {
+            foreach (SocketGuildUser u in users) {
                 // Heres to hoping no user ever has the ID 0.
                 Date date = UserSettings.GetSetting<Date> (u.Id, "Birthday", null);
                 if (date != null)
@@ -53,15 +54,15 @@ namespace DiscordCthulhu {
         }
 
         private void AnnounceBirthday (Date date) {
-            User user = Program.GetServer ().GetUser (date.userID);
-            Channel main = Program.GetMainChannel (Program.GetServer ());
+            SocketGuildUser user = Program.GetServer ().GetUser (date.userID);
+            SocketGuildChannel main = Program.GetMainChannel (Program.GetServer ());
             // I have no idea if this works, and it's possibly the worst possible way I could have done that.
 
             int age = 0;
             try {
                 age = DateTime.MinValue.Add (DateTime.Now - date.day).Year - DateTime.MinValue.Year;
             } catch (IndexOutOfRangeException) {
-                Console.WriteLine (user.Name + " has somehow set their birthday to be before now. wat.");
+                Console.WriteLine (user.Username + " has somehow set their birthday to be before now. wat.");
             }
 
             string ageSuffix = "'rd";
@@ -74,7 +75,7 @@ namespace DiscordCthulhu {
                     break;
             }
 
-            Program.messageControl.SendMessage (main, "It's **" + Program.GetUserName (user) + "'s** birthday today, wish them congratulations, as you throw them into the depths of hell on their **" + age + ageSuffix + "** birthday!");
+            Program.messageControl.SendMessage (main as SocketTextChannel, "It's **" + Program.GetUserName (user) + "'s** birthday today, wish them congratulations, as you throw them into the depths of hell on their **" + age + ageSuffix + "** birthday!");
             Program.messageControl.SendMessage (user, "This is an official completely not cold and automated birthday greeting, from the loving ~~nazimods~~ admins of **" + Program.serverName + "**: - Happy birthdsay!");
         }
 

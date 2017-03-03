@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Discord;
+using Discord.WebSocket;
 
 namespace DiscordCthulhu {
     public static class UserSettings {
@@ -85,7 +86,7 @@ namespace DiscordCthulhu {
                 if (AllowExecution (e, arguments)) {
                     int number;
                     if (int.TryParse (arguments[0], out number)) {
-                        UserSettings.SetSetting (e.User.Id, "EventRemindTime", number);
+                        UserSettings.SetSetting (e.Author.Id, "EventRemindTime", number);
                         Program.messageControl.SendMessage (e, "You have succesfully changed remind timespan to **" + number.ToString () + "**.");
                     }else {
                         Program.messageControl.SendMessage (e, "Failed to change event remind timespan");
@@ -109,7 +110,7 @@ namespace DiscordCthulhu {
                 if (AllowExecution (e, arguments)) {
                     DateTime parse;
                     if (DateTime.TryParse (arguments[0], out parse)) {
-                        Birthdays.SetBirthday (e.User.Id, parse);
+                        Birthdays.SetBirthday (e.Author.Id, parse);
                         Program.messageControl.SendMessage (e, "You have succesfully set your birthday to **" + parse.ToString () + "**.");
                     } else {
                         Program.messageControl.SendMessage (e, "Failed to set birthday - could not parse date.");

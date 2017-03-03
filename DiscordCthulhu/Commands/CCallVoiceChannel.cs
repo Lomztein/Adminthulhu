@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Discord;
+using Discord.WebSocket;
 
 namespace DiscordCthulhu {
     public class CCallVoiceChannel : Command {
@@ -20,13 +21,13 @@ namespace DiscordCthulhu {
             base.ExecuteCommand (e, arguments);
             if (AllowExecution (e, arguments)) {
 
-                List<Channel> voiceChannels = e.SocketGuild.VoiceChannels.ToList ();
+                List<SocketVoiceChannel> voiceChannels = (e.Channel as SocketGuildChannel).Guild.VoiceChannels.ToList ();
 
                 string text = "";
                 for (int i = 0; i < voiceChannels.Count; i++) {
                     if (voiceChannels[i].Name.ToLower ().Substring (0, arguments[0].Length) == arguments[0].ToLower ()) {
 
-                        List<User> users = voiceChannels[i].Users.ToList ();
+                        List<SocketGuildUser> users = voiceChannels[i].Users.ToList ();
                         for (int j = 0; j < users.Count; j++) {
                             text += users[j].Mention + " ";
                         }
@@ -35,7 +36,7 @@ namespace DiscordCthulhu {
                     }
                 }
 
-                Program.messageControl.SendMessage(e, e.User.Name + ": " + text + ", " + arguments[1]);
+                Program.messageControl.SendMessage(e, e.Author.Username + ": " + text + ", " + arguments[1]);
             }
         }
     }

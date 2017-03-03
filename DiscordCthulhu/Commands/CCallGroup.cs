@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Discord;
+using Discord.WebSocket;
 
 namespace DiscordCthulhu {
     class CCallGroup : Command {
@@ -20,7 +21,7 @@ namespace DiscordCthulhu {
             base.ExecuteCommand (e, arguments);
             if (AllowExecution (e, arguments)) {
 
-                PlayerGroups.Group group = Program.playerGroups.FindGroupByName (e.SocketGuild.Name, arguments[0]);
+                PlayerGroups.Group group = Program.playerGroups.FindGroupByName ((e.Channel as SocketGuildChannel).Guild.Name, arguments[0]);
 
                 if (group != null) {
                     string toSend = "Calling group " + group.groupName + ": ";

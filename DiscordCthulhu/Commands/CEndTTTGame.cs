@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Discord;
+using Discord.WebSocket;
 
 namespace DiscordCthulhu {
     class CEndTTTGame : Command {
@@ -19,7 +20,7 @@ namespace DiscordCthulhu {
             base.ExecuteCommand (e, arguments);
             if (AllowExecution (e, arguments)) {
 
-                TicTacToe.TicTacToeGame game = TicTacToe.FindPlayersGame (e.User.Name);
+                TicTacToe.TicTacToeGame game = TicTacToe.FindPlayersGame (e.Author.Username);
                 if (game != null) {
                     TicTacToe.currentGames.Remove (game);
                     Program.messageControl.SendMessage (e, "Your current game has now been ended. I can only assume you gave up.");

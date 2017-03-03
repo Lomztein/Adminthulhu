@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Discord;
+using Discord.WebSocket;
 
 namespace DiscordCthulhu {
     public class DebugCommands : CommandSet {
@@ -29,7 +30,7 @@ namespace DiscordCthulhu {
                 if (AllowExecution (e, arguments)) {
                     ulong parse;
                     if (ulong.TryParse (arguments[0], out parse)) {
-                        User user = Program.GetServer ().GetUser (parse);
+                        SocketGuildUser user = Program.GetServer ().GetUser (parse);
                         if (user != null) {
                             await Task.Delay (1000);
                             UserActivityMonitor.userActivity.Remove (user.Id);

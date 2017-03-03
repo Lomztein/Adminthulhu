@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
 using Discord;
+using Discord.WebSocket;
 
 namespace DiscordCthulhu {
     // Not to be confused with C# events, this class handles planned day events for Discord servers.
@@ -61,7 +62,7 @@ namespace DiscordCthulhu {
         public static void SendEventReminder ( ulong userID, Event remindEvent ) {
             // Make sure discordClient is ready before sending any reminders.
             if (Program.discordClient != null && Program.GetServer () != null) {
-                User user = Program.GetServer ().GetUser (userID);
+                SocketGuildUser user = Program.GetServer ().GetUser (userID);
                 Program.messageControl.SendMessage (user, "**REMINDER:** You have an upcoming event **" + remindEvent.eventName + "** on **" + Program.serverName + "** coming soon, this " + remindEvent.eventTime.DayOfWeek.ToString () + " at " + remindEvent.eventTime.ToString ());
                 remindEvent.lastRemind[userID] = DateTime.Now;
             }
@@ -74,7 +75,7 @@ namespace DiscordCthulhu {
             if (startingEvent.eventMemberIDs.Count != 0) {
                 string mentions = "";
                 foreach (ulong id in startingEvent.eventMemberIDs) {
-                    User user = Program.GetServer ().GetUser (id);
+                    SocketGuildUser user = Program.GetServer ().GetUser (id);
                     mentions += ", " + user.Mention;
                 }
                 string startText = "Hey" + mentions + "!\nWe're starting the **" + startingEvent.eventName + "** now!";
@@ -83,11 +84,11 @@ namespace DiscordCthulhu {
                 }
 
                 Program.messageControl.SendMessage (
-                    Program.GetMainChannel (Program.GetServer ()),
+                    Program.GetMainChannel (Program.GetServer ()) as SocketTextChannel,
                     startText);
             } else {
                 Program.messageControl.SendMessage (
-                    Program.GetMainChannel (Program.GetServer ()),
+                    Program.GetMainChannel (Program.GetServer ()) as SocketTextChannel,
                     "Event **" + startingEvent.eventName + "** cancelled, since no one showed up. :(");
             }
 
@@ -255,7 +256,7 @@ namespace DiscordCthulhu {
                 AutomatedEventHandling.Event eve = AutomatedEventHandling.FindEvent (arguments[0]);
 
                 if (eve != null) {
-                    eve.eventMemberIDs.Add (e.User.Id);
+                    eve.eventMemberIDs.Add (e.Author.Id);
                     AutomatedEventHandling.SaveEvents ();
                     Program.messageControl.SendMessage (e,"Succesfully joined event **" + eve.eventName + "**. You will be mentioned when it begins.");
                 } else {
@@ -280,7 +281,7 @@ namespace DiscordCthulhu {
                 AutomatedEventHandling.Event eve = AutomatedEventHandling.FindEvent (arguments[0]);
 
                 if (eve != null) {
-                    eve.eventMemberIDs.Remove (e.User.Id);
+                    eve.eventMemberIDs.Remove (e.Author.Id);
                     AutomatedEventHandling.SaveEvents ();
                     Program.messageControl.SendMessage (e, "Succesfully left event **" + eve.eventName + "**. You will most certainly not be missed.");
                 } else {

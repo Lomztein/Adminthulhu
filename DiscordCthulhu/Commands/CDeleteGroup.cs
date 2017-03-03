@@ -22,9 +22,9 @@ namespace DiscordCthulhu {
             base.ExecuteCommand (e, arguments);
             if (AllowExecution (e, arguments)) {
 
-                PlayerGroups.Group group = Program.playerGroups.FindGroupByName (e.SocketGuild.Name, arguments[0]);
+                PlayerGroups.Group group = Program.playerGroups.FindGroupByName ((e.Channel as SocketGuildChannel).Guild.Name, arguments[0]);
                 if (group != null) {
-                    Program.playerGroups.groups[e.SocketGuild.Name].Remove (group);
+                    Program.playerGroups.groups[(e.Channel as SocketGuildChannel).Guild.Name].Remove (group);
                     Program.messageControl.SendMessage (e, "Group \"" + arguments[0] + "\" succesfully deleted.");
                 }else {
                     Program.messageControl.SendMessage (e, "Group \"" + arguments[0] + "\" not found.");

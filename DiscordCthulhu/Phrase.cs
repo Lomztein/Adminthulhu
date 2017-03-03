@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Discord;
+using Discord.WebSocket;
 
 namespace DiscordCthulhu {
     public class Phrase {
@@ -16,8 +17,8 @@ namespace DiscordCthulhu {
 
         public bool CheckAndRespond (SocketMessage e) {
 
-            string message = e.Content.Text;
-            string sender = e.User.Name;
+            string message = e.Content;
+            string sender = e.Author.Username;
             string locChannel = e.Channel.Name;
 
             if (message.Length < inputText.Length)

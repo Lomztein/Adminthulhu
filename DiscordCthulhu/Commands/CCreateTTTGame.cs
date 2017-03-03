@@ -25,7 +25,7 @@ namespace DiscordCthulhu {
 
                 if (int.TryParse (arguments[0], out number)) {
                     if (number <= 10) {
-                        TicTacToe.CreateGame (e.User.Name, e, number);
+                        TicTacToe.CreateGame (e.Author.Username, e, number);
                     }else {
                         Program.messageControl.SendMessage (e, "Sorry, I can't handle a size larger than 10.");
                     }

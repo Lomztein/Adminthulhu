@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Discord;
+using Discord.WebSocket;
 
 namespace DiscordCthulhu {
 
@@ -34,33 +35,18 @@ namespace DiscordCthulhu {
             if (AllowExecution (e, arguments)) {
 
                 if (allowed.Contains (arguments[0].ToUpper ())) {
-                    Role[] roles = e.SocketGuild.FindRoles (arguments[0].ToUpper (), true).ToArray ();
+                    SocketRole[] roles = (e.Channel as SocketGuildChannel).Guild.Roles.Where (x => allowed.Contains(x.Name)).ToArray ();
+                    SocketRole toAdd = roles.Where (x => x.Name == arguments[0].ToUpper ()).ElementAt(0);
 
-                    if (roles.Length == 1) {
-                        Role role = roles[0];
-
-                        try {
-                            if (!role.Permissions.ManageRoles) {
-
-                                if (removePrevious) {
-                                    List<Role> rList = new List<Role> ();
-                                    for (int i = 0; i < allowed.Length; i++) {
-                                        rList.Add (e.SocketGuild.FindRoles (allowed[i], true).ToList ()[0]);
-                                    }
-
-                                    int removeTries = 5;
-                                    for (int i = 0; i < removeTries; i++) {
-                                        await e.User.RemoveRoles (rList.ToArray ());
-                                    }
-                                }
-
-                                await e.User.AddRoles (role);
-                                Program.messageControl.SendMessage (e, succesText);
-                            }
-                        } catch (Exception exception) {
-                            Program.messageControl.SendMessage (e, "Error: " + exception.Content);
+                    SocketGuildUser user = e.Author as SocketGuildUser;
+                    foreach (SocketRole role in roles) {
+                        if (user.Roles.Contains (role)) {
+                            await user.RemoveRolesAsync (role);
                         }
                     }
+
+                    await user.AddRolesAsync (toAdd);
+                    
                 } else {
                     string colors = "";
                     for (int i = 0; i < allowed.Length; i++) {

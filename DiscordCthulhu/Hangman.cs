@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using Discord.WebSocket;
 using Discord;
 
 namespace DiscordCthulhu {
@@ -42,8 +43,8 @@ namespace DiscordCthulhu {
         }
 
         public bool GuessLetter (SocketMessage e, char letter) {
-            Channel channel = e.Channel;
-            Program.messageControl.SendMessage (channel, Program.GetUserName (e.User) + " guessed the letter **" + letter + "**.");
+            SocketTextChannel channel = (e.Channel as SocketTextChannel);
+            Program.messageControl.SendMessage (channel, Program.GetUserName (e.Author as SocketGuildUser) + " guessed the letter **" + letter + "**.");
             if (!letterWhitelist.Contains (letter)) {
                 Program.messageControl.SendMessage (channel, "Error: No numbers or special characters allowed.");
                 return false;

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Discord;
+using Discord.WebSocket;
 
 // I highly advice against reading this. It is incredibly ugly and unoptimized.
 namespace DiscordCthulhu {
@@ -29,7 +30,7 @@ namespace DiscordCthulhu {
             base.ExecuteCommand (e, arguments);
             if (AllowExecution (e, arguments)) {
 
-                Channel channel = e.User.VoiceChannel;
+                SocketGuildChannel channel = (e.Author as SocketGuildUser).VoiceChannel;
                 if (channel != null) {
                     AutomatedVoiceChannels.VoiceChannel vc = AutomatedVoiceChannels.allVoiceChannels[channel.Id];
                     if (!vc.IsLocked ()) {
@@ -39,7 +40,7 @@ namespace DiscordCthulhu {
                             return;
                         }
 
-                        vc.Lock (e.User, true);
+                        vc.Lock (e.Author as SocketGuildUser, true);
 
                         Program.messageControl.SendMessage (e.Channel, "Succesfully locked voice channel **" + vc.name + "**.");
                         return;
@@ -67,12 +68,12 @@ namespace DiscordCthulhu {
             base.ExecuteCommand (e, arguments);
             if (AllowExecution (e, arguments)) {
 
-                Channel channel = e.User.VoiceChannel;
+                SocketGuildChannel channel = (e.Author as SocketGuildUser).VoiceChannel;
                 if (channel != null) {
                     AutomatedVoiceChannels.VoiceChannel vc = AutomatedVoiceChannels.allVoiceChannels[channel.Id];
                     if (vc.IsLocked ()) {
 
-                        if (vc.lockerID == e.User.Id) {
+                        if (vc.lockerID == e.Author.Id) {
                             vc.Unlock (true);
                             Program.messageControl.SendMessage (e.Channel, "Succesfully unlocked voice channel **" + vc.name + "**.");
                             return;
@@ -105,8 +106,8 @@ namespace DiscordCthulhu {
             base.ExecuteCommand (e, arguments);
             if (AllowExecution (e, arguments)) {
 
-                Channel channel = e.User.VoiceChannel;
-                User user = Program.FindUserByName (e.SocketGuild, arguments[0]);
+                SocketGuildChannel channel = (e.Author as SocketGuildUser).VoiceChannel;
+                SocketGuildUser user = Program.FindUserByName ((e.Channel as SocketGuildChannel).Guild, arguments[0]);
                 if (user == null) {
                     Program.messageControl.SendMessage (e.Channel, "Failed to invite - User **" + arguments[0] + "** couldn't be found on this server.");
                     return;
@@ -115,7 +116,7 @@ namespace DiscordCthulhu {
                 if (channel != null) {
                     AutomatedVoiceChannels.VoiceChannel vc = AutomatedVoiceChannels.allVoiceChannels[channel.Id];
                     if (vc.IsLocked ()) {
-                        vc.InviteUser (e.User, user);
+                        vc.InviteUser (e.Author as SocketGuildUser, user);
                         Program.messageControl.SendMessage (e.Channel, "User **" + Program.GetUserName (user) + "** succesfully invited.");
                         return;
                     }
@@ -142,7 +143,7 @@ namespace DiscordCthulhu {
             base.ExecuteCommand (e, arguments);
             if (AllowExecution (e, arguments)) {
 
-                Channel channel = e.User.VoiceChannel;
+                SocketGuildChannel channel = (e.Author as SocketGuildUser).VoiceChannel;
 
                 if (channel != null) {
                     AutomatedVoiceChannels.VoiceChannel vc = AutomatedVoiceChannels.allVoiceChannels[channel.Id];
@@ -179,8 +180,8 @@ namespace DiscordCthulhu {
             base.ExecuteCommand (e, arguments);
             if (AllowExecution (e, arguments)) {
 
-                Channel channel = e.User.VoiceChannel;
-                User user = Program.FindUserByName (e.SocketGuild, arguments[0]);
+                SocketGuildChannel channel = (e.Author as SocketGuildUser).VoiceChannel;
+                SocketGuildUser user = Program.FindUserByName ((e.Channel as SocketGuildChannel).Guild, arguments[0]);
                 if (user == null) {
                     Program.messageControl.SendMessage (e.Channel, "Error - User not found.");
                     return;
@@ -190,8 +191,8 @@ namespace DiscordCthulhu {
                     AutomatedVoiceChannels.VoiceChannel vc = AutomatedVoiceChannels.allVoiceChannels[channel.Id];
                     if (vc.IsLocked ()) {
 
-                        if (vc.lockerID == e.User.Id) {
-                            if (user.ServerPermissions.ManageChannels) {
+                        if (vc.lockerID == e.Author.Id) {
+                            if (user.GuildPermissions.ManageChannels) {
                                 Program.messageControl.SendMessage (e.Channel, "Nice try, but you can't kick admins >:D.");
                                 return;
                             }

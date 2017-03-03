@@ -25,10 +25,10 @@ namespace DiscordCthulhu {
             SerializationIO.SaveObjectToFile (Program.dataPath + Program.commandSettingsDirectory + command + Program.gitHubIgnoreType, enabledSettings);
         }
 
-        public static Dictionary<string, List<string>> LoadSettings (string commandName) {
-            Dictionary<string, List<string>> settings = SerializationIO.LoadObjectFromFile<Dictionary<string, List<string>>> (Program.dataPath + Program.commandSettingsDirectory + commandName + Program.gitHubIgnoreType);
+        public static Dictionary<ulong, List<string>> LoadSettings (string commandName) {
+            Dictionary<ulong, List<string>> settings = SerializationIO.LoadObjectFromFile<Dictionary<ulong, List<string>>> (Program.dataPath + Program.commandSettingsDirectory + commandName + Program.gitHubIgnoreType);
             if (settings == null) {
-                return new Dictionary<string, List<string>> ();
+                return new Dictionary<ulong, List<string>> ();
             } else {
                 return settings;
             }
@@ -67,16 +67,17 @@ namespace DiscordCthulhu {
         }
 
         public void RemoveFromChannel (SocketMessage e, bool allChannels) {
-            if (enabledSettings.ContainsKey (e.SocketGuild.Name)) {
+            SocketGuild guild = (e.Channel as SocketGuildChannel).Guild;
+            if (enabledSettings.ContainsKey (guild.Id)) {
                 if (allChannels) {
-                    Channel[] channels = e.SocketGuild.TextChannels.ToArray ();
+                    SocketGuildChannel[] channels = guild.TextChannels.ToArray ();
                     for (int i = 0; i < channels.Length; i++) {
-                        if (enabledSettings[e.SocketGuild.Name].Contains (channels[i].Name))
-                            enabledSettings[e.SocketGuild.Name].Remove (channels[i].Name);
+                        if (enabledSettings[guild.Id].Contains (channels[i].Name))
+                            enabledSettings[guild.Id].Remove (channels[i].Name);
                     }
                 } else {
-                    if (enabledSettings[e.SocketGuild.Name].Contains (e.Channel.Name))
-                        enabledSettings[e.SocketGuild.Name].Remove (e.Channel.Name);
+                    if (enabledSettings[guild.Id].Contains (e.Channel.Name))
+                        enabledSettings[guild.Id].Remove (e.Channel.Name);
                 }
             }
 
@@ -91,7 +92,7 @@ namespace DiscordCthulhu {
 
         public bool AllowExecution (SocketMessage e, List<string> args) {
 
-            if (e.Channel.IsPrivate && (isAdminOnly && !alwaysEnabled)) {
+            if (e.Channel as SocketDMChannel == null && (isAdminOnly && !alwaysEnabled)) {
                 Program.messageControl.SendMessage (e, "Failed to execute: Not available in private chat.");
                 return false;
             }
@@ -102,7 +103,7 @@ namespace DiscordCthulhu {
                 return false;
             }
 
-            if (isAdminOnly && !e.User.GetPermissions (e.Channel).ManageChannel) {
+            if (isAdminOnly && !(e.Author as SocketGuildUser).GetPermissions (e.Channel as SocketGuildChannel).ManageChannel) {
                 Program.messageControl.SendMessage (e, "Failed to execute: Command is admin-only.");
                 return false;
             }

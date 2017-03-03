@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Discord;
 using System.IO;
+using Discord.WebSocket;
 
 namespace DiscordCthulhu {
 
@@ -36,13 +37,13 @@ namespace DiscordCthulhu {
         }
 
         public void OnDayPassed ( DateTime time ) {
-            Channel mainChannel = Program.GetMainChannel (Program.GetServer ());
+            SocketGuildChannel mainChannel = Program.GetMainChannel (Program.GetServer ());
 
             Random random = new Random ();
             int number = random.Next (headers.Count);
 
             string topic = headers[number];
-            mainChannel.Edit (null, topic, null);
+            //mainChannel.ModifyAsync (delegate ( GuildChannelProperties properties ) { properties. = topic; } )); Not yet implemented in 1.0
         }
 
         public void OnHourPassed ( DateTime time ) {

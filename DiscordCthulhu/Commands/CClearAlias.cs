@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Discord;
+using Discord.WebSocket;
 
 namespace DiscordCthulhu {
     public class CClearAliasses : Command {
@@ -18,7 +19,7 @@ namespace DiscordCthulhu {
         public override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
             base.ExecuteCommand (e, arguments);
             if (AllowExecution (e, arguments)) {
-                AliasCollection.User user = Program.aliasCollection.FindUsersByAlias (e.User.Name)[0];
+                AliasCollection.User user = Program.aliasCollection.FindUsersByAlias (e.Author.Username)[0];
                 if (Program.aliasCollection.RemoveUser (user)) {
                     Program.messageControl.SendMessage(e, "All your aliasses has been removed from the collection.");
                 } else {

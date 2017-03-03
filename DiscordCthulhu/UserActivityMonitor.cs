@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Discord;
 using System.Threading;
+using Discord.WebSocket;
 
 namespace DiscordCthulhu {
 
@@ -19,9 +20,9 @@ namespace DiscordCthulhu {
         private static int activeThresholdDays = 7;
         private static int presentThresholdDays = 30;
 
-        private static string activeUserRole = "Active!";
-        private static string presentUserRole = "Present";
-        private static string inactiveUserRole = "Inactive :(";
+        private static ulong activeUserRole = 273017450390487041;
+        private static ulong presentUserRole = 273017481600434186;
+        private static ulong inactiveUserRole = 273017511468072960;
 
         public void Initialize ( DateTime time ) {
             userActivity = SerializationIO.LoadObjectFromFile<Dictionary<ulong, DateTime>> (Program.dataPath + activityFileName + Program.gitHubIgnoreType);
@@ -37,23 +38,27 @@ namespace DiscordCthulhu {
 
             await Task.Delay (5000);
 
-            IEnumerable<User> users = Program.GetServer ().Users;
-            foreach (User u in users) {
+            IEnumerable<SocketGuildUser> users = Program.GetServer ().Users;
+            foreach (SocketGuildUser u in users) {
                 if (!userActivity.ContainsKey (u.Id)) {
                     RecordActivity (u.Id, DateTime.Now.AddMonths (-6), false);
                 }
             }
 
-            Program.discordClient.MessageReceived += ( s, e ) => {
-                RecordActivity (e.User.Id, DateTime.Now, true);
+            Program.discordClient.MessageReceived += ( e ) => {
+                RecordActivity (e.Author.Id, DateTime.Now, true);
+                return Task.CompletedTask;
             };
 
-            Program.discordClient.UserUpdated += ( s, e ) => {
-                if (e.Before.VoiceChannel != e.After.VoiceChannel) {
-                    if (e.After.VoiceChannel != null) {
-                        RecordActivity (e.After.Id, DateTime.Now, true);
+            Program.discordClient.UserUpdated += ( before, after ) => {
+                SocketGuildUser afterUser = after as SocketGuildUser;
+                if ((before as SocketGuildUser).VoiceChannel != afterUser.VoiceChannel) {
+                    if (afterUser.VoiceChannel != null) {
+                        RecordActivity (after.Id, DateTime.Now, true);
                     }
                 }
+
+                return Task.CompletedTask;
             };
 
             OnDayPassed (DateTime.Now);
@@ -67,9 +72,9 @@ namespace DiscordCthulhu {
             }
 
             // Well that got ugly.
-            Role activeRole = Program.GetServer ().FindRoles (activeUserRole).FirstOrDefault ();
-            Role presentRole = Program.GetServer ().FindRoles (presentUserRole).FirstOrDefault ();
-            Role inactiveRole = Program.GetServer ().FindRoles (inactiveUserRole).FirstOrDefault ();
+            SocketRole activeRole = Program.GetServer ().GetRole (activeUserRole);
+            SocketRole presentRole = Program.GetServer ().GetRole (presentUserRole);
+            SocketRole inactiveRole = Program.GetServer ().GetRole (inactiveUserRole);
             UpdateUser (userID, activeRole, presentRole, inactiveRole);
 
             if (single) {
@@ -78,9 +83,9 @@ namespace DiscordCthulhu {
         }
 
         public void OnDayPassed ( DateTime time ) {
-            Role activeRole = Program.GetServer ().FindRoles (activeUserRole).FirstOrDefault ();
-            Role presentRole = Program.GetServer ().FindRoles (presentUserRole).FirstOrDefault ();
-            Role inactiveRole = Program.GetServer ().FindRoles (inactiveUserRole).FirstOrDefault ();
+            SocketRole activeRole = Program.GetServer ().GetRole (activeUserRole);
+            SocketRole presentRole = Program.GetServer ().GetRole (presentUserRole);
+            SocketRole inactiveRole = Program.GetServer ().GetRole (inactiveUserRole);
 
             foreach (ulong id in userActivity.Keys) {
                 UpdateUser (id, activeRole, presentRole, inactiveRole);
@@ -89,7 +94,7 @@ namespace DiscordCthulhu {
             SerializationIO.SaveObjectToFile (Program.dataPath + activityFileName + Program.gitHubIgnoreType, userActivity);
         }
 
-        private static async void UpdateUser ( ulong id, Role activeRole, Role presentRole, Role inactiveRole ) {
+        private static async void UpdateUser ( ulong id, SocketRole activeRole, SocketRole presentRole, SocketRole inactiveRole ) {
             DateTime time = DateTime.Now;
 
             if (lastUserUpdate.ContainsKey (id) && time < lastUserUpdate[id])
@@ -102,10 +107,10 @@ namespace DiscordCthulhu {
             }
 
             DateTime lastActivity = userActivity[id];
-            User user = Program.GetServer ().GetUser (id);
+            SocketGuildUser user = Program.GetServer ().GetUser (id);
 
-            List<Role> toAdd = new List<Role> ();
-            List<Role> toRemove = new List<Role> ();
+            List<SocketRole> toAdd = new List<SocketRole> ();
+            List<SocketRole> toRemove = new List<SocketRole> ();
 
             // This feels like it could be done differnetly, but it'll do.
             if (lastActivity > time.AddDays (-activeThresholdDays)) {
@@ -123,17 +128,17 @@ namespace DiscordCthulhu {
                 toRemove.Add (activeRole);
             }
 
-            foreach (Role r in toRemove) {
-                if (user.HasRole (r)) {
-                    ChatLogger.Log ("Removing role " + r.Name + " from user " + user.Name);
-                    await user.RemoveRoles (r);
+            foreach (SocketRole r in toRemove) {
+                if (user.Roles.Contains (r)) {
+                    ChatLogger.Log ("Removing role " + r.Name + " from user " + user.Username);
+                    await user.RemoveRolesAsync (r);
                 }
             }
 
             // This might be heavy on the server during midnights.
-            if (!user.HasRole (toAdd[0])) {
-                ChatLogger.Log ("Adding role " + toAdd[0].Name + " to user " + user.Name);
-                await user.AddRoles (toAdd[0]);
+            if (!user.Roles.Contains (toAdd[0])) {
+                ChatLogger.Log ("Adding role " + toAdd[0].Name + " to user " + user.Username);
+                await user.AddRolesAsync (toAdd[0]);
             }
         }
 

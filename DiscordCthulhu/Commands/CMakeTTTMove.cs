@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Discord;
+using Discord.WebSocket;
 
 namespace DiscordCthulhu {
     class CMakeTTTMove : Command {
@@ -24,7 +25,7 @@ namespace DiscordCthulhu {
                 int y;
 
                 if (int.TryParse (arguments[0], out x) && int.TryParse (arguments[1], out y)) {
-                    TicTacToe.MakeMove (e.User.Name, x, y, e);
+                    TicTacToe.MakeMove (e.Author.Username, x, y, e);
                 }
             }
         }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Discord;
+using Discord.WebSocket;
 
 namespace DiscordCthulhu {
     public class CCommandList : Command {
@@ -29,7 +30,7 @@ namespace DiscordCthulhu {
                         toDisplay.Add (Program.commands[i].GetShortHelp ());
                 }
 
-                if (!e.Channel.IsPrivate) {
+                if (e.Channel as SocketDMChannel == null) {
                         toDisplay.Add ("\n**ADMIN ONLY COMMANDS**");
 
                     for (int i = 0; i < Program.commands.Length; i++) {

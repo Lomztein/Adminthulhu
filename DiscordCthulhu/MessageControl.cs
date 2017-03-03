@@ -136,7 +136,7 @@ namespace DiscordCthulhu
             }
         }
 
-        public async void AsyncSend ( ISocketMessageChannel e, string message) {
+        public async void AsyncSend (ISocketMessageChannel e, string message) {
             ChatLogger.Log ("Sending a message.");
             if (message.Length > 0) {
                 Task<RestUserMessage> messageTask = e.SendMessageAsync (message);

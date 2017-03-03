@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Discord;
+using Discord.WebSocket;
 
 namespace DiscordCthulhu {
     class CFizzfyr : Command {
@@ -18,7 +19,7 @@ namespace DiscordCthulhu {
         public override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
             base.ExecuteCommand (e, arguments);
             if (AllowExecution (e, arguments)) {
-                Program.messageControl.SendImage (e.Channel, "Looking for this sexy stud?", Program.dataPath + Program.resourceDirectory + "/fizzfyr.jpg");
+                Program.messageControl.SendImage (e.Channel as SocketTextChannel, "Looking for this sexy stud?", Program.dataPath + Program.resourceDirectory + "/fizzfyr.jpg");
             }
         }
     }
@@ -35,7 +36,7 @@ namespace DiscordCthulhu {
         public override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
             base.ExecuteCommand (e, arguments);
             if (AllowExecution (e, arguments)) {
-                Program.messageControl.SendImage (e.Channel, "Swiggity swooty I'm coming for dat booty!", Program.dataPath + Program.resourceDirectory + "/scorekarl.jpg");
+                Program.messageControl.SendImage (e.Channel as SocketTextChannel, "Swiggity swooty I'm coming for dat booty!", Program.dataPath + Program.resourceDirectory + "/scorekarl.jpg");
             }
         }
     }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Discord;
+using Discord.WebSocket;
 
 namespace DiscordCthulhu {
     public class CSetAlias : Command {
@@ -18,7 +19,7 @@ namespace DiscordCthulhu {
         public override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
             base.ExecuteCommand (e, arguments);
             if (AllowExecution (e, arguments)) {
-                if (!Program.aliasCollection.AddAlias (e.User.Name, arguments[0])) {
+                if (!Program.aliasCollection.AddAlias (e.Author.Username, arguments[0])) {
                     Program.messageControl.SendMessage(e, "Failed to add " + arguments[0] + " to your collection, as it is already there.");
                 } else {
                     Program.messageControl.SendMessage(e, arguments[0] + " added to your collection of aliasses.");

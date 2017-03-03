@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Discord;
+using Discord.WebSocket;
 
 namespace DiscordCthulhu {
 
@@ -31,11 +32,12 @@ namespace DiscordCthulhu {
         }
 
         public bool CreateGroup (SocketMessage e, string groupName) {
-            if (!groups.ContainsKey (e.SocketGuild.Name))
-                groups.Add (e.SocketGuild.Name, new List<Group> ());
+            SocketGuild guild = (e.Channel as SocketGuildChannel).Guild;
+            if (!groups.ContainsKey (guild.Name))
+                groups.Add (guild.Name, new List<Group> ());
 
-            if (FindGroupByName (e.SocketGuild.Name, groupName) == null) {
-                groups[e.SocketGuild.Name].Add (new Group (groupName, e.User.Mention));
+            if (FindGroupByName (guild.Name, groupName) == null) {
+                groups[guild.Name].Add (new Group (groupName, e.Author.Mention));
                 Save ();
                 return true;
             }
@@ -44,9 +46,10 @@ namespace DiscordCthulhu {
         }
 
         public bool JoinGroup (SocketMessage e, string groupName) {
-            Group group = FindGroupByName (e.SocketGuild.Name, groupName);
-            if (!IsUserMember (group, e.User.Mention) && group != null) {
-                group.AddMember (e.User.Mention);
+            SocketGuild guild = (e.Channel as SocketGuildChannel).Guild;
+            Group group = FindGroupByName (guild.Name, groupName);
+            if (!IsUserMember (group, e.Author.Mention) && group != null) {
+                group.AddMember (e.Author.Mention);
                 Save ();
                 return true;
             }
@@ -55,12 +58,13 @@ namespace DiscordCthulhu {
         }
 
         public bool LeaveGroup (SocketMessage e, string groupName) {
-            Group group = FindGroupByName (e.SocketGuild.Name, groupName);
-            if (IsUserMember (group, e.User.Mention)) {
-                group.RemoveMember (e.User.Mention);
+            SocketGuild guild = (e.Channel as SocketGuildChannel).Guild;
+            Group group = FindGroupByName (guild.Name, groupName);
+            if (IsUserMember (group, e.Author.Mention)) {
+                group.RemoveMember (e.Author.Mention);
 
                 if (group.memberMentions.Count == 0)
-                    groups[e.SocketGuild.Name].Remove (group);
+                    groups[guild.Name].Remove (group);
 
                 Save ();
                 return true;

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using Discord.WebSocket;
 
 namespace DiscordCthulhu {
     class ChatLogger {
@@ -29,7 +30,7 @@ namespace DiscordCthulhu {
         public static void DebugLog (string message) {
             Log (message);
             if (Program.GetServer () != null)
-                Program.messageControl.SendMessage (Program.SearchChannel (Program.GetServer (), Program.dumpTextChannelName), message);
+                Program.messageControl.SendMessage (Program.SearchChannel (Program.GetServer (), Program.dumpTextChannelName) as SocketTextChannel, message);
         }
     }
 }

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Discord.WebSocket;
 
 namespace DiscordCthulhu {
 
@@ -120,8 +121,8 @@ namespace DiscordCthulhu {
             DateTime eventDay = new DateTime (now.Year, now.Month, now.Day, eventHour, 0, 0).AddDays (daysBetween);
             AutomatedEventHandling.CreateEvent ("Friday Event", eventDay, highestGame.name + " has been chosen by vote!");
 
-            Channel mainChannel = Program.GetMainChannel (Program.GetServer ());
-            Program.messageControl.SendMessage (mainChannel, "The game for this fridays event has been chosen by vote: **" + highestGame.name + "**! It can be joined using command `!event join friday event`");
+            SocketGuildChannel mainChannel = Program.GetMainChannel (Program.GetServer ());
+            Program.messageControl.SendMessage (mainChannel as SocketTextChannel, "The game for this fridays event has been chosen by vote: **" + highestGame.name + "**! It can be joined using command `!event join friday event`");
 
             List<ulong> processed = new List<ulong> ();
             foreach (Vote vote in votes) {
@@ -129,7 +130,7 @@ namespace DiscordCthulhu {
                     continue;
 
                 if (highestGame != games[vote.votedGameID]) {
-                    User user = Program.GetServer ().GetUser (vote.voterID);
+                    SocketGuildUser user = Program.GetServer ().GetUser (vote.voterID);
                     // AutomatedEventHandling seriously lacks wrapper functions.
                     Program.messageControl.AskQuestion (user, "The friday event you voted for sadly lost to **" + highestGame.name + "** , do you want to join the event anyways?",
                         delegate () {
@@ -165,8 +166,8 @@ namespace DiscordCthulhu {
             votes = new List<Vote> ();
             UpdateVoteMessage (true);
 
-            Channel mainChannel = Program.GetMainChannel (Program.GetServer ());
-            Program.messageControl.SendMessage (mainChannel, "A new vote for next friday event has begun, see pinned messages in <#188106821154766848> for votesheet.");
+            SocketGuildChannel mainChannel = Program.GetMainChannel (Program.GetServer ());
+            Program.messageControl.SendMessage (mainChannel as SocketTextChannel, "A new vote for next friday event has begun, see pinned messages in <#188106821154766848> for votesheet.");
             
 
             SaveData ();
@@ -232,8 +233,8 @@ namespace DiscordCthulhu {
                 text += "**Vote using `!event vote <id>` to vote. You can vote 3 times, and also remove votes using `!event removevote <id>`!**";
             }
 
-            Channel channel = Program.SearchChannel (Program.GetServer (), "announcements");
-            Content message = channel.GetMessage (votingMessageID);
+            SocketGuildChannel channel = Program.SearchChannel (Program.GetServer (), "announcements");
+            SocketUserMessage message = (channel as SocketTextChannel).GetMessageAsync (votingMessageID).Result as SocketUserMessage;
 
             /*if (message == null || forceNew || votingMessageID == 0) {
                 Task<Content> task = Program.messageControl.AsyncSend (channel, text);
@@ -242,7 +243,7 @@ namespace DiscordCthulhu {
                 Console.WriteLine (task.Result.Id);
                 votingMessageID = task.Result.Id;
             } else {*/
-            await message.Edit (text);
+            await message.ModifyAsync (delegate ( MessageProperties properties ) { properties.Content = text; });
             //}
         }
 
@@ -286,7 +287,7 @@ namespace DiscordCthulhu {
                         bool withinRange = parse > 0 && parse <= AutomatedWeeklyEvent.games.Length;
 
                         if (withinRange) {
-                            AutomatedWeeklyEvent.VoteForGame (e, e.User.Id, parse - 1);
+                            AutomatedWeeklyEvent.VoteForGame (e, e.Author.Id, parse - 1);
                         } else {
                             Program.messageControl.SendMessage (e, "Failed to vote - outside range ( 1-" + (AutomatedWeeklyEvent.games.Length) + " ).");
                         }
@@ -318,7 +319,7 @@ namespace DiscordCthulhu {
                         bool withinRange = parse > 0 && parse <= AutomatedWeeklyEvent.games.Length;
 
                         if (withinRange) {
-                            AutomatedWeeklyEvent.RemoveVote (e, e.User.Id, parse - 1);
+                            AutomatedWeeklyEvent.RemoveVote (e, e.Author.Id, parse - 1);
                         } else {
                             Program.messageControl.SendMessage (e, "Failed to remove vote - outside range ( 1-" + (AutomatedWeeklyEvent.games.Length) + " ).");
                         }

@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Discord;
 using System.Collections.Concurrent;
+using Discord.WebSocket;
 
 namespace DiscordCthulhu {
     public partial class ControlPanel : Form {
@@ -42,11 +43,11 @@ namespace DiscordCthulhu {
         private void button1_Click ( object sender, EventArgs e ) {
             if (messageText.Text.Length != 0) {
 
-                foreach (SocketGuild server in Program.discordClient.Servers) {
-                    Channel channel = Program.SearchChannel (server, channelName.Text);
+                foreach (SocketGuild server in Program.discordClient.Guilds) {
+                    SocketGuildChannel channel = Program.SearchChannel (server, channelName.Text);
                     if (channel != null) {
                     //foreach (Channel channel in server.TextChannels) {
-                        Program.messageControl.SendMessage (channel, messageText.Text);
+                        Program.messageControl.SendMessage (channel as SocketTextChannel, messageText.Text);
                         messageText.Text = "";
                     }
                 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Discord;
+using Discord.WebSocket;
 
 namespace DiscordCthulhu {
     class CLeaveGroup : Command {
@@ -19,7 +20,7 @@ namespace DiscordCthulhu {
             base.ExecuteCommand (e, arguments);
             if (AllowExecution (e, arguments)) {
 
-                PlayerGroups.Group group = Program.playerGroups.FindGroupByName (e.SocketGuild.Name, arguments[0]);
+                PlayerGroups.Group group = Program.playerGroups.FindGroupByName ((e.Channel as SocketGuildChannel).Guild.Name, arguments[0]);
                 if (Program.playerGroups.LeaveGroup (e, arguments[0])) {
                     Program.messageControl.SendMessage (e, "You have left the group " + arguments[0]);
                     if (group == null) {

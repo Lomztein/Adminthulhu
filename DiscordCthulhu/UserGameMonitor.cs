@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Discord;
+using Discord.WebSocket;
 
 namespace DiscordCthulhu {
     public class UserGameMonitor {
@@ -17,15 +18,17 @@ namespace DiscordCthulhu {
             if (userGames == null)
                 userGames = new Dictionary<ulong, List<string>> ();
 
-            Program.discordClient.UserUpdated += ( s, e ) => {
-                User user = e.After;
+            Program.discordClient.UserUpdated += ( before, after ) => {
+                SocketGuildUser user = after as SocketGuildUser;
                 
-                string gameName = user.CurrentGame.HasValue ? user.CurrentGame.Value.Name.ToString ().ToUpper () : null;
+                string gameName = user.Game.HasValue ? user.Game.Value.Name.ToString ().ToUpper () : null;
                 AddGame (user, gameName);
+
+                return Task.CompletedTask;
             };
         }
 
-        public static string AddGame (User user, string gameName) {
+        public static string AddGame (SocketGuildUser user, string gameName) {
             string result = "";
             if (gameName != null && gameName != "") {
                 gameName = gameName.ToUpper ();
@@ -34,7 +37,7 @@ namespace DiscordCthulhu {
                 if (userGames.ContainsKey (user.Id)) {
                     if (!userGames[user.Id].Contains (gameName)) {
                         userGames[user.Id].Add (gameName);
-                        ChatLogger.Log ("Added game " + gameName + " to gamelist of " + user.Name);
+                        ChatLogger.Log ("Added game " + gameName + " to gamelist of " + user.Username);
                         result = "Succesfully added game **" + gameName + "** to your gamelist.";
                         doSave = true;
                     }else {
@@ -43,7 +46,7 @@ namespace DiscordCthulhu {
                 } else {
                     userGames.Add (user.Id, new List<string> ());
                     userGames[user.Id].Add (gameName);
-                    ChatLogger.Log ("Constructed a new gamelist for " + user.Name);
+                    ChatLogger.Log ("Constructed a new gamelist for " + user.Username);
                     result = "Succesfully added game **" + gameName + "** to your gamelist.";
                     doSave = true;
                 }
@@ -54,7 +57,7 @@ namespace DiscordCthulhu {
             return result;
         }
 
-        public static string RemoveGame (User user, string gameName) {
+        public static string RemoveGame (SocketGuildUser user, string gameName) {
             string result = "";
             gameName = gameName.ToUpper ();
             if (userGames.ContainsKey (user.Id)) {
@@ -64,11 +67,11 @@ namespace DiscordCthulhu {
             return result;
         }
 
-        public static List<User> FindUsersWithGame (string gameName) {
+        public static List<SocketGuildUser> FindUsersWithGame (string gameName) {
             // I feel retarded right now, something seems off.
             gameName = gameName.ToUpper ();
 
-            List<User> foundUsers = new List<User> ();
+            List<SocketGuildUser> foundUsers = new List<SocketGuildUser> ();
             int count = userGames.Count ();
             for (int i = 0; i < count; i++) {
                 if (userGames.ElementAt (i).Value.Contains (gameName))
@@ -100,12 +103,12 @@ namespace DiscordCthulhu {
             public override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
                 base.ExecuteCommand (e, arguments);
                 if (AllowExecution (e, arguments)) {
-                    List<User> foundUsers = UserGameMonitor.FindUsersWithGame (arguments[0]);
+                    List<SocketGuildUser> foundUsers = UserGameMonitor.FindUsersWithGame (arguments[0]);
                     if (foundUsers.Count == 0) {
                         Program.messageControl.SendMessage (e, "Sorry, no records of **" + arguments[0] + "** being played were found.");
                     }else {
                         string total = "Here is the list of everyone who've been seen playing **" + arguments[0] + "**:```\n";
-                        foreach (User user in foundUsers) {
+                        foreach (SocketGuildUser user in foundUsers) {
                             total += Program.GetUserName (user) + "\n";
                         }
                         total += "```";
@@ -128,7 +131,7 @@ namespace DiscordCthulhu {
         public override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
             base.ExecuteCommand (e, arguments);
             if (AllowExecution (e, arguments)) {
-                string result = UserGameMonitor.AddGame (e.User, arguments[0]);
+                string result = UserGameMonitor.AddGame ((e.Author as SocketGuildUser), arguments[0]);
                 Program.messageControl.SendMessage (e, result);
             }            
         }
@@ -146,7 +149,7 @@ namespace DiscordCthulhu {
         public override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
             base.ExecuteCommand (e, arguments);
             if (AllowExecution (e, arguments)) {
-                string result = UserGameMonitor.RemoveGame (e.User, arguments[0]);
+                string result = UserGameMonitor.RemoveGame ((e.Author as SocketGuildUser), arguments[0]);
                 Program.messageControl.SendMessage (e, result);
             }
         }

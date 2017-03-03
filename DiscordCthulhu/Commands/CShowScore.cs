@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Discord;
+using Discord.WebSocket;
 
 namespace DiscordCthulhu {
     public class CShowScore : Command {
@@ -19,7 +20,7 @@ namespace DiscordCthulhu {
 
             base.ExecuteCommand (e, arguments);
             if (AllowExecution (e, arguments)) {
-                Program.messageControl.SendMessage (e, "Your current score is " + Program.scoreCollection.GetScore (e.User.Name));
+                Program.messageControl.SendMessage (e, "Your current score is " + Program.scoreCollection.GetScore (e.Author.Username));
             }
         }
     }
