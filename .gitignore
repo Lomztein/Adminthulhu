@@ -50,3 +50,6 @@ Temporary Items
 .botproperty
 /DiscordCthulhu/bin/Debug
 /DiscordCthulhu/bin/Release
+
+/Compiled
+/packages
