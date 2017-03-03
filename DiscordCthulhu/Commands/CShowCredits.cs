@@ -23,5 +23,6 @@ namespace DiscordCthulhu {
                                                     +"Additional Programming: Frederik \"Fred\" Rosenberg and Victor \"Nyx\" Koch\n" +
                                                     +"This bot is created using the Discord.NET Discord Bot API for C#");
             }
-      }
+        }
+    }
 }

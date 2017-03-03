@@ -70,11 +70,6 @@ namespace DiscordCthulhu {
 
         public async void Start (string[] args) {
 
-            string token = SerializationIO.LoadTextFile (dataPath + "bottoken" + gitHubIgnoreType)[0];
-
-            await discordClient.LoginAsync (TokenType.Bot, token);
-            Console.WriteLine ("Connecting using token: " + token);
-
             // Linux specific test
             if (args.Length > 0) {
                 dataPath = args[0];
@@ -91,7 +86,7 @@ namespace DiscordCthulhu {
             aliasCollection = AliasCollection.Load ();
             scoreCollection.scores = ScoreCollection.Load ();
             playerGroups = PlayerGroups.Load ();
-            clock = new Clock ();
+            //clock = new Clock ();
 
             discordClient = new DiscordSocketClient ();
             messageControl = new MessageControl();
@@ -238,6 +233,13 @@ namespace DiscordCthulhu {
 
             ChatLogger.Log (dataPath);
 
+            string token = SerializationIO.LoadTextFile (dataPath + "bottoken" + gitHubIgnoreType)[0];
+
+            Console.WriteLine ("Connecting using token: " + token);
+            await discordClient.LoginAsync (TokenType.Bot, token);
+            await discordClient.StartAsync ();
+
+            await Task.Delay (-1);
         }   
 
         private static int maxTries = 5;

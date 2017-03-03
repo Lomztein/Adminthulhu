@@ -48,8 +48,9 @@ Temporary Items
 
 # Files that should totally be ignored.
 .botproperty
-/DiscordCthulhu/bin/Debug
-/DiscordCthulhu/bin/Release
+/DiscordCthulhu/bin/
+/DiscordCthulhu/obj/
+
 
 /Compiled
 /packages
