@@ -19,7 +19,7 @@ namespace DiscordCthulhu {
             isAdminOnly = true;
         }
 
-        public override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
+        public override Task ExecuteCommand ( SocketMessage e, List<string> arguments ) {
             base.ExecuteCommand (e, arguments);
             if (AllowExecution (e, arguments)) {
                 int number;
@@ -38,6 +38,7 @@ namespace DiscordCthulhu {
                     Program.messageControl.SendMessage (e, "Failed to parse second argument.");
                 }
             }
+            return Task.CompletedTask;
         }
     }
 }

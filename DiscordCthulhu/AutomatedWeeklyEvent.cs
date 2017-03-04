@@ -56,7 +56,7 @@ namespace DiscordCthulhu {
 
         public int eventHour = 20;
 
-        public async void Initialize ( DateTime time ) {
+        public async Task Initialize ( DateTime time ) {
             votes = SerializationIO.LoadObjectFromFile<List<Vote>> (Program.dataPath + Program.eventDirectory + votesFileName + Program.gitHubIgnoreType);
             games = SerializationIO.LoadObjectFromFile<Game[]> (Program.dataPath + Program.eventDirectory + gamesFileName + Program.gitHubIgnoreType);
 
@@ -79,10 +79,11 @@ namespace DiscordCthulhu {
             SerializationIO.SaveObjectToFile (Program.dataPath + Program.eventDirectory + gamesFileName + Program.gitHubIgnoreType, games);
         }
 
-        public void OnDayPassed ( DateTime time ) {
+        public Task OnDayPassed ( DateTime time ) {
+            return Task.CompletedTask;
         }
 
-        public void OnHourPassed ( DateTime time ) {
+        public Task OnHourPassed ( DateTime time ) {
             switch (status) {
                 case WeeklyEventStatus.Voting:
                     if (time.AddDays (-1).DayOfWeek.ToString ().ToLower () == voteEndDay) {
@@ -96,12 +97,15 @@ namespace DiscordCthulhu {
                     }
                     break;
             }
+            return Task.CompletedTask;
         }
 
-        public void OnMinutePassed ( DateTime time ) {
+        public Task OnMinutePassed ( DateTime time ) {
+            return Task.CompletedTask;
         }
 
-        public void OnSecondPassed ( DateTime time ) {
+        public Task OnSecondPassed ( DateTime time ) {
+            return Task.CompletedTask;
         }
 
         private void CountVotes () {
@@ -219,7 +223,7 @@ namespace DiscordCthulhu {
             return true;
         }
 
-        public static async void UpdateVoteMessage ( bool forceNew ) {
+        public static async Task UpdateVoteMessage ( bool forceNew ) {
             string text = "Vote for this " + eventDay + "s event!```\n";
             int index = 0;
             foreach (Game game in games) {
@@ -278,7 +282,7 @@ namespace DiscordCthulhu {
             argumentNumber = 1;
         }
 
-        public override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
+        public override Task ExecuteCommand ( SocketMessage e, List<string> arguments ) {
             base.ExecuteCommand (e, arguments);
             if (AllowExecution (e, arguments)) {
                 if (AutomatedWeeklyEvent.status == AutomatedWeeklyEvent.WeeklyEventStatus.Voting) {
@@ -298,6 +302,7 @@ namespace DiscordCthulhu {
                     Program.messageControl.SendMessage (e, "Failed to vote - voting not in progress.");
                 }
             }
+            return Task.CompletedTask;
         }
     }
 
@@ -310,7 +315,7 @@ namespace DiscordCthulhu {
             argumentNumber = 1;
         }
 
-        public override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
+        public override Task ExecuteCommand ( SocketMessage e, List<string> arguments ) {
             base.ExecuteCommand (e, arguments);
             if (AllowExecution (e, arguments)) {
                 if (AutomatedWeeklyEvent.status == AutomatedWeeklyEvent.WeeklyEventStatus.Voting) {
@@ -330,6 +335,7 @@ namespace DiscordCthulhu {
                     Program.messageControl.SendMessage (e, "Failed to remove vote - voting not in progress.");
                 }
             }
+            return Task.CompletedTask;
         }
     }
 }

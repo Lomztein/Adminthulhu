@@ -23,7 +23,7 @@ namespace DiscordCthulhu {
             alwaysEnabled = true;
         }
 
-        public override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
+        public override Task ExecuteCommand ( SocketMessage e, List<string> arguments ) {
             base.ExecuteCommand (e, arguments);
             if (AllowExecution (e, arguments)) {
 
@@ -40,7 +40,7 @@ namespace DiscordCthulhu {
                 }
 
                 if (inText == "?")
-                    return;
+                    return Task.CompletedTask;
 
                 for (int i = 0; i < inText.Length; i++) {
                     if (inText[i] == ' ') {
@@ -53,13 +53,14 @@ namespace DiscordCthulhu {
                             outText += NumberToString (letter) + " ";
                         } else if (!ignoreUnavailable) {
                             Program.messageControl.SendMessage (e, "Unavailable character detected: " + letter);
-                            return;
+                            return Task.CompletedTask;
                         }
                     }
                 }
 
                 Program.messageControl.SendMessage (e, outText);
             }
+            return Task.CompletedTask;
         }
 
         public string NumberToString (char number) {

@@ -13,7 +13,7 @@ namespace DiscordCthulhu {
         // This contains birthday dates, should only use month and day value.
         public static List<Date> birthdays;
 
-        public async void Initialize ( DateTime time ) {
+        public async Task Initialize ( DateTime time ) {
             while (Program.GetServer () == null)
                 await Task.Delay (1000);
 
@@ -28,13 +28,15 @@ namespace DiscordCthulhu {
             }
         }
 
-        public void OnDayPassed ( DateTime time ) {
+        public Task OnDayPassed ( DateTime time ) {
+            return Task.CompletedTask;
         }
 
-        public void OnHourPassed ( DateTime time ) {
+        public Task OnHourPassed ( DateTime time ) {
+            return Task.CompletedTask;
         }
 
-        public void OnMinutePassed ( DateTime time ) {
+        public Task OnMinutePassed ( DateTime time ) {
             if (birthdays != null) {
                 foreach (Date date in birthdays) {
                     // userID = 0 if the user hasn't set a date.
@@ -48,9 +50,11 @@ namespace DiscordCthulhu {
                     }
                 }
             }
+            return Task.CompletedTask;
         }
 
-        public void OnSecondPassed ( DateTime time ) {
+        public Task OnSecondPassed ( DateTime time ) {
+            return Task.CompletedTask;
         }
 
         private void AnnounceBirthday (Date date) {

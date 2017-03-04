@@ -16,11 +16,12 @@ namespace DiscordCthulhu {
             argumentNumber = 0;
         }
 
-        public override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
+        public override Task ExecuteCommand ( SocketMessage e, List<string> arguments ) {
             base.ExecuteCommand (e, arguments);
             if (AllowExecution (e, arguments)) {
                 //Program.messageControl.SendMessage (Program.discordClient., "Invite URL: " + invite.Url);
             }
+            return Task.CompletedTask;
         }
 
     }

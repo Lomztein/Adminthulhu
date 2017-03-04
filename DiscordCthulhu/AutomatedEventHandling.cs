@@ -29,11 +29,12 @@ namespace DiscordCthulhu {
                 upcomingEvents = new List<Event> ();
         }
 
-        public void Initialize (DateTime now) {
+        public Task Initialize (DateTime now) {
             LoadEvents ();
+            return Task.CompletedTask;
         }
 
-        public void OnSecondPassed ( DateTime now ) {
+        public Task OnSecondPassed ( DateTime now ) {
             List<Event> toRemove = new List<Event> ();
             foreach (Event e in upcomingEvents) {
                 if (e.eventState == Event.EventState.Awaiting) {
@@ -57,6 +58,7 @@ namespace DiscordCthulhu {
 
             foreach (Event r in toRemove)
                 upcomingEvents.Remove (r);
+            return Task.CompletedTask;
         }
 
         public static void SendEventReminder ( ulong userID, Event remindEvent ) {
@@ -113,14 +115,17 @@ namespace DiscordCthulhu {
             SaveEvents ();
         }
 
-        public void OnMinutePassed ( DateTime time ) {
+        public Task OnMinutePassed ( DateTime time ) {
+            return Task.CompletedTask;
         }
 
-        public void OnHourPassed ( DateTime time ) {
+        public Task OnHourPassed ( DateTime time ) {
             SaveEvents ();
+            return Task.CompletedTask;
         }
 
-        public void OnDayPassed ( DateTime time ) {
+        public Task OnDayPassed ( DateTime time ) {
+            return Task.CompletedTask;
         }
 
         [Serializable]
@@ -167,7 +172,7 @@ namespace DiscordCthulhu {
             argumentNumber = 3;
         }
 
-        public override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
+        public override Task ExecuteCommand ( SocketMessage e, List<string> arguments ) {
             base.ExecuteCommand (e, arguments);
             if (AllowExecution (e, arguments)) {
                 DateTime parse;
@@ -178,6 +183,7 @@ namespace DiscordCthulhu {
                     Program.messageControl.SendMessage (e, "Failed to create event, could not parse time.");
                 }
             }
+            return Task.CompletedTask;
         }
     }
 
@@ -191,7 +197,7 @@ namespace DiscordCthulhu {
             argumentNumber = 1;
         }
 
-        public override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
+        public override Task ExecuteCommand ( SocketMessage e, List<string> arguments ) {
             base.ExecuteCommand (e, arguments);
             if (AllowExecution (e, arguments)) {
                 AutomatedEventHandling.Event eve = AutomatedEventHandling.FindEvent (arguments[0]);
@@ -204,6 +210,7 @@ namespace DiscordCthulhu {
                     AutomatedEventHandling.SaveEvents ();
                 }
             }
+            return Task.CompletedTask;
         }
     }
 
@@ -217,7 +224,7 @@ namespace DiscordCthulhu {
             argumentNumber = 4;
         }
 
-        public override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
+        public override Task ExecuteCommand ( SocketMessage e, List<string> arguments ) {
             base.ExecuteCommand (e, arguments);
             if (AllowExecution (e, arguments)) {
                 AutomatedEventHandling.Event eve = AutomatedEventHandling.FindEvent (arguments[0]);
@@ -238,6 +245,7 @@ namespace DiscordCthulhu {
                     }
                 }
             }
+            return Task.CompletedTask;
         }
     }
 
@@ -250,7 +258,7 @@ namespace DiscordCthulhu {
             argumentNumber = 1;
         }
 
-        public override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
+        public override Task ExecuteCommand ( SocketMessage e, List<string> arguments ) {
             base.ExecuteCommand (e, arguments);
             if (AllowExecution (e, arguments)) {
                 AutomatedEventHandling.Event eve = AutomatedEventHandling.FindEvent (arguments[0]);
@@ -263,6 +271,7 @@ namespace DiscordCthulhu {
                     Program.messageControl.SendMessage (e, "Failed to join event - event by name **" + arguments[0] + "** could not be found.");
                 }
             }
+            return Task.CompletedTask;
         }
     }
 
@@ -275,7 +284,7 @@ namespace DiscordCthulhu {
             argumentNumber = 1;
         }
 
-        public override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
+        public override Task ExecuteCommand ( SocketMessage e, List<string> arguments ) {
             base.ExecuteCommand (e, arguments);
             if (AllowExecution (e, arguments)) {
                 AutomatedEventHandling.Event eve = AutomatedEventHandling.FindEvent (arguments[0]);
@@ -288,6 +297,7 @@ namespace DiscordCthulhu {
                     Program.messageControl.SendMessage (e, "Failed to leave event - event by name **" + arguments[0] + "** could not be found.");
                 }
             }
+            return Task.CompletedTask;
         }
     }
 
@@ -299,7 +309,7 @@ namespace DiscordCthulhu {
             argumentNumber = 0;
         }
 
-        public override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
+        public override Task ExecuteCommand ( SocketMessage e, List<string> arguments ) {
             base.ExecuteCommand (e, arguments);
             if (AllowExecution (e, arguments)) {
                 string combinedEvents = "Upcoming events are: ```";
@@ -314,6 +324,7 @@ namespace DiscordCthulhu {
                 combinedEvents += "```";
                 Program.messageControl.SendMessage (e, combinedEvents);
             }
+            return Task.CompletedTask;
         }
     }
 
@@ -326,7 +337,7 @@ namespace DiscordCthulhu {
             argumentNumber = 1;
         }
 
-        public override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
+        public override Task ExecuteCommand ( SocketMessage e, List<string> arguments ) {
             base.ExecuteCommand (e, arguments);
             if (AllowExecution (e, arguments)) {
                 AutomatedEventHandling.Event locEvent = AutomatedEventHandling.FindEvent (arguments[0]);
@@ -347,6 +358,7 @@ namespace DiscordCthulhu {
                     Program.messageControl.SendMessage (e, "Failed to show event member list - event **" + arguments[0] + "** not found.");
                 }
             }
+            return Task.CompletedTask;
         }
     }
 }

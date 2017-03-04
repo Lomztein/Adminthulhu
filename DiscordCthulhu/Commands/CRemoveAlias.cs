@@ -16,7 +16,7 @@ namespace DiscordCthulhu {
             help = "Removes the alias " + argHelp + " from your collection.";
         }
 
-        public override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
+        public override Task ExecuteCommand ( SocketMessage e, List<string> arguments ) {
             base.ExecuteCommand (e, arguments);
             if (AllowExecution (e, arguments)) {
                 if (!Program.aliasCollection.RemoveAlias (e.Author.Username, arguments[0])) {
@@ -25,6 +25,7 @@ namespace DiscordCthulhu {
                     Program.messageControl.SendMessage(e, arguments[0] + " removed from your collection of aliasses.");
                 }
             }
+            return Task.CompletedTask;
         }
     }
 }

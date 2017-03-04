@@ -26,7 +26,7 @@ namespace DiscordCthulhu {
             argumentNumber = 0;
         }
 
-        public override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
+        public override Task ExecuteCommand ( SocketMessage e, List<string> arguments ) {
             base.ExecuteCommand (e, arguments);
             if (AllowExecution (e, arguments)) {
 
@@ -37,21 +37,22 @@ namespace DiscordCthulhu {
 
                         if (!vc.lockable) {
                             Program.messageControl.SendMessage (e.Channel, "Error - cannot lock this channel due to *reasons*.");
-                            return;
+                            return Task.CompletedTask;
                         }
 
                         vc.Lock (e.Author as SocketGuildUser, true);
 
                         Program.messageControl.SendMessage (e.Channel, "Succesfully locked voice channel **" + vc.name + "**.");
-                        return;
+                        return Task.CompletedTask;
                     }
 
                     Program.messageControl.SendMessage (e.Channel, "Error - voice channel **" + vc.name + "** already locked.");
-                    return;
+                    return Task.CompletedTask;
                 }
 
                 Program.messageControl.SendMessage (e.Channel, "Failed to lock channel, are you even in one?");
             }
+            return Task.CompletedTask;
         }
     }
 
@@ -64,7 +65,7 @@ namespace DiscordCthulhu {
             argumentNumber = 0;
         }
 
-        public override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
+        public override Task ExecuteCommand ( SocketMessage e, List<string> arguments ) {
             base.ExecuteCommand (e, arguments);
             if (AllowExecution (e, arguments)) {
 
@@ -76,19 +77,23 @@ namespace DiscordCthulhu {
                         if (vc.lockerID == e.Author.Id) {
                             vc.Unlock (true);
                             Program.messageControl.SendMessage (e.Channel, "Succesfully unlocked voice channel **" + vc.name + "**.");
-                            return;
+                            return Task.CompletedTask;
+
                         }
 
                         Program.messageControl.SendMessage (e.Channel, "Only the person who locked this channel can do that, which is " + vc.GetLocker ().Mention);
-                        return;
+                        return Task.CompletedTask;
+
                     }
 
                     Program.messageControl.SendMessage (e.Channel, "Failed to unlock voice channel **" + vc.name + "** - It is not unlocked.");
-                    return;
+                    return Task.CompletedTask;
+
                 }
 
                 Program.messageControl.SendMessage (e.Channel, "Failed to unlock channel, are you even in one?");
             }
+            return Task.CompletedTask;
         }
     }
 
@@ -102,7 +107,7 @@ namespace DiscordCthulhu {
             argumentNumber = 1;
         }
 
-        public override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
+        public override Task ExecuteCommand ( SocketMessage e, List<string> arguments ) {
             base.ExecuteCommand (e, arguments);
             if (AllowExecution (e, arguments)) {
 
@@ -110,7 +115,8 @@ namespace DiscordCthulhu {
                 SocketGuildUser user = Program.FindUserByName ((e.Channel as SocketGuildChannel).Guild, arguments[0]);
                 if (user == null) {
                     Program.messageControl.SendMessage (e.Channel, "Failed to invite - User **" + arguments[0] + "** couldn't be found on this server.");
-                    return;
+                    return Task.CompletedTask;
+
                 }
 
                 if (channel != null) {
@@ -118,15 +124,18 @@ namespace DiscordCthulhu {
                     if (vc.IsLocked ()) {
                         vc.InviteUser (e.Author as SocketGuildUser, user);
                         Program.messageControl.SendMessage (e.Channel, "User **" + Program.GetUserName (user) + "** succesfully invited.");
-                        return;
+                        return Task.CompletedTask;
+
                     }
 
                     Program.messageControl.SendMessage (e.Channel, "The channel isn't locked, but I'm sure " + Program.GetUserName (user) + " would love to join anyways.");
-                    return;
+                    return Task.CompletedTask;
+
                 }
 
                 Program.messageControl.SendMessage (e.Channel, "Failed to invite, are you even in a channel?");
             }
+            return Task.CompletedTask;
         }
     }
 
@@ -139,7 +148,7 @@ namespace DiscordCthulhu {
             argumentNumber = 0;
         }
 
-        public override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
+        public override Task ExecuteCommand ( SocketMessage e, List<string> arguments ) {
             base.ExecuteCommand (e, arguments);
             if (AllowExecution (e, arguments)) {
 
@@ -154,15 +163,18 @@ namespace DiscordCthulhu {
                         }
                         reply += "```";
                         Program.messageControl.SendMessage (e.Channel, "Users allowed on your locked channel:\n" + reply);
-                        return;
+                        return Task.CompletedTask;
+
                     }
 
                     Program.messageControl.SendMessage (e.Channel, "Error - The channel isn't locked.");
-                    return;
+                    return Task.CompletedTask;
+
                 }
 
                 Program.messageControl.SendMessage (e.Channel, "Error - Are you even in a channel?");
             }
+            return Task.CompletedTask;
         }
     }
 
@@ -176,7 +188,7 @@ namespace DiscordCthulhu {
             argumentNumber = 1;
         }
 
-        public override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
+        public override Task ExecuteCommand ( SocketMessage e, List<string> arguments ) {
             base.ExecuteCommand (e, arguments);
             if (AllowExecution (e, arguments)) {
 
@@ -184,7 +196,8 @@ namespace DiscordCthulhu {
                 SocketGuildUser user = Program.FindUserByName ((e.Channel as SocketGuildChannel).Guild, arguments[0]);
                 if (user == null) {
                     Program.messageControl.SendMessage (e.Channel, "Error - User not found.");
-                    return;
+                    return Task.CompletedTask;
+
                 }
 
                 if (channel != null) {
@@ -194,24 +207,29 @@ namespace DiscordCthulhu {
                         if (vc.lockerID == e.Author.Id) {
                             if (user.GuildPermissions.ManageChannels) {
                                 Program.messageControl.SendMessage (e.Channel, "Nice try, but you can't kick admins >:D.");
-                                return;
+                                return Task.CompletedTask;
+
                             }
                             vc.Kick (user);
                             Program.messageControl.SendMessage (e.Channel, "User **" + Program.GetUserName (user) + "** succesfully kicked.");
                             Program.messageControl.SendMessage (user, "Sorry man, but you have been kicked from voice channel **" + vc.name + "**.");
-                            return;
+                            return Task.CompletedTask;
+
                         }
 
                         Program.messageControl.SendMessage (e.Channel, "Only the person who locked this channel can do that, which is " + vc.GetLocker ().Mention);
-                        return;
+                        return Task.CompletedTask;
+
                     }
 
                     Program.messageControl.SendMessage (e.Channel, "Error - The channel isn't locked.");
-                    return;
+                    return Task.CompletedTask;
+
                 }
 
                 Program.messageControl.SendMessage (e.Channel, "Error - Are you even in a channel?");
             }
+            return Task.CompletedTask;
         }
     }
 }

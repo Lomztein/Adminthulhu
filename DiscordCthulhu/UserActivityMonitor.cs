@@ -24,14 +24,14 @@ namespace DiscordCthulhu {
         private static ulong presentUserRole = 273017481600434186;
         private static ulong inactiveUserRole = 273017511468072960;
 
-        public void Initialize ( DateTime time ) {
+        public async Task Initialize ( DateTime time ) {
             userActivity = SerializationIO.LoadObjectFromFile<Dictionary<ulong, DateTime>> (Program.dataPath + activityFileName + Program.gitHubIgnoreType);
             if (userActivity == null)
                 userActivity = new Dictionary<ulong, DateTime> ();
-            Booted ();
+            await Booted ();
         }
 
-        async void Booted () {
+        async Task Booted () {
             while (Program.GetServer () == null) {
                 await Task.Delay (1000);
             }
@@ -61,7 +61,7 @@ namespace DiscordCthulhu {
                 return Task.CompletedTask;
             };
 
-            OnDayPassed (DateTime.Now);
+            await OnDayPassed (DateTime.Now);
         }
 
         public static void RecordActivity ( ulong userID, DateTime time, bool single ) {
@@ -82,7 +82,7 @@ namespace DiscordCthulhu {
             }
         }
 
-        public void OnDayPassed ( DateTime time ) {
+        public Task OnDayPassed ( DateTime time ) {
             SocketRole activeRole = Program.GetServer ().GetRole (activeUserRole);
             SocketRole presentRole = Program.GetServer ().GetRole (presentUserRole);
             SocketRole inactiveRole = Program.GetServer ().GetRole (inactiveUserRole);
@@ -92,9 +92,10 @@ namespace DiscordCthulhu {
             }
 
             SerializationIO.SaveObjectToFile (Program.dataPath + activityFileName + Program.gitHubIgnoreType, userActivity);
+            return Task.CompletedTask;
         }
 
-        private static async void UpdateUser ( ulong id, SocketRole activeRole, SocketRole presentRole, SocketRole inactiveRole ) {
+        private static async Task UpdateUser ( ulong id, SocketRole activeRole, SocketRole presentRole, SocketRole inactiveRole ) {
             DateTime time = DateTime.Now;
 
             if (lastUserUpdate.ContainsKey (id) && time < lastUserUpdate[id])
@@ -142,13 +143,16 @@ namespace DiscordCthulhu {
             }
         }
 
-        public void OnHourPassed ( DateTime time ) {
+        public Task OnHourPassed ( DateTime time ) {
+            return Task.CompletedTask;
         }
 
-        public void OnMinutePassed ( DateTime time ) {
+        public Task OnMinutePassed ( DateTime time ) {
+            return Task.CompletedTask;
         }
 
-        public void OnSecondPassed ( DateTime time ) {
+        public Task OnSecondPassed ( DateTime time ) {
+            return Task.CompletedTask;
         }
     }
 }

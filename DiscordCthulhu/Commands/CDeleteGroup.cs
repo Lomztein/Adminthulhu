@@ -18,7 +18,7 @@ namespace DiscordCthulhu {
             isAdminOnly = true;
         }
 
-        public override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
+        public override Task ExecuteCommand ( SocketMessage e, List<string> arguments ) {
             base.ExecuteCommand (e, arguments);
             if (AllowExecution (e, arguments)) {
 
@@ -30,6 +30,7 @@ namespace DiscordCthulhu {
                     Program.messageControl.SendMessage (e, "Group \"" + arguments[0] + "\" not found.");
                 }
             }
+            return Task.CompletedTask;
         }
     }
 }

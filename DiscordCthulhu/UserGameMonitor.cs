@@ -100,7 +100,7 @@ namespace DiscordCthulhu {
                 argumentNumber = 1;
             }
 
-            public override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
+            public override Task ExecuteCommand ( SocketMessage e, List<string> arguments ) {
                 base.ExecuteCommand (e, arguments);
                 if (AllowExecution (e, arguments)) {
                     List<SocketGuildUser> foundUsers = UserGameMonitor.FindUsersWithGame (arguments[0]);
@@ -115,6 +115,7 @@ namespace DiscordCthulhu {
                         Program.messageControl.SendMessage (e, total);
                     }
                 }
+            return Task.CompletedTask;
             }
         }
     }
@@ -128,12 +129,13 @@ namespace DiscordCthulhu {
             argumentNumber = 1;
         }
 
-        public override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
+        public override Task ExecuteCommand ( SocketMessage e, List<string> arguments ) {
             base.ExecuteCommand (e, arguments);
             if (AllowExecution (e, arguments)) {
                 string result = UserGameMonitor.AddGame ((e.Author as SocketGuildUser), arguments[0]);
                 Program.messageControl.SendMessage (e, result);
             }            
+            return Task.CompletedTask;
         }
     }
 
@@ -146,12 +148,13 @@ namespace DiscordCthulhu {
             argumentNumber = 1;
         }
 
-        public override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
+        public override Task ExecuteCommand ( SocketMessage e, List<string> arguments ) {
             base.ExecuteCommand (e, arguments);
             if (AllowExecution (e, arguments)) {
                 string result = UserGameMonitor.RemoveGame ((e.Author as SocketGuildUser), arguments[0]);
                 Program.messageControl.SendMessage (e, result);
             }
+            return Task.CompletedTask;
         }
     }
 
@@ -163,7 +166,7 @@ namespace DiscordCthulhu {
             argumentNumber = 0;
         }
 
-        public override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
+        public override Task ExecuteCommand ( SocketMessage e, List<string> arguments ) {
             base.ExecuteCommand (e, arguments);
             if (AllowExecution (e, arguments)) {
 
@@ -197,6 +200,7 @@ namespace DiscordCthulhu {
                 all += "```";
                 Program.messageControl.SendMessage (e, all);
             }
+            return Task.CompletedTask;
         }
     }
 }

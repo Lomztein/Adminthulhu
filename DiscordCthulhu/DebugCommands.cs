@@ -25,7 +25,7 @@ namespace DiscordCthulhu {
                 argumentNumber = 1;
             }
 
-            public async override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
+            public async override Task ExecuteCommand ( SocketMessage e, List<string> arguments ) {
                 base.ExecuteCommand (e, arguments);
                 if (AllowExecution (e, arguments)) {
                     ulong parse;

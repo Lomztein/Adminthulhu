@@ -81,7 +81,7 @@ namespace DiscordCthulhu {
                 argumentNumber = 1;
             }
 
-            public override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
+            public override Task ExecuteCommand ( SocketMessage e, List<string> arguments ) {
                 base.ExecuteCommand (e, arguments);
                 if (AllowExecution (e, arguments)) {
                     int number;
@@ -92,6 +92,7 @@ namespace DiscordCthulhu {
                         Program.messageControl.SendMessage (e, "Failed to change event remind timespan");
                     }
                 }
+            return Task.CompletedTask;
             }
         }
 
@@ -105,7 +106,7 @@ namespace DiscordCthulhu {
                 argumentNumber = 1;
             }
 
-            public override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
+            public override Task ExecuteCommand ( SocketMessage e, List<string> arguments ) {
                 base.ExecuteCommand (e, arguments);
                 if (AllowExecution (e, arguments)) {
                     DateTime parse;
@@ -116,6 +117,7 @@ namespace DiscordCthulhu {
                         Program.messageControl.SendMessage (e, "Failed to set birthday - could not parse date.");
                     }
                 }
+            return Task.CompletedTask;
             }
         }
 

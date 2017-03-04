@@ -16,7 +16,7 @@ namespace DiscordCthulhu {
             argumentNumber = 0;
         }
 
-        public override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
+        public override Task ExecuteCommand ( SocketMessage e, List<string> arguments ) {
             base.ExecuteCommand (e, arguments);
             if (AllowExecution (e, arguments)) {
                 string[] deathItself = SerializationIO.LoadTextFile (Program.dataPath + "theentirebeemoviescript.txt");
@@ -28,6 +28,7 @@ namespace DiscordCthulhu {
 
                 Program.messageControl.SendMessage (e, complete);
             }
+            return Task.CompletedTask;
         }
     }
 }

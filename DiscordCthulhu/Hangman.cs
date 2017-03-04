@@ -110,7 +110,7 @@ namespace DiscordCthulhu {
                 argumentNumber = 1;
             }
 
-            public override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
+            public override Task ExecuteCommand ( SocketMessage e, List<string> arguments ) {
                 base.ExecuteCommand (e, arguments);
                 if (AllowExecution (e, arguments)) {
                     if (Hangman.currentGame == null) {
@@ -134,6 +134,7 @@ namespace DiscordCthulhu {
                         Program.messageControl.SendMessage (e, "Failed to start new game of Hangman - a game is already in progress!");
                     }
                 }
+            return Task.CompletedTask;
             }
         }
 
@@ -146,7 +147,7 @@ namespace DiscordCthulhu {
                 argumentNumber = 1;
             }
 
-            public override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
+            public override Task ExecuteCommand ( SocketMessage e, List<string> arguments ) {
                 base.ExecuteCommand (e, arguments);
                 if (AllowExecution (e, arguments)) {
                     if (Hangman.currentGame == null) {
@@ -159,6 +160,7 @@ namespace DiscordCthulhu {
                         }
                     }
                 }
+            return Task.CompletedTask;
             }
         }
 
@@ -170,7 +172,7 @@ namespace DiscordCthulhu {
                 argumentNumber = 0;
             }
 
-            public override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
+            public override Task ExecuteCommand ( SocketMessage e, List<string> arguments ) {
                 base.ExecuteCommand (e, arguments);
                 if (AllowExecution (e, arguments)) {
                     if (Hangman.currentGame == null) {
@@ -184,6 +186,7 @@ namespace DiscordCthulhu {
                         Program.messageControl.SendMessage (e, combined);
                     }
                 }
+            return Task.CompletedTask;
             }
         }
 
@@ -195,7 +198,7 @@ namespace DiscordCthulhu {
                 argumentNumber = 0;
             }
 
-            public override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
+            public override Task ExecuteCommand ( SocketMessage e, List<string> arguments ) {
                 base.ExecuteCommand (e, arguments);
                 if (AllowExecution (e, arguments)) {
                     if (Hangman.currentGame == null) {
@@ -204,6 +207,7 @@ namespace DiscordCthulhu {
                         Program.messageControl.SendMessage (e, "Current progress: `" + Hangman.currentGame.progress + "`");
                     }
                 }
+                return Task.CompletedTask;
             }
         }
     }

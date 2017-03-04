@@ -64,7 +64,7 @@ namespace DiscordCthulhu {
             allVoiceChannels.Add (channel.id, channel);
         }
 
-        public static async void UpdateVoiceChannel ( SocketVoiceChannel voice ) {
+        public static async Task UpdateVoiceChannel ( SocketVoiceChannel voice ) {
             Game highestGame = new Game ("", "", StreamType.NotStreaming);
 
             if (voice != null && allVoiceChannels.ContainsKey (voice.Id)) {
@@ -208,7 +208,7 @@ namespace DiscordCthulhu {
             return true;
         }
 
-        public static async void CheckFullAndAddIf (SocketGuild server) {
+        public static async Task CheckFullAndAddIf (SocketGuild server) {
             IEnumerable<VoiceChannel> channels = allVoiceChannels.Values.ToList ();
             int count = channels.Count ();
 

@@ -17,7 +17,7 @@ namespace DiscordCthulhu {
             argumentNumber = 1;
         }
 
-        public override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
+        public override Task ExecuteCommand ( SocketMessage e, List<string> arguments ) {
             base.ExecuteCommand (e, arguments);
             if (AllowExecution (e, arguments)) {
 
@@ -31,6 +31,7 @@ namespace DiscordCthulhu {
                     }
                 }
             }
+            return Task.CompletedTask;
         }
     }
 }

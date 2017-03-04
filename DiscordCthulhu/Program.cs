@@ -68,7 +68,7 @@ namespace DiscordCthulhu {
 
         public static ControlPanel controlPanel = null;
 
-        public async void Start (string[] args) {
+        public async Task Start (string[] args) {
 
             // Linux specific test
             if (args.Length > 0) {
@@ -86,7 +86,7 @@ namespace DiscordCthulhu {
             aliasCollection = AliasCollection.Load ();
             scoreCollection.scores = ScoreCollection.Load ();
             playerGroups = PlayerGroups.Load ();
-            //clock = new Clock ();
+            clock = new Clock ();
 
             discordClient = new DiscordSocketClient ();
             messageControl = new MessageControl();
@@ -113,16 +113,6 @@ namespace DiscordCthulhu {
 
                         FindAndExecuteCommand (e, command, arguments, commands);
                     }
-                } else if (e.Author == discordClient.CurrentUser) {
-                    if (messageControl.messages.Count > 0) {
-                        foreach (MessageTimer messageTimer in messageControl.messages) {
-                            if (messageTimer.message == e.Content) {
-                                ChatLogger.Log ("Removed!");
-                                messageControl.RemoveMessageTimer (messageTimer);
-                                break;
-                            }
-                        }
-                    }
                 }
 
                 FindPhraseAndRespond (e);
@@ -135,7 +125,7 @@ namespace DiscordCthulhu {
                 return Task.CompletedTask;
             };
 
-            discordClient.UserJoined += ( e ) => {
+            discordClient.UserJoined += async ( e ) => {
                 messageControl.SendMessage (GetMainChannel (e.Guild) as SocketTextChannel, "**" + e.Username + "** has joined this server. Bid them welcome or murder them in cold blood, it's really up to you.");
 
                 string[] welcomeMessage = SerializationIO.LoadTextFile (dataPath + "welcomemessage" + gitHubIgnoreType);
@@ -144,9 +134,7 @@ namespace DiscordCthulhu {
                     combined += welcomeMessage[i] + "\n";
                 }
 
-                messageControl.SendMessage (e, combined);
-
-                return Task.CompletedTask;
+                await messageControl.SendMessage (e, combined);
             };
 
             discordClient.UserLeft += ( e ) => {
@@ -154,7 +142,8 @@ namespace DiscordCthulhu {
                 return Task.CompletedTask;
             };
 
-            discordClient.UserUpdated += ( before, after ) => {
+            discordClient.UserUpdated += async ( before, after ) => {
+                Console.WriteLine ("User " + before.Username + " updated..");
                 SocketGuildUser beforeUser = (before as SocketGuildUser);
                 SocketGuildUser afterUser = (after as SocketGuildUser);
                 SocketGuild guild = beforeUser.Guild;
@@ -167,17 +156,17 @@ namespace DiscordCthulhu {
                         ChatLogger.Log ("Voice channel change detected with user " + before.Username);
 
                         AutomatedVoiceChannels.AddMissingChannels (guild);
-                        AutomatedVoiceChannels.CheckFullAndAddIf (guild);
+                        await AutomatedVoiceChannels.CheckFullAndAddIf (guild);
                         AutomatedVoiceChannels.RemoveLeftoverChannels (guild);
                     }
 
-                    AutomatedVoiceChannels.UpdateVoiceChannel (beforeUser.VoiceChannel);
-                    AutomatedVoiceChannels.UpdateVoiceChannel (afterUser.VoiceChannel);
+                    await AutomatedVoiceChannels.UpdateVoiceChannel (beforeUser.VoiceChannel);
+                    await AutomatedVoiceChannels.UpdateVoiceChannel (afterUser.VoiceChannel);
                 }
 
                 SocketGuildChannel channel = GetMainChannel (afterUser.Guild);
                 if (channel == null)
-                    return Task.CompletedTask;
+                    return;
 
                 if (beforeUser.Username != afterUser.Username) {
                     messageControl.SendMessage (channel as SocketTextChannel, "**"+ GetUserUpdateName (beforeUser, afterUser, true) + "** has changed their name to **" + afterUser.Username + "**");
@@ -186,8 +175,6 @@ namespace DiscordCthulhu {
                 if (beforeUser.Nickname != afterUser.Nickname) {
                     messageControl.SendMessage (channel as SocketTextChannel, "**" + GetUserUpdateName (beforeUser, afterUser, true) + "** has changed their nickname to **" + GetUserUpdateName (beforeUser, afterUser, false) + "**");
                 }
-
-                return Task.CompletedTask;
             };
 
             discordClient.UserBanned += ( e, guild ) => {
@@ -243,7 +230,7 @@ namespace DiscordCthulhu {
         }   
 
         private static int maxTries = 5;
-        public static async void SecureAddRole (SocketGuildUser user, SocketRole role) {
+        public static async Task SecureAddRole (SocketGuildUser user, SocketRole role) {
             int tries = 0;
             while (!user.Roles.Contains (role)) {
                 if (tries > maxTries) {
@@ -265,7 +252,7 @@ namespace DiscordCthulhu {
             return result;
         }
 
-        public static async void SecureRemoveRole ( SocketGuildUser user, SocketRole role ) {
+        public static async Task SecureRemoveRole ( SocketGuildUser user, SocketRole role ) {
             int tries = 0;
             while (user.Roles.Contains (role)) {
                 if (tries > maxTries) {

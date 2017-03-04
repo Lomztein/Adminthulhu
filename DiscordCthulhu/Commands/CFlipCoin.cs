@@ -16,7 +16,7 @@ namespace DiscordCthulhu {
             argumentNumber = 0;
         }
 
-        public override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
+        public override Task ExecuteCommand ( SocketMessage e, List<string> arguments ) {
             base.ExecuteCommand (e, arguments);
             if (AllowExecution (e, arguments)) {
                 Random random = new Random ();
@@ -26,6 +26,7 @@ namespace DiscordCthulhu {
                     Program.messageControl.SendMessage (e, "Your coin flipped to show tails.");
                 }
             }
+            return Task.CompletedTask;
         }
     }
 }

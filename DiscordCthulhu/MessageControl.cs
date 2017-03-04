@@ -8,38 +8,9 @@ using System.Threading.Tasks;
 using Discord.WebSocket;
 using Discord.Rest;
 
-namespace DiscordCthulhu
-{
-    class MessageTimer
-    {
-        public string message { get; }
-        private Timer timer;
-        SocketMessage e;
+namespace DiscordCthulhu {
 
-        public MessageTimer(SocketMessage e, string message, int delay)
-        {
-            this.message = message;
-            this.e = e;
-            timer = new Timer(delay * 1000);
-            timer.Elapsed += Timer_Elapsed;
-            timer.Start();
-        }
-
-        private async void Timer_Elapsed(object sender, ElapsedEventArgs e)
-        {
-            ChatLogger.Log("Send message timer: "  + message);
-            await this.e.Channel.SendMessageAsync(message);
-        }
-
-        public void StopTimer()
-        {
-            timer.Stop();
-        }
-    }
-
-    class MessageControl
-    {
-        public List<MessageTimer> messages = new List<MessageTimer>();
+    class MessageControl {
         public static int maxCharacters = 2000;
 
         // Honestly I have no clue if this works properly, as it is kind of difficult to test out.
@@ -99,12 +70,6 @@ namespace DiscordCthulhu
             return Task.CompletedTask;
         }
 
-        public void RemoveMessageTimer(MessageTimer messageTimer)
-        {
-            messageTimer.StopTimer();
-            messages.Remove(messageTimer);
-        }
-
         /// <summary>
         /// Sends a message lol.
         /// </summary>
@@ -125,7 +90,7 @@ namespace DiscordCthulhu
             return message;
         }
 
-        public async void SendMessage (SocketGuildUser e, string message) {
+        public async Task SendMessage (SocketGuildUser e, string message) {
             string[] split = SplitMessage (message);
 
             Task<RestDMChannel> channel = e.CreateDMChannelAsync ();
@@ -136,7 +101,7 @@ namespace DiscordCthulhu
             }
         }
 
-        public async void AsyncSend (ISocketMessageChannel e, string message) {
+        public async Task AsyncSend (ISocketMessageChannel e, string message) {
             ChatLogger.Log ("Sending a message.");
             if (message.Length > 0) {
                 Task<RestUserMessage> messageTask = e.SendMessageAsync (message);
@@ -144,7 +109,7 @@ namespace DiscordCthulhu
             }
         }
 
-        public async void SendImage (SocketTextChannel e, string message, string imagePath) {
+        public async Task SendImage (SocketTextChannel e, string message, string imagePath) {
             ChatLogger.Log ("Sending an image!");
             try {
                 await e.SendFileAsync (imagePath, message);
@@ -155,7 +120,7 @@ namespace DiscordCthulhu
 
         public Dictionary<ulong, List<Action>> askedUsers = new Dictionary<ulong, List<Action>>();
 
-        public async void AskQuestion (SocketGuildUser user, string question, Action ifYes) {
+        public async Task AskQuestion (SocketGuildUser user, string question, Action ifYes) {
             SendMessage (user, question + " (y/n)");
 
             if (!askedUsers.ContainsKey (user.Id)) {

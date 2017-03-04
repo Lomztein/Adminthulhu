@@ -17,7 +17,7 @@ namespace DiscordCthulhu {
             isAdminOnly = true;
         }
 
-        public override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
+        public override Task ExecuteCommand ( SocketMessage e, List<string> arguments ) {
             base.ExecuteCommand (e, arguments);
             if (AllowExecution (e, arguments)) {
 
@@ -27,6 +27,7 @@ namespace DiscordCthulhu {
                     Program.messageControl.SendMessage (e, "Unable to create group: Group by that name already exists.");
                 }
             }
+            return Task.CompletedTask;
         }
 
     }

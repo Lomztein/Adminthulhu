@@ -16,7 +16,7 @@ namespace DiscordCthulhu {
             argumentNumber = 0;
         }
 
-        public override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
+        public override Task ExecuteCommand ( SocketMessage e, List<string> arguments ) {
             base.ExecuteCommand (e, arguments);
             if (AllowExecution (e, arguments)) {
                 AliasCollection.User user = Program.aliasCollection.FindUsersByAlias (e.Author.Username)[0];
@@ -26,6 +26,7 @@ namespace DiscordCthulhu {
                     Program.messageControl.SendMessage(e, "Couldn't find any aliasses in your name.");
                 }
             }
+            return Task.CompletedTask;
         }
     }
 }

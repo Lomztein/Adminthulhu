@@ -27,16 +27,17 @@ namespace DiscordCthulhu {
             headers.AddRange (additional);
         }
 
-        public void Initialize ( DateTime time ) {
+        public Task Initialize ( DateTime time ) {
             string filePath = Program.dataPath + additionalHeaderPath;
             if (File.Exists (filePath)) {
 
                 string[] additional = SerializationIO.LoadTextFile (filePath);
                 AddHeaders (additional);
             }
+            return Task.CompletedTask;
         }
 
-        public void OnDayPassed ( DateTime time ) {
+        public Task OnDayPassed ( DateTime time ) {
             SocketGuildChannel mainChannel = Program.GetMainChannel (Program.GetServer ());
 
             Random random = new Random ();
@@ -44,15 +45,19 @@ namespace DiscordCthulhu {
 
             string topic = headers[number];
             //mainChannel.ModifyAsync (delegate ( GuildChannelProperties properties ) { properties. = topic; } )); Not yet implemented in 1.0
+            return Task.CompletedTask;
         }
 
-        public void OnHourPassed ( DateTime time ) {
+        public Task OnHourPassed ( DateTime time ) {
+            return Task.CompletedTask;
         }
 
-        public void OnMinutePassed ( DateTime time ) {
+        public Task OnMinutePassed ( DateTime time ) {
+            return Task.CompletedTask;
         }
 
-        public void OnSecondPassed ( DateTime time ) {
+        public Task OnSecondPassed ( DateTime time ) {
+            return Task.CompletedTask;
         }
     }
 
@@ -67,7 +72,7 @@ namespace DiscordCthulhu {
             isAdminOnly = true;
         }
 
-        public override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
+        public override Task ExecuteCommand ( SocketMessage e, List<string> arguments ) {
             base.ExecuteCommand (e, arguments);
             if (AllowExecution (e, arguments)) {
                 string filePath = Program.dataPath + AutomatedTextChannels.additionalHeaderPath;
@@ -76,6 +81,8 @@ namespace DiscordCthulhu {
 
                 Program.messageControl.SendMessage (e, "Succesfully added header to list of additional headers!");
             }
+
+            return Task.CompletedTask;
         }
     }
 
@@ -88,7 +95,7 @@ namespace DiscordCthulhu {
             argumentNumber = 0;
         }
 
-        public override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
+        public override Task ExecuteCommand ( SocketMessage e, List<string> arguments ) {
             base.ExecuteCommand (e, arguments);
             if (AllowExecution (e, arguments)) {
                 string complete = "```";
@@ -98,6 +105,7 @@ namespace DiscordCthulhu {
                 complete += "```";
                 Program.messageControl.SendMessage (e, "All current possible headers are: " + complete);
             }
+            return Task.CompletedTask;
         }
     }
 }

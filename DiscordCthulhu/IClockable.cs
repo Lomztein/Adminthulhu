@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 namespace DiscordCthulhu {
     public interface IClockable {
 
-        void Initialize ( DateTime time );
+        Task Initialize ( DateTime time );
 
-        void OnSecondPassed ( DateTime time );
+        Task OnSecondPassed ( DateTime time );
 
-        void OnMinutePassed ( DateTime time );
+        Task OnMinutePassed ( DateTime time );
 
-        void OnHourPassed ( DateTime time );
+        Task OnHourPassed ( DateTime time );
 
-        void OnDayPassed ( DateTime time );
+        Task OnDayPassed ( DateTime time );
     }
 }

@@ -84,10 +84,11 @@ namespace DiscordCthulhu {
             SaveSettings ();
         }
 
-        public virtual void ExecuteCommand ( SocketMessage e, List<string> arguments) {
+        public virtual Task ExecuteCommand ( SocketMessage e, List<string> arguments) {
             if (arguments.Count > 0 && arguments[0] == "?") {
                 Program.messageControl.SendMessage(e, GetHelp ());
             }
+            return Task.CompletedTask;
         }
 
         public bool AllowExecution (SocketMessage e, List<string> args) {

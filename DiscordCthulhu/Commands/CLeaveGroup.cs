@@ -16,7 +16,7 @@ namespace DiscordCthulhu {
             help = "Leaves the group " + argHelp + ".";
         }
 
-        public override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
+        public override Task ExecuteCommand ( SocketMessage e, List<string> arguments ) {
             base.ExecuteCommand (e, arguments);
             if (AllowExecution (e, arguments)) {
 
@@ -30,6 +30,7 @@ namespace DiscordCthulhu {
                     Program.messageControl.SendMessage (e, "Either you are not a member, or that group doesn't exist.");
                 }
             }
+            return Task.CompletedTask;
         }
     }
 }

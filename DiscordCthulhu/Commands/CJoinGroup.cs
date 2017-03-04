@@ -16,7 +16,7 @@ namespace DiscordCthulhu {
             help = "Joins the group " + argHelp + " if it exists on this server.";
         }
 
-        public override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
+        public override Task ExecuteCommand ( SocketMessage e, List<string> arguments ) {
             base.ExecuteCommand (e, arguments);
             if (AllowExecution (e, arguments)) {
 
@@ -26,6 +26,7 @@ namespace DiscordCthulhu {
                     Program.messageControl.SendMessage (e, "Failed to join group: Group doesn't exist on this server.");
                 }
             }
+            return Task.CompletedTask;
         }
     }
 }
