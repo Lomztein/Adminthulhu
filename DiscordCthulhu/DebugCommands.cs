@@ -25,9 +25,9 @@ namespace DiscordCthulhu {
                 argumentNumber = 1;
             }
 
-            public async override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
-                base.ExecuteCommand (e, arguments);
-                if (AllowExecution (e, arguments)) {
+            public override async Task ExecuteCommand ( SocketMessage e, List<string> arguments ) {
+                await base.ExecuteCommand (e, arguments);
+                if (await AllowExecution (e, arguments)) {
                     ulong parse;
                     if (ulong.TryParse (arguments[0], out parse)) {
                         SocketGuildUser user = Program.GetServer ().GetUser (parse);
@@ -35,12 +35,12 @@ namespace DiscordCthulhu {
                             await Task.Delay (1000);
                             UserActivityMonitor.userActivity.Remove (user.Id);
                             UserActivityMonitor.lastUserUpdate.Remove (user.Id);
-                            Program.messageControl.SendMessage (e, "Succesfully reset activity of " + Program.GetUserName (user));
+                            await Program.messageControl.SendMessage (e, "Succesfully reset activity of " + Program.GetUserName (user));
                         }else {
-                            Program.messageControl.SendMessage (e, "Failed to reset - could not find user.");
+                            await Program.messageControl.SendMessage (e, "Failed to reset - could not find user.");
                         }
                     } else {
-                        Program.messageControl.SendMessage (e, "Failed to reset - could not parse user ID.");
+                        await Program.messageControl.SendMessage (e, "Failed to reset - could not parse user ID.");
                     }
                 }
             }

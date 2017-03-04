@@ -16,18 +16,18 @@ namespace DiscordCthulhu {
             help = "Leaves the group " + argHelp + ".";
         }
 
-        public override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
-            base.ExecuteCommand (e, arguments);
-            if (AllowExecution (e, arguments)) {
+        public override async Task ExecuteCommand ( SocketMessage e, List<string> arguments ) {
+            await base.ExecuteCommand (e, arguments);
+            if (await AllowExecution (e, arguments)) {
 
                 PlayerGroups.Group group = Program.playerGroups.FindGroupByName ((e.Channel as SocketGuildChannel).Guild.Name, arguments[0]);
-                if (Program.playerGroups.LeaveGroup (e, arguments[0])) {
-                    Program.messageControl.SendMessage (e, "You have left the group " + arguments[0]);
+                if (await Program.playerGroups.LeaveGroup (e, arguments[0])) {
+                    await Program.messageControl.SendMessage (e, "You have left the group " + arguments[0]);
                     if (group == null) {
-                        Program.messageControl.SendMessage (e, "Group is empty and has been automatically removed.");
+                        await Program.messageControl.SendMessage (e, "Group is empty and has been automatically removed.");
                     }
                 } else {
-                    Program.messageControl.SendMessage (e, "Either you are not a member, or that group doesn't exist.");
+                    await Program.messageControl.SendMessage (e, "Either you are not a member, or that group doesn't exist.");
                 }
             }
         }

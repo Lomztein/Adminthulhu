@@ -9,13 +9,13 @@ namespace DiscordCthulhu {
 
         public Dictionary<string, int> scores;
 
-        public void ChangeScore (string user, int number) {
+        public async Task ChangeScore (string user, int number) {
             if (scores.ContainsKey (user)) {
                 scores[user] += number;
             }else {
                 scores.Add (user, number);
             }
-            Save ();
+            await Save();
         }
 
         public int GetScore (string user) {
@@ -28,12 +28,12 @@ namespace DiscordCthulhu {
 
         // Totally didn't copy paste this part from AliasCollection.cs.
         // Might be good to create a generalized version of load instead.
-        public void Save () {
-            SerializationIO.SaveObjectToFile (Program.dataPath + "scores.dat", scores);
+        public async Task Save () {
+            await SerializationIO.SaveObjectToFile (Program.dataPath + "scores.dat", scores);
         }
 
-        public static Dictionary<string, int> Load () {
-            Dictionary<string, int> collection = SerializationIO.LoadObjectFromFile<Dictionary<string, int>> (Program.dataPath + "scores" + Program.gitHubIgnoreType);
+        public static async Task<Dictionary<string, int>> Load () {
+            Dictionary<string, int> collection = await SerializationIO.LoadObjectFromFile<Dictionary<string, int>> (Program.dataPath + "scores" + Program.gitHubIgnoreType);
             if (collection == null) {
                 return new Dictionary<string, int> ();
             } else {

@@ -31,33 +31,33 @@ namespace DiscordCthulhu {
             return null;
         }
 
-        public bool CreateGroup (SocketMessage e, string groupName) {
+        public async Task<bool> CreateGroup (SocketMessage e, string groupName) {
             SocketGuild guild = (e.Channel as SocketGuildChannel).Guild;
             if (!groups.ContainsKey (guild.Name))
                 groups.Add (guild.Name, new List<Group> ());
 
             if (FindGroupByName (guild.Name, groupName) == null) {
                 groups[guild.Name].Add (new Group (groupName, e.Author.Mention));
-                Save ();
+                await Save();
                 return true;
             }
 
             return false;
         }
 
-        public bool JoinGroup (SocketMessage e, string groupName) {
+        public async Task<bool> JoinGroup (SocketMessage e, string groupName) {
             SocketGuild guild = (e.Channel as SocketGuildChannel).Guild;
             Group group = FindGroupByName (guild.Name, groupName);
             if (!IsUserMember (group, e.Author.Mention) && group != null) {
                 group.AddMember (e.Author.Mention);
-                Save ();
+                await Save();
                 return true;
             }
 
             return false;
         }
 
-        public bool LeaveGroup (SocketMessage e, string groupName) {
+        public async Task<bool> LeaveGroup (SocketMessage e, string groupName) {
             SocketGuild guild = (e.Channel as SocketGuildChannel).Guild;
             Group group = FindGroupByName (guild.Name, groupName);
             if (IsUserMember (group, e.Author.Mention)) {
@@ -66,7 +66,7 @@ namespace DiscordCthulhu {
                 if (group.memberMentions.Count == 0)
                     groups[guild.Name].Remove (group);
 
-                Save ();
+                await Save();
                 return true;
             }
 
@@ -80,8 +80,8 @@ namespace DiscordCthulhu {
             return g.memberMentions.Contains (userMention);
         }
 
-        public static PlayerGroups Load () {
-            PlayerGroups groups = SerializationIO.LoadObjectFromFile<PlayerGroups> (Program.dataPath + "groups" + Program.gitHubIgnoreType);
+        public static async Task<PlayerGroups> Load () {
+            PlayerGroups groups = await SerializationIO.LoadObjectFromFile<PlayerGroups> (Program.dataPath + "groups" + Program.gitHubIgnoreType);
 
             if (groups != null)
                 return groups;
@@ -90,8 +90,8 @@ namespace DiscordCthulhu {
 
         }
 
-        public void Save () {
-            SerializationIO.SaveObjectToFile (Program.dataPath + "groups" + Program.gitHubIgnoreType, this);
+        public async Task Save () {
+            await SerializationIO.SaveObjectToFile (Program.dataPath + "groups" + Program.gitHubIgnoreType, this);
         }
 
         [Serializable]

@@ -20,7 +20,7 @@ namespace DiscordCthulhu {
         /// </summary>
         /// <param name="message"></param>
         /// <returns></returns>
-        public static bool OnMessageRecieved (SocketMessage message) {
+        public static async Task<bool> OnMessageRecieved (SocketMessage message) {
             // First, add the message to the log.
             if (messageLog.ContainsKey (message.Author.Id)) {
                 messageLog[message.Author.Id].Add (new MessageObject (message.Content));
@@ -50,9 +50,9 @@ namespace DiscordCthulhu {
             }
 
             if (userMessages > maxUserMessages || sameMessages > maxSameMessages) {
-                Program.messageControl.SendMessage (message.Author as SocketGuildUser, "Spam detected, please wait a few seconds before sending a message. This is arguably the most useless feature of this bot.");
+                await Program.messageControl.SendMessage (message.Author as SocketGuildUser, "Spam detected, please wait a few seconds before sending a message. This is arguably the most useless feature of this bot.");
                 Program.allowedDeletedMessages.Add (message.Content);
-                message.DeleteAsync ();
+                await message.DeleteAsync ();
                 return true;
             }
 

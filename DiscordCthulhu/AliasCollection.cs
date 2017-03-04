@@ -31,12 +31,12 @@ namespace DiscordCthulhu {
             }
         }
 
-        public void Save () {
-            SerializationIO.SaveObjectToFile (Program.dataPath + "aliasses.dat", this);
+        public async Task Save () {
+            await SerializationIO.SaveObjectToFile (Program.dataPath + "aliasses.dat", this);
         }
 
-        public static AliasCollection Load () {
-            AliasCollection collection = SerializationIO.LoadObjectFromFile<AliasCollection> (Program.dataPath + "aliasses.dat");
+        public static async Task<AliasCollection> Load () {
+            AliasCollection collection = await SerializationIO.LoadObjectFromFile<AliasCollection> (Program.dataPath + "aliasses.dat");
             if (collection == null) {
                 return new AliasCollection ();
             } else {
@@ -73,41 +73,41 @@ namespace DiscordCthulhu {
             return foundUsers;
         }
 
-        public bool AddAlias (string username, string alias) {
+        public async Task<bool> AddAlias (string username, string alias) {
             User user = FindUsersByAlias (username)[0];
             if (user == null) {
                 users.Add (new User (username, alias));
-                Save ();
+                await Save();
                 return true;
             }
             if (user.aliasses.Contains (alias)) {
                 return false;
             } else {
                 user.aliasses.Add (alias);
-                Save ();
+                await Save();
                 return true;
             }
         }
 
-        public bool RemoveAlias (string username, string alias) {
+        public async Task<bool> RemoveAlias (string username, string alias) {
             User user = FindUsersByAlias (username)[0];
             if (user == null) {
                 return false;
             }
             if (user.aliasses.Contains (alias)) {
                 user.aliasses.Remove (alias);
-                Save ();
+                await Save();
                 return true;
             } else {
                 return false;
             }
         }
 
-        public bool RemoveUser (User user) {
+        public async Task<bool> RemoveUser (User user) {
             if (!users.Contains (user))
                 return false;
             users.Remove (user);
-            Save ();
+            await Save();
             return true;
         }
     }

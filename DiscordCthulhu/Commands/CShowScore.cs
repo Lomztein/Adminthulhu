@@ -16,11 +16,11 @@ namespace DiscordCthulhu {
             argumentNumber = 0;
         }
 
-        public override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
+        public override async Task ExecuteCommand ( SocketMessage e, List<string> arguments ) {
 
-            base.ExecuteCommand (e, arguments);
-            if (AllowExecution (e, arguments)) {
-                Program.messageControl.SendMessage (e, "Your current score is " + Program.scoreCollection.GetScore (e.Author.Username));
+            await base.ExecuteCommand (e, arguments);
+            if (await AllowExecution (e, arguments)) {
+                await Program.messageControl.SendMessage (e, "Your current score is " + Program.scoreCollection.GetScore (e.Author.Username));
             }
         }
     }

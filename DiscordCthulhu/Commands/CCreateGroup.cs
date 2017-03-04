@@ -17,14 +17,14 @@ namespace DiscordCthulhu {
             isAdminOnly = true;
         }
 
-        public override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
-            base.ExecuteCommand (e, arguments);
-            if (AllowExecution (e, arguments)) {
+        public override async Task ExecuteCommand ( SocketMessage e, List<string> arguments ) {
+            await base.ExecuteCommand (e, arguments);
+            if (await AllowExecution (e, arguments)) {
 
-                if (Program.playerGroups.CreateGroup (e, arguments[0])) {
-                    Program.messageControl.SendMessage (e, "Group " + arguments[0] + " has been created succesfully.");
+                if (await Program.playerGroups.CreateGroup (e, arguments[0])) {
+                    await Program.messageControl.SendMessage (e, "Group " + arguments[0] + " has been created succesfully.");
                 }else {
-                    Program.messageControl.SendMessage (e, "Unable to create group: Group by that name already exists.");
+                    await Program.messageControl.SendMessage (e, "Unable to create group: Group by that name already exists.");
                 }
             }
         }

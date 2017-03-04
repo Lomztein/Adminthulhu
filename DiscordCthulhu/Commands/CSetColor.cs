@@ -30,9 +30,9 @@ namespace DiscordCthulhu {
             argumentNumber = 1;
         }
 
-        public override async void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
-            base.ExecuteCommand (e, arguments);
-            if (AllowExecution (e, arguments)) {
+        public override async Task ExecuteCommand ( SocketMessage e, List<string> arguments ) {
+            await base.ExecuteCommand (e, arguments);
+            if (await AllowExecution (e, arguments)) {
 
                 if (allowed.Contains (arguments[0].ToUpper ())) {
                     SocketRole[] roles = (e.Channel as SocketGuildChannel).Guild.Roles.Where (x => allowed.Contains(x.Name)).ToArray ();
@@ -52,7 +52,7 @@ namespace DiscordCthulhu {
                     for (int i = 0; i < allowed.Length; i++) {
                         colors += allowed[i] + ", ";
                     }
-                    Program.messageControl.SendMessage(e, failText + colors);
+                    await Program.messageControl.SendMessage(e, failText + colors);
                 }
             }
         }

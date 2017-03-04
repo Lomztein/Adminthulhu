@@ -16,10 +16,10 @@ namespace DiscordCthulhu {
             help = "Finds and shows you the user that has the alias " + argHelp + " in their collection.";
         }
 
-        public override async void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
+        public override async Task ExecuteCommand ( SocketMessage e, List<string> arguments ) {
 
-            base.ExecuteCommand (e, arguments);
-            if (AllowExecution (e, arguments)) {
+            await base.ExecuteCommand (e, arguments);
+            if (await AllowExecution (e, arguments)) {
                 List<AliasCollection.User> users = Program.aliasCollection.FindUsersByAlias (arguments[0]);
                 if (users != null) {
                     foreach (AliasCollection.User user in users)
@@ -42,7 +42,7 @@ namespace DiscordCthulhu {
                 }
                 else
                 {
-                    Program.messageControl.SendMessage(e, "User not found in collection.");
+                    await Program.messageControl.SendMessage(e, "User not found in collection.");
                     //await e.Channel.SendMessage("User not found in collection.");
                 }
 

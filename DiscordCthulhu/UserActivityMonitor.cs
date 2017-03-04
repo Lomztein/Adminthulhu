@@ -24,14 +24,14 @@ namespace DiscordCthulhu {
         private static ulong presentUserRole = 273017481600434186;
         private static ulong inactiveUserRole = 273017511468072960;
 
-        public void Initialize ( DateTime time ) {
-            userActivity = SerializationIO.LoadObjectFromFile<Dictionary<ulong, DateTime>> (Program.dataPath + activityFileName + Program.gitHubIgnoreType);
+        public async Task Initialize ( DateTime time ) {
+            userActivity = await SerializationIO.LoadObjectFromFile<Dictionary<ulong, DateTime>> (Program.dataPath + activityFileName + Program.gitHubIgnoreType);
             if (userActivity == null)
                 userActivity = new Dictionary<ulong, DateTime> ();
-            Booted ();
+            await Booted ();
         }
 
-        async void Booted () {
+        async Task Booted () {
             while (Program.GetServer () == null) {
                 await Task.Delay (1000);
             }
@@ -41,30 +41,27 @@ namespace DiscordCthulhu {
             IEnumerable<SocketGuildUser> users = Program.GetServer ().Users;
             foreach (SocketGuildUser u in users) {
                 if (!userActivity.ContainsKey (u.Id)) {
-                    RecordActivity (u.Id, DateTime.Now.AddMonths (-6), false);
+                    await RecordActivity (u.Id, DateTime.Now.AddMonths (-6), false);
                 }
             }
 
-            Program.discordClient.MessageReceived += ( e ) => {
-                RecordActivity (e.Author.Id, DateTime.Now, true);
-                return Task.CompletedTask;
+            Program.discordClient.MessageReceived += async ( e ) => {
+                await RecordActivity (e.Author.Id, DateTime.Now, true);
             };
 
-            Program.discordClient.UserUpdated += ( before, after ) => {
+            Program.discordClient.UserUpdated += async ( before, after ) => {
                 SocketGuildUser afterUser = after as SocketGuildUser;
                 if ((before as SocketGuildUser).VoiceChannel != afterUser.VoiceChannel) {
                     if (afterUser.VoiceChannel != null) {
-                        RecordActivity (after.Id, DateTime.Now, true);
+                        await RecordActivity (after.Id, DateTime.Now, true);
                     }
                 }
-
-                return Task.CompletedTask;
             };
 
-            OnDayPassed (DateTime.Now);
+            await OnDayPassed (DateTime.Now);
         }
 
-        public static void RecordActivity ( ulong userID, DateTime time, bool single ) {
+        public static async Task RecordActivity ( ulong userID, DateTime time, bool single ) {
             if (userActivity.ContainsKey (userID)) {
                 userActivity[userID] = time;
             } else {
@@ -75,26 +72,26 @@ namespace DiscordCthulhu {
             SocketRole activeRole = Program.GetServer ().GetRole (activeUserRole);
             SocketRole presentRole = Program.GetServer ().GetRole (presentUserRole);
             SocketRole inactiveRole = Program.GetServer ().GetRole (inactiveUserRole);
-            UpdateUser (userID, activeRole, presentRole, inactiveRole);
+            await UpdateUser (userID, activeRole, presentRole, inactiveRole);
 
             if (single) {
-                SerializationIO.SaveObjectToFile (Program.dataPath + activityFileName + Program.gitHubIgnoreType, userActivity);
+                await SerializationIO.SaveObjectToFile (Program.dataPath + activityFileName + Program.gitHubIgnoreType, userActivity);
             }
         }
 
-        public void OnDayPassed ( DateTime time ) {
+        public async Task OnDayPassed ( DateTime time ) {
             SocketRole activeRole = Program.GetServer ().GetRole (activeUserRole);
             SocketRole presentRole = Program.GetServer ().GetRole (presentUserRole);
             SocketRole inactiveRole = Program.GetServer ().GetRole (inactiveUserRole);
 
             foreach (ulong id in userActivity.Keys) {
-                UpdateUser (id, activeRole, presentRole, inactiveRole);
+                await UpdateUser (id, activeRole, presentRole, inactiveRole);
             }
 
-            SerializationIO.SaveObjectToFile (Program.dataPath + activityFileName + Program.gitHubIgnoreType, userActivity);
+            await SerializationIO.SaveObjectToFile (Program.dataPath + activityFileName + Program.gitHubIgnoreType, userActivity);
         }
 
-        private static async void UpdateUser ( ulong id, SocketRole activeRole, SocketRole presentRole, SocketRole inactiveRole ) {
+        private static async Task UpdateUser ( ulong id, SocketRole activeRole, SocketRole presentRole, SocketRole inactiveRole ) {
             DateTime time = DateTime.Now;
 
             if (lastUserUpdate.ContainsKey (id) && time < lastUserUpdate[id])
@@ -142,13 +139,16 @@ namespace DiscordCthulhu {
             }
         }
 
-        public void OnHourPassed ( DateTime time ) {
+        public Task OnHourPassed ( DateTime time ) {
+            return Task.CompletedTask;
         }
 
-        public void OnMinutePassed ( DateTime time ) {
+        public Task OnMinutePassed ( DateTime time ) {
+            return Task.CompletedTask;
         }
 
-        public void OnSecondPassed ( DateTime time ) {
+        public Task OnSecondPassed ( DateTime time ) {
+            return Task.CompletedTask;
         }
     }
 }

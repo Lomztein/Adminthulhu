@@ -13,22 +13,20 @@ namespace DiscordCthulhu {
         public static string fileName = "usergames";
         public const int MAX_GAMES_TO_DISPLAY = 20;
 
-        public static void Initialize () {
-            userGames = SerializationIO.LoadObjectFromFile < Dictionary<ulong, List<string>>> (Program.dataPath + fileName);
+        public static async Task Initialize () {
+            userGames = await SerializationIO.LoadObjectFromFile < Dictionary<ulong, List<string>>> (Program.dataPath + fileName);
             if (userGames == null)
                 userGames = new Dictionary<ulong, List<string>> ();
 
-            Program.discordClient.UserUpdated += ( before, after ) => {
+            Program.discordClient.UserUpdated += async ( before, after ) => {
                 SocketGuildUser user = after as SocketGuildUser;
                 
                 string gameName = user.Game.HasValue ? user.Game.Value.Name.ToString ().ToUpper () : null;
-                AddGame (user, gameName);
-
-                return Task.CompletedTask;
+                await AddGame(user, gameName);
             };
         }
 
-        public static string AddGame (SocketGuildUser user, string gameName) {
+        public static async Task<string> AddGame (SocketGuildUser user, string gameName) {
             string result = "";
             if (gameName != null && gameName != "") {
                 gameName = gameName.ToUpper ();
@@ -52,7 +50,7 @@ namespace DiscordCthulhu {
                 }
 
                 if (doSave)
-                    SerializationIO.SaveObjectToFile (Program.dataPath + fileName, userGames);
+                    await SerializationIO.SaveObjectToFile (Program.dataPath + fileName, userGames);
             }
             return result;
         }
@@ -100,19 +98,19 @@ namespace DiscordCthulhu {
                 argumentNumber = 1;
             }
 
-            public override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
-                base.ExecuteCommand (e, arguments);
-                if (AllowExecution (e, arguments)) {
+            public override async Task ExecuteCommand ( SocketMessage e, List<string> arguments ) {
+                await base.ExecuteCommand (e, arguments);
+                if (await AllowExecution (e, arguments)) {
                     List<SocketGuildUser> foundUsers = UserGameMonitor.FindUsersWithGame (arguments[0]);
                     if (foundUsers.Count == 0) {
-                        Program.messageControl.SendMessage (e, "Sorry, no records of **" + arguments[0] + "** being played were found.");
+                        await Program.messageControl.SendMessage (e, "Sorry, no records of **" + arguments[0] + "** being played were found.");
                     }else {
                         string total = "Here is the list of everyone who've been seen playing **" + arguments[0] + "**:```\n";
                         foreach (SocketGuildUser user in foundUsers) {
                             total += Program.GetUserName (user) + "\n";
                         }
                         total += "```";
-                        Program.messageControl.SendMessage (e, total);
+                        await Program.messageControl.SendMessage (e, total);
                     }
                 }
             }
@@ -128,11 +126,11 @@ namespace DiscordCthulhu {
             argumentNumber = 1;
         }
 
-        public override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
-            base.ExecuteCommand (e, arguments);
-            if (AllowExecution (e, arguments)) {
-                string result = UserGameMonitor.AddGame ((e.Author as SocketGuildUser), arguments[0]);
-                Program.messageControl.SendMessage (e, result);
+        public override async Task ExecuteCommand ( SocketMessage e, List<string> arguments ) {
+            await base.ExecuteCommand (e, arguments);
+            if (await AllowExecution (e, arguments)) {
+                string result = await UserGameMonitor.AddGame ((e.Author as SocketGuildUser), arguments[0]);
+                await Program.messageControl.SendMessage (e, result);
             }            
         }
     }
@@ -146,11 +144,11 @@ namespace DiscordCthulhu {
             argumentNumber = 1;
         }
 
-        public override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
-            base.ExecuteCommand (e, arguments);
-            if (AllowExecution (e, arguments)) {
+        public override async Task ExecuteCommand ( SocketMessage e, List<string> arguments ) {
+            await base.ExecuteCommand (e, arguments);
+            if (await AllowExecution (e, arguments)) {
                 string result = UserGameMonitor.RemoveGame ((e.Author as SocketGuildUser), arguments[0]);
-                Program.messageControl.SendMessage (e, result);
+                await Program.messageControl.SendMessage (e, result);
             }
         }
     }
@@ -163,9 +161,9 @@ namespace DiscordCthulhu {
             argumentNumber = 0;
         }
 
-        public override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
-            base.ExecuteCommand (e, arguments);
-            if (AllowExecution (e, arguments)) {
+        public override async Task ExecuteCommand ( SocketMessage e, List<string> arguments ) {
+            await base.ExecuteCommand (e, arguments);
+            if (await AllowExecution (e, arguments)) {
 
                 string all = "Top " + UserGameMonitor.MAX_GAMES_TO_DISPLAY + " most played games on this server:```\n";
                 Dictionary<string, int> passedGames = new Dictionary<string, int> ();
@@ -195,7 +193,7 @@ namespace DiscordCthulhu {
                         break;
                 }
                 all += "```";
-                Program.messageControl.SendMessage (e, all);
+                await Program.messageControl.SendMessage (e, all);
             }
         }
     }

@@ -27,10 +27,10 @@ namespace DiscordCthulhu {
             }
         }
 
-        public static void DebugLog (string message) {
+        public static async Task DebugLog (string message) {
             Log (message);
             if (Program.GetServer () != null)
-                Program.messageControl.SendMessage (Program.SearchChannel (Program.GetServer (), Program.dumpTextChannelName) as SocketTextChannel, message);
+                await Program.messageControl.SendMessage (Program.SearchChannel (Program.GetServer (), Program.dumpTextChannelName) as SocketTextChannel, message);
         }
     }
 }

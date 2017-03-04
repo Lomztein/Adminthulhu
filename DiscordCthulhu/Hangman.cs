@@ -42,11 +42,11 @@ namespace DiscordCthulhu {
             guessedLetters = new List<char> ();
         }
 
-        public bool GuessLetter (SocketMessage e, char letter) {
+        public async Task<bool> GuessLetter (SocketMessage e, char letter) {
             SocketTextChannel channel = (e.Channel as SocketTextChannel);
-            Program.messageControl.SendMessage (channel, Program.GetUserName (e.Author as SocketGuildUser) + " guessed the letter **" + letter + "**.");
+            await Program.messageControl.SendMessage (channel, Program.GetUserName (e.Author as SocketGuildUser) + " guessed the letter **" + letter + "**.");
             if (!letterWhitelist.Contains (letter)) {
-                Program.messageControl.SendMessage (channel, "Error: No numbers or special characters allowed.");
+                await Program.messageControl.SendMessage (channel, "Error: No numbers or special characters allowed.");
                 return false;
             }
 
@@ -69,10 +69,10 @@ namespace DiscordCthulhu {
                         progress = firstPart.ToUpper ();
                     }
 
-                    Program.messageControl.SendMessage (channel, "Success! Current progress: `" + progress + "`");
+                    await Program.messageControl.SendMessage (channel, "Success! Current progress: `" + progress + "`");
 
                     if (progress.ToLower () == word.ToLower ()) {
-                        Program.messageControl.SendMessage (channel, "Well I'll be damned, it seems you are victorious!");
+                        await Program.messageControl.SendMessage (channel, "Well I'll be damned, it seems you are victorious!");
                         currentGame = null;
                     }
                     return true;
@@ -80,15 +80,15 @@ namespace DiscordCthulhu {
                     tries++;
 
                     if (tries > maxTries) {
-                        Program.messageControl.SendMessage (channel, "Bad news, you've lost the game. Also this game. Word was **" + word.ToUpper () + "**.");
+                        await Program.messageControl.SendMessage (channel, "Bad news, you've lost the game. Also this game. Word was **" + word.ToUpper () + "**.");
                         currentGame = null;
                     } else {
-                        Program.messageControl.SendMessage (channel, "Sorry, but that letter isn't in the word you're trying to guess. You are now one step closer to eternal doom. Try " + tries + " / " + maxTries + ".");
+                        await Program.messageControl.SendMessage (channel, "Sorry, but that letter isn't in the word you're trying to guess. You are now one step closer to eternal doom. Try " + tries + " / " + maxTries + ".");
                     }
                     return false;
                 }
             }
-            Program.messageControl.SendMessage (channel, "Can't do that, that letter has already been guessed.");
+            await Program.messageControl.SendMessage (channel, "Can't do that, that letter has already been guessed.");
             return false;
         }
     }
@@ -110,9 +110,9 @@ namespace DiscordCthulhu {
                 argumentNumber = 1;
             }
 
-            public override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
-                base.ExecuteCommand (e, arguments);
-                if (AllowExecution (e, arguments)) {
+            public override async Task ExecuteCommand ( SocketMessage e, List<string> arguments ) {
+                await base.ExecuteCommand (e, arguments);
+                if (await AllowExecution (e, arguments)) {
                     if (Hangman.currentGame == null) {
                         // First of all, check if there are any hidden characters.
                         bool anyHidden = false;
@@ -126,12 +126,12 @@ namespace DiscordCthulhu {
                         if (anyHidden) {
 
                         Hangman.currentGame = new Hangman (arguments[0]);
-                        Program.messageControl.SendMessage (e, "Succesfully started new game of Hangman! Care to take a guess? `" + Hangman.ToUnderscores (arguments[0]) + "`.");
+                        await Program.messageControl.SendMessage (e, "Succesfully started new game of Hangman! Care to take a guess? `" + Hangman.ToUnderscores (arguments[0]) + "`.");
                         }else {
-                            Program.messageControl.SendMessage (e, "Failed to start a new game of Hangman - word must contain letters of the alfabet.");
+                            await Program.messageControl.SendMessage (e, "Failed to start a new game of Hangman - word must contain letters of the alfabet.");
                         }
                     } else {
-                        Program.messageControl.SendMessage (e, "Failed to start new game of Hangman - a game is already in progress!");
+                        await Program.messageControl.SendMessage (e, "Failed to start new game of Hangman - a game is already in progress!");
                     }
                 }
             }
@@ -146,16 +146,16 @@ namespace DiscordCthulhu {
                 argumentNumber = 1;
             }
 
-            public override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
-                base.ExecuteCommand (e, arguments);
-                if (AllowExecution (e, arguments)) {
+            public override async Task ExecuteCommand ( SocketMessage e, List<string> arguments ) {
+                await base.ExecuteCommand (e, arguments);
+                if (await AllowExecution (e, arguments)) {
                     if (Hangman.currentGame == null) {
-                        Program.messageControl.SendMessage (e, "Sorry man, but no game of Hangman is in progress. Why not start one? :D");
+                        await Program.messageControl.SendMessage (e, "Sorry man, but no game of Hangman is in progress. Why not start one? :D");
                     } else {
                         if (arguments[0].Length == 1) {
-                            Hangman.currentGame.GuessLetter (e, arguments[0].ToLower ()[0]);
+                            await Hangman.currentGame.GuessLetter (e, arguments[0].ToLower ()[0]);
                         }else {
-                            Program.messageControl.SendMessage (e, "Failed to guess - you can only guess one letter at a time.");
+                            await Program.messageControl.SendMessage (e, "Failed to guess - you can only guess one letter at a time.");
                         }
                     }
                 }
@@ -170,18 +170,18 @@ namespace DiscordCthulhu {
                 argumentNumber = 0;
             }
 
-            public override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
-                base.ExecuteCommand (e, arguments);
-                if (AllowExecution (e, arguments)) {
+            public override async Task ExecuteCommand ( SocketMessage e, List<string> arguments ) {
+                await base.ExecuteCommand (e, arguments);
+                if (await AllowExecution (e, arguments)) {
                     if (Hangman.currentGame == null) {
-                        Program.messageControl.SendMessage (e, "No current Hangman game in progress.");
+                        await Program.messageControl.SendMessage (e, "No current Hangman game in progress.");
                     } else {
                         string combined = "Currently used letters: `";
                         foreach (char c in Hangman.currentGame.guessedLetters) {
                             combined += c.ToString ().ToUpper () + " ";
                         }
                         combined += "`";
-                        Program.messageControl.SendMessage (e, combined);
+                        await Program.messageControl.SendMessage (e, combined);
                     }
                 }
             }
@@ -195,13 +195,13 @@ namespace DiscordCthulhu {
                 argumentNumber = 0;
             }
 
-            public override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
-                base.ExecuteCommand (e, arguments);
-                if (AllowExecution (e, arguments)) {
+            public override async Task ExecuteCommand ( SocketMessage e, List<string> arguments ) {
+                await base.ExecuteCommand (e, arguments);
+                if (await AllowExecution (e, arguments)) {
                     if (Hangman.currentGame == null) {
-                        Program.messageControl.SendMessage (e, "No current Hangman game in progress.");
+                        await Program.messageControl.SendMessage (e, "No current Hangman game in progress.");
                     } else {
-                        Program.messageControl.SendMessage (e, "Current progress: `" + Hangman.currentGame.progress + "`");
+                        await Program.messageControl.SendMessage (e, "Current progress: `" + Hangman.currentGame.progress + "`");
                     }
                 }
             }

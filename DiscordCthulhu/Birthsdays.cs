@@ -13,7 +13,7 @@ namespace DiscordCthulhu {
         // This contains birthday dates, should only use month and day value.
         public static List<Date> birthdays;
 
-        public async void Initialize ( DateTime time ) {
+        public async Task Initialize ( DateTime time ) {
             while (Program.GetServer () == null)
                 await Task.Delay (1000);
 
@@ -28,13 +28,15 @@ namespace DiscordCthulhu {
             }
         }
 
-        public void OnDayPassed ( DateTime time ) {
+        public Task OnDayPassed ( DateTime time ) {
+            return Task.CompletedTask;
         }
 
-        public void OnHourPassed ( DateTime time ) {
+        public Task OnHourPassed ( DateTime time ) {
+            return Task.CompletedTask;
         }
 
-        public void OnMinutePassed ( DateTime time ) {
+        public async Task OnMinutePassed ( DateTime time ) {
             if (birthdays != null) {
                 foreach (Date date in birthdays) {
                     // userID = 0 if the user hasn't set a date.
@@ -43,17 +45,18 @@ namespace DiscordCthulhu {
 
                     DateTime dateThisYear = new DateTime (DateTime.Now.Year, date.day.Month, date.day.Day, date.day.Hour, date.day.Minute, 0);
                     if (DateTime.Now > dateThisYear && !date.passedThisYear) {
-                        AnnounceBirthday (date);
+                        await AnnounceBirthday (date);
                         date.passedThisYear = true;
                     }
                 }
             }
         }
 
-        public void OnSecondPassed ( DateTime time ) {
+        public Task OnSecondPassed ( DateTime time ) {
+            return Task.CompletedTask;
         }
 
-        private void AnnounceBirthday (Date date) {
+        private async Task AnnounceBirthday (Date date) {
             SocketGuildUser user = Program.GetServer ().GetUser (date.userID);
             SocketGuildChannel main = Program.GetMainChannel (Program.GetServer ());
             // I have no idea if this works, and it's possibly the worst possible way I could have done that.
@@ -75,8 +78,8 @@ namespace DiscordCthulhu {
                     break;
             }
 
-            Program.messageControl.SendMessage (main as SocketTextChannel, "It's **" + Program.GetUserName (user) + "'s** birthday today, wish them congratulations, as you throw them into the depths of hell on their **" + age + ageSuffix + "** birthday!");
-            Program.messageControl.SendMessage (user, "This is an official completely not cold and automated birthday greeting, from the loving ~~nazimods~~ admins of **" + Program.serverName + "**: - Happy birthdsay!");
+            await Program.messageControl.SendMessage (main as SocketTextChannel, "It's **" + Program.GetUserName (user) + "'s** birthday today, wish them congratulations, as you throw them into the depths of hell on their **" + age + ageSuffix + "** birthday!");
+            await Program.messageControl.SendMessage (user, "This is an official completely not cold and automated birthday greeting, from the loving ~~nazimods~~ admins of **" + Program.serverName + "**: - Happy birthdsay!");
         }
 
         public static void SetBirthday (ulong userID, DateTime day) {

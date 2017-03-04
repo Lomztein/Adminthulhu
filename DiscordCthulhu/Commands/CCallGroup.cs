@@ -17,9 +17,9 @@ namespace DiscordCthulhu {
             argumentNumber = 2;
         }
 
-        public override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
-            base.ExecuteCommand (e, arguments);
-            if (AllowExecution (e, arguments)) {
+        public override async Task ExecuteCommand ( SocketMessage e, List<string> arguments ) {
+            await base.ExecuteCommand (e, arguments);
+            if (await AllowExecution (e, arguments)) {
 
                 PlayerGroups.Group group = Program.playerGroups.FindGroupByName ((e.Channel as SocketGuildChannel).Guild.Name, arguments[0]);
 
@@ -30,9 +30,9 @@ namespace DiscordCthulhu {
                         toSend += group.memberMentions[i] + ", ";
                     }
                     toSend += "\n" + arguments[1];
-                    Program.messageControl.SendMessage (e, toSend);
+                    await Program.messageControl.SendMessage (e, toSend);
                 } else {
-                    Program.messageControl.SendMessage (e, "Group not found on this server.");
+                    await Program.messageControl.SendMessage (e, "Group not found on this server.");
                 }
             }
         }

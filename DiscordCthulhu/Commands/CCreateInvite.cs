@@ -16,9 +16,9 @@ namespace DiscordCthulhu {
             argumentNumber = 0;
         }
 
-        public override async void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
-            base.ExecuteCommand (e, arguments);
-            if (AllowExecution (e, arguments)) {
+        public override async Task ExecuteCommand ( SocketMessage e, List<string> arguments ) {
+            await base.ExecuteCommand (e, arguments);
+            if (await AllowExecution (e, arguments)) {
                 IInvite invite = await e.SocketGuild.CreateInvite (1800, 1, false, false);
                 Program.messageControl.SendMessage(e, "Invite URL: " + invite.Url);
             }

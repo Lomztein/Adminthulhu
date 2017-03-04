@@ -28,47 +28,47 @@ namespace DiscordCthulhu {
         public static char[] playerChars = new char[] { ' ', 'O', 'X'};
 
         // Returns -1 if no game, 0 if the game continues, 1 if player victory and 2 if bot victory.
-        public static int MakeMove (string playerName, int x, int y, SocketMessage e) {
+        public static async Task<int> MakeMove (string playerName, int x, int y, SocketMessage e) {
             TicTacToeGame game = FindPlayersGame (playerName);
             if (game == null) {
-                Program.messageControl.SendMessage (e, "You have no game in progress currently, start a new one if you want to play.");
+                await Program.messageControl.SendMessage (e, "You have no game in progress currently, start a new one if you want to play.");
                 return -1;
             }
 
             bool succesful = game.SetBlock (PLAYER_ID, x, y);
             if (succesful) {
                 if (game.CheckForVictory (PLAYER_ID)) {
-                    Program.messageControl.SendMessage (e, game.Render ());
-                    Program.messageControl.SendMessage (e, "Wha-, you.. you beat me? How is this possible? I can barely dream of your seemingly infinite intelligence.");
-                    Program.scoreCollection.ChangeScore (playerName, 1);
+                    await Program.messageControl.SendMessage (e, game.Render ());
+                    await Program.messageControl.SendMessage (e, "Wha-, you.. you beat me? How is this possible? I can barely dream of your seemingly infinite intelligence.");
+                    await Program.scoreCollection.ChangeScore (playerName, 1);
                     currentGames.Remove (game);
 
                     return 1;
                 }
-                Program.messageControl.SendMessage (e, game.Render ());
-                Program.messageControl.SendMessage (e, "A strange move.. Now tremble at my immense intelligence!");
+                await Program.messageControl.SendMessage (e, game.Render ());
+                await Program.messageControl.SendMessage (e, "A strange move.. Now tremble at my immense intelligence!");
                 PlayerInputAI.MakeMove (game, BOT_ID);
                 if (game.CheckForVictory (BOT_ID)) {
-                    Program.messageControl.SendMessage (e, game.Render ());
-                    Program.messageControl.SendMessage (e, "I am victorious! As always with you puny humans, the mighty Cthulhu triumps above any man!");
+                    await Program.messageControl.SendMessage (e, game.Render ());
+                    await Program.messageControl.SendMessage (e, "I am victorious! As always with you puny humans, the mighty Cthulhu triumps above any man!");
                     currentGames.Remove (game);
 
                     return 2;
                 }
-                Program.messageControl.SendMessage (e, game.Render ());
+                await Program.messageControl.SendMessage (e, game.Render ());
             }
 
             return 0;
         }
 
-        public static void CreateGame (string playerName, SocketMessage e, int size) {
+        public static async Task CreateGame (string playerName, SocketMessage e, int size) {
             if (FindPlayersGame (playerName) != null) {
-                Program.messageControl.SendMessage (e, "You already have a game in progress.");
+                await Program.messageControl.SendMessage (e, "You already have a game in progress.");
             }else {
                 TicTacToeGame newGame = new TicTacToeGame (playerName, size);
                 currentGames.Add (newGame);
-                Program.messageControl.SendMessage (e, "You have challenged Cthulhu to a match of Tic Tac Toe, prepare to die.");
-                Program.messageControl.SendMessage (e, newGame.Render ());
+                await Program.messageControl.SendMessage (e, "You have challenged Cthulhu to a match of Tic Tac Toe, prepare to die.");
+                await Program.messageControl.SendMessage (e, newGame.Render ());
             }
         }
 

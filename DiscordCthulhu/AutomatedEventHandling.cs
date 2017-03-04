@@ -19,36 +19,36 @@ namespace DiscordCthulhu {
 
         public static string eventFileName = "events";
 
-        public static void SaveEvents () {
-            SerializationIO.SaveObjectToFile (Program.dataPath + eventFileName + Program.gitHubIgnoreType, upcomingEvents);
+        public static async Task SaveEvents () {
+            await SerializationIO.SaveObjectToFile (Program.dataPath + eventFileName + Program.gitHubIgnoreType, upcomingEvents);
         }
 
-        public static void LoadEvents () {
-            upcomingEvents = SerializationIO.LoadObjectFromFile<List<Event>> (Program.dataPath + eventFileName + Program.gitHubIgnoreType);
+        public static async Task LoadEvents () {
+            upcomingEvents = await SerializationIO.LoadObjectFromFile<List<Event>> (Program.dataPath + eventFileName + Program.gitHubIgnoreType);
             if (upcomingEvents == null)
                 upcomingEvents = new List<Event> ();
         }
 
-        public void Initialize (DateTime now) {
-            LoadEvents ();
+        public async Task Initialize (DateTime now) {
+            await LoadEvents();
         }
 
-        public void OnSecondPassed ( DateTime now ) {
+        public async Task OnSecondPassed ( DateTime now ) {
             List<Event> toRemove = new List<Event> ();
             foreach (Event e in upcomingEvents) {
                 if (e.eventState == Event.EventState.Awaiting) {
                     if (now > e.eventTime) {
-                        StartEvent (e);
+                        await StartEvent (e);
 
                         toRemove.Add (e);
-                        SaveEvents ();
+                        await SaveEvents();
                     }
 
                     foreach (ulong userID in e.eventMemberIDs) {
                         if (e.eventTime.AddDays (UserSettings.GetSetting<int>(userID, "EventRemindTime, ", 2)) < now) {
                             DateTime remindTime = new DateTime (now.Year, now.Month, now.Day, 12, 00, 0);
                             if (remindTime < now && e.lastRemind[userID].Day != remindTime.Day) {
-                                SendEventReminder (userID, e);
+                                await SendEventReminder (userID, e);
                             }
                         }
                     }
@@ -59,16 +59,16 @@ namespace DiscordCthulhu {
                 upcomingEvents.Remove (r);
         }
 
-        public static void SendEventReminder ( ulong userID, Event remindEvent ) {
+        public static async Task SendEventReminder ( ulong userID, Event remindEvent ) {
             // Make sure discordClient is ready before sending any reminders.
             if (Program.discordClient != null && Program.GetServer () != null) {
                 SocketGuildUser user = Program.GetServer ().GetUser (userID);
-                Program.messageControl.SendMessage (user, "**REMINDER:** You have an upcoming event **" + remindEvent.eventName + "** on **" + Program.serverName + "** coming soon, this " + remindEvent.eventTime.DayOfWeek.ToString () + " at " + remindEvent.eventTime.ToString ());
+                await Program.messageControl.SendMessage (user, "**REMINDER:** You have an upcoming event **" + remindEvent.eventName + "** on **" + Program.serverName + "** coming soon, this " + remindEvent.eventTime.DayOfWeek.ToString () + " at " + remindEvent.eventTime.ToString ());
                 remindEvent.lastRemind[userID] = DateTime.Now;
             }
         }
 
-        public static void StartEvent ( Event startingEvent ) {
+        public static async Task StartEvent ( Event startingEvent ) {
             ChatLogger.Log ("Starting event: " + startingEvent.eventName + "!");
             startingEvent.eventState = Event.EventState.Ended;
 
@@ -83,11 +83,11 @@ namespace DiscordCthulhu {
                     startText += "\n`" + startingEvent.eventDescription + "`";
                 }
 
-                Program.messageControl.SendMessage (
+                await Program.messageControl.SendMessage (
                     Program.GetMainChannel (Program.GetServer ()) as SocketTextChannel,
                     startText);
             } else {
-                Program.messageControl.SendMessage (
+                await Program.messageControl.SendMessage (
                     Program.GetMainChannel (Program.GetServer ()) as SocketTextChannel,
                     "Event **" + startingEvent.eventName + "** cancelled, since no one showed up. :(");
             }
@@ -102,25 +102,27 @@ namespace DiscordCthulhu {
             return null;
         }
 
-        public static void JoinEvent (ulong userID, string eventName) {
+        public static async Task JoinEvent (ulong userID, string eventName) {
             Event e = FindEvent (eventName);
             e.eventMemberIDs.Add (userID);
-            SaveEvents ();
+            await SaveEvents();
         }
 
-        public static void CreateEvent (string eventName, DateTime date, string description = null) {
+        public static async Task CreateEvent (string eventName, DateTime date, string description = null) {
             upcomingEvents.Add (new Event (eventName, date, description));
-            SaveEvents ();
+            await SaveEvents();
         }
 
-        public void OnMinutePassed ( DateTime time ) {
+        public Task OnMinutePassed ( DateTime time ) {
+            return Task.CompletedTask;
         }
 
-        public void OnHourPassed ( DateTime time ) {
-            SaveEvents ();
+        public async Task OnHourPassed ( DateTime time ) {
+            await SaveEvents();
         }
 
-        public void OnDayPassed ( DateTime time ) {
+        public Task OnDayPassed ( DateTime time ) {
+            return Task.CompletedTask;
         }
 
         [Serializable]
@@ -167,15 +169,15 @@ namespace DiscordCthulhu {
             argumentNumber = 3;
         }
 
-        public override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
-            base.ExecuteCommand (e, arguments);
-            if (AllowExecution (e, arguments)) {
+        public override async Task ExecuteCommand ( SocketMessage e, List<string> arguments ) {
+            await base.ExecuteCommand (e, arguments);
+            if (await AllowExecution (e, arguments)) {
                 DateTime parse;
                 if (DateTime.TryParse (arguments[1], out parse)) {
-                    AutomatedEventHandling.CreateEvent (arguments[0], parse, arguments[2]);
-                    Program.messageControl.SendMessage (e, "Succesfully created event **" + arguments[0] + "** at " + parse.ToString ());
+                    await AutomatedEventHandling.CreateEvent (arguments[0], parse, arguments[2]);
+                    await Program.messageControl.SendMessage (e, "Succesfully created event **" + arguments[0] + "** at " + parse.ToString ());
                 }else {
-                    Program.messageControl.SendMessage (e, "Failed to create event, could not parse time.");
+                    await Program.messageControl.SendMessage (e, "Failed to create event, could not parse time.");
                 }
             }
         }
@@ -191,17 +193,17 @@ namespace DiscordCthulhu {
             argumentNumber = 1;
         }
 
-        public override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
-            base.ExecuteCommand (e, arguments);
-            if (AllowExecution (e, arguments)) {
+        public override async Task ExecuteCommand ( SocketMessage e, List<string> arguments ) {
+            await base.ExecuteCommand (e, arguments);
+            if (await AllowExecution (e, arguments)) {
                 AutomatedEventHandling.Event eve = AutomatedEventHandling.FindEvent (arguments[0]);
 
                 if (eve == null) {
-                    Program.messageControl.SendMessage (e, "Unable to cancel event - event by name **" + arguments[0] + "** not found.");
+                    await Program.messageControl.SendMessage (e, "Unable to cancel event - event by name **" + arguments[0] + "** not found.");
                 }else {
-                    Program.messageControl.SendMessage (e, "Event **" + eve.eventName + "** has been cancelled.");
+                    await Program.messageControl.SendMessage (e, "Event **" + eve.eventName + "** has been cancelled.");
                     AutomatedEventHandling.upcomingEvents.Remove (eve);
-                    AutomatedEventHandling.SaveEvents ();
+                    await AutomatedEventHandling.SaveEvents ();
                 }
             }
         }
@@ -217,13 +219,13 @@ namespace DiscordCthulhu {
             argumentNumber = 4;
         }
 
-        public override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
-            base.ExecuteCommand (e, arguments);
-            if (AllowExecution (e, arguments)) {
+        public override async Task ExecuteCommand ( SocketMessage e, List<string> arguments ) {
+            await base.ExecuteCommand (e, arguments);
+            if (await AllowExecution (e, arguments)) {
                 AutomatedEventHandling.Event eve = AutomatedEventHandling.FindEvent (arguments[0]);
 
                 if (eve == null) {
-                    Program.messageControl.SendMessage (e, "Unable to edit event - event by name **" + arguments[0] + "** not found.");
+                    await Program.messageControl.SendMessage (e, "Unable to edit event - event by name **" + arguments[0] + "** not found.");
                 }else{
                     DateTime parse;
                     if (DateTime.TryParse (arguments[2], out parse)) {
@@ -231,10 +233,10 @@ namespace DiscordCthulhu {
                         eve.eventDescription = arguments[1];
                         eve.eventTime = parse;
 
-                        Program.messageControl.SendMessage (e, "Event **" + eve.eventName + "** has been edited.");
-                        AutomatedEventHandling.SaveEvents ();
+                        await Program.messageControl.SendMessage (e, "Event **" + eve.eventName + "** has been edited.");
+                        await AutomatedEventHandling.SaveEvents ();
                     } else {
-                        Program.messageControl.SendMessage (e, "Failed to edit event, could not parse time.");
+                        await Program.messageControl.SendMessage (e, "Failed to edit event, could not parse time.");
                     }
                 }
             }
@@ -250,17 +252,17 @@ namespace DiscordCthulhu {
             argumentNumber = 1;
         }
 
-        public override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
-            base.ExecuteCommand (e, arguments);
-            if (AllowExecution (e, arguments)) {
+        public override async Task ExecuteCommand ( SocketMessage e, List<string> arguments ) {
+            await base.ExecuteCommand (e, arguments);
+            if (await AllowExecution (e, arguments)) {
                 AutomatedEventHandling.Event eve = AutomatedEventHandling.FindEvent (arguments[0]);
 
                 if (eve != null) {
                     eve.eventMemberIDs.Add (e.Author.Id);
-                    AutomatedEventHandling.SaveEvents ();
-                    Program.messageControl.SendMessage (e,"Succesfully joined event **" + eve.eventName + "**. You will be mentioned when it begins.");
+                    await AutomatedEventHandling.SaveEvents ();
+                    await Program.messageControl.SendMessage (e,"Succesfully joined event **" + eve.eventName + "**. You will be mentioned when it begins.");
                 } else {
-                    Program.messageControl.SendMessage (e, "Failed to join event - event by name **" + arguments[0] + "** could not be found.");
+                    await Program.messageControl.SendMessage (e, "Failed to join event - event by name **" + arguments[0] + "** could not be found.");
                 }
             }
         }
@@ -275,17 +277,17 @@ namespace DiscordCthulhu {
             argumentNumber = 1;
         }
 
-        public override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
-            base.ExecuteCommand (e, arguments);
-            if (AllowExecution (e, arguments)) {
+        public override async Task ExecuteCommand ( SocketMessage e, List<string> arguments ) {
+            await base.ExecuteCommand (e, arguments);
+            if (await AllowExecution (e, arguments)) {
                 AutomatedEventHandling.Event eve = AutomatedEventHandling.FindEvent (arguments[0]);
 
                 if (eve != null) {
                     eve.eventMemberIDs.Remove (e.Author.Id);
-                    AutomatedEventHandling.SaveEvents ();
-                    Program.messageControl.SendMessage (e, "Succesfully left event **" + eve.eventName + "**. You will most certainly not be missed.");
+                    await AutomatedEventHandling.SaveEvents ();
+                    await Program.messageControl.SendMessage (e, "Succesfully left event **" + eve.eventName + "**. You will most certainly not be missed.");
                 } else {
-                    Program.messageControl.SendMessage (e, "Failed to leave event - event by name **" + arguments[0] + "** could not be found.");
+                    await Program.messageControl.SendMessage (e, "Failed to leave event - event by name **" + arguments[0] + "** could not be found.");
                 }
             }
         }
@@ -299,9 +301,9 @@ namespace DiscordCthulhu {
             argumentNumber = 0;
         }
 
-        public override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
-            base.ExecuteCommand (e, arguments);
-            if (AllowExecution (e, arguments)) {
+        public override async Task ExecuteCommand ( SocketMessage e, List<string> arguments ) {
+            await base.ExecuteCommand (e, arguments);
+            if (await AllowExecution (e, arguments)) {
                 string combinedEvents = "Upcoming events are: ```";
                 if (AutomatedEventHandling.upcomingEvents.Count != 0) {
                     foreach (AutomatedEventHandling.Event eve in AutomatedEventHandling.upcomingEvents) {
@@ -312,7 +314,7 @@ namespace DiscordCthulhu {
                 }
                 
                 combinedEvents += "```";
-                Program.messageControl.SendMessage (e, combinedEvents);
+                await Program.messageControl.SendMessage (e, combinedEvents);
             }
         }
     }
@@ -326,9 +328,9 @@ namespace DiscordCthulhu {
             argumentNumber = 1;
         }
 
-        public override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
-            base.ExecuteCommand (e, arguments);
-            if (AllowExecution (e, arguments)) {
+        public override async Task ExecuteCommand ( SocketMessage e, List<string> arguments ) {
+            await base.ExecuteCommand (e, arguments);
+            if (await AllowExecution (e, arguments)) {
                 AutomatedEventHandling.Event locEvent = AutomatedEventHandling.FindEvent (arguments[0]);
                 if (locEvent != null) {
 
@@ -342,9 +344,9 @@ namespace DiscordCthulhu {
                     }
 
                     combinedMembers += "```";
-                    Program.messageControl.SendMessage (e, combinedMembers);
+                    await Program.messageControl.SendMessage (e, combinedMembers);
                 }else {
-                    Program.messageControl.SendMessage (e, "Failed to show event member list - event **" + arguments[0] + "** not found.");
+                    await Program.messageControl.SendMessage (e, "Failed to show event member list - event **" + arguments[0] + "** not found.");
                 }
             }
         }

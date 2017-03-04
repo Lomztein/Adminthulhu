@@ -16,13 +16,13 @@ namespace DiscordCthulhu {
             help = "Removes the alias " + argHelp + " from your collection.";
         }
 
-        public override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
-            base.ExecuteCommand (e, arguments);
-            if (AllowExecution (e, arguments)) {
-                if (!Program.aliasCollection.RemoveAlias (e.Author.Username, arguments[0])) {
-                    Program.messageControl.SendMessage(e, "Failed to remove " + arguments[0] + " from your collection, as it doesn't seem to be there.");
+        public override async Task ExecuteCommand ( SocketMessage e, List<string> arguments ) {
+            await base.ExecuteCommand (e, arguments);
+            if (await AllowExecution (e, arguments)) {
+                if (!await Program.aliasCollection.RemoveAlias (e.Author.Username, arguments[0])) {
+                    await Program.messageControl.SendMessage(e, "Failed to remove " + arguments[0] + " from your collection, as it doesn't seem to be there.");
                 } else {
-                    Program.messageControl.SendMessage(e, arguments[0] + " removed from your collection of aliasses.");
+                    await Program.messageControl.SendMessage(e, arguments[0] + " removed from your collection of aliasses.");
                 }
             }
         }

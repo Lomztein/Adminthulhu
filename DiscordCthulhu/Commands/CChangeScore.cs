@@ -19,23 +19,23 @@ namespace DiscordCthulhu {
             isAdminOnly = true;
         }
 
-        public override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
-            base.ExecuteCommand (e, arguments);
-            if (AllowExecution (e, arguments)) {
+        public override async Task ExecuteCommand ( SocketMessage e, List<string> arguments ) {
+            await base.ExecuteCommand (e, arguments);
+            if (await AllowExecution (e, arguments)) {
                 int number;
 
                 if (int.TryParse (arguments[1], out number)) {
 
-                    Program.scoreCollection.ChangeScore (arguments[0], number);
-                    Program.messageControl.SendMessage (e, arguments[0] + " score has been changed by " + number.ToString () + ".\n" + 
+                    await Program.scoreCollection.ChangeScore (arguments[0], number);
+                    await Program.messageControl.SendMessage (e, arguments[0] + " score has been changed by " + number.ToString () + ".\n" + 
                         "Their score now totals " + Program.scoreCollection.GetScore (arguments[0]) + ".");
 
                     SocketGuildUser user = Program.FindUserByName ((e.Channel as SocketGuildChannel).Guild, arguments[0]);
                     if (user != null) {
-                        Program.messageControl.SendMessage (user, "Your score has been increased by " + number + " for reason: " + arguments[2]);
+                        await Program.messageControl.SendMessage (user, "Your score has been increased by " + number + " for reason: " + arguments[2]);
                     }
                 }else {
-                    Program.messageControl.SendMessage (e, "Failed to parse second argument.");
+                    await Program.messageControl.SendMessage (e, "Failed to parse second argument.");
                 }
             }
         }

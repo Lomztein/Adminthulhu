@@ -21,12 +21,12 @@ namespace DiscordCthulhu {
 
         public Dictionary<ulong, List<string>> enabledSettings = new Dictionary<ulong, List<string>>();
 
-        public void SaveSettings () {
-            SerializationIO.SaveObjectToFile (Program.dataPath + Program.commandSettingsDirectory + command + Program.gitHubIgnoreType, enabledSettings);
+        public async Task SaveSettings () {
+            await SerializationIO.SaveObjectToFile (Program.dataPath + Program.commandSettingsDirectory + command + Program.gitHubIgnoreType, enabledSettings);
         }
 
-        public static Dictionary<ulong, List<string>> LoadSettings (string commandName) {
-            Dictionary<ulong, List<string>> settings = SerializationIO.LoadObjectFromFile<Dictionary<ulong, List<string>>> (Program.dataPath + Program.commandSettingsDirectory + commandName + Program.gitHubIgnoreType);
+        public static async Task<Dictionary<ulong, List<string>>> LoadSettings (string commandName) {
+            Dictionary<ulong, List<string>> settings = await SerializationIO.LoadObjectFromFile<Dictionary<ulong, List<string>>> (Program.dataPath + Program.commandSettingsDirectory + commandName + Program.gitHubIgnoreType);
             if (settings == null) {
                 return new Dictionary<ulong, List<string>> ();
             } else {
@@ -37,7 +37,7 @@ namespace DiscordCthulhu {
         // Add and remove commands functions are very similar, however they are too different
         // for a general function to really be worth it.
 
-        public void AddToChannel (SocketMessage e, bool allChannels) {
+        public async Task AddToChannel (SocketMessage e, bool allChannels) {
             SocketGuild guild = (e.Channel as SocketGuildChannel).Guild;
             if (!enabledSettings.ContainsKey (guild.Id))
                 enabledSettings.Add (guild.Id, new List<string> ());
@@ -53,7 +53,7 @@ namespace DiscordCthulhu {
                     enabledSettings[guild.Id].Add (e.Channel.Name);
             }
 
-            SaveSettings ();
+            await SaveSettings();
         }
 
         public bool AvailableOnChannel (SocketMessage e) {
@@ -66,7 +66,7 @@ namespace DiscordCthulhu {
             return false;
         }
 
-        public void RemoveFromChannel (SocketMessage e, bool allChannels) {
+        public async Task RemoveFromChannel (SocketMessage e, bool allChannels) {
             SocketGuild guild = (e.Channel as SocketGuildChannel).Guild;
             if (enabledSettings.ContainsKey (guild.Id)) {
                 if (allChannels) {
@@ -81,43 +81,43 @@ namespace DiscordCthulhu {
                 }
             }
 
-            SaveSettings ();
+            await SaveSettings();
         }
 
-        public virtual void ExecuteCommand ( SocketMessage e, List<string> arguments) {
+        public virtual async Task ExecuteCommand ( SocketMessage e, List<string> arguments) {
             if (arguments.Count > 0 && arguments[0] == "?") {
-                Program.messageControl.SendMessage(e, GetHelp ());
+                await Program.messageControl.SendMessage(e, GetHelp ());
             }
         }
 
-        public bool AllowExecution (SocketMessage e, List<string> args) {
+        public async Task<bool> AllowExecution (SocketMessage e, List<string> args) {
 
             if (e.Channel as SocketDMChannel == null && (isAdminOnly && !alwaysEnabled)) {
-                Program.messageControl.SendMessage (e, "Failed to execute: Not available in private chat.");
+                await Program.messageControl.SendMessage (e, "Failed to execute: Not available in private chat.");
                 return false;
             }
 
             if (argumentNumber != args.Count) {
                 if (!(args.Count == 1 && args[0] == "?"))
-                    Program.messageControl.SendMessage (e, "Failed to execute: Wrong number of arguments.");
+                    await Program.messageControl.SendMessage (e, "Failed to execute: Wrong number of arguments.");
                 return false;
             }
 
             if (isAdminOnly && !(e.Author as SocketGuildUser).GetPermissions (e.Channel as SocketGuildChannel).ManageChannel) {
-                Program.messageControl.SendMessage (e, "Failed to execute: Command is admin-only.");
+                await Program.messageControl.SendMessage (e, "Failed to execute: Command is admin-only.");
                 return false;
             }
 
             if (!isAdminOnly && !alwaysEnabled && !AvailableOnChannel (e)) {
-                Program.messageControl.SendMessage (e, "Command not available on this server or channel.");
+                await Program.messageControl.SendMessage (e, "Command not available on this server or channel.");
                 return false;
             }
 
             return true;
         }
 
-        public virtual void Initialize () {
-            enabledSettings = LoadSettings (command);
+        public virtual async Task Initialize () {
+            enabledSettings = await LoadSettings(command);
         }
 
         public virtual string GetHelp () {

@@ -17,9 +17,9 @@ namespace DiscordCthulhu {
             alwaysEnabled = true;
         }
 
-        public override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
-            base.ExecuteCommand (e, arguments);
-            if (AllowExecution (e, arguments)) {
+        public override async Task ExecuteCommand ( SocketMessage e, List<string> arguments ) {
+            await base.ExecuteCommand (e, arguments);
+            if (await AllowExecution (e, arguments)) {
 
                 List<string> toDisplay = new List<string> ();
 
@@ -45,7 +45,7 @@ namespace DiscordCthulhu {
                     commands += toDisplay[i] + "\n";
                 }
 
-                Program.messageControl.SendMessage(e, commands);
+                await Program.messageControl.SendMessage(e, commands);
             }
         }
     }

@@ -17,14 +17,14 @@ namespace DiscordCthulhu {
             argumentNumber = 1;
         }
 
-        public override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
-            base.ExecuteCommand (e, arguments);
-            if (AllowExecution (e, arguments)) {
+        public override async Task ExecuteCommand ( SocketMessage e, List<string> arguments ) {
+            await base.ExecuteCommand (e, arguments);
+            if (await AllowExecution (e, arguments)) {
                 Random random = new Random ();
                 int number;
 
                 if (int.TryParse (arguments[0], out number)) {
-                    Program.messageControl.SendMessage(e, "You rolled " + (random.Next(number) + 1).ToString());
+                    await Program.messageControl.SendMessage(e, "You rolled " + (random.Next(number) + 1).ToString());
                 }
             }
         }

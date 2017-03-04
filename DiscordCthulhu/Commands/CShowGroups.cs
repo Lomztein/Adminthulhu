@@ -16,9 +16,9 @@ namespace DiscordCthulhu {
             argumentNumber = 0;
         }
 
-        public override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
-            base.ExecuteCommand (e, arguments);
-            if (AllowExecution (e, arguments)) {
+        public override async Task ExecuteCommand ( SocketMessage e, List<string> arguments ) {
+            await base.ExecuteCommand (e, arguments);
+            if (await AllowExecution (e, arguments)) {
 
                 if (Program.playerGroups.groups.ContainsKey ((e.Channel as SocketGuildChannel).Guild.Name)) {
                     string toSend = "Groups on this server: \n\n";
@@ -27,9 +27,9 @@ namespace DiscordCthulhu {
                         toSend += groups[i].groupName + " - " + groups[i].memberMentions.Count + " members.\n";
                     }
 
-                    Program.messageControl.SendMessage (e, toSend);
+                    await Program.messageControl.SendMessage (e, toSend);
                 } else {
-                    Program.messageControl.SendMessage (e, "No groups found on this server.");
+                    await Program.messageControl.SendMessage (e, "No groups found on this server.");
                 }
             }
         }

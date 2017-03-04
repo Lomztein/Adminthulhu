@@ -18,18 +18,18 @@ namespace DiscordCthulhu {
             isAdminOnly = true;
         }
 
-        public override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
-            base.ExecuteCommand (e, arguments);
+        public override async Task ExecuteCommand ( SocketMessage e, List<string> arguments ) {
+            await base.ExecuteCommand (e, arguments);
 
             if (arguments[0] == "?") {
                 string commandNames = "Available commands: ";
                 for (int i = 0; i < Program.commands.Length; i++) {
                     commandNames += Program.commands[i].command + ", ";
                 }
-                Program.messageControl.SendMessage (e, commandNames);
+                await Program.messageControl.SendMessage (e, commandNames);
             }
 
-            if (AllowExecution (e, arguments)) {
+            if (await AllowExecution (e, arguments)) {
 
                 bool allChannels;
                 bool enable;
@@ -38,26 +38,26 @@ namespace DiscordCthulhu {
                     if (arguments[0].ToUpper () == "ALL") {
                         for (int i = 0; i < Program.commands.Length; i++) {
                             if (enable) {
-                                Program.commands[i].AddToChannel (e, allChannels);
+                                await Program.commands[i].AddToChannel (e, allChannels);
                             } else {
-                                Program.commands[i].RemoveFromChannel (e, allChannels);
+                                await Program.commands[i].RemoveFromChannel (e, allChannels);
                             }
                         }
                     } else {
                         Command command = Program.FindCommand (arguments[0]);
                         if (command != null) {
                             if (enable) {
-                                command.AddToChannel (e, allChannels);
+                                await command.AddToChannel (e, allChannels);
                             } else {
-                                command.RemoveFromChannel (e, allChannels);
+                                await command.RemoveFromChannel (e, allChannels);
                             }
-                            Program.messageControl.SendMessage (e, "Succesfully added command to this channel.");
+                            await Program.messageControl.SendMessage (e, "Succesfully added command to this channel.");
                         } else {
-                            Program.messageControl.SendMessage (e, "Failed to add command: command now found.");
+                            await Program.messageControl.SendMessage (e, "Failed to add command: command now found.");
                         }
                     }
                 }else {
-                    Program.messageControl.SendMessage (e, "Failed to execute: Failed to parse argument.");
+                    await Program.messageControl.SendMessage (e, "Failed to execute: Failed to parse argument.");
                 }
             }
         }

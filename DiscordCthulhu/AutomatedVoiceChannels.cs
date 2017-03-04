@@ -64,7 +64,7 @@ namespace DiscordCthulhu {
             allVoiceChannels.Add (channel.id, channel);
         }
 
-        public static async void UpdateVoiceChannel ( SocketVoiceChannel voice ) {
+        public static async Task UpdateVoiceChannel ( SocketVoiceChannel voice ) {
             Game highestGame = new Game ("", "", StreamType.NotStreaming);
 
             if (voice != null && allVoiceChannels.ContainsKey (voice.Id)) {
@@ -73,7 +73,7 @@ namespace DiscordCthulhu {
                     return;
 
                 if (voice.Users.Count () == 0)
-                    allVoiceChannels[voice.Id].Unlock (false);
+                    await allVoiceChannels[voice.Id].Unlock (false);
 
                 Dictionary<Game, int> numPlayers = new Dictionary<Game, int> ();
                 List<SocketGuildUser> users = Program.ForceGetUsers (voice);
@@ -107,12 +107,12 @@ namespace DiscordCthulhu {
                 if (voice.Name != newName) {
                     await voice.ModifyAsync ((delegate ( VoiceChannelProperties properties ) { properties.Name = newName; } ));
                 }
-                allVoiceChannels[voice.Id].CheckLocker ();
+                await allVoiceChannels[voice.Id].CheckLocker ();
             }
         }
 
         private static bool hasChecked = false;
-        public static void AddMissingChannels (SocketGuild server) {
+        public static async Task AddMissingChannels (SocketGuild server) {
             if (hasChecked)
                 return;
 
@@ -122,11 +122,11 @@ namespace DiscordCthulhu {
                 }
                 if (channel.Name[0] == lockIcon[0]) {
                     if (channel.Users.Count () == 0) {
-                        allVoiceChannels[channel.Id].Unlock (true);
+                        await allVoiceChannels[channel.Id].Unlock (true);
                     } else {
                         SocketGuildUser user = channel.Users.ElementAt (0);
-                        allVoiceChannels[channel.Id].Lock (user, true);
-                        Program.messageControl.SendMessage (user, "After a reboot of this bot, you have automatically been granted ownership of locked channel **" + allVoiceChannels[channel.Id].name + "**.");
+                        await allVoiceChannels[channel.Id].Lock (user, true);
+                        await Program.messageControl.SendMessage (user, "After a reboot of this bot, you have automatically been granted ownership of locked channel **" + allVoiceChannels[channel.Id].name + "**.");
                     }
                 }
             }
@@ -208,7 +208,7 @@ namespace DiscordCthulhu {
             return true;
         }
 
-        public static async void CheckFullAndAddIf (SocketGuild server) {
+        public static async Task CheckFullAndAddIf (SocketGuild server) {
             IEnumerable<VoiceChannel> channels = allVoiceChannels.Values.ToList ();
             int count = channels.Count ();
 
@@ -285,7 +285,7 @@ namespace DiscordCthulhu {
                 return allowedUsers.Count != 0;
             }
 
-            public void Lock (SocketGuildUser lockingUser, bool update) {
+            public async Task Lock (SocketGuildUser lockingUser, bool update) {
                 if (lockable) {
                     lockerID = lockingUser.Id;
 
@@ -296,33 +296,33 @@ namespace DiscordCthulhu {
 
                     allowedUsers = alreadyIn;
                     if (update)
-                        UpdateVoiceChannel (GetChannel ());
+                        await UpdateVoiceChannel(GetChannel ());
                 }
             }
 
-            public void Unlock (bool update) {
+            public async Task Unlock (bool update) {
                 allowedUsers = new List<ulong> ();
                 lockerID = 0;
                 if (update)
-                    UpdateVoiceChannel (GetChannel ());
+                    await UpdateVoiceChannel(GetChannel ());
             }
 
-            public bool InviteUser (SocketGuildUser sender, SocketGuildUser user ) {
+            public async Task<bool> InviteUser (SocketGuildUser sender, SocketGuildUser user ) {
                 if (!allowedUsers.Contains (user.Id) && IsLocked ()) {
                     allowedUsers.Add (user.Id);
-                    Program.messageControl.SendMessage (user, "**" + Program.GetUserName (sender) + "** has invited you to join the locked channel **" + name + "** on **" + Program.serverName + "**.");
+                    await Program.messageControl.SendMessage (user, "**" + Program.GetUserName (sender) + "** has invited you to join the locked channel **" + name + "** on **" + Program.serverName + "**.");
                     return true;
                 }
                 return false;
             }
 
-            public void RequestInvite ( SocketGuildUser requester ) {
+            public async Task RequestInvite ( SocketGuildUser requester ) {
                 if (IsLocked ()) {
-                    Program.messageControl.AskQuestion (GetLocker (), "**" + Program.GetUserName (requester) + "** on **" + Program.serverName + "** requests access to your locked voice channel.",
-                        delegate () {
+                    await Program.messageControl.AskQuestion (GetLocker (), "**" + Program.GetUserName (requester) + "** on **" + Program.serverName + "** requests access to your locked voice channel.",
+                        async () => {
                             allowedUsers.Add (requester.Id);
-                            Program.messageControl.SendMessage (requester, "Your request to join **" + name + "** has been accepted.");
-                            Program.messageControl.SendMessage (GetLocker (), "Succesfully accepted requiest.");
+                            await Program.messageControl.SendMessage (requester, "Your request to join **" + name + "** has been accepted.");
+                            await Program.messageControl.SendMessage (GetLocker (), "Succesfully accepted requiest.");
                         } );
                 }
             }
@@ -335,7 +335,7 @@ namespace DiscordCthulhu {
                 return Program.GetServer ().GetUser (lockerID);
             }
 
-            public void CheckLocker () {
+            public async Task CheckLocker () {
                 bool containsLocker = false;
                 foreach (SocketGuildUser user in GetChannel ().Users) {
                     if (user.Id == lockerID) {
@@ -346,7 +346,7 @@ namespace DiscordCthulhu {
 
                 if (IsLocked () && !containsLocker) {
                     lockerID = GetChannel ().Users.ElementAt (0).Id;
-                    Program.messageControl.SendMessage (GetLocker (), "Since the previous locker left, you are now the new locker of voice channel **" + name + "**.");
+                    await Program.messageControl.SendMessage (GetLocker (), "Since the previous locker left, you are now the new locker of voice channel **" + name + "**.");
                 }
             }
         }

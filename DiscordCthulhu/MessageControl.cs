@@ -25,10 +25,10 @@ namespace DiscordCthulhu
             timer.Start();
         }
 
-        private async void Timer_Elapsed(object sender, ElapsedEventArgs e)
+        private void Timer_Elapsed(object sender, ElapsedEventArgs e)
         {
             ChatLogger.Log("Send message timer: "  + message);
-            await this.e.Channel.SendMessageAsync(message);
+            this.e.Channel.SendMessageAsync(message).GetAwaiter().GetResult();
         }
 
         public void StopTimer()
@@ -111,21 +111,21 @@ namespace DiscordCthulhu
         /// <param name="Content event arguments"></param>
         /// <param name="message"></param>
         /// <returns The same message as is input, for laziness></returns>
-        public string SendMessage(SocketMessage e, string message) {
-            return SendMessage (e.Channel, message);
+        public async Task<string> SendMessage(SocketMessage e, string message) {
+            return await SendMessage (e.Channel, message);
         }
 
-        public string SendMessage ( ISocketMessageChannel e, string message ) {
+        public async Task<string> SendMessage ( ISocketMessageChannel e, string message ) {
             string[] messages = SplitMessage (message);
             //messages.Add(new MessageTimer(e, message, 5));
             for (int i = 0; i < messages.Length; i++) {
-                AsyncSend (e, messages[i]);
+                await AsyncSend (e, messages[i]);
             }
 
             return message;
         }
 
-        public async void SendMessage (SocketGuildUser e, string message) {
+        public async Task SendMessage (SocketGuildUser e, string message) {
             string[] split = SplitMessage (message);
 
             Task<RestDMChannel> channel = e.CreateDMChannelAsync ();
@@ -136,7 +136,7 @@ namespace DiscordCthulhu
             }
         }
 
-        public async void AsyncSend (ISocketMessageChannel e, string message) {
+        public async Task AsyncSend (ISocketMessageChannel e, string message) {
             ChatLogger.Log ("Sending a message.");
             if (message.Length > 0) {
                 Task<RestUserMessage> messageTask = e.SendMessageAsync (message);
@@ -144,7 +144,7 @@ namespace DiscordCthulhu
             }
         }
 
-        public async void SendImage (SocketTextChannel e, string message, string imagePath) {
+        public async Task SendImage (SocketTextChannel e, string message, string imagePath) {
             ChatLogger.Log ("Sending an image!");
             try {
                 await e.SendFileAsync (imagePath, message);
@@ -153,13 +153,13 @@ namespace DiscordCthulhu
             }
         }
 
-        public Dictionary<ulong, List<Action>> askedUsers = new Dictionary<ulong, List<Action>>();
+        public Dictionary<ulong, List<Func<Task>>> askedUsers = new Dictionary<ulong, List<Func<Task>>>();
 
-        public async void AskQuestion (SocketGuildUser user, string question, Action ifYes) {
-            SendMessage (user, question + " (y/n)");
+        public async Task AskQuestion (SocketGuildUser user, string question, Func<Task> ifYes) {
+            await SendMessage (user, question + " (y/n)");
 
             if (!askedUsers.ContainsKey (user.Id)) {
-                askedUsers.Add (user.Id, new List<Action> ());
+                askedUsers.Add (user.Id, new List<Func<Task>> ());
             }
             askedUsers[user.Id].Add (ifYes);
 
@@ -169,7 +169,7 @@ namespace DiscordCthulhu
                 askedUsers[user.Id].Remove (ifYes);
                 if (askedUsers[user.Id].Count == 0) {
                     askedUsers.Remove (user.Id);
-                    SendMessage (user, "Question timed out after 30 seconds.");
+                    await SendMessage (user, "Question timed out after 30 seconds.");
                 }
             }
         }

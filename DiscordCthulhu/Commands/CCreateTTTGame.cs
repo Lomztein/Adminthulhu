@@ -17,17 +17,17 @@ namespace DiscordCthulhu {
             argumentNumber = 1;
         }
 
-        public override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
-            base.ExecuteCommand (e, arguments);
-            if (AllowExecution (e, arguments)) {
+        public override async Task ExecuteCommand ( SocketMessage e, List<string> arguments ) {
+            await base.ExecuteCommand (e, arguments);
+            if (await AllowExecution (e, arguments)) {
 
                 int number;
 
                 if (int.TryParse (arguments[0], out number)) {
                     if (number <= 10) {
-                        TicTacToe.CreateGame (e.Author.Username, e, number);
+                        await TicTacToe.CreateGame (e.Author.Username, e, number);
                     }else {
-                        Program.messageControl.SendMessage (e, "Sorry, I can't handle a size larger than 10.");
+                        await Program.messageControl.SendMessage (e, "Sorry, I can't handle a size larger than 10.");
                     }
                 }
             }

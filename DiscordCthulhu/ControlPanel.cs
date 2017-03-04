@@ -46,8 +46,8 @@ namespace DiscordCthulhu {
                 foreach (SocketGuild server in Program.discordClient.Guilds) {
                     SocketGuildChannel channel = Program.SearchChannel (server, channelName.Text);
                     if (channel != null) {
-                    //foreach (Channel channel in server.TextChannels) {
-                        Program.messageControl.SendMessage (channel as SocketTextChannel, messageText.Text);
+                        //foreach (Channel channel in server.TextChannels) {
+                        Program.messageControl.SendMessage (channel as SocketTextChannel, messageText.Text).GetAwaiter().GetResult();
                         messageText.Text = "";
                     }
                 }

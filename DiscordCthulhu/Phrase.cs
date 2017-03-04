@@ -15,7 +15,7 @@ namespace DiscordCthulhu {
         public string response;
         public string channel;
 
-        public bool CheckAndRespond (SocketMessage e) {
+        public async Task<bool> CheckAndRespond (SocketMessage e) {
 
             string message = e.Content;
             string sender = e.Author.Username;
@@ -31,7 +31,7 @@ namespace DiscordCthulhu {
                         Random random = new Random ();
                         if (random.Next (100) < chance || chance == 100) {
 
-                            Program.messageControl.SendMessage (e, response);
+                            await Program.messageControl.SendMessage (e, response);
                             return true;
                         }
                     }

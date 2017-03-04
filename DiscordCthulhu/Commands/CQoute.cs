@@ -32,11 +32,11 @@ namespace DiscordCthulhu {
             argumentNumber = 0;
         }
 
-        public override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
-            base.ExecuteCommand (e, arguments);
-            if (AllowExecution (e, arguments)) {
+        public override async Task ExecuteCommand ( SocketMessage e, List<string> arguments ) {
+            await base.ExecuteCommand (e, arguments);
+            if (await AllowExecution (e, arguments)) {
                 Random random = new Random ();
-                Program.messageControl.SendMessage (e, quotes[random.Next (quotes.Length)]);
+                await Program.messageControl.SendMessage (e, quotes[random.Next (quotes.Length)]);
             }
         }
     }

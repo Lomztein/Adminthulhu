@@ -17,15 +17,15 @@ namespace DiscordCthulhu {
             argumentNumber = 2;
         }
 
-        public override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
-            base.ExecuteCommand (e, arguments);
-            if (AllowExecution (e, arguments)) {
+        public override async Task ExecuteCommand ( SocketMessage e, List<string> arguments ) {
+            await base.ExecuteCommand (e, arguments);
+            if (await AllowExecution (e, arguments)) {
 
                 int x;
                 int y;
 
                 if (int.TryParse (arguments[0], out x) && int.TryParse (arguments[1], out y)) {
-                    TicTacToe.MakeMove (e.Author.Username, x, y, e);
+                    await TicTacToe.MakeMove (e.Author.Username, x, y, e);
                 }
             }
         }

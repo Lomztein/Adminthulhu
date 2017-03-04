@@ -17,18 +17,18 @@ namespace DiscordCthulhu {
             help = "A placeholder, shouldn't be accessable in final version.";
         }
 
-        public override void Initialize () {
+        public override async Task Initialize () {
 
-            base.Initialize ();
+            await base.Initialize ();
             foreach (Command c in commandsInSet) {
                 c.helpPrefix = helpPrefix + command + " ";
-                c.Initialize ();
+                await c.Initialize ();
                 c.enabledSettings = enabledSettings;
                 c.isAdminOnly = isAdminOnly;
             }
         }
 
-        public override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
+        public override async Task ExecuteCommand ( SocketMessage e, List<string> arguments ) {
             if (arguments.Count > 0 && arguments[0] == "?") {
                 // Display all commands within command.
                 string commands = "Commands in the **" + command + "** command set:\n```";
@@ -36,7 +36,7 @@ namespace DiscordCthulhu {
                     commands += c.GetShortHelp () + "\n";
                 }
                 commands += "```";
-                Program.messageControl.SendMessage (e, commands);
+                await Program.messageControl.SendMessage (e, commands);
             } else {
                 // Standard command format is !command arg1;arg2;arg3
                 // Commandset format is !command secondaryCommand arg1;arg2;arg3
@@ -54,7 +54,7 @@ namespace DiscordCthulhu {
                     string command = "";
 
                     List<string> newArguments = Program.ConstructArguments (secondayCommand, out command);
-                    Program.FindAndExecuteCommand (e, command, newArguments, commandsInSet);
+                    await Program.FindAndExecuteCommand (e, command, newArguments, commandsInSet);
                 }
             }
         }

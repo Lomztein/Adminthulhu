@@ -9,7 +9,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 namespace DiscordCthulhu {
     class SerializationIO {
 
-        public static T LoadObjectFromFile<T> ( string path ) {
+        public static async Task<T> LoadObjectFromFile<T> ( string path ) {
             try {
                 if (File.Exists (path)) {
 
@@ -23,12 +23,12 @@ namespace DiscordCthulhu {
                 ChatLogger.Log ("Failed to load file at " + path);
                 return default (T);
             } catch (Exception e) {
-                ChatLogger.DebugLog ("Error: " + e.Message);
+                await ChatLogger.DebugLog ("Error: " + e.Message);
                 return default (T);
             }
         }
 
-        public static void SaveObjectToFile (string fileName, object obj) {
+        public static async Task SaveObjectToFile (string fileName, object obj) {
             try {
                 BinaryFormatter bf = new BinaryFormatter ();
                 FileStream file = File.Create (fileName);
@@ -36,7 +36,7 @@ namespace DiscordCthulhu {
                 bf.Serialize (file, obj);
                 file.Close ();
             } catch (Exception e) {
-                ChatLogger.DebugLog ("Error: Failed to save file: " + e.Message);
+                await ChatLogger.DebugLog ("Error: Failed to save file: " + e.Message);
             }
         }
 

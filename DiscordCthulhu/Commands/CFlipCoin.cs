@@ -16,14 +16,14 @@ namespace DiscordCthulhu {
             argumentNumber = 0;
         }
 
-        public override void ExecuteCommand ( SocketMessage e, List<string> arguments ) {
-            base.ExecuteCommand (e, arguments);
-            if (AllowExecution (e, arguments)) {
+        public override async Task ExecuteCommand ( SocketMessage e, List<string> arguments ) {
+            await base.ExecuteCommand (e, arguments);
+            if (await AllowExecution (e, arguments)) {
                 Random random = new Random ();
                 if (random.Next (2) == 0) {
-                    Program.messageControl.SendMessage (e, "Your coin flipped to show heads.");
+                    await Program.messageControl.SendMessage (e, "Your coin flipped to show heads.");
                 } else {
-                    Program.messageControl.SendMessage (e, "Your coin flipped to show tails.");
+                    await Program.messageControl.SendMessage (e, "Your coin flipped to show tails.");
                 }
             }
         }

@@ -32,7 +32,7 @@ namespace DiscordCthulhu {
         public static string eventDirectory = "Event/";
         public static string gitHubIgnoreType = ".botproperty";
 
-        static void Main ( string[] args ) => new Program ().Start (args);
+        static void Main ( string[] args ) => new Program ().Start (args).GetAwaiter().GetResult();
 
         public static DiscordSocketClient discordClient;
 
@@ -68,7 +68,7 @@ namespace DiscordCthulhu {
 
         public static ControlPanel controlPanel = null;
 
-        public async void Start (string[] args) {
+        public async Task Start (string[] args) {
 
             // Linux specific test
             if (args.Length > 0) {
@@ -83,23 +83,23 @@ namespace DiscordCthulhu {
             InitializeDirectories ();
             ChatLogger.Log ("Booting..");
 
-            aliasCollection = AliasCollection.Load ();
-            scoreCollection.scores = ScoreCollection.Load ();
-            playerGroups = PlayerGroups.Load ();
-            //clock = new Clock ();
+            aliasCollection = await AliasCollection.Load ();
+            scoreCollection.scores = await ScoreCollection.Load ();
+            playerGroups = await PlayerGroups.Load ();
+            clock = new Clock ();
 
             discordClient = new DiscordSocketClient ();
             messageControl = new MessageControl();
             //controlPanel = new ControlPanel (); //Removed due to being practically useless.
 
             InitializeData ();
-            InitializeCommands ();
-            UserSettings.Initialize ();
-            UserGameMonitor.Initialize ();
+            await InitializeCommands();
+            await UserSettings.Initialize ();
+            await UserGameMonitor.Initialize ();
 
             bootedTime = DateTime.Now.AddSeconds (BOOT_WAIT_TIME);
 
-            discordClient.MessageReceived += ( e ) => {
+            discordClient.MessageReceived += async ( e ) => {
 
                 ChatLogger.Log (GetChannelName (e) + " says: " + e.Content);
                 if (e.Author != discordClient.CurrentUser  && e.Content.Length > 0 && e.Content[0] == commandChar) {
@@ -111,7 +111,7 @@ namespace DiscordCthulhu {
                         string command = "";
                         List<string> arguments = ConstructArguments (message, out command);
 
-                        FindAndExecuteCommand (e, command, arguments, commands);
+                        await FindAndExecuteCommand (e, command, arguments, commands);
                     }
                 } else if (e.Author == discordClient.CurrentUser) {
                     if (messageControl.messages.Count > 0) {
@@ -125,18 +125,16 @@ namespace DiscordCthulhu {
                     }
                 }
 
-                FindPhraseAndRespond (e);
+                await FindPhraseAndRespond(e);
 
                 if (e.Content.Length > 0 && e.Content[0] == commandChar) {
-                    e.DeleteAsync ();
+                    await e.DeleteAsync ();
                     allowedDeletedMessages.Add (e.Content);
                 }
-
-                return Task.CompletedTask;
             };
 
-            discordClient.UserJoined += ( e ) => {
-                messageControl.SendMessage (GetMainChannel (e.Guild) as SocketTextChannel, "**" + e.Username + "** has joined this server. Bid them welcome or murder them in cold blood, it's really up to you.");
+            discordClient.UserJoined += async ( e ) => {
+                await messageControl.SendMessage (GetMainChannel (e.Guild) as SocketTextChannel, "**" + e.Username + "** has joined this server. Bid them welcome or murder them in cold blood, it's really up to you.");
 
                 string[] welcomeMessage = SerializationIO.LoadTextFile (dataPath + "welcomemessage" + gitHubIgnoreType);
                 string combined = "";
@@ -144,17 +142,14 @@ namespace DiscordCthulhu {
                     combined += welcomeMessage[i] + "\n";
                 }
 
-                messageControl.SendMessage (e, combined);
-
-                return Task.CompletedTask;
+                await messageControl.SendMessage (e, combined);
             };
 
-            discordClient.UserLeft += ( e ) => {
-                messageControl.SendMessage (GetMainChannel (e.Guild) as SocketTextChannel, "**" + GetUserName (e) + "** has left the server. Don't worry, they'll come crawling back soon.");
-                return Task.CompletedTask;
+            discordClient.UserLeft += async ( e ) => {
+                await messageControl.SendMessage (GetMainChannel (e.Guild) as SocketTextChannel, "**" + GetUserName (e) + "** has left the server. Don't worry, they'll come crawling back soon.");
             };
 
-            discordClient.UserUpdated += ( before, after ) => {
+            discordClient.UserUpdated += async ( before, after ) => {
                 SocketGuildUser beforeUser = (before as SocketGuildUser);
                 SocketGuildUser afterUser = (after as SocketGuildUser);
                 SocketGuild guild = beforeUser.Guild;
@@ -166,64 +161,55 @@ namespace DiscordCthulhu {
                         // Voice channel change detected.
                         ChatLogger.Log ("Voice channel change detected with user " + before.Username);
 
-                        AutomatedVoiceChannels.AddMissingChannels (guild);
-                        AutomatedVoiceChannels.CheckFullAndAddIf (guild);
+                        await AutomatedVoiceChannels.AddMissingChannels (guild);
+                        await AutomatedVoiceChannels.CheckFullAndAddIf (guild);
                         AutomatedVoiceChannels.RemoveLeftoverChannels (guild);
                     }
 
-                    AutomatedVoiceChannels.UpdateVoiceChannel (beforeUser.VoiceChannel);
-                    AutomatedVoiceChannels.UpdateVoiceChannel (afterUser.VoiceChannel);
+                    await AutomatedVoiceChannels.UpdateVoiceChannel (beforeUser.VoiceChannel);
+                    await AutomatedVoiceChannels.UpdateVoiceChannel (afterUser.VoiceChannel);
                 }
 
                 SocketGuildChannel channel = GetMainChannel (afterUser.Guild);
                 if (channel == null)
-                    return Task.CompletedTask;
+                    return;
 
                 if (beforeUser.Username != afterUser.Username) {
-                    messageControl.SendMessage (channel as SocketTextChannel, "**"+ GetUserUpdateName (beforeUser, afterUser, true) + "** has changed their name to **" + afterUser.Username + "**");
+                    await messageControl.SendMessage (channel as SocketTextChannel, "**"+ GetUserUpdateName (beforeUser, afterUser, true) + "** has changed their name to **" + afterUser.Username + "**");
                 }
 
                 if (beforeUser.Nickname != afterUser.Nickname) {
-                    messageControl.SendMessage (channel as SocketTextChannel, "**" + GetUserUpdateName (beforeUser, afterUser, true) + "** has changed their nickname to **" + GetUserUpdateName (beforeUser, afterUser, false) + "**");
+                    await messageControl.SendMessage (channel as SocketTextChannel, "**" + GetUserUpdateName (beforeUser, afterUser, true) + "** has changed their nickname to **" + GetUserUpdateName (beforeUser, afterUser, false) + "**");
                 }
-
-                return Task.CompletedTask;
             };
 
-            discordClient.UserBanned += ( e, guild ) => {
+            discordClient.UserBanned += async ( e, guild ) => {
                 SocketChannel channel = GetMainChannel (guild);
                 if (channel == null)
-                    return Task.CompletedTask;
+                    return;
 
-                messageControl.SendMessage (channel as SocketTextChannel, "**" + GetUserName (e as SocketGuildUser) + "** has been banned from this server, they will not be missed.");
-                messageControl.SendMessage (e as SocketGuildUser, "Sorry to tell you like this, but you have been permabanned from Monster Mash. ;-;");
-
-                return Task.CompletedTask;
+                await messageControl.SendMessage (channel as SocketTextChannel, "**" + GetUserName (e as SocketGuildUser) + "** has been banned from this server, they will not be missed.");
+                await messageControl.SendMessage (e as SocketGuildUser, "Sorry to tell you like this, but you have been permabanned from Monster Mash. ;-;");
             };
 
-            discordClient.UserUnbanned += ( e, guild ) => {
+            discordClient.UserUnbanned += async ( e, guild ) => {
                 SocketChannel channel = GetMainChannel (guild);
                 if (channel == null)
-                    return Task.CompletedTask;
+                    return;
 
-                messageControl.SendMessage (channel as SocketTextChannel, "**" + GetUserName (e as SocketGuildUser) + "** has been unbanned from this server, They are once more welcome in our arms of glory.");
-                messageControl.SendMessage (e as SocketGuildUser, "You have been unbanned from Monster Mash, we love you once more! :D");
-
-                return Task.CompletedTask;
+                await messageControl.SendMessage (channel as SocketTextChannel, "**" + GetUserName (e as SocketGuildUser) + "** has been unbanned from this server, They are once more welcome in our arms of glory.");
+                await messageControl.SendMessage (e as SocketGuildUser, "You have been unbanned from Monster Mash, we love you once more! :D");
             };
 
-            discordClient.MessageDeleted += (index, e) => {
+            discordClient.MessageDeleted += async (index, e) => {
                 SocketGuildChannel channel = SearchChannel ((e.Value.Channel as SocketGuildChannel).Guild, dumpTextChannelName);
                 if (channel == null)
-                    return Task.CompletedTask;
 
                 if (!allowedDeletedMessages.Contains (e.Value.Content)) {
-                    messageControl.SendMessage (channel as SocketTextChannel, "In order disallow *any* secrets except for admin secrets, I'd like to tell you that **" + GetUserName (e.Value.Author as SocketGuildUser) + "** just had a message deleted on **" + e.Value.Channel.Name + "**.");
+                    await messageControl.SendMessage (channel as SocketTextChannel, "In order disallow *any* secrets except for admin secrets, I'd like to tell you that **" + GetUserName (e.Value.Author as SocketGuildUser) + "** just had a message deleted on **" + e.Value.Channel.Name + "**.");
                 }else {
                     allowedDeletedMessages.Remove (e.Value.Content);
                 }
-
-                return Task.CompletedTask;
             };
 
             discordClient.Ready += () => {
@@ -243,11 +229,11 @@ namespace DiscordCthulhu {
         }   
 
         private static int maxTries = 5;
-        public static async void SecureAddRole (SocketGuildUser user, SocketRole role) {
+        public static async Task SecureAddRole (SocketGuildUser user, SocketRole role) {
             int tries = 0;
             while (!user.Roles.Contains (role)) {
                 if (tries > maxTries) {
-                    messageControl.SendMessage (SearchChannel (GetServer (), dumpTextChannelName) as SocketTextChannel, "Error - tried to add role too many times.");
+                    await messageControl.SendMessage (SearchChannel (GetServer (), dumpTextChannelName) as SocketTextChannel, "Error - tried to add role too many times.");
                     break;
                 }
                 tries++;
@@ -265,11 +251,11 @@ namespace DiscordCthulhu {
             return result;
         }
 
-        public static async void SecureRemoveRole ( SocketGuildUser user, SocketRole role ) {
+        public static async Task SecureRemoveRole ( SocketGuildUser user, SocketRole role ) {
             int tries = 0;
             while (user.Roles.Contains (role)) {
                 if (tries > maxTries) {
-                    messageControl.SendMessage (SearchChannel (GetServer (), dumpTextChannelName) as SocketTextChannel, "Error - tried to remove role too many times.");
+                    await messageControl.SendMessage (SearchChannel (GetServer (), dumpTextChannelName) as SocketTextChannel, "Error - tried to remove role too many times.");
                     break;
                 }
                 ChatLogger.Log ("Removing role from " + user.Username + " - " + role.Name);
@@ -406,9 +392,9 @@ namespace DiscordCthulhu {
                 Directory.CreateDirectory (path);
         }
 
-        public static void InitializeCommands () {
+        public static async Task InitializeCommands () {
             for (int i = 0; i < commands.Length; i++) {
-                commands[i].Initialize ();
+                await commands[i].Initialize ();
             }
         }
 
@@ -420,10 +406,10 @@ namespace DiscordCthulhu {
             return null;
         }
 
-        public static bool FindAndExecuteCommand (SocketMessage e, string commandName, List<string> arguements, Command[] commandList) {
+        public static async Task<bool> FindAndExecuteCommand (SocketMessage e, string commandName, List<string> arguements, Command[] commandList) {
             for (int i = 0; i < commandList.Length; i++) {
                 if (commandList[i].command == commandName) {
-                    commandList[i].ExecuteCommand (e, arguements);
+                    await commandList[i].ExecuteCommand (e, arguements);
                     return true;
                 }
             }
@@ -440,9 +426,9 @@ namespace DiscordCthulhu {
             return null;
         }
 
-        public void FindPhraseAndRespond ( SocketMessage e ) {  
+        public async Task FindPhraseAndRespond ( SocketMessage e ) {  
             for (int i = 0; i < phrases.Length; i++) {
-                if (phrases[i].CheckAndRespond (e))
+                if (await phrases[i].CheckAndRespond (e))
                     return;
             }
         }
