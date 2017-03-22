@@ -79,7 +79,7 @@ namespace Adminthulhu {
                 List<SocketGuildUser> users = voice.Users.ToList ();
                 foreach (SocketGuildUser user in users) {
 
-                    SocketUser forcedUser = Program.discordClient.GetUser (user.Id);
+                    SocketGuildUser forcedUser = Program.GetServer().GetUser (user.Id);
                     if (forcedUser.Game.HasValue) {
                         if (numPlayers.ContainsKey (user.Game.Value)) {
                             numPlayers[forcedUser.Game.Value]++;
@@ -104,8 +104,8 @@ namespace Adminthulhu {
                 string lockString = allVoiceChannels[voice.Id].IsLocked () ? lockIcon : "";
                 // Trying to optimize API calls here, just to spare those poor souls at the Discord API HQ stuff
                 string newName = highestGame.Name != "" ? lockString + allVoiceChannels[voice.Id].name + " - " + highestGame.Name : lockString + allVoiceChannels[voice.Id].name;
-                ChatLogger.Log ("Channel name updated: " + newName);
                 if (voice.Name != newName) {
+                    ChatLogger.Log ("Channel name updated: " + newName);
                     await voice.ModifyAsync ((delegate ( VoiceChannelProperties properties ) { properties.Name = newName; } ));
                 }
                 allVoiceChannels[voice.Id].CheckLocker ();
@@ -253,7 +253,7 @@ namespace Adminthulhu {
                             loc.position++;
                     }
 
-                    await afkChannel.GetChannel ().ModifyAsync (new Action<VoiceChannelProperties> (delegate ( VoiceChannelProperties properties ) { properties.Position = int.MaxValue; } ));
+                    await afkChannel.GetChannel ().ModifyAsync (delegate ( VoiceChannelProperties properties ) { properties.Position = allVoiceChannels.Count; } );
                 }
             }
         }

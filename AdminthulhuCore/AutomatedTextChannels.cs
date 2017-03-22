@@ -44,7 +44,7 @@ namespace Adminthulhu {
             int number = random.Next (headers.Count);
 
             string topic = headers[number];
-            //mainChannel.ModifyAsync (delegate ( GuildChannelProperties properties ) { properties. = topic; } )); Not yet implemented in 1.0
+            mainChannel.ModifyAsync (delegate (GuildChannelProperties properties) {  (properties as TextChannelProperties).Topic = topic; } );
             return Task.CompletedTask;
         }
 

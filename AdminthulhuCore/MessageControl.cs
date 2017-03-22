@@ -100,12 +100,14 @@ namespace Adminthulhu {
             }
         }
 
-        public async Task AsyncSend (ISocketMessageChannel e, string message) {
+        public async Task<RestUserMessage> AsyncSend (ISocketMessageChannel e, string message) {
             ChatLogger.Log ("Sending a message.");
             if (message.Length > 0) {
                 Task<RestUserMessage> messageTask = e.SendMessageAsync (message);
                 await messageTask;
+                return messageTask.Result;
             }
+            return null;
         }
 
         public async Task SendImage (SocketTextChannel e, string message, string imagePath) {

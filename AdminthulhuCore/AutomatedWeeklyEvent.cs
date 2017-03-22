@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Discord.WebSocket;
+using Discord.Rest;
 
 namespace Adminthulhu {
 
@@ -18,7 +19,7 @@ namespace Adminthulhu {
             new Game ("Dodgeball"),
             new Game ("Guns of Icarus"),
             new Game ("Rocket League"),
-            new Game ("Brawlshalla"),
+            new Game ("Brawlhalla"),
             new Game ("Battlefield"),
             new Game ("Left 4 Dead 2"),
             new Game ("PlanetSide 2"),
@@ -40,67 +41,68 @@ namespace Adminthulhu {
         public static string votesFileName = "votes";
         public static string allGamesFileName = "allgames";
         public static string gamesFileName = "games";
+        public static string statusFileName = "status";
 
         public static string eventDay = "friday";
-        public static string voteEndDay = "wednesday";
+        public static string voteEndDay = "tuesday";
         public static int daysBetween = 2;
 
         public static int votesPerPerson = 3;
         public static int gamesPerWeek = 10;
 
+        public static string announcementsChannelName = "announcements";
+
         public enum WeeklyEventStatus { Voting, Waiting }
         public static WeeklyEventStatus status = WeeklyEventStatus.Voting;
         public static Game highestGame = null;
 
-        public static ulong votingMessageID = 276023604892663808;
+        public static ulong votingMessageID = 0;
 
         public int eventHour = 20;
 
-        public async Task Initialize ( DateTime time ) {
-            votes = SerializationIO.LoadObjectFromFile<List<Vote>> (Program.dataPath + Program.eventDirectory + votesFileName + Program.gitHubIgnoreType);
-            games = SerializationIO.LoadObjectFromFile<Game[]> (Program.dataPath + Program.eventDirectory + gamesFileName + Program.gitHubIgnoreType);
+        public async Task Initialize(DateTime time) {
+            votes = SerializationIO.LoadObjectFromFile<List<Vote>>(Program.dataPath + Program.eventDirectory + votesFileName + Program.gitHubIgnoreType);
+            games = SerializationIO.LoadObjectFromFile<Game[]>(Program.dataPath + Program.eventDirectory + gamesFileName + Program.gitHubIgnoreType);
+            votingMessageID = SerializationIO.LoadObjectFromFile<ulong>(Program.dataPath + Program.eventDirectory + statusFileName + Program.gitHubIgnoreType);
 
             if (votes == null)
-                votes = new List<Vote> ();
+                votes = new List<Vote>();
 
             foreach (Vote v in votes) {
-                Console.WriteLine (games[v.votedGameID].name);
+                Console.WriteLine(games[v.votedGameID].name);
             }
 
-            while (Program.GetServer () == null)
-                await Task.Delay (1000);
+            while (Program.GetServer() == null)
+                await Task.Delay(1000);
 
             if (games == null)
-                BeginNewVote ();
+                BeginNewVote();
         }
 
-        public static void SaveData () {
-            SerializationIO.SaveObjectToFile (Program.dataPath + Program.eventDirectory + votesFileName + Program.gitHubIgnoreType, votes);
-            SerializationIO.SaveObjectToFile (Program.dataPath + Program.eventDirectory + gamesFileName + Program.gitHubIgnoreType, games);
+        public static void SaveData() {
+            SerializationIO.SaveObjectToFile(Program.dataPath + Program.eventDirectory + votesFileName + Program.gitHubIgnoreType, votes);
+            SerializationIO.SaveObjectToFile(Program.dataPath + Program.eventDirectory + gamesFileName + Program.gitHubIgnoreType, games);
+            SerializationIO.SaveObjectToFile(Program.dataPath + Program.eventDirectory + statusFileName + Program.gitHubIgnoreType, votingMessageID);
         }
 
-        public Task OnDayPassed ( DateTime time ) {
+        public Task OnDayPassed(DateTime time) {
+            return Task.CompletedTask;
+        }
+
+        public Task OnMinutePassed(DateTime time) {
+            if (votes != null) {
+                if (time.AddDays(-1).DayOfWeek.ToString().ToLower() == voteEndDay) {
+                    CountVotes();
+                }
+            }else{
+                if (time.AddDays(-1).DayOfWeek.ToString().ToLower() == eventDay) {
+                    BeginNewVote();
+                }
+            }
             return Task.CompletedTask;
         }
 
         public Task OnHourPassed ( DateTime time ) {
-            switch (status) {
-                case WeeklyEventStatus.Voting:
-                    if (time.AddDays (-1).DayOfWeek.ToString ().ToLower () == voteEndDay) {
-                        CountVotes ();
-                    }
-                    break;
-
-                case WeeklyEventStatus.Waiting:
-                    if (time.AddDays (-1).DayOfWeek.ToString ().ToLower () == eventDay) {
-                        BeginNewVote ();
-                    }
-                    break;
-            }
-            return Task.CompletedTask;
-        }
-
-        public Task OnMinutePassed ( DateTime time ) {
             return Task.CompletedTask;
         }
 
@@ -128,29 +130,42 @@ namespace Adminthulhu {
             SocketGuildChannel mainChannel = Program.GetMainChannel (Program.GetServer ());
             Program.messageControl.SendMessage (mainChannel as SocketTextChannel, "The game for this fridays event has been chosen by vote: **" + highestGame.name + "**! It can be joined using command `!event join friday event`");
 
-            List<ulong> processed = new List<ulong> ();
-            foreach (Vote vote in votes) {
-                if (processed.Contains (vote.voterID))
-                    continue;
+            Dictionary<ulong, bool> didWin = new Dictionary<ulong, bool>();
 
-                if (highestGame != games[vote.votedGameID]) {
-                    SocketGuildUser user = Program.GetServer ().GetUser (vote.voterID);
+            foreach (Vote vote in votes) {
+                if (!didWin.ContainsKey (vote.voterID))
+                    didWin.Add (vote.voterID, false);
+
+                if (!didWin [ vote.voterID ]) {
+                    if (highestGame == games [ vote.votedGameID ]) {
+                        didWin [ vote.voterID ] = true;
+                    }
+                }
+            }
+
+            int count = didWin.Count ();
+            for (int i = 0; i < count; i++) {
+                KeyValuePair<ulong, bool> pair = didWin.ElementAt (i);
+                if (!pair.Value) {
+                    SocketGuildUser user = Program.GetServer ().GetUser (pair.Key);
                     // AutomatedEventHandling seriously lacks wrapper functions.
                     Program.messageControl.AskQuestion (user, "The friday event you voted for sadly lost to **" + highestGame.name + "** , do you want to join the event anyways?",
                         delegate () {
-                            AutomatedEventHandling.JoinEvent (vote.voterID, "friday event");
+                            AutomatedEventHandling.JoinEvent (pair.Key, "friday event");
                             Program.messageControl.SendMessage (user, "You have joined the friday event succesfully!"); 
                         } );
                 }else {
-                    AutomatedEventHandling.JoinEvent (vote.voterID, "friday event");
+                    AutomatedEventHandling.JoinEvent (pair.Key, "friday event");
                 }
-                processed.Add (vote.voterID);
             }
+
+            games = null;
+            votes = null;
 
             UpdateVoteMessage (false);
         }
 
-        private void BeginNewVote () {
+        private async Task BeginNewVote () {
             status = WeeklyEventStatus.Voting;
 
             highestGame = null;
@@ -168,12 +183,11 @@ namespace Adminthulhu {
                 game.votes = 0;
 
             votes = new List<Vote> ();
-            UpdateVoteMessage (true);
+            await UpdateVoteMessage (true);
 
             SocketGuildChannel mainChannel = Program.GetMainChannel (Program.GetServer ());
-            Program.messageControl.SendMessage (mainChannel as SocketTextChannel, "A new vote for next friday event has begun, see pinned messages in <#188106821154766848> for votesheet.");
-            
 
+            Program.messageControl.SendMessage (mainChannel as SocketTextChannel, "A new vote for next friday event has begun, see pinned messages in <#188106821154766848> for votesheet.");
             SaveData ();
         }
 
@@ -223,13 +237,14 @@ namespace Adminthulhu {
             return true;
         }
 
-        public static async Task UpdateVoteMessage ( bool forceNew ) {
+        public static async Task UpdateVoteMessage(bool forceNew) {
             string text = "Vote for this " + eventDay + "s event!```\n";
             int index = 0;
             foreach (Game game in games) {
                 text += (index + 1) + " - " + game.name + " - " + game.votes.ToString () + " votes.\n";
                 index++;
-            }   
+            }
+
             text += "```\n";
             if (status == WeeklyEventStatus.Waiting) {
                 text += "**VOTING HAS ENDED, " + highestGame.name + " HAS WON THE VOTE.**";
@@ -238,17 +253,33 @@ namespace Adminthulhu {
             }
 
             SocketGuildChannel channel = Program.SearchChannel (Program.GetServer (), "announcements");
-            SocketUserMessage message = (channel as SocketTextChannel).GetMessageAsync (votingMessageID).Result as SocketUserMessage;
+            IMessage message = null;
+            if (votingMessageID != 0) {
+                try {
+                    message = await (channel as SocketTextChannel).GetMessageAsync (votingMessageID);
+                } catch {
+                    message = null;
+                }
+            }
 
-            /*if (message == null || forceNew || votingMessageID == 0) {
-                Task<Content> task = Program.messageControl.AsyncSend (channel, text);
+            ChatLogger.Log ("Updating vote message.");
+
+            if (message == null || forceNew) {
+
+                Task<RestUserMessage> task = Program.messageControl.AsyncSend (channel as SocketTextChannel, text);
                 await task;
-
-                Console.WriteLine (task.Result.Id);
                 votingMessageID = task.Result.Id;
-            } else {*/
-            await message.ModifyAsync (delegate ( MessageProperties properties ) { properties.Content = text; });
-            //}
+
+            } else {
+                try {
+                    RestUserMessage m = message as RestUserMessage;
+                    await m.ModifyAsync (delegate (MessageProperties properties) {
+                        properties.Content = text;
+                    });
+                } catch (Exception e) {
+                    ChatLogger.DebugLog (e.Message);
+                }
+            }
         }
 
         public class Game {

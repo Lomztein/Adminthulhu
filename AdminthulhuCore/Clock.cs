@@ -12,7 +12,10 @@ namespace Adminthulhu {
         public DateTime lastMesauredTime;
         public int checkDelay = 1000; // The time between each check in milliseconds.
 
-        public IClockable[] clockables = new IClockable[] {new AutomatedEventHandling (), new AutomatedTextChannels (), new UserActivityMonitor (), new Birthdays (), new AutomatedWeeklyEvent ()};
+        public IClockable[] clockables = new IClockable[] {
+            new AutomatedEventHandling (), new AutomatedTextChannels (), new UserActivityMonitor (), new Birthdays (), new AutomatedWeeklyEvent (),
+            new Strikes (),
+        };
 
         public Clock () {
             timeThread = new Thread (new ThreadStart (Initialize));
@@ -20,7 +23,6 @@ namespace Adminthulhu {
             while (!timeThread.IsAlive) {
                 ChatLogger.Log ("Initializing clock thread..");
             }
-
             Thread.Sleep (1);
         }
 
@@ -62,6 +64,26 @@ namespace Adminthulhu {
                 Thread.Sleep (checkDelay);
                 lastMesauredTime = now;
             }
+        }
+
+        public static TimeSpan GetTimespan(string input) {
+            int count;
+            if (int.TryParse (input.Substring (0, input.Length - 1), out count)) {
+                switch (input [ input.Length - 1 ]) {
+                    case 'm':
+                        return new TimeSpan (0, count, 0);
+
+                    case 'h':
+                        return new TimeSpan (count, 0, 0);
+
+                    case 'd':
+                        return new TimeSpan (count, 0, 0, 0);
+
+                    case 'w':
+                        return new TimeSpan (count * 7, 0, 0, 0, 0);
+                }
+            }
+            throw new ArgumentException ("Input didn't work, dummy.");
         }
     }
 }

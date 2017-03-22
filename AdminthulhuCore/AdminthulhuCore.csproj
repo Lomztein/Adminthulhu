@@ -4,13 +4,14 @@
     <TargetFramework>netcoreapp1.1</TargetFramework>
     <StartupObject />
     <RootNamespace>Adminthulhu</RootNamespace>
+    <AssemblyName>Adminthulhu</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
     <Folder Include="wwwroot\" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Discord.Net" Version="1.0.0-rc-00614" />
+    <PackageReference Include="Discord.Net" Version="1.0.0-rc-00630" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.0.0" />
     <PackageReference Include="Microsoft.AspNetCore" Version="1.1.1" />
     <PackageReference Include="Newtonsoft.Json" Version="10.0.1-beta1" />

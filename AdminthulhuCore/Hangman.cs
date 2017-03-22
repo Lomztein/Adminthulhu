@@ -75,7 +75,7 @@ namespace Adminthulhu {
                     if (progress.ToLower () == word.ToLower ()) {
                         Program.messageControl.SendMessage (channel, "Well I'll be damned, it seems you are victorious!");
                         currentGame = null;
-                        Program.SetGame ("");
+                        Program.SetGame (null);
                     }
                     return true;
                 }else{

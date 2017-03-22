@@ -12,7 +12,7 @@ namespace Adminthulhu {
         public static T LoadObjectFromFile<T> ( string path ) {
             try {
                 if (File.Exists (path)) {
-
+                    
                     StreamReader reader = File.OpenText (path);
                     JsonTextReader jReader = new JsonTextReader (reader);
 

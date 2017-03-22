@@ -32,7 +32,7 @@ namespace Adminthulhu {
             };
 
             Program.discordClient.ReactionRemoved += async ( message, channel, reaction ) => {
-
+                
                 IMessage iMessage = await channel.GetMessageAsync (message.Id);
 
                 if (reaction.Emoji.Id == upvoteID) {
@@ -68,10 +68,11 @@ namespace Adminthulhu {
             base.ExecuteCommand (e, arguments);
             if (AllowExecution (e, arguments)) {
                 long karmaCount = 0;
+
                 SocketGuildUser user = e.Author as SocketGuildUser;
 
                 if (arguments[0] != "me") {
-                    Program.FindUserByName ((e.Channel as SocketGuildChannel).Guild, arguments[0]);
+                    user = Program.FindUserByName ((e.Channel as SocketGuildChannel).Guild, arguments[0]);
                     if (user == null) {
                         Program.messageControl.SendMessage (e.Channel, "User " + arguments[0] + " not found.");
                         return Task.CompletedTask;

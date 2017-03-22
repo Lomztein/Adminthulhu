@@ -18,11 +18,10 @@ namespace Adminthulhu {
             if (userGames == null)
                 userGames = new Dictionary<ulong, List<string>> ();
 
-            Program.discordClient.UserUpdated += ( before, after ) => {
-                SocketGuildUser user = after as SocketGuildUser;
+            Program.discordClient.GuildMemberUpdated += ( before, after ) => {
                 
-                string gameName = user.Game.HasValue ? user.Game.Value.Name.ToString ().ToUpper () : null;
-                AddGame (user, gameName);
+                string gameName = after.Game.HasValue ? after.Game.Value.Name.ToString ().ToUpper () : null;
+                AddGame (after, gameName);
 
                 return Task.CompletedTask;
             };

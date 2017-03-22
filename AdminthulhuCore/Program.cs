@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting;
 using Discord;
 using Discord.WebSocket;
 
-namespace Adminthulhu {
+namespace Adminthulhu
+{
     class Program {
 
         public static char commandChar = '!';
@@ -18,7 +18,7 @@ namespace Adminthulhu {
             new CEndTheWorld (), new CFizzfyr (), new CSwiggity (),
             new CAddHeader (), new CShowHeaders (), new CKarma (), new CReport (),
             new VoiceCommands (), new EventCommands (), new UserSettingsCommands (), new DebugCommands (), new HangmanCommands (),
-            new GameCommands ()
+            new GameCommands (), new StrikeCommandSet (),
         };
 
         public static string dataPath = "";
@@ -153,7 +153,7 @@ namespace Adminthulhu {
                 // Maybe, just maybe put these into a single function.
                 if (FullyBooted ()) {
                     AutomatedVoiceChannels.AddMissingChannels (guild);
-                    //await AutomatedVoiceChannels.CheckFullAndAddIf (guild);
+                    await AutomatedVoiceChannels.CheckFullAndAddIf (guild);
                     AutomatedVoiceChannels.RemoveLeftoverChannels (guild);
 
                     await AutomatedVoiceChannels.UpdateVoiceChannel (before.VoiceChannel);
@@ -250,7 +250,7 @@ namespace Adminthulhu {
             }
         }
 
-        public static async Task SetGame (string gameName) {
+        public static async Task SetGame (string gameName) { // Wrapper functions ftw
             await discordClient.SetGameAsync (gameName);
         }
 
