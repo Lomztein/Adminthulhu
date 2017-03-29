@@ -61,22 +61,36 @@ namespace Adminthulhu {
         public int eventHour = 20;
 
         public async Task Initialize(DateTime time) {
-            votes = SerializationIO.LoadObjectFromFile<List<Vote>>(Program.dataPath + Program.eventDirectory + votesFileName + Program.gitHubIgnoreType);
-            games = SerializationIO.LoadObjectFromFile<Game[]>(Program.dataPath + Program.eventDirectory + gamesFileName + Program.gitHubIgnoreType);
-            votingMessageID = SerializationIO.LoadObjectFromFile<ulong>(Program.dataPath + Program.eventDirectory + statusFileName + Program.gitHubIgnoreType);
+            votes = SerializationIO.LoadObjectFromFile<List<Vote>> (Program.dataPath + Program.eventDirectory + votesFileName + Program.gitHubIgnoreType);
+            games = SerializationIO.LoadObjectFromFile<Game [ ]> (Program.dataPath + Program.eventDirectory + gamesFileName + Program.gitHubIgnoreType);
+            votingMessageID = SerializationIO.LoadObjectFromFile<ulong> (Program.dataPath + Program.eventDirectory + statusFileName + Program.gitHubIgnoreType);
 
             if (votes == null)
-                votes = new List<Vote>();
+                votes = new List<Vote> ();
 
             foreach (Vote v in votes) {
-                Console.WriteLine(games[v.votedGameID].name);
+                Console.WriteLine (games [ v.votedGameID ].name);
             }
 
-            while (Program.GetServer() == null)
-                await Task.Delay(1000);
+            while (Utility.GetServer () == null)
+                await Task.Delay (1000);
 
             if (games == null)
-                BeginNewVote();
+                BeginNewVote ();
+
+            Program.discordClient.ReactionAdded += async (message, channel, reaction) => {
+                if (message.Id == votingMessageID) {
+                    int reactionID = 0;
+                    for (int i = 0; i < gamesPerWeek; i++) {
+                        if (CEmbolden.NumberToString ((i + 1).ToString () [ 0 ]) == reaction.Emoji.Name) {
+                            reactionID = i;
+                            break;
+                        }
+                        VoteForGame (null, reaction.UserId, reactionID);
+                        await message.Value.RemoveReactionAsync (reaction.Emoji, reaction.User.Value);
+                    }
+                }
+            };
         }
 
         public static void SaveData() {
@@ -91,11 +105,11 @@ namespace Adminthulhu {
 
         public Task OnMinutePassed(DateTime time) {
             if (votes != null) {
-                if (time.AddDays(-1).DayOfWeek.ToString().ToLower() == voteEndDay) {
+                if (time.DayOfWeek.ToString().ToLower() == voteEndDay) {
                     CountVotes();
                 }
             }else{
-                if (time.AddDays(-1).DayOfWeek.ToString().ToLower() == eventDay) {
+                if (time.DayOfWeek.ToString().ToLower() == eventDay) {
                     BeginNewVote();
                 }
             }
@@ -127,7 +141,7 @@ namespace Adminthulhu {
             DateTime eventDay = new DateTime (now.Year, now.Month, now.Day, eventHour, 0, 0).AddDays (daysBetween);
             AutomatedEventHandling.CreateEvent ("Friday Event", eventDay, highestGame.name + " has been chosen by vote!");
 
-            SocketGuildChannel mainChannel = Program.GetMainChannel (Program.GetServer ());
+            SocketGuildChannel mainChannel = Utility.GetMainChannel (Utility.GetServer ());
             Program.messageControl.SendMessage (mainChannel as SocketTextChannel, "The game for this fridays event has been chosen by vote: **" + highestGame.name + "**! It can be joined using command `!event join friday event`");
 
             Dictionary<ulong, bool> didWin = new Dictionary<ulong, bool>();
@@ -147,7 +161,7 @@ namespace Adminthulhu {
             for (int i = 0; i < count; i++) {
                 KeyValuePair<ulong, bool> pair = didWin.ElementAt (i);
                 if (!pair.Value) {
-                    SocketGuildUser user = Program.GetServer ().GetUser (pair.Key);
+                    SocketGuildUser user = Utility.GetServer ().GetUser (pair.Key);
                     // AutomatedEventHandling seriously lacks wrapper functions.
                     Program.messageControl.AskQuestion (user, "The friday event you voted for sadly lost to **" + highestGame.name + "** , do you want to join the event anyways?",
                         delegate () {
@@ -185,33 +199,49 @@ namespace Adminthulhu {
             votes = new List<Vote> ();
             await UpdateVoteMessage (true);
 
-            SocketGuildChannel mainChannel = Program.GetMainChannel (Program.GetServer ());
+            SocketGuildChannel mainChannel = Utility.GetMainChannel (Utility.GetServer ());
 
             Program.messageControl.SendMessage (mainChannel as SocketTextChannel, "A new vote for next friday event has begun, see pinned messages in <#188106821154766848> for votesheet.");
             SaveData ();
         }
 
-        public static bool VoteForGame ( SocketMessage e, ulong userID, int id ) {
+        public static bool VoteForGame (SocketMessage e, ulong userID, int id ) {
             List<Vote> userVotes = new List<Vote> ();
-
+            SocketGuildUser user = Utility.GetServer ().GetUser (userID);
+            
             foreach (Vote vote in votes) {
                 if (vote.voterID == userID)
                     userVotes.Add (vote);
             }
 
             if (userVotes.Count >= votesPerPerson) {
-                Program.messageControl.SendMessage (e, "You've already voted for " + votesPerPerson + " games, you'll have to remove one to vote using `!event removevote <id>`, before you can place another.");
+                string locText = "You've already voted for " + votesPerPerson + " games, you'll have to remove one to vote using `!event removevote <id>`, before you can place another.";
+                if (e == null) {
+                    Program.messageControl.SendMessage (user, locText);
+                } else {
+                    Program.messageControl.SendMessage (e, locText);
+                }
                 return false;
             }
 
             foreach (Vote v in userVotes) {
                 if (v.votedGameID == id) {
-                    Program.messageControl.SendMessage (e, "You've already voted for **" + games[id].name + "**. You can't vote for the same game more than once.");
+                    string locText = "You've already voted for **" + games [ id ].name + "**. You can't vote for the same game more than once.";
+                    if (e == null) {
+                        Program.messageControl.SendMessage (user, locText);
+                    } else {
+                        Program.messageControl.SendMessage (e, locText);
+                    }
                     return false;
                 }
             }
 
-            Program.messageControl.SendMessage (e, "Succesfully voted for **" + games[id].name + "**, in the upcoming friday event.");
+            string text = "Succesfully voted for **" + games [ id ].name + "**, in the upcoming friday event.";
+            if (e == null) {
+                Program.messageControl.SendMessage (user, text);
+            } else {
+                Program.messageControl.SendMessage (e, text);
+            }
             votes.Add (new Vote (userID, id));
             games[id].votes++;
 
@@ -252,7 +282,7 @@ namespace Adminthulhu {
                 text += "**Vote using `!event vote <id>` to vote. You can vote 3 times, and also remove votes using `!event removevote <id>`!**";
             }
 
-            SocketGuildChannel channel = Program.SearchChannel (Program.GetServer (), "announcements");
+            SocketGuildChannel channel = Utility.SearchChannel (Utility.GetServer (), "announcements");
             IMessage message = null;
             if (votingMessageID != 0) {
                 try {
@@ -269,6 +299,11 @@ namespace Adminthulhu {
                 Task<RestUserMessage> task = Program.messageControl.AsyncSend (channel as SocketTextChannel, text);
                 await task;
                 votingMessageID = task.Result.Id;
+
+                for (int i = 0; i < gamesPerWeek; i++) {
+                    string emoji = CEmbolden.NumberToString ((i + 1).ToString()[0]); // wat
+                    await task.Result.AddReactionAsync (emoji);
+                }
 
             } else {
                 try {

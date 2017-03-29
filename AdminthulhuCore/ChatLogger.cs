@@ -29,8 +29,8 @@ namespace Adminthulhu {
 
         public static void DebugLog (string message) {
             Log (message);
-            if (Program.GetServer () != null)
-                Program.messageControl.SendMessage (Program.SearchChannel (Program.GetServer (), Program.dumpTextChannelName) as SocketTextChannel, message);
+            if (Utility.GetServer () != null)
+                Program.messageControl.SendMessage (Utility.SearchChannel (Utility.GetServer (), Program.dumpTextChannelName) as SocketTextChannel, message);
         }
     }
 }

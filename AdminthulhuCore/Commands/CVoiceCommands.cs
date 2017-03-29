@@ -112,7 +112,7 @@ namespace Adminthulhu {
             if (AllowExecution (e, arguments)) {
 
                 SocketGuildChannel channel = (e.Author as SocketGuildUser).VoiceChannel;
-                SocketGuildUser user = Program.FindUserByName ((e.Channel as SocketGuildChannel).Guild, arguments[0]);
+                SocketGuildUser user = Utility.FindUserByName ((e.Channel as SocketGuildChannel).Guild, arguments[0]);
                 if (user == null) {
                     Program.messageControl.SendMessage (e.Channel, "Failed to invite - User **" + arguments[0] + "** couldn't be found on this server.");
                     return Task.CompletedTask;
@@ -123,12 +123,12 @@ namespace Adminthulhu {
                     AutomatedVoiceChannels.VoiceChannel vc = AutomatedVoiceChannels.allVoiceChannels[channel.Id];
                     if (vc.IsLocked ()) {
                         vc.InviteUser (e.Author as SocketGuildUser, user);
-                        Program.messageControl.SendMessage (e.Channel, "User **" + Program.GetUserName (user) + "** succesfully invited.");
+                        Program.messageControl.SendMessage (e.Channel, "User **" + Utility.GetUserName (user) + "** succesfully invited.");
                         return Task.CompletedTask;
 
                     }
 
-                    Program.messageControl.SendMessage (e.Channel, "The channel isn't locked, but I'm sure " + Program.GetUserName (user) + " would love to join anyways.");
+                    Program.messageControl.SendMessage (e.Channel, "The channel isn't locked, but I'm sure " + Utility.GetUserName (user) + " would love to join anyways.");
                     return Task.CompletedTask;
 
                 }
@@ -159,7 +159,7 @@ namespace Adminthulhu {
                     if (vc.IsLocked ()) {
                         string reply = "```\n";
                         foreach (ulong user in vc.allowedUsers) {
-                            //reply += Program.GetUserName (Program.GetServer ().GetUser (user)) + "\n";
+                            //reply += Utility.GetUserName (Utility.GetServer ().GetUser (user)) + "\n";
                         }
                         reply += "```";
                         Program.messageControl.SendMessage (e.Channel, "Users allowed on your locked channel:\n" + reply);
@@ -193,7 +193,7 @@ namespace Adminthulhu {
             if (AllowExecution (e, arguments)) {
 
                 SocketGuildChannel channel = (e.Author as SocketGuildUser).VoiceChannel;
-                SocketGuildUser user = Program.FindUserByName ((e.Channel as SocketGuildChannel).Guild, arguments[0]);
+                SocketGuildUser user = Utility.FindUserByName ((e.Channel as SocketGuildChannel).Guild, arguments[0]);
                 if (user == null) {
                     Program.messageControl.SendMessage (e.Channel, "Error - User not found.");
                     return Task.CompletedTask;
@@ -211,7 +211,7 @@ namespace Adminthulhu {
 
                             }
                             vc.Kick (user);
-                            Program.messageControl.SendMessage (e.Channel, "User **" + Program.GetUserName (user) + "** succesfully kicked.");
+                            Program.messageControl.SendMessage (e.Channel, "User **" + Utility.GetUserName (user) + "** succesfully kicked.");
                             Program.messageControl.SendMessage (user, "Sorry man, but you have been kicked from voice channel **" + vc.name + "**.");
                             return Task.CompletedTask;
 

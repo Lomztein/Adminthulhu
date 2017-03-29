@@ -74,7 +74,7 @@ namespace Adminthulhu {
             int count = userGames.Count ();
             for (int i = 0; i < count; i++) {
                 if (userGames.ElementAt (i).Value.Contains (gameName))
-                    foundUsers.Add (Program.GetServer ().GetUser (userGames.ElementAt (i).Key));
+                    foundUsers.Add (Utility.GetServer ().GetUser (userGames.ElementAt (i).Key));
             }
 
             return foundUsers;
@@ -108,7 +108,7 @@ namespace Adminthulhu {
                     }else {
                         string total = "Here is the list of everyone who've been seen playing **" + arguments[0] + "**:```\n";
                         foreach (SocketGuildUser user in foundUsers) {
-                            total += Program.GetUserName (user) + "\n";
+                            total += Utility.GetUserName (user) + "\n";
                         }
                         total += "```";
                         Program.messageControl.SendMessage (e, total);

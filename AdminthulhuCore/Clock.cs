@@ -37,7 +37,7 @@ namespace Adminthulhu {
 
                 // This could possibly be improved with delegates, but I have no idea how they work.
                 // Don't do anything before the server is ready.
-                if (Program.GetServer () != null) {
+                if (Utility.GetServer () != null) {
 
                     if (now.Second != lastMesauredTime.Second) {
                         foreach (IClockable c in clockables)

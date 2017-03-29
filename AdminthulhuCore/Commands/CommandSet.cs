@@ -52,7 +52,7 @@ namespace Adminthulhu {
                     string secondayCommand = message.Substring (message.IndexOf (' ') + 1);
                     string command = "";
 
-                    List<string> newArguments = Program.ConstructArguments (secondayCommand, out command);
+                    List<string> newArguments = Utility.ConstructArguments (secondayCommand, out command);
                     Program.FindAndExecuteCommand (e, command, newArguments, commandsInSet);
                 }
             }

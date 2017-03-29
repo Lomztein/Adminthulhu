@@ -72,7 +72,7 @@ namespace Adminthulhu {
                 SocketGuildUser user = e.Author as SocketGuildUser;
 
                 if (arguments[0] != "me") {
-                    user = Program.FindUserByName ((e.Channel as SocketGuildChannel).Guild, arguments[0]);
+                    user = Utility.FindUserByName ((e.Channel as SocketGuildChannel).Guild, arguments[0]);
                     if (user == null) {
                         Program.messageControl.SendMessage (e.Channel, "User " + arguments[0] + " not found.");
                         return Task.CompletedTask;
@@ -80,7 +80,7 @@ namespace Adminthulhu {
                 }
 
                 karmaCount = Karma.GetKarma (user.Id);
-                Program.messageControl.SendMessage (e.Channel, "User " + Program.GetUserName (user) + " currently have " + karmaCount + " karma.");
+                Program.messageControl.SendMessage (e.Channel, "User " + Utility.GetUserName (user) + " currently have " + karmaCount + " karma.");
             }
             return Task.CompletedTask;
         }

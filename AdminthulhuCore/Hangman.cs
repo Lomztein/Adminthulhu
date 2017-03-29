@@ -40,12 +40,12 @@ namespace Adminthulhu {
             progress = ToUnderscores (word);
 
             guessedLetters = new List<char> ();
-            Program.SetGame ("Hangman");
+            Utility.SetGame ("Hangman");
         }
 
         public bool GuessLetter (SocketMessage e, char letter) {
             SocketTextChannel channel = (e.Channel as SocketTextChannel);
-            Program.messageControl.SendMessage (channel, Program.GetUserName (e.Author as SocketGuildUser) + " guessed the letter **" + letter + "**.");
+            Program.messageControl.SendMessage (channel, Utility.GetUserName (e.Author as SocketGuildUser) + " guessed the letter **" + letter + "**.");
             if (!letterWhitelist.Contains (letter)) {
                 Program.messageControl.SendMessage (channel, "Error: No numbers or special characters allowed.");
                 return false;
@@ -75,7 +75,7 @@ namespace Adminthulhu {
                     if (progress.ToLower () == word.ToLower ()) {
                         Program.messageControl.SendMessage (channel, "Well I'll be damned, it seems you are victorious!");
                         currentGame = null;
-                        Program.SetGame (null);
+                        Utility.SetGame (null);
                     }
                     return true;
                 }else{

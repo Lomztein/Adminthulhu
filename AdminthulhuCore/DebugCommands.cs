@@ -30,12 +30,12 @@ namespace Adminthulhu {
                 if (AllowExecution (e, arguments)) {
                     ulong parse;
                     if (ulong.TryParse (arguments[0], out parse)) {
-                        SocketGuildUser user = Program.GetServer ().GetUser (parse);
+                        SocketGuildUser user = Utility.GetServer ().GetUser (parse);
                         if (user != null) {
                             await Task.Delay (1000);
                             UserActivityMonitor.userActivity.Remove (user.Id);
                             UserActivityMonitor.lastUserUpdate.Remove (user.Id);
-                            Program.messageControl.SendMessage (e, "Succesfully reset activity of " + Program.GetUserName (user));
+                            Program.messageControl.SendMessage (e, "Succesfully reset activity of " + Utility.GetUserName (user));
                         }else {
                             Program.messageControl.SendMessage (e, "Failed to reset - could not find user.");
                         }

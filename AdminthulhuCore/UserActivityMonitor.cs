@@ -32,13 +32,13 @@ namespace Adminthulhu {
         }
 
         async Task Booted () {
-            while (Program.GetServer () == null) {
+            while (Utility.GetServer () == null) {
                 await Task.Delay (1000);
             }
 
             await Task.Delay (5000);
 
-            IEnumerable<SocketGuildUser> users = Program.GetServer ().Users;
+            IEnumerable<SocketGuildUser> users = Utility.GetServer ().Users;
             foreach (SocketGuildUser u in users) {
                 if (!userActivity.ContainsKey (u.Id)) {
                     RecordActivity (u.Id, DateTime.Now.AddMonths (-6), false);
@@ -70,9 +70,9 @@ namespace Adminthulhu {
             }
 
             // Well that got ugly.
-            SocketRole activeRole = Program.GetServer ().GetRole (activeUserRole);
-            SocketRole presentRole = Program.GetServer ().GetRole (presentUserRole);
-            SocketRole inactiveRole = Program.GetServer ().GetRole (inactiveUserRole);
+            SocketRole activeRole = Utility.GetServer ().GetRole (activeUserRole);
+            SocketRole presentRole = Utility.GetServer ().GetRole (presentUserRole);
+            SocketRole inactiveRole = Utility.GetServer ().GetRole (inactiveUserRole);
             UpdateUser (userID, activeRole, presentRole, inactiveRole);
 
             if (single) {
@@ -81,9 +81,9 @@ namespace Adminthulhu {
         }
 
         public Task OnDayPassed ( DateTime time ) {
-            SocketRole activeRole = Program.GetServer ().GetRole (activeUserRole);
-            SocketRole presentRole = Program.GetServer ().GetRole (presentUserRole);
-            SocketRole inactiveRole = Program.GetServer ().GetRole (inactiveUserRole);
+            SocketRole activeRole = Utility.GetServer ().GetRole (activeUserRole);
+            SocketRole presentRole = Utility.GetServer ().GetRole (presentUserRole);
+            SocketRole inactiveRole = Utility.GetServer ().GetRole (inactiveUserRole);
 
             foreach (ulong id in userActivity.Keys) {
                 UpdateUser (id, activeRole, presentRole, inactiveRole);
@@ -106,7 +106,7 @@ namespace Adminthulhu {
             }
 
             DateTime lastActivity = userActivity[id];
-            SocketGuildUser user = Program.GetServer ().GetUser (id);
+            SocketGuildUser user = Utility.GetServer ().GetUser (id);
 
             List<SocketRole> toAdd = new List<SocketRole> ();
             List<SocketRole> toRemove = new List<SocketRole> ();
@@ -130,14 +130,14 @@ namespace Adminthulhu {
             foreach (SocketRole r in toRemove) {
                 if (user.Roles.Contains (r)) {
                     ChatLogger.Log ("Removing role " + r.Name + " from user " + user.Username);
-                    await user.RemoveRolesAsync (r);
+                    await user.RemoveRoleAsync (r);
                 }
             }
 
             // This might be heavy on the server during midnights.
             if (!user.Roles.Contains (toAdd[0])) {
                 ChatLogger.Log ("Adding role " + toAdd[0].Name + " to user " + user.Username);
-                await user.AddRolesAsync (toAdd[0]);
+                await user.AddRoleAsync (toAdd[0]);
             }
         }
 

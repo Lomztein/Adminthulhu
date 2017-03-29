@@ -64,7 +64,8 @@ namespace Adminthulhu {
             return Task.CompletedTask;
         }
 
-        public string NumberToString (char number) {
+        // Considering this is now used in more than one class, it might be wise to move it to a core class in order to remain structured.
+        public static string NumberToString (char number) {
             switch (number) {
                 case '0':
                     return ":zero:";

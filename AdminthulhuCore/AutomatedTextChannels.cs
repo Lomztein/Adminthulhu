@@ -17,7 +17,6 @@ namespace Adminthulhu {
             "<:pogchamp:245217372137455616> When that ass is thicc",
             "<:Serviet:255721870828109824> Privet, comrades!",
             "When life gives you lemons, take them - its free stuff!",
-            "\"Bim bam ba dum, ba-ba-di-da, bim bam ba dum, ba-ba-di-da.\" - That guy from KoRN.",
             "\"Tiderne var bedre dengang Nick var admin\" - Nick.",
             "The massively oversexualised unofficial offical fanclub of Rênëgédë CROWBAR Rèvêngéncë, the god of eternal faggotry.. <3",
             "Where is the walrus pit! <:gooseman:271588350677221377>",
@@ -38,7 +37,7 @@ namespace Adminthulhu {
         }
 
         public Task OnDayPassed ( DateTime time ) {
-            SocketGuildChannel mainChannel = Program.GetMainChannel (Program.GetServer ());
+            SocketGuildChannel mainChannel = Utility.GetMainChannel (Utility.GetServer ());
 
             Random random = new Random ();
             int number = random.Next (headers.Count);

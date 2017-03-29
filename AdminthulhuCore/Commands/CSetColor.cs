@@ -41,11 +41,11 @@ namespace Adminthulhu {
                     SocketGuildUser user = e.Author as SocketGuildUser;
                     foreach (SocketRole role in roles) {
                         if (user.Roles.Contains (role)) {
-                            await user.RemoveRolesAsync (role);
+                            await user.RemoveRoleAsync (role);
                         }
                     }
 
-                    await user.AddRolesAsync (toAdd);
+                    await user.AddRoleAsync (toAdd);
                     
                 } else {
                     string colors = "";

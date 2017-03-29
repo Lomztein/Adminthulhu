@@ -14,10 +14,10 @@ namespace Adminthulhu {
         public static List<Date> birthdays;
 
         public async Task Initialize ( DateTime time ) {
-            while (Program.GetServer () == null)
+            while (Utility.GetServer () == null)
                 await Task.Delay (1000);
 
-            IEnumerable<SocketGuildUser> users = Program.GetServer ().Users;
+            IEnumerable<SocketGuildUser> users = Utility.GetServer ().Users;
             birthdays = new List<Date> ();
 
             foreach (SocketGuildUser u in users) {
@@ -58,8 +58,8 @@ namespace Adminthulhu {
         }
 
         private void AnnounceBirthday (Date date) {
-            SocketGuildUser user = Program.GetServer ().GetUser (date.userID);
-            SocketGuildChannel main = Program.GetMainChannel (Program.GetServer ());
+            SocketGuildUser user = Utility.GetServer ().GetUser (date.userID);
+            SocketGuildChannel main = Utility.GetMainChannel (Utility.GetServer ());
             // I have no idea if this works, and it's possibly the worst possible way I could have done that.
 
             int age = 0;
@@ -79,7 +79,7 @@ namespace Adminthulhu {
                     break;
             }
 
-            Program.messageControl.SendMessage (main as SocketTextChannel, "It's **" + Program.GetUserName (user) + "'s** birthday today, wish them congratulations, as you throw them into the depths of hell on their **" + age + ageSuffix + "** birthday!");
+            Program.messageControl.SendMessage (main as SocketTextChannel, "It's **" + Utility.GetUserName (user) + "'s** birthday today, wish them congratulations, as you throw them into the depths of hell on their **" + age + ageSuffix + "** birthday!");
             Program.messageControl.SendMessage (user, "This is an official completely not cold and automated birthday greeting, from the loving ~~nazimods~~ admins of **" + Program.serverName + "**: - Happy birthdsay!");
         }
 

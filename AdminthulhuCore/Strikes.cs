@@ -58,7 +58,7 @@ namespace Adminthulhu
         }
 
         private static SocketRole GetRole() {
-            return Program.GetServer ().GetRole (strikeRoleID);
+            return Utility.GetServer ().GetRole (strikeRoleID);
         }
 
         public static void AddStrike(ulong user, DateTime time, TimeSpan span, string strikeReason) {
@@ -68,11 +68,11 @@ namespace Adminthulhu
             } else {
                 strikes.Add (user, new Strike () { reason = strikeReason, strikeDate = time, strikeTime = span }); // Well these names are not confusing. I suppose this is why we make constructors.
             }
-            SocketGuildUser socketUser = Program.GetServer ().GetUser (user);
+            SocketGuildUser socketUser = Utility.GetServer ().GetUser (user);
             SocketRole role = GetRole ();
 
             if (!socketUser.Roles.Contains (role)) {
-                Program.SecureAddRole (socketUser, role);
+                Utility.SecureAddRole (socketUser, role);
             }
 
             Program.messageControl.SendMessage (socketUser, "https://media.giphy.com/media/l2SpND5MD3Ig5QVc4/giphy.gif You've recieved a strike: " + strikeReason + 
@@ -84,9 +84,9 @@ namespace Adminthulhu
         public static void RaiseStrike(ulong user) {
             if (strikes.ContainsKey (user)) {
                 SocketRole role = GetRole ();
-                SocketGuildUser socketUser = Program.GetServer ().GetUser (user);
+                SocketGuildUser socketUser = Utility.GetServer ().GetUser (user);
 
-                Program.SecureRemoveRole (socketUser, role);
+                Utility.SecureRemoveRole (socketUser, role);
                 strikes.Remove (user);
 
                 Program.messageControl.SendMessage (socketUser, "Congratulations, you've served your time. You strike has been raised, and you have full access to features once more.");

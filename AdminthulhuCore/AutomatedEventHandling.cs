@@ -63,8 +63,8 @@ namespace Adminthulhu {
 
         public static void SendEventReminder ( ulong userID, Event remindEvent ) {
             // Make sure discordClient is ready before sending any reminders.
-            if (Program.discordClient != null && Program.GetServer () != null) {
-                SocketGuildUser user = Program.GetServer ().GetUser (userID);
+            if (Program.discordClient != null && Utility.GetServer () != null) {
+                SocketGuildUser user = Utility.GetServer ().GetUser (userID);
                 Program.messageControl.SendMessage (user, "**REMINDER:** You have an upcoming event **" + remindEvent.eventName + "** on **" + Program.serverName + "** coming soon, this " + remindEvent.eventTime.DayOfWeek.ToString () + " at " + remindEvent.eventTime.ToString ());
                 remindEvent.lastRemind[userID] = DateTime.Now;
             }
@@ -77,7 +77,7 @@ namespace Adminthulhu {
             if (startingEvent.eventMemberIDs.Count != 0) {
                 string mentions = "";
                 foreach (ulong id in startingEvent.eventMemberIDs) {
-                    SocketGuildUser user = Program.GetServer ().GetUser (id);
+                    SocketGuildUser user = Utility.GetServer ().GetUser (id);
                     mentions += ", " + user.Mention;
                 }
                 string startText = "Hey" + mentions + "!\nWe're starting the **" + startingEvent.eventName + "** now!";
@@ -86,11 +86,11 @@ namespace Adminthulhu {
                 }
 
                 Program.messageControl.SendMessage (
-                    Program.GetMainChannel (Program.GetServer ()) as SocketTextChannel,
+                    Utility.GetMainChannel (Utility.GetServer ()) as SocketTextChannel,
                     startText);
             } else {
                 Program.messageControl.SendMessage (
-                    Program.GetMainChannel (Program.GetServer ()) as SocketTextChannel,
+                    Utility.GetMainChannel (Utility.GetServer ()) as SocketTextChannel,
                     "Event **" + startingEvent.eventName + "** cancelled, since no one showed up. :(");
             }
 
@@ -345,7 +345,7 @@ namespace Adminthulhu {
                     string combinedMembers = "Event members are: ```";
                     if (AutomatedEventHandling.upcomingEvents.Count != 0) {
                         foreach (ulong user in locEvent.eventMemberIDs) {
-                            combinedMembers += "\n" + Program.GetUserName (Program.GetServer ().GetUser (user));
+                            combinedMembers += "\n" + Utility.GetUserName (Utility.GetServer ().GetUser (user));
                         }
                     } else {
                         combinedMembers += "Nobody, why don't you join? :D";

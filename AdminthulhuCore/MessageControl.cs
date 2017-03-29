@@ -46,22 +46,23 @@ namespace Adminthulhu {
         }
 
         public MessageControl () {
-            Program.discordClient.MessageReceived += CheckForQuestions;
+            Program.discordClient.ReactionAdded += CheckForQuestions;
         }
 
-        private Task CheckForQuestions ( SocketMessage e ) {
-            if (askedUsers.ContainsKey (e.Author.Id)) {
+        private Task CheckForQuestions(Cacheable<IUserMessage, ulong> message, ISocketMessageChannel channel, SocketReaction reaction) {
+            Console.WriteLine (reaction.Emoji.Name);
+            if (askedUsers.ContainsKey (reaction.UserId) && channel as SocketDMChannel != null) {
                 bool didAnswer = false;
-                if (e.Content == "y") {
-                    askedUsers[e.Author.Id][0] ();
+                if (reaction.Emoji.Name[0] == "­👍"[1]) {
+                    askedUsers [ reaction.UserId ] [ 0 ] ();
                     didAnswer = true;
-                }else if (e.Content == "n") {
+                } else if (reaction.Emoji.Name[0] == "👎"[1]) {
                     didAnswer = true;
                 }
                 if (didAnswer) {
-                    askedUsers[e.Author.Id].Remove (askedUsers[e.Author.Id][0]);
-                    if (askedUsers[e.Author.Id].Count == 0) {
-                        askedUsers.Remove (e.Author.Id);
+                    askedUsers [reaction.UserId].Remove (askedUsers [ reaction.UserId ] [ 0 ]);
+                    if (askedUsers [ reaction.UserId ].Count == 0) {
+                        askedUsers.Remove (reaction.UserId);
                     }
                 }
             }
@@ -89,15 +90,18 @@ namespace Adminthulhu {
             return message;
         }
 
-        public async Task SendMessage (SocketGuildUser e, string message) {
+        public async Task<RestMessage> SendMessage (SocketGuildUser e, string message) {
+            RestMessage finalMessage = null;
+
             string[] split = SplitMessage (message);
 
             Task<RestDMChannel> channel = e.CreateDMChannelAsync ();
             RestDMChannel result = await channel;
 
             for (int i = 0; i < split.Length; i++) {
-                await result.SendMessageAsync (split[i]);
+                finalMessage = await result.SendMessageAsync (split[i]);
             }
+            return finalMessage;
         }
 
         public async Task<RestUserMessage> AsyncSend (ISocketMessageChannel e, string message) {
@@ -122,20 +126,24 @@ namespace Adminthulhu {
         public Dictionary<ulong, List<Action>> askedUsers = new Dictionary<ulong, List<Action>>();
 
         public async Task AskQuestion (SocketGuildUser user, string question, Action ifYes) {
-            SendMessage (user, question + " (y/n)");
+            RestMessage message = await SendMessage (user, question);
+
+                await (message as RestUserMessage).AddReactionAsync ("👍");
+                await (message as RestUserMessage).AddReactionAsync ("­:thumbsdown:");
 
             if (!askedUsers.ContainsKey (user.Id)) {
                 askedUsers.Add (user.Id, new List<Action> ());
             }
+
             askedUsers[user.Id].Add (ifYes);
 
-            await Task.Delay (30 * 1000);
+            await Task.Delay (5 * 60 * 1000);
 
             if (askedUsers.ContainsKey (user.Id)) {
                 askedUsers[user.Id].Remove (ifYes);
                 if (askedUsers[user.Id].Count == 0) {
                     askedUsers.Remove (user.Id);
-                    SendMessage (user, "Question timed out after 30 seconds.");
+                    await SendMessage (user, "Question timed out after 5 minutes.");
                 }
             }
         }

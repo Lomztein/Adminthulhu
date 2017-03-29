@@ -79,7 +79,7 @@ namespace Adminthulhu {
                 List<SocketGuildUser> users = voice.Users.ToList ();
                 foreach (SocketGuildUser user in users) {
 
-                    SocketGuildUser forcedUser = Program.GetServer().GetUser (user.Id);
+                    SocketGuildUser forcedUser = Utility.GetServer().GetUser (user.Id);
                     if (forcedUser.Game.HasValue) {
                         if (numPlayers.ContainsKey (user.Game.Value)) {
                             numPlayers[forcedUser.Game.Value]++;
@@ -221,7 +221,7 @@ namespace Adminthulhu {
 
                 if (cur.GetChannel () != null) {
                     SocketVoiceChannel channel = cur.GetChannel ();
-                    if (Program.ForceGetUsers (channel.Id).Count != 0) {
+                    if (Utility.ForceGetUsers (channel.Id).Count != 0) {
                         fullChannels++;
                     }
                 }
@@ -237,7 +237,6 @@ namespace Adminthulhu {
                         Task<RestVoiceChannel> createTask = server.CreateVoiceChannelAsync (channelName);
                         channel = await createTask;
                     } catch (Exception e) {
-                        Console.WriteLine (e.Message);
                         throw;
                     }
 
@@ -253,7 +252,7 @@ namespace Adminthulhu {
                             loc.position++;
                     }
 
-                    await afkChannel.GetChannel ().ModifyAsync (delegate ( VoiceChannelProperties properties ) { properties.Position = allVoiceChannels.Count; } );
+                    await afkChannel.GetChannel ().ModifyAsync (delegate ( VoiceChannelProperties properties ) { properties.Position = int.MaxValue - 1; } );
                 }
             }
         }
@@ -317,7 +316,7 @@ namespace Adminthulhu {
             public bool InviteUser (SocketGuildUser sender, SocketGuildUser user ) {
                 if (!allowedUsers.Contains (user.Id) && IsLocked ()) {
                     allowedUsers.Add (user.Id);
-                    Program.messageControl.SendMessage (user, "**" + Program.GetUserName (sender) + "** has invited you to join the locked channel **" + name + "** on **" + Program.serverName + "**.");
+                    Program.messageControl.SendMessage (user, "**" + Utility.GetUserName (sender) + "** has invited you to join the locked channel **" + name + "** on **" + Program.serverName + "**.");
                     return true;
                 }
                 return false;
@@ -325,7 +324,7 @@ namespace Adminthulhu {
 
             public void RequestInvite ( SocketGuildUser requester ) {
                 if (IsLocked ()) {
-                    Program.messageControl.AskQuestion (GetLocker (), "**" + Program.GetUserName (requester) + "** on **" + Program.serverName + "** requests access to your locked voice channel.",
+                    Program.messageControl.AskQuestion (GetLocker (), "**" + Utility.GetUserName (requester) + "** on **" + Program.serverName + "** requests access to your locked voice channel.",
                         delegate () {
                             allowedUsers.Add (requester.Id);
                             Program.messageControl.SendMessage (requester, "Your request to join **" + name + "** has been accepted.");
@@ -339,7 +338,7 @@ namespace Adminthulhu {
             }
 
             public SocketGuildUser GetLocker () {
-                return Program.GetServer ().GetUser (lockerID);
+                return Utility.GetServer ().GetUser (lockerID);
             }
 
             public void CheckLocker () {

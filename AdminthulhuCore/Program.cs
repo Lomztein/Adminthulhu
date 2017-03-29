@@ -105,7 +105,13 @@ namespace Adminthulhu
 
             discordClient.MessageReceived += (e) => {
 
-                ChatLogger.Log (GetChannelName (e) + " says: " + e.Content);
+                if (e.Author.Username == "Lomztein") {
+                    messageControl.AskQuestion (e.Author as SocketGuildUser, "This is a test, confirm?", delegate {
+                        messageControl.SendMessage (e.Author as SocketGuildUser, "Confirmed, yo.");
+                    });
+                }
+
+                ChatLogger.Log (Utility.GetChannelName (e) + " says: " + e.Content);
                 if (e.Author != discordClient.CurrentUser && e.Content.Length > 0 && e.Content[0] == commandChar) {
                     string message = e.Content;
 
@@ -113,7 +119,7 @@ namespace Adminthulhu
 
                         message = message.Substring (1);
                         string command = "";
-                        List<string> arguments = ConstructArguments (message, out command);
+                        List<string> arguments = Utility.ConstructArguments (message, out command);
 
                         FindAndExecuteCommand (e, command, arguments, commands);
                     }
@@ -130,7 +136,7 @@ namespace Adminthulhu
             };
 
             discordClient.UserJoined += async (e) => {
-                messageControl.SendMessage (GetMainChannel (e.Guild) as SocketTextChannel, "**" + e.Username + "** has joined this server. Bid them welcome or murder them in cold blood, it's really up to you.");
+                messageControl.SendMessage (Utility.GetMainChannel (e.Guild) as SocketTextChannel, "**" + e.Username + "** has joined this server. Bid them welcome or murder them in cold blood, it's really up to you.");
 
                 string[] welcomeMessage = SerializationIO.LoadTextFile (dataPath + "welcomemessage" + gitHubIgnoreType);
                 string combined = "";
@@ -142,7 +148,7 @@ namespace Adminthulhu
             };
 
             discordClient.UserLeft += (e) => {
-                messageControl.SendMessage (GetMainChannel (e.Guild) as SocketTextChannel, "**" + GetUserName (e) + "** has left the server. Don't worry, they'll come crawling back soon.");
+                messageControl.SendMessage (Utility.GetMainChannel (e.Guild) as SocketTextChannel, "**" + Utility.GetUserName (e) + "** has left the server. Don't worry, they'll come crawling back soon.");
                 return Task.CompletedTask;
             };
 
@@ -167,40 +173,40 @@ namespace Adminthulhu
                 Console.WriteLine ("User " + before.Username + " updated.");
                 SocketGuild guild = before.Guild;
 
-                SocketGuildChannel channel = GetMainChannel (after.Guild);
+                SocketGuildChannel channel = Utility.GetMainChannel (after.Guild);
                 AutomatedVoiceChannels.UpdateVoiceChannel (after.VoiceChannel);
 
                 if (channel == null)
                     return Task.CompletedTask;
 
                 if (before.Username != after.Username) {
-                    messageControl.SendMessage (channel as SocketTextChannel, "**" + GetUserUpdateName (before, after, true) + "** has changed their name to **" + after.Username + "**");
+                    messageControl.SendMessage (channel as SocketTextChannel, "**" + Utility.GetUserUpdateName (before, after, true) + "** has changed their name to **" + after.Username + "**");
                 }
 
                 if (before.Nickname != after.Nickname) {
-                    messageControl.SendMessage (channel as SocketTextChannel, "**" + GetUserUpdateName (before, after, true) + "** has changed their nickname to **" + GetUserUpdateName (before, after, false) + "**");
+                    messageControl.SendMessage (channel as SocketTextChannel, "**" + Utility.GetUserUpdateName (before, after, true) + "** has changed their nickname to **" + Utility.GetUserUpdateName (before, after, false) + "**");
                 }
 
                 return Task.CompletedTask;
             };
 
             discordClient.UserBanned += (e, guild) => {
-                SocketChannel channel = GetMainChannel (guild);
+                SocketChannel channel = Utility.GetMainChannel (guild);
                 if (channel == null)
                     return Task.CompletedTask;
 
-                messageControl.SendMessage (channel as SocketTextChannel, "**" + GetUserName (e as SocketGuildUser) + "** has been banned from this server, they will not be missed.");
+                messageControl.SendMessage (channel as SocketTextChannel, "**" + Utility.GetUserName (e as SocketGuildUser) + "** has been banned from this server, they will not be missed.");
                 messageControl.SendMessage (e as SocketGuildUser, "Sorry to tell you like this, but you have been permabanned from Monster Mash. ;-;");
 
                 return Task.CompletedTask;
             };
 
             discordClient.UserUnbanned += (e, guild) => {
-                SocketChannel channel = GetMainChannel (guild);
+                SocketChannel channel = Utility.GetMainChannel (guild);
                 if (channel == null)
                     return Task.CompletedTask;
 
-                messageControl.SendMessage (channel as SocketTextChannel, "**" + GetUserName (e as SocketGuildUser) + "** has been unbanned from this server, They are once more welcome in our arms of glory.");
+                messageControl.SendMessage (channel as SocketTextChannel, "**" + Utility.GetUserName (e as SocketGuildUser) + "** has been unbanned from this server, They are once more welcome in our arms of glory.");
                 messageControl.SendMessage (e as SocketGuildUser, "You have been unbanned from Monster Mash, we love you once more! :D");
 
                 return Task.CompletedTask;
@@ -212,7 +218,7 @@ namespace Adminthulhu
 
                 if (message.HasValue) {
                     if (!allowedDeletedMessages.Contains (message.Value.Content)) {
-                        messageControl.SendMessage (channel as SocketTextChannel, "In order disallow *any* secrets except for admin secrets, I'd like to tell you that **" + GetUserName (message.Value.Author as SocketGuildUser) + "** just had a message deleted on **" + message.Value.Channel.Name + "**.");
+                        messageControl.SendMessage (channel as SocketTextChannel, "In order disallow *any* secrets except for admin secrets, I'd like to tell you that **" + Utility.GetUserName (message.Value.Author as SocketGuildUser) + "** just had a message deleted on **" + message.Value.Channel.Name + "**.");
                     } else {
                         allowedDeletedMessages.Remove (message.Value.Content);
                     }
@@ -235,49 +241,6 @@ namespace Adminthulhu
             await Task.Delay (-1);
         }
 
-        private static int maxTries = 5;
-        public static async Task SecureAddRole (SocketGuildUser user, SocketRole role) {
-            int tries = 0;
-            while (!user.Roles.Contains (role)) {
-                if (tries > maxTries) {
-                    messageControl.SendMessage (SearchChannel (GetServer (), dumpTextChannelName) as SocketTextChannel, "Error - tried to add role too many times.");
-                    break;
-                }
-                tries++;
-                ChatLogger.Log ("Adding role to " + user.Username + " - " + role.Name);
-                await (user.AddRolesAsync (role));
-                await Task.Delay (5000);
-            }
-        }
-
-        public static async Task SetGame (string gameName) { // Wrapper functions ftw
-            await discordClient.SetGameAsync (gameName);
-        }
-
-        public static List<SocketGuildUser> ForceGetUsers (ulong channelID) {
-            SocketGuildChannel channel = GetServer ().GetChannel (channelID);
-            List<SocketGuildUser> result = new List<SocketGuildUser> ();
-            foreach (SocketGuildUser u in channel.Users) {
-                result.Add (GetServer ().GetUser (u.Id));
-            }
-            Console.WriteLine (result.Count);
-            return result;
-        }
-
-        public static async Task SecureRemoveRole (SocketGuildUser user, SocketRole role) {
-            int tries = 0;
-            while (user.Roles.Contains (role)) {
-                if (tries > maxTries) {
-                    messageControl.SendMessage (SearchChannel (GetServer (), dumpTextChannelName) as SocketTextChannel, "Error - tried to remove role too many times.");
-                    break;
-                }
-                ChatLogger.Log ("Removing role from " + user.Username + " - " + role.Name);
-                tries++;
-                await (user.RemoveRolesAsync (role));
-                await Task.Delay (5000);
-            }
-        }
-
         private static bool hasBooted = false;
         public static bool FullyBooted () {
             if (hasBooted)
@@ -290,107 +253,8 @@ namespace Adminthulhu
             return hasBooted;
         }
 
-        public static List<string> ConstructArguments (string fullCommand, out string command) {
-            string toSplit = fullCommand.Substring (fullCommand.IndexOf (' ') + 1);
-            List<string> arguments = new List<string> ();
-            command = "";
-
-            if (fullCommand.LastIndexOf (' ') != -1) {
-                // FEEL THE SPAGHETTI.
-                command = fullCommand.Substring (0, fullCommand.Substring (1).IndexOf (' ') + 1);
-                string[] loc = toSplit.Split (';');
-                for (int i = 0; i < loc.Length; i++) {
-
-                    loc[i] = TrimSpaces (loc[i]);
-                    arguments.Add (loc[i]);
-                }
-            } else {
-                command = fullCommand;
-            }
-
-            return arguments;
-        }
-
-        public static SocketGuild GetServer (SocketChannel channel) {
-            return (channel as SocketGuildChannel).Guild;
-        }
-
-        public static string GetUserName (SocketGuildUser user) {
-            if (user == null)
-                return "[ERROR - NULL USER REFERENCE]";
-            if (user.Nickname == null)
-                return user.Username;
-            return user.Nickname;
-        }
-
-        public string GetUserUpdateName (SocketGuildUser beforeUser, SocketGuildUser afterUser, bool before) {
-            if (before) {
-                if (beforeUser.Nickname == null)
-                    return afterUser.Username;
-                return beforeUser.Nickname;
-            } else {
-                if (afterUser.Nickname == null)
-                    return afterUser.Username;
-                return afterUser.Nickname;
-            }
-        }
-
-        public static SocketGuildChannel GetMainChannel (SocketGuild server) {
-            return SearchChannel (server, mainTextChannelName);
-        }
-
-        [Obsolete]
-        public static SocketGuildChannel GetChannelByName (SocketGuild server, string name) {
-            if (server == null)
-                return null;
-
-            SocketGuildChannel channel = SearchChannel (server, name);
-            return channel;
-        }
-
-        public static SocketGuildChannel SearchChannel (SocketGuild server, string name) {
-            IEnumerable<SocketGuildChannel> channels = server.Channels;
-            foreach (SocketGuildChannel channel in channels) {
-                if (channel.Name.Length >= name.Length && channel.Name.Substring (0, name.Length) == name)
-                    return channel;
-            }
-
-            return null;
-        }
-
         private void InitializeData () {
             AutomatedVoiceChannels.InitializeData ();
-        }
-
-        public static SocketGuild GetServer () {
-            if (server != null)
-                return server;
-
-            if (discordClient != null) {
-                IEnumerable<SocketGuild> servers = discordClient.Guilds;
-                if (servers.Count () != 0)
-                    server = servers.ElementAt (0);
-            } else {
-                return null;
-            }
-
-            return server;
-        }
-
-        // I thought the TrimStart and TrimEnd functions would work like this, which they may, but I couldn't get them working. Maybe I'm just an idiot, but whatever.
-        private static string TrimSpaces (string input) {
-            if (input.Length == 0)
-                return " ";
-
-            string trimmed = input;
-            while (trimmed[0] == ' ') {
-                trimmed = trimmed.Substring (1);
-            }
-
-            while (trimmed[trimmed.Length - 1] == ' ') {
-                trimmed = trimmed.Substring (0, trimmed.Length - 1);
-            }
-            return trimmed;
         }
 
         public static void InitializeDirectories () {
@@ -430,27 +294,10 @@ namespace Adminthulhu
             return false;
         }
 
-        public static SocketGuildUser FindUserByName (SocketGuild server, string username) {
-            foreach (SocketGuildUser user in server.Users) {
-                string name = GetUserName (user).ToLower ();
-                if (name.Length >= username.Length && name.Substring (0, username.Length) == username.ToLower ())
-                    return user;
-            }
-            return null;
-        }
-
         public void FindPhraseAndRespond (SocketMessage e) {
             for (int i = 0; i < phrases.Length; i++) {
                 if (phrases[i].CheckAndRespond (e))
                     return;
-            }
-        }
-
-        public static string GetChannelName (SocketMessage e) {
-            if (e.Channel as SocketDMChannel != null) {
-                return "Private message: " + e.Author.Username;
-            } else {
-                return (e.Channel as SocketGuildChannel).Guild.Name + "/" + e.Channel.Name + "/" + e.Author.Username;
             }
         }
     }
