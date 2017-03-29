@@ -53,8 +53,8 @@ namespace Adminthulhu {
             Console.WriteLine (reaction.Emoji.Name);
             if (askedUsers.ContainsKey (reaction.UserId) && channel as SocketDMChannel != null) {
                 bool didAnswer = false;
-                if (reaction.Emoji.Name[0] == "­👍"[1]) {
-                    askedUsers [ reaction.UserId ] [ 0 ] ();
+                if (reaction.Emoji.Name[0] == "­👌" [ 1]) {
+                    askedUsers [ reaction.UserId ] [ 0 ] (); // Saving functions in an array seems optimal.
                     didAnswer = true;
                 } else if (reaction.Emoji.Name[0] == "👎"[1]) {
                     didAnswer = true;
@@ -128,8 +128,7 @@ namespace Adminthulhu {
         public async Task AskQuestion (SocketGuildUser user, string question, Action ifYes) {
             RestMessage message = await SendMessage (user, question);
 
-                await (message as RestUserMessage).AddReactionAsync ("👍");
-                await (message as RestUserMessage).AddReactionAsync ("­:thumbsdown:");
+                await (message as RestUserMessage).AddReactionAsync ("👌");
 
             if (!askedUsers.ContainsKey (user.Id)) {
                 askedUsers.Add (user.Id, new List<Action> ());

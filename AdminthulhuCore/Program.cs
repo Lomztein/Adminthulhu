@@ -31,6 +31,7 @@ namespace Adminthulhu
         public static string resourceDirectory = "Resources/";
         public static string eventDirectory = "Event/";
         public static string gitHubIgnoreType = ".botproperty";
+        public static string avatarPath = "avatar.jpg";
 
         public static void Main (string[] args) {
             new Program ().ErrorCatcher (args);
@@ -104,12 +105,6 @@ namespace Adminthulhu
             bootedTime = DateTime.Now.AddSeconds (BOOT_WAIT_TIME);
 
             discordClient.MessageReceived += (e) => {
-
-                if (e.Author.Username == "Lomztein") {
-                    messageControl.AskQuestion (e.Author as SocketGuildUser, "This is a test, confirm?", delegate {
-                        messageControl.SendMessage (e.Author as SocketGuildUser, "Confirmed, yo.");
-                    });
-                }
 
                 ChatLogger.Log (Utility.GetChannelName (e) + " says: " + e.Content);
                 if (e.Author != discordClient.CurrentUser && e.Content.Length > 0 && e.Content[0] == commandChar) {
@@ -234,9 +229,14 @@ namespace Adminthulhu
 
             string token = SerializationIO.LoadTextFile (dataPath + "bottoken" + gitHubIgnoreType)[0];
 
-            Console.WriteLine ("Connecting to Discord..");
+            ChatLogger.Log ("Connecting to Discord..");
             await discordClient.LoginAsync (TokenType.Bot, token);
             await discordClient.StartAsync ();
+
+            await discordClient.CurrentUser.ModifyAsync (delegate (SelfUserProperties properties) {
+                properties.Username = "Adminthulhu";
+                properties.Avatar = new Optional<Image?> (new Image (dataPath + avatarPath));
+            });
 
             await Task.Delay (-1);
         }

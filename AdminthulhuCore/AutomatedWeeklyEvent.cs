@@ -11,6 +11,8 @@ namespace Adminthulhu {
 
     public class AutomatedWeeklyEvent : IClockable {
 
+        private static string [ ] unicodeEmojis = new string [ ] { "0⃣","1⃣", "2⃣", "3⃣", "4⃣", "5⃣", "6⃣", "7⃣", "8⃣", "9⃣" };
+
         public static Game[] allGames = new Game[] {
             new Game ("Overwatch"),
             new Game ("GMod"),
@@ -79,18 +81,32 @@ namespace Adminthulhu {
                 BeginNewVote ();
 
             Program.discordClient.ReactionAdded += async (message, channel, reaction) => {
-                if (message.Id == votingMessageID) {
-                    int reactionID = 0;
-                    for (int i = 0; i < gamesPerWeek; i++) {
-                        if (CEmbolden.NumberToString ((i + 1).ToString () [ 0 ]) == reaction.Emoji.Name) {
-                            reactionID = i;
-                            break;
-                        }
-                        VoteForGame (null, reaction.UserId, reactionID);
-                        await message.Value.RemoveReactionAsync (reaction.Emoji, reaction.User.Value);
+                OnReactionChanged (message, channel, reaction, true);
+            };
+            Program.discordClient.ReactionRemoved += async (message, channel, reaction) => {
+                OnReactionChanged (message, channel, reaction, false);
+            };
+        }
+
+        private static string GetUnicodeEmoji(int index) {
+            return unicodeEmojis [ index ];
+        }
+
+        private static void OnReactionChanged (Cacheable<IUserMessage, ulong> message, ISocketMessageChannel channel, SocketReaction reaction, bool add) {
+            if (message.Id == votingMessageID) {
+                int reactionID = 0;
+                for (int i = 0; i < gamesPerWeek; i++) {
+                    if (GetUnicodeEmoji (i) == reaction.Emoji.Name) {
+                        reactionID = i;
+                        break;
+                    }
+                    if (add) {
+                        VoteForGame (null, reaction.User.Value.Id, reactionID);
+                    } else {
+                        RemoveVote (null, reaction.UserId, reactionID);
                     }
                 }
-            };
+            }
         }
 
         public static void SaveData() {
@@ -253,12 +269,13 @@ namespace Adminthulhu {
 
         public static bool RemoveVote (SocketMessage e, ulong userID, int gameID) {
             Vote vote = votes.Find (x => x.voterID == userID && x.votedGameID == gameID);
-            if (vote == null) {
-                Program.messageControl.SendMessage (e,"Failed to remove vote, you haven't voted for **" + games[gameID].name + "**");
+            if (vote == null && e != null) {
+                Program.messageControl.SendMessage (e, "Failed to remove vote, you haven't voted for **" + games [ gameID ].name + "**");
                 return false;
-            }else {
+            } else {
                 votes.Remove (vote);
-                Program.messageControl.SendMessage (e, "Succesfully removed vote from **" + games[gameID].name + "**.");
+                if (e != null)
+                    Program.messageControl.SendMessage (e, "Succesfully removed vote from **" + games[gameID].name + "**.");
             }
 
             games[gameID].votes--;
@@ -301,7 +318,7 @@ namespace Adminthulhu {
                 votingMessageID = task.Result.Id;
 
                 for (int i = 0; i < gamesPerWeek; i++) {
-                    string emoji = CEmbolden.NumberToString ((i + 1).ToString()[0]); // wat
+                    string emoji = GetUnicodeEmoji (i);
                     await task.Result.AddReactionAsync (emoji);
                 }
 

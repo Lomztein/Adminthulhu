@@ -252,7 +252,8 @@ namespace Adminthulhu {
                             loc.position++;
                     }
 
-                    await afkChannel.GetChannel ().ModifyAsync (delegate ( VoiceChannelProperties properties ) { properties.Position = int.MaxValue - 1; } );
+                    await afkChannel.GetChannel ().ModifyAsync (delegate ( VoiceChannelProperties properties ) { properties.Position = allVoiceChannels.Count - 1; } );
+                    await afkChannel.GetChannel ().ModifyAsync (delegate ( VoiceChannelProperties properties ) { properties.Position = allVoiceChannels.Count; } ); // Yay for hacky stuffz!
                 }
             }
         }
