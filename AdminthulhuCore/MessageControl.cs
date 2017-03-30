@@ -50,24 +50,22 @@ namespace Adminthulhu {
         }
 
         private Task CheckForQuestions(Cacheable<IUserMessage, ulong> message, ISocketMessageChannel channel, SocketReaction reaction) {
-            Console.WriteLine (reaction.Emoji.Name);
-            if (askedUsers.ContainsKey (reaction.UserId) && channel as SocketDMChannel != null) {
-                bool didAnswer = false;
-                if (reaction.Emoji.Name[0] == "­👌" [ 1]) {
-                    askedUsers [ reaction.UserId ] [ 0 ] (); // Saving functions in an array seems optimal.
-                    didAnswer = true;
-                } else if (reaction.Emoji.Name[0] == "👎"[1]) {
-                    didAnswer = true;
-                }
-                if (didAnswer) {
-                    askedUsers [reaction.UserId].Remove (askedUsers [ reaction.UserId ] [ 0 ]);
-                    if (askedUsers [ reaction.UserId ].Count == 0) {
-                        askedUsers.Remove (reaction.UserId);
-                    }
+            Question question = FindByMessageID (reaction.UserId, message.Id);
+            if (question != null && reaction.Emoji.Name[0] == "👌"[1])  { // Emojis are wierd or something
+                question.ifYes ();
+                askedUsers [ reaction.UserId ].Remove (question);
+            }
+            return Task.CompletedTask;
+        }
+
+        public Question FindByMessageID(ulong userID, ulong messageID) {
+            if (askedUsers.ContainsKey (userID)) {
+                foreach (Question question in askedUsers [ userID ]) {
+                    if (question.messageID == messageID)
+                        return question;
                 }
             }
-
-            return Task.CompletedTask;
+            return null;
         }
 
         /// <summary>
@@ -123,7 +121,7 @@ namespace Adminthulhu {
             }
         }
 
-        public Dictionary<ulong, List<Action>> askedUsers = new Dictionary<ulong, List<Action>>();
+        private Dictionary<ulong, List<Question>> askedUsers = new Dictionary<ulong, List<Question>>();
 
         public async Task AskQuestion (SocketGuildUser user, string question, Action ifYes) {
             RestMessage message = await SendMessage (user, question);
@@ -131,20 +129,33 @@ namespace Adminthulhu {
                 await (message as RestUserMessage).AddReactionAsync ("👌");
 
             if (!askedUsers.ContainsKey (user.Id)) {
-                askedUsers.Add (user.Id, new List<Action> ());
+                askedUsers.Add (user.Id, new List<Question> ());
             }
 
-            askedUsers[user.Id].Add (ifYes);
+            Question newQuestion = new Question (message.Id, ifYes);
+            askedUsers [user.Id].Add (newQuestion);
 
             await Task.Delay (5 * 60 * 1000);
 
             if (askedUsers.ContainsKey (user.Id)) {
-                askedUsers[user.Id].Remove (ifYes);
+                askedUsers[user.Id].Remove (newQuestion);
                 if (askedUsers[user.Id].Count == 0) {
                     askedUsers.Remove (user.Id);
                     await SendMessage (user, "Question timed out after 5 minutes.");
                 }
             }
+        }
+
+        public class Question {
+
+            public ulong messageID;
+            public Action ifYes;
+
+            public Question(ulong messageID, Action ifYes) {
+                this.messageID = messageID;
+                this.ifYes = ifYes;
+            }
+
         }
     }
 }

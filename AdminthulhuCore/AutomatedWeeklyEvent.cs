@@ -11,7 +11,7 @@ namespace Adminthulhu {
 
     public class AutomatedWeeklyEvent : IClockable {
 
-        private static string [ ] unicodeEmojis = new string [ ] { "0⃣","1⃣", "2⃣", "3⃣", "4⃣", "5⃣", "6⃣", "7⃣", "8⃣", "9⃣" };
+        private static string [ ] unicodeEmojis = new string [ ] { "1⃣", "2⃣", "3⃣", "4⃣", "5⃣", "6⃣", "7⃣", "8⃣", "9⃣", "🔟" };
 
         public static Game[] allGames = new Game[] {
             new Game ("Overwatch"),
@@ -94,17 +94,22 @@ namespace Adminthulhu {
 
         private static void OnReactionChanged (Cacheable<IUserMessage, ulong> message, ISocketMessageChannel channel, SocketReaction reaction, bool add) {
             if (message.Id == votingMessageID) {
-                int reactionID = 0;
+                int reactionID = -1;
                 for (int i = 0; i < gamesPerWeek; i++) {
                     if (GetUnicodeEmoji (i) == reaction.Emoji.Name) {
                         reactionID = i;
                         break;
                     }
-                    if (add) {
-                        VoteForGame (null, reaction.User.Value.Id, reactionID);
-                    } else {
-                        RemoveVote (null, reaction.UserId, reactionID);
-                    }
+                }
+
+                if (add) {
+                    VoteForGame (null, reaction.User.Value.Id, reactionID);
+                } else {
+                    RemoveVote (null, reaction.UserId, reactionID);
+                }
+
+                if (reactionID == -1) {
+                    message.Value.RemoveReactionAsync (reaction.Emoji, message.Value.Author);
                 }
             }
         }
@@ -221,10 +226,10 @@ namespace Adminthulhu {
             SaveData ();
         }
 
-        public static bool VoteForGame (SocketMessage e, ulong userID, int id ) {
+        public static bool VoteForGame(SocketMessage e, ulong userID, int id) {
             List<Vote> userVotes = new List<Vote> ();
             SocketGuildUser user = Utility.GetServer ().GetUser (userID);
-            
+
             foreach (Vote vote in votes) {
                 if (vote.voterID == userID)
                     userVotes.Add (vote);
@@ -252,12 +257,11 @@ namespace Adminthulhu {
                 }
             }
 
-            string text = "Succesfully voted for **" + games [ id ].name + "**, in the upcoming friday event.";
-            if (e == null) {
-                Program.messageControl.SendMessage (user, text);
-            } else {
+            if (e != null) {
+                string text = "Succesfully voted for **" + games [ id ].name + "**, in the upcoming friday event.";
                 Program.messageControl.SendMessage (e, text);
             }
+
             votes.Add (new Vote (userID, id));
             games[id].votes++;
 
@@ -272,13 +276,14 @@ namespace Adminthulhu {
             if (vote == null && e != null) {
                 Program.messageControl.SendMessage (e, "Failed to remove vote, you haven't voted for **" + games [ gameID ].name + "**");
                 return false;
-            } else {
+            }
+            if (vote != null) {
+                games[gameID].votes--;
                 votes.Remove (vote);
                 if (e != null)
                     Program.messageControl.SendMessage (e, "Succesfully removed vote from **" + games[gameID].name + "**.");
             }
 
-            games[gameID].votes--;
             UpdateVoteMessage (false);
             SaveData ();
             return true;

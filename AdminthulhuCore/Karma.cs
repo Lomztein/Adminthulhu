@@ -80,7 +80,7 @@ namespace Adminthulhu {
                 }
 
                 karmaCount = Karma.GetKarma (user.Id);
-                Program.messageControl.SendMessage (e.Channel, "User " + Utility.GetUserName (user) + " currently have " + karmaCount + " karma.");
+                Program.messageControl.SendMessage (e.Channel, "User " + Utility.GetUserName (user) + " currently has " + karmaCount + " karma.");
             }
             return Task.CompletedTask;
         }
