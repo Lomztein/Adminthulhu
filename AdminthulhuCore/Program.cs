@@ -151,28 +151,20 @@ namespace Adminthulhu
                 Console.WriteLine ("User voice updated: " + user.Username);
                 SocketGuild guild = (user as SocketGuildUser).Guild;
 
-                // Maybe, just maybe put these into a single function.
-                if (FullyBooted ()) {
-                    AutomatedVoiceChannels.AddMissingChannels (guild);
-                    await AutomatedVoiceChannels.CheckFullAndAddIf (guild);
-                    AutomatedVoiceChannels.RemoveLeftoverChannels (guild);
-
-                    await AutomatedVoiceChannels.UpdateVoiceChannel (before.VoiceChannel);
-                    await AutomatedVoiceChannels.UpdateVoiceChannel (after.VoiceChannel);
-                }
+                await AutomatedVoiceChannels.OnUserUpdated (guild, before.VoiceChannel, after.VoiceChannel);
 
                 return;
             };
 
-            discordClient.GuildMemberUpdated += (before, after) => {
+            discordClient.GuildMemberUpdated += async (before, after) => {
                 Console.WriteLine ("User " + before.Username + " updated.");
                 SocketGuild guild = before.Guild;
 
                 SocketGuildChannel channel = Utility.GetMainChannel (after.Guild);
-                AutomatedVoiceChannels.UpdateVoiceChannel (after.VoiceChannel);
+                await AutomatedVoiceChannels.OnUserUpdated (guild, null, after.VoiceChannel);
 
                 if (channel == null)
-                    return Task.CompletedTask;
+                    return;
 
                 if (before.Username != after.Username) {
                     messageControl.SendMessage (channel as SocketTextChannel, "**" + Utility.GetUserUpdateName (before, after, true) + "** has changed their name to **" + after.Username + "**");
@@ -181,8 +173,6 @@ namespace Adminthulhu
                 if (before.Nickname != after.Nickname) {
                     messageControl.SendMessage (channel as SocketTextChannel, "**" + Utility.GetUserUpdateName (before, after, true) + "** has changed their nickname to **" + Utility.GetUserUpdateName (before, after, false) + "**");
                 }
-
-                return Task.CompletedTask;
             };
 
             discordClient.UserBanned += (e, guild) => {

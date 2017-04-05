@@ -38,12 +38,13 @@ namespace Adminthulhu {
 
         public Task OnDayPassed ( DateTime time ) {
             SocketGuildChannel mainChannel = Utility.GetMainChannel (Utility.GetServer ());
+            SocketTextChannel channel = mainChannel as SocketTextChannel;
 
             Random random = new Random ();
             int number = random.Next (headers.Count);
 
             string topic = headers[number];
-            mainChannel.ModifyAsync (delegate (GuildChannelProperties properties) {  (properties as TextChannelProperties).Topic = topic; } );
+            channel.ModifyAsync (delegate (TextChannelProperties properties) {  (properties).Topic = topic; } );
             return Task.CompletedTask;
         }
 

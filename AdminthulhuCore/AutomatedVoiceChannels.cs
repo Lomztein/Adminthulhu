@@ -52,6 +52,18 @@ namespace Adminthulhu {
             }
         }
 
+        public static async Task OnUserUpdated(SocketGuild guild, SocketVoiceChannel before, SocketVoiceChannel after) {
+            // Maybe, just maybe put these into a single function.
+            if (Program.FullyBooted ()) {
+                AddMissingChannels (guild);
+                await CheckFullAndAddIf (guild);
+                RemoveLeftoverChannels (guild);
+
+                await UpdateVoiceChannel (before);
+                await UpdateVoiceChannel (after);
+            }
+        }
+
         private static void AddDefaultChannel (ulong id, string name, int index) {
             VoiceChannel newChannel = new VoiceChannel (id, name, index);
 
@@ -103,7 +115,8 @@ namespace Adminthulhu {
 
                 string lockString = allVoiceChannels[voice.Id].IsLocked () ? lockIcon : "";
                 // Trying to optimize API calls here, just to spare those poor souls at the Discord API HQ stuff
-                string newName = highestGame.Name != "" ? lockString + allVoiceChannels[voice.Id].name + " - " + highestGame.Name : lockString + allVoiceChannels[voice.Id].name;
+                string nameLetter = allVoiceChannels [ voice.Id ].name [ 0 ] + ""; // Eeeeeeuhhh, yes.
+                string newName = highestGame.Name != "" ? lockString + nameLetter + nameLetter + " - " + highestGame.Name : lockString + allVoiceChannels[voice.Id].name;   
                 if (voice.Name != newName) {
                     ChatLogger.Log ("Channel name updated: " + newName);
                     await voice.ModifyAsync ((delegate ( VoiceChannelProperties properties ) { properties.Name = newName; } ));
@@ -251,9 +264,6 @@ namespace Adminthulhu {
                         if (loc.position >= channelPos && loc.GetChannel () as IVoiceChannel != channel)
                             loc.position++;
                     }
-
-                    await afkChannel.GetChannel ().ModifyAsync (delegate ( VoiceChannelProperties properties ) { properties.Position = allVoiceChannels.Count - 1; } );
-                    await afkChannel.GetChannel ().ModifyAsync (delegate ( VoiceChannelProperties properties ) { properties.Position = allVoiceChannels.Count; } ); // Yay for hacky stuffz!
                 }
             }
         }

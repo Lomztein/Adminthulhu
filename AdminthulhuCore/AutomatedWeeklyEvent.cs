@@ -318,6 +318,9 @@ namespace Adminthulhu {
 
             if (message == null || forceNew) {
 
+                if (message != null)
+                    await message.DeleteAsync ();
+
                 Task<RestUserMessage> task = Program.messageControl.AsyncSend (channel as SocketTextChannel, text);
                 await task;
                 votingMessageID = task.Result.Id;

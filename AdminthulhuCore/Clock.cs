@@ -12,9 +12,9 @@ namespace Adminthulhu {
         public DateTime lastMesauredTime;
         public int checkDelay = 1000; // The time between each check in milliseconds.
 
-        public IClockable[] clockables = new IClockable[] {
+        public IClockable [ ] clockables = new IClockable [ ] {
             new AutomatedEventHandling (), new AutomatedTextChannels (), new UserActivityMonitor (), new Birthdays (), new AutomatedWeeklyEvent (),
-            new Strikes (),
+            new Strikes (), new AprilFools (),
         };
 
         public Clock () {
