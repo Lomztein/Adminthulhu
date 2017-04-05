@@ -64,6 +64,7 @@ namespace Adminthulhu
             new Phrase ("", "khave", 2, "¯\\_(ツ)_/¯"),
             new Phrase ("(╯°□°）╯︵ ┻━┻", 100, "Please respect tables. ┬─┬ノ(ಠ_ಠノ)"),
             new Phrase ("nice", "Twistbonk", 25, "Very nice!"),
+            new Phrase ("", "", 1, "btw"),
         };
         public static List<string> allowedDeletedMessages = new List<string>();
 
