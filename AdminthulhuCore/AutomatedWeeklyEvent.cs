@@ -121,19 +121,19 @@ namespace Adminthulhu {
         }
 
         public Task OnDayPassed(DateTime time) {
+            if (votes != null) {
+                if ((time.DayOfWeek - 1).ToString ().ToLower () == voteEndDay) {
+                    CountVotes ();
+                }
+            } else {
+                if ((time.DayOfWeek - 1).ToString ().ToLower () == eventDay) {
+                    BeginNewVote ();
+                }
+            }
             return Task.CompletedTask;
         }
 
         public Task OnMinutePassed(DateTime time) {
-            if (votes != null) {
-                if (time.DayOfWeek.ToString().ToLower() == voteEndDay) {
-                    CountVotes();
-                }
-            }else{
-                if (time.DayOfWeek.ToString().ToLower() == eventDay) {
-                    BeginNewVote();
-                }
-            }
             return Task.CompletedTask;
         }
 
@@ -227,16 +227,11 @@ namespace Adminthulhu {
         }
 
         public static bool VoteForGame(SocketMessage e, ulong userID, int id) {
-            List<Vote> userVotes = new List<Vote> ();
             SocketGuildUser user = Utility.GetServer ().GetUser (userID);
+            List<Vote> userVotes;
 
-            foreach (Vote vote in votes) {
-                if (vote.voterID == userID)
-                    userVotes.Add (vote);
-            }
-
-            if (userVotes.Count >= votesPerPerson) {
-                string locText = "You've already voted for " + votesPerPerson + " games, you'll have to remove one to vote using `!event removevote <id>`, before you can place another.";
+            if (HasReachedVoteLimit (userID, out userVotes)) {
+                string locText = "You've already voted for " + votesPerPerson + " games, you'll have to remove one vote by removing a reaction, or by using `!event removevote <id>` before you can place another.";
                 if (e == null) {
                     Program.messageControl.SendMessage (user, locText);
                 } else {
@@ -271,6 +266,18 @@ namespace Adminthulhu {
             return true;
         }
 
+        public static bool HasReachedVoteLimit(ulong userID, out List<Vote> userVotes) {
+            userVotes = new List<Vote> ();
+            SocketGuildUser user = Utility.GetServer ().GetUser (userID);
+
+            foreach (Vote vote in votes) {
+                if (vote.voterID == userID)
+                    userVotes.Add (vote);
+            }
+
+            return (userVotes.Count >= votesPerPerson);
+        }
+
         public static bool RemoveVote (SocketMessage e, ulong userID, int gameID) {
             Vote vote = votes.Find (x => x.voterID == userID && x.votedGameID == gameID);
             if (vote == null && e != null) {
@@ -301,7 +308,7 @@ namespace Adminthulhu {
             if (status == WeeklyEventStatus.Waiting) {
                 text += "**VOTING HAS ENDED, " + highestGame.name + " HAS WON THE VOTE.**";
             } else {
-                text += "**Vote using `!event vote <id>` to vote. You can vote 3 times, and also remove votes using `!event removevote <id>`!**";
+                text += "**Vote using the reactions below, or `!event vote <id>`. You can vote 3 times, and also remove votes using `!event removevote <id>`!**";
             }
 
             SocketGuildChannel channel = Utility.SearchChannel (Utility.GetServer (), "announcements");
@@ -340,6 +347,7 @@ namespace Adminthulhu {
                     ChatLogger.DebugLog (e.Message);
                 }
             }
+
         }
 
         public class Game {
