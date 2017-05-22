@@ -51,7 +51,7 @@ namespace Adminthulhu {
 
         private Task CheckForQuestions(Cacheable<IUserMessage, ulong> message, ISocketMessageChannel channel, SocketReaction reaction) {
             Question question = FindByMessageID (reaction.UserId, message.Id);
-            if (question != null && reaction.Emoji.Name[0] == "👌"[1])  { // Emojis are wierd or something
+            if (question != null && reaction.Emote.Name[0] == "ok_hand"[1])  { // Emojis are wierd or something
                 question.ifYes ();
                 askedUsers [ reaction.UserId ].Remove (question);
             }
@@ -126,7 +126,8 @@ namespace Adminthulhu {
         public async Task AskQuestion (SocketGuildUser user, string question, Action ifYes) {
             RestMessage message = await SendMessage (user, question);
 
-                await (message as RestUserMessage).AddReactionAsync ("👌");
+            await (message as RestUserMessage).AddReactionAsync (Emote.Parse ("👌"));
+                //await (message as RestUserMessage).AddReactionAsync ()
 
             if (!askedUsers.ContainsKey (user.Id)) {
                 askedUsers.Add (user.Id, new List<Question> ());

@@ -168,7 +168,7 @@ namespace Adminthulhu {
 
         public static bool IsCorrectMessage(Cacheable<IUserMessage, ulong> message, SocketReaction reaction, ulong desiredMessage, string emojiName) {
             if (emojiName != null)
-                return message.Id == desiredMessage && reaction.Emoji.Name == emojiName;
+                return message.Id == desiredMessage && reaction.Emote.Name == emojiName;
             return message.Id == desiredMessage;
         }
     }

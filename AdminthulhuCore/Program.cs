@@ -18,7 +18,7 @@ namespace Adminthulhu
             new CEndTheWorld (), new CFizzfyr (), new CSwiggity (),
             new CAddHeader (), new CShowHeaders (), new CKarma (), new CReport (),
             new VoiceCommands (), new EventCommands (), new UserSettingsCommands (), new DebugCommands (), new HangmanCommands (),
-            new GameCommands (), new StrikeCommandSet (),
+            new GameCommands (), new StrikeCommandSet (), new CAddEventGame (), new CRemoveEventGame (), new CHighlightEventGame (),
         };
 
         public static string dataPath = "";
@@ -132,6 +132,7 @@ namespace Adminthulhu
             };
 
             discordClient.UserJoined += async (e) => {
+                Younglings.OnUserJoined (e);
                 messageControl.SendMessage (Utility.GetMainChannel (e.Guild) as SocketTextChannel, "**" + e.Username + "** has joined this server. Bid them welcome or murder them in cold blood, it's really up to you.");
 
                 string[] welcomeMessage = SerializationIO.LoadTextFile (dataPath + "welcomemessage" + gitHubIgnoreType);

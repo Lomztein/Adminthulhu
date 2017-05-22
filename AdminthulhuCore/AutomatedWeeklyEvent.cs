@@ -1,7 +1,7 @@
 ﻿using Discord;
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Linq;  
 using System.Text;
 using System.Threading.Tasks;
 using Discord.WebSocket;
@@ -13,8 +13,8 @@ namespace Adminthulhu {
 
         private static string [ ] unicodeEmojis = new string [ ] { "1⃣", "2⃣", "3⃣", "4⃣", "5⃣", "6⃣", "7⃣", "8⃣", "9⃣", "🔟" };
 
-        public static Game[] allGames = new Game[] {
-            new Game ("Overwatch"),
+        public static List<Game> allGames = new List<Game>() {
+            /*new Game ("Overwatch"),
             new Game ("GMod"),
             new Game ("Counter Strike: GO"),
             new Game ("Team Fortress 2"),
@@ -34,7 +34,7 @@ namespace Adminthulhu {
             new Game ("Toribash"),
             new Game ("Robocraft"),
             new Game ("TrackMania"),
-            new Game ("Robot Roller-Derby Disco Dodgeball"),
+            new Game ("Robot Roller-Derby Disco Dodgeball"),*/
         };
 
         public static Game[] games;
@@ -66,13 +66,10 @@ namespace Adminthulhu {
             votes = SerializationIO.LoadObjectFromFile<List<Vote>> (Program.dataPath + Program.eventDirectory + votesFileName + Program.gitHubIgnoreType);
             games = SerializationIO.LoadObjectFromFile<Game [ ]> (Program.dataPath + Program.eventDirectory + gamesFileName + Program.gitHubIgnoreType);
             votingMessageID = SerializationIO.LoadObjectFromFile<ulong> (Program.dataPath + Program.eventDirectory + statusFileName + Program.gitHubIgnoreType);
+            allGames = SerializationIO.LoadObjectFromFile<List<Game>> (Program.dataPath + Program.eventDirectory + "allGames" + Program.gitHubIgnoreType); // At some point you just stop caring.
 
             if (votes == null)
                 votes = new List<Vote> ();
-
-            foreach (Vote v in votes) {
-                Console.WriteLine (games [ v.votedGameID ].name);
-            }
 
             while (Utility.GetServer () == null)
                 await Task.Delay (1000);
@@ -96,7 +93,7 @@ namespace Adminthulhu {
             if (message.Id == votingMessageID) {
                 int reactionID = -1;
                 for (int i = 0; i < gamesPerWeek; i++) {
-                    if (GetUnicodeEmoji (i) == reaction.Emoji.Name) {
+                    if (GetUnicodeEmoji (i) == reaction.Emote.Name) {
                         reactionID = i;
                         break;
                     }
@@ -109,7 +106,7 @@ namespace Adminthulhu {
                 }
 
                 if (reactionID == -1) {
-                    message.Value.RemoveReactionAsync (reaction.Emoji, message.Value.Author);
+                    message.Value.RemoveReactionAsync (reaction.Emote, message.Value.Author);
                 }
             }
         }
@@ -118,11 +115,12 @@ namespace Adminthulhu {
             SerializationIO.SaveObjectToFile(Program.dataPath + Program.eventDirectory + votesFileName + Program.gitHubIgnoreType, votes);
             SerializationIO.SaveObjectToFile(Program.dataPath + Program.eventDirectory + gamesFileName + Program.gitHubIgnoreType, games);
             SerializationIO.SaveObjectToFile(Program.dataPath + Program.eventDirectory + statusFileName + Program.gitHubIgnoreType, votingMessageID);
+            SerializationIO.SaveObjectToFile (Program.dataPath + Program.eventDirectory + "allGames" + Program.gitHubIgnoreType, allGames);
         }
 
         public Task OnDayPassed(DateTime time) {
             if (votes != null) {
-                if ((time.DayOfWeek - 1).ToString ().ToLower () == voteEndDay) {
+                if ((time.DayOfWeek + 1).ToString ().ToLower () == voteEndDay) { // The answer is don't think about it.
                     CountVotes ();
                 }
             } else {
@@ -205,14 +203,31 @@ namespace Adminthulhu {
 
             highestGame = null;
             List<Game> possibilities = allGames.ToList ();
+            List<Game> highlightedGames = possibilities.FindAll (x => x.highlight);
+            List<Game> selectedGames = new List<Game> ();
             Random rand = new Random ();
             games = new Game[gamesPerWeek];
 
-            for (int i = 0; i < games.Length; i++) {
-                int index = rand.Next (0, possibilities.Count);
-                games[i] = possibilities[index];
-                possibilities.RemoveAt (index);
+            // A C++ programmer would possibly kill me for this memory management.
+            for (int i = 0; i < gamesPerWeek; i++) {
+                int index = rand.Next (0, highlightedGames.Count > 0 ? highlightedGames.Count : possibilities.Count);
+                if (highlightedGames.Count > 0) {
+                    selectedGames [ i ] = highlightedGames[ index ];
+                    highlightedGames.RemoveAt (index);
+                } else {
+                    selectedGames [ i ] = possibilities [ index ];
+                    possibilities.RemoveAt (index);
+                }
             }
+
+            // Shuffle dat shite.
+            for (int i = 0; i < gamesPerWeek; i++) {
+                int index = rand.Next (0, selectedGames.Count);
+                games [ i ] = selectedGames [ i ];
+                selectedGames.RemoveAt (i);
+            }
+
+            // Well that's the least optimized code I've written in ages, and that says something.
 
             foreach (Game game in games)
                 game.votes = 0;
@@ -222,7 +237,7 @@ namespace Adminthulhu {
 
             SocketGuildChannel mainChannel = Utility.GetMainChannel (Utility.GetServer ());
 
-            Program.messageControl.SendMessage (mainChannel as SocketTextChannel, "A new vote for next friday event has begun, see pinned messages in <#188106821154766848> for votesheet.");
+            Program.messageControl.SendMessage (mainChannel as SocketTextChannel, Utility.GetServer ().EveryoneRole.Mention + "! A new vote for next friday event has begun, see pinned messages in <#188106821154766848> for votesheet.");
             SaveData ();
         }
 
@@ -278,6 +293,31 @@ namespace Adminthulhu {
             return (userVotes.Count >= votesPerPerson);
         }
 
+        public static bool HighlightGame(string gameName) {
+            Game game = allGames.Find (x => x.name.ToLower () == gameName.ToLower ());
+            if (game != null) {
+                game.highlight = !game.highlight;
+                SaveData ();
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        public static bool AddGame(string gameName, bool highlight = false) {
+            if (allGames.Find (x => x.name.ToLower () == gameName.ToLower ()) == null) {
+                allGames.Add (new Game (gameName) { highlight = highlight }); // Not even remotely confusing.
+                SaveData ();
+                return true;
+            }
+            return false;
+        }
+
+        public static void RemoveGame(int id) {
+            allGames.RemoveAt (id);
+            SaveData ();
+        }
+
         public static bool RemoveVote (SocketMessage e, ulong userID, int gameID) {
             Vote vote = votes.Find (x => x.voterID == userID && x.votedGameID == gameID);
             if (vote == null && e != null) {
@@ -300,13 +340,13 @@ namespace Adminthulhu {
             string text = "Vote for this " + eventDay + "s event!```\n";
             int index = 0;
             foreach (Game game in games) {
-                text += (index + 1) + " - " + game.name + " - " + game.votes.ToString () + " votes.\n";
+                text += (index + 1) + " - " + game.name + (game.highlight ? " * " : "") + " - " + game.votes.ToString () + " votes.\n";
                 index++;
             }
 
             text += "```\n";
             if (status == WeeklyEventStatus.Waiting) {
-                text += "**VOTING HAS ENDED, " + highestGame.name + " HAS WON THE VOTE.**";
+                text += "**VOTING HAS ENDED, " + highestGame.name.ToUpper () + " HAS WON THE VOTE.**";
             } else {
                 text += "**Vote using the reactions below, or `!event vote <id>`. You can vote 3 times, and also remove votes using `!event removevote <id>`!**";
             }
@@ -334,7 +374,7 @@ namespace Adminthulhu {
 
                 for (int i = 0; i < gamesPerWeek; i++) {
                     string emoji = GetUnicodeEmoji (i);
-                    await task.Result.AddReactionAsync (emoji);
+                    await task.Result.AddReactionAsync (Emote.Parse (emoji));
                 }
 
             } else {
@@ -353,9 +393,14 @@ namespace Adminthulhu {
         public class Game {
             public string name;
             public int votes;
+            public bool highlight;
 
             public Game ( string gameName ) {
                 name = gameName;
+            }
+
+            public void ToggleHighlight() {
+                highlight = !highlight;
             }
         }
 
@@ -398,6 +443,109 @@ namespace Adminthulhu {
                 } else {
                     Program.messageControl.SendMessage (e, "Failed to vote - voting not in progress.");
                 }
+            }
+            return Task.CompletedTask;
+        }
+    }
+
+    public class CRemoveEventGame : Command {
+        public CRemoveEventGame() {
+            command = "removeeventgame";
+            name = "Remove a Game";
+            argHelp = "<id>";
+            help = "Remove a game from automated friday events.";
+            argumentNumber = 1;
+            isAdminOnly = true;
+        }
+
+        public override Task ExecuteCommand(SocketUserMessage e, List<string> arguments) {
+            base.ExecuteCommand (e, arguments);
+            if (AllowExecution (e, arguments)) {
+                int parse;
+                if (int.TryParse (arguments [ 0 ], out parse)) {
+                    bool withinRange = parse > 0 && parse <= AutomatedWeeklyEvent.games.Length;
+
+                    if (withinRange) {
+                        AutomatedWeeklyEvent.RemoveGame (parse);
+                    } else {
+                        Program.messageControl.SendMessage (e, "Failed to remove - outside range ( 0-" + (AutomatedWeeklyEvent.allGames.Count - 1) + " ).");
+                    }
+                } else {
+                    Program.messageControl.SendMessage (e, "Failed to remove, could not parse number.");
+                }
+            }
+            return Task.CompletedTask;
+        }
+    }
+
+    public class CAddEventGame : Command {
+        public CAddEventGame() {
+            command = "addeventgame";
+            name = "Add a Game";
+            argHelp = "<name>;<highlight(true,false)>";
+            help = "Remove a game from automated friday events.";
+            argumentNumber = 2;
+            isAdminOnly = true;
+        }
+
+        public override Task ExecuteCommand(SocketUserMessage e, List<string> arguments) {
+            base.ExecuteCommand (e, arguments);
+            if (AllowExecution (e, arguments)) {
+                bool parse;
+                if (bool.TryParse (arguments [ 1 ], out parse)) {
+                    if (AutomatedWeeklyEvent.AddGame (arguments [ 0 ], parse)) {
+                        Program.messageControl.SendMessage (e, "Succesfully added game to automated events.");
+                    } else {
+                        Program.messageControl.SendMessage (e, "Failed to add game, it might already be on the list.");
+                    }
+                } else {
+                    Program.messageControl.SendMessage (e, "Failed to add, could not parse highlight bool.");
+                }
+            }
+            return Task.CompletedTask;
+        }
+    }
+
+    public class CHighlightEventGame : Command {
+        public CHighlightEventGame() {
+            command = "highlighteventgame";
+            name = "Highlight a Game";
+            argHelp = "<name>";
+            help = "Toggles whether or not a game is highlighted.";
+            argumentNumber = 1;
+            isAdminOnly = true;
+        }
+
+        public override Task ExecuteCommand(SocketUserMessage e, List<string> arguments) {
+            base.ExecuteCommand (e, arguments);
+            if (AllowExecution (e, arguments)) {
+                if (AutomatedWeeklyEvent.HighlightGame (arguments [ 0 ])) {
+                    Program.messageControl.SendMessage (e, "Succesfully toggled game highlight automated events.");
+                } else {
+                    Program.messageControl.SendMessage (e, "Failed to toggle game highlight.");
+                }
+            }
+            return Task.CompletedTask;
+        }
+    }
+
+    public class CListEventGames : Command {
+        public CListEventGames() {
+            command = "listeventgames";
+            name = "List Event Games";
+            help = "Lists all possible event games.";
+            argumentNumber = 0;
+        }
+
+        public override Task ExecuteCommand(SocketUserMessage e, List<string> arguments) {
+            base.ExecuteCommand (e, arguments);
+            if (AllowExecution (e, arguments)) {
+                string result = "```";
+                for (int i = 0; i < AutomatedWeeklyEvent.allGames.Count; i++) {
+                    result += "\n" + AutomatedWeeklyEvent.allGames [ i ].name + (AutomatedWeeklyEvent.allGames[i].highlight ? " *" : "");
+                }
+                result += "```";
+                Program.messageControl.SendMessage (e, result);
             }
             return Task.CompletedTask;
         }

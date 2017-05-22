@@ -12,8 +12,8 @@ namespace Adminthulhu {
         public static Dictionary<ulong, long> karmaCollection;
         public static string karmaFileName = "karmaCollection";
 
-        public static ulong upvoteID = 244049485263667200;
-        public static ulong downvoteID = 244049499251539968;
+        public static string upvote = "upvote";
+        public static string downvote = "downvote";
 
         public Karma () {
             karmaCollection = SerializationIO.LoadObjectFromFile<Dictionary<ulong, long>> (Program.dataPath + karmaFileName + Program.gitHubIgnoreType);
@@ -24,9 +24,9 @@ namespace Adminthulhu {
 
                 IMessage iMessage = await channel.GetMessageAsync (message.Id);
 
-                if (reaction.Emoji.Id == upvoteID) {
+                if (reaction.Emote.Name == upvote) {
                     ChangeKarma (iMessage.Author.Id, 1);
-                } else if (reaction.Emoji.Id == downvoteID) {
+                } else if (reaction.Emote.Name == downvote) {
                     ChangeKarma (iMessage.Author.Id, -1);
                 }
             };
@@ -35,9 +35,9 @@ namespace Adminthulhu {
                 
                 IMessage iMessage = await channel.GetMessageAsync (message.Id);
 
-                if (reaction.Emoji.Id == upvoteID) {
+                if (reaction.Emote.Name == upvote) {
                     ChangeKarma (iMessage.Author.Id, -1);
-                } else if (reaction.Emoji.Id == downvoteID) {
+                } else if (reaction.Emote.Name == downvote) {
                     ChangeKarma (iMessage.Author.Id, +1);
                 }
             };
