@@ -14,7 +14,7 @@ namespace Adminthulhu {
             command = "voice";
             name = "Voice Commands";
             help = "A set of commands specifically for voice channels.";
-            commandsInSet = new Command[] { new CLock (), new CUnlock (), new CInvite (), new CMembers (), new CKick (), new CCallVoiceChannel () };
+            commandsInSet = new Command[] { new CLock (), new CUnlock (), new CInvite (), new CMembers (), new CKick (), new CCallVoiceChannel (), new CLooking () };
         }
     }
     class CLock : Command {
@@ -229,6 +229,25 @@ namespace Adminthulhu {
 
                 Program.messageControl.SendMessage (e.Channel, "Error - Are you even in a channel?");
             }
+            return Task.CompletedTask;
+        }
+    }
+
+    public class CLooking : Command {
+        public CLooking() {
+            command = "looking";
+            name = "Toogle Looking";
+            help = "Toggles a tag which informs the world you're looking for players.";
+            argumentNumber = 0;
+        }
+
+        public override Task ExecuteCommand(SocketUserMessage e, List<string> arguments) {
+            base.ExecuteCommand (e, arguments);
+            if (AllowExecution (e, arguments)) {
+                AutomatedVoiceChannels.allVoiceChannels [ (e.Author as SocketGuildUser).VoiceChannel.Id ].ToggleLooking ();
+                Program.messageControl.SendMessage (e, "Succesfully toggled \"Looking for players\" tag.");
+            }
+
             return Task.CompletedTask;
         }
     }

@@ -54,7 +54,7 @@ namespace Adminthulhu
             new Phrase ("", "Nyx", 1, "*Allegedly...*"),
             new Phrase ("", "Peacekeeper", 2, "*It's always crits..*"),
             new Phrase ("wow!", "Gizmo Gizmo", 100, "INSANE AIR TIME!"),
-            new Phrase ("Thx fam", "", 100, "No props. We Gucci."),
+            new Phrase ("Thx fam", "", 100, "No probs. We Gucci."),
             new Phrase ("Fuck yis", "Lomztein", 100, "Fuck no."),
             new Phrase ("<:Serviet:255721870828109824> Privet Comrades!", "Creeperskull", 100, "Privet, federal leader!"),
             new Phrase ("<:Serviet:255721870828109824> Privet Comrades!", "", 100, "Privet!"),
@@ -64,7 +64,6 @@ namespace Adminthulhu
             new Phrase ("", "khave", 2, "¯\\_(ツ)_/¯"),
             new Phrase ("(╯°□°）╯︵ ┻━┻", 100, "Please respect tables. ┬─┬ノ(ಠ_ಠノ)"),
             new Phrase ("nice", "Twistbonk", 25, "Very nice!"),
-            new Phrase ("", "", 1, "btw"),
         };
         public static List<string> allowedDeletedMessages = new List<string>();
 
@@ -153,28 +152,38 @@ namespace Adminthulhu
                 Console.WriteLine ("User voice updated: " + user.Username);
                 SocketGuild guild = (user as SocketGuildUser).Guild;
 
+                if (after.VoiceChannel != null)
+                    AutomatedVoiceChannels.allVoiceChannels [ after.VoiceChannel.Id ].OnUserJoined (user as SocketGuildUser);
+
                 await AutomatedVoiceChannels.OnUserUpdated (guild, before.VoiceChannel, after.VoiceChannel);
 
                 return;
             };
 
-            discordClient.UserUpdated += async (before, after) => {
-                Console.WriteLine ("User " + before.Username + " updated.");
+            discordClient.GuildMemberUpdated += async (before, after) => {
                 SocketGuild guild = (before as SocketGuildUser).Guild;
 
                 SocketGuildChannel channel = Utility.GetMainChannel ((after as SocketGuildUser).Guild);
-                await AutomatedVoiceChannels.OnUserUpdated (guild, null, (after as SocketGuildUser).VoiceChannel);
+                await AutomatedVoiceChannels.OnUserUpdated (guild, before.VoiceChannel, after.VoiceChannel);
+
+                if ((before as SocketGuildUser).Nickname != (after as SocketGuildUser).Nickname) {
+                    messageControl.SendMessage (channel as SocketTextChannel, "**" + Utility.GetUserUpdateName (before as SocketGuildUser, after as SocketGuildUser, true) + "** has changed their nickname to **" + Utility.GetUserUpdateName (before as SocketGuildUser, after as SocketGuildUser, false) + "**");
+                }
+            };
+
+            discordClient.UserUpdated += (before, after) => {
+                Console.WriteLine ("User " + before.Username + " updated.");
+
+                SocketTextChannel channel = Utility.GetMainChannel (Utility.GetServer ()) as SocketTextChannel;
 
                 if (channel == null)
-                    return;
+                    return Task.CompletedTask;
 
                 if (before.Username != after.Username) {
                     messageControl.SendMessage (channel as SocketTextChannel, "**" + Utility.GetUserUpdateName (before as SocketGuildUser, after as SocketGuildUser, true) + "** has changed their name to **" + after.Username + "**");
                 }
 
-                if ((before as SocketGuildUser).Nickname != (after as SocketGuildUser).Nickname) {
-                    messageControl.SendMessage (channel as SocketTextChannel, "**" + Utility.GetUserUpdateName (before as SocketGuildUser, after as SocketGuildUser, true) + "** has changed their nickname to **" + Utility.GetUserUpdateName (before as SocketGuildUser, after as SocketGuildUser, false) + "**");
-                }
+                return Task.CompletedTask;
             };
 
             discordClient.UserBanned += (e, guild) => {
@@ -193,7 +202,7 @@ namespace Adminthulhu
                 if (channel == null)
                     return Task.CompletedTask;
 
-                messageControl.SendMessage (channel as SocketTextChannel, "**" + Utility.GetUserName (e as SocketGuildUser) + "** has been unbanned from this server, They are once more welcome in our arms of glory.");
+                messageControl.SendMessage (channel as SocketTextChannel, "**" + Utility.GetUserName (e as SocketGuildUser) + "** has been unbanned from this server, They are once more welcome in our glorious embrace.");
                 messageControl.SendMessage (e as SocketGuildUser, "You have been unbanned from Monster Mash, we love you once more! :D");
 
                 return Task.CompletedTask;

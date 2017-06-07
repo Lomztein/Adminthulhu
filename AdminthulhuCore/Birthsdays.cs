@@ -83,6 +83,16 @@ namespace Adminthulhu {
             Program.messageControl.SendMessage (user, "This is an official completely not cold and automated birthday greeting, from the loving ~~nazimods~~ admins of **" + Program.serverName + "**: - Happy birthday!");
         }
 
+        public static bool IsUsersBirthday(SocketUser user) {
+            Date date = birthdays.Find (x => x.userID == user.Id);
+            if (date == null)
+                return false;
+
+            if (date.day.Month == DateTime.Now.Month && date.day.Day == DateTime.Now.Day)
+                return true;
+            return false;
+        }
+
         public static void SetBirthday (ulong userID, DateTime day) {
             // Well that's a lot easier than looping each time, these could prove useful to fully understand.
             Date date = birthdays.Find (x => x.userID == userID);

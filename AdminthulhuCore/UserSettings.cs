@@ -41,15 +41,18 @@ namespace Adminthulhu {
                 foreach (Setting s in set) {
                     if (s.name == key) {
                         s.value = value;
+                        SaveSettings ();
                         return;
                     }
                 }
 
                 set.Add (new Setting (key, value));
+                SaveSettings ();
                 return;
             }
 
             userSettings.Add (userID, new List<Setting> ());
+            userSettings [userID].Add (new Setting (key, value));
             SaveSettings ();
         }
 
