@@ -20,9 +20,9 @@ namespace Adminthulhu {
         private static int activeThresholdDays = 7;
         private static int presentThresholdDays = 30;
 
-        private static ulong activeUserRole = 273017450390487041;
-        private static ulong presentUserRole = 273017481600434186;
-        private static ulong inactiveUserRole = 273017511468072960;
+        public static ulong activeUserRole = 273017450390487041;
+        public static ulong presentUserRole = 273017481600434186;
+        public static ulong inactiveUserRole = 273017511468072960;
 
         public async Task Initialize ( DateTime time ) {
             userActivity = SerializationIO.LoadObjectFromFile<Dictionary<ulong, DateTime>> (Program.dataPath + activityFileName + Program.gitHubIgnoreType);

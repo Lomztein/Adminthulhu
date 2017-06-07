@@ -14,7 +14,7 @@ namespace Adminthulhu {
 
         public IClockable [ ] clockables = new IClockable [ ] {
             new AutomatedEventHandling (), new AutomatedTextChannels (), new UserActivityMonitor (), new Birthdays (), new AutomatedWeeklyEvent (),
-            new Strikes (), new AprilFools (),
+            new Strikes (), new AprilFools (), new Younglings (),
         };
 
         public Clock () {

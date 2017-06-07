@@ -18,7 +18,7 @@ namespace Adminthulhu
             new CEndTheWorld (), new CFizzfyr (), new CSwiggity (),
             new CAddHeader (), new CShowHeaders (), new CKarma (), new CReport (),
             new VoiceCommands (), new EventCommands (), new UserSettingsCommands (), new DebugCommands (), new HangmanCommands (),
-            new GameCommands (), new StrikeCommandSet (),
+            new GameCommands (), new StrikeCommandSet (), new CAddEventGame (), new CRemoveEventGame (), new CHighlightEventGame (),
         };
 
         public static string dataPath = "";
@@ -132,6 +132,7 @@ namespace Adminthulhu
             };
 
             discordClient.UserJoined += async (e) => {
+                Younglings.OnUserJoined (e);
                 messageControl.SendMessage (Utility.GetMainChannel (e.Guild) as SocketTextChannel, "**" + e.Username + "** has joined this server. Bid them welcome or murder them in cold blood, it's really up to you.");
 
                 string[] welcomeMessage = SerializationIO.LoadTextFile (dataPath + "welcomemessage" + gitHubIgnoreType);
@@ -157,22 +158,22 @@ namespace Adminthulhu
                 return;
             };
 
-            discordClient.GuildMemberUpdated += async (before, after) => {
+            discordClient.UserUpdated += async (before, after) => {
                 Console.WriteLine ("User " + before.Username + " updated.");
-                SocketGuild guild = before.Guild;
+                SocketGuild guild = (before as SocketGuildUser).Guild;
 
-                SocketGuildChannel channel = Utility.GetMainChannel (after.Guild);
-                await AutomatedVoiceChannels.OnUserUpdated (guild, null, after.VoiceChannel);
+                SocketGuildChannel channel = Utility.GetMainChannel ((after as SocketGuildUser).Guild);
+                await AutomatedVoiceChannels.OnUserUpdated (guild, null, (after as SocketGuildUser).VoiceChannel);
 
                 if (channel == null)
                     return;
 
                 if (before.Username != after.Username) {
-                    messageControl.SendMessage (channel as SocketTextChannel, "**" + Utility.GetUserUpdateName (before, after, true) + "** has changed their name to **" + after.Username + "**");
+                    messageControl.SendMessage (channel as SocketTextChannel, "**" + Utility.GetUserUpdateName (before as SocketGuildUser, after as SocketGuildUser, true) + "** has changed their name to **" + after.Username + "**");
                 }
 
-                if (before.Nickname != after.Nickname) {
-                    messageControl.SendMessage (channel as SocketTextChannel, "**" + Utility.GetUserUpdateName (before, after, true) + "** has changed their nickname to **" + Utility.GetUserUpdateName (before, after, false) + "**");
+                if ((before as SocketGuildUser).Nickname != (after as SocketGuildUser).Nickname) {
+                    messageControl.SendMessage (channel as SocketTextChannel, "**" + Utility.GetUserUpdateName (before as SocketGuildUser, after as SocketGuildUser, true) + "** has changed their nickname to **" + Utility.GetUserUpdateName (before as SocketGuildUser, after as SocketGuildUser, false) + "**");
                 }
             };
 

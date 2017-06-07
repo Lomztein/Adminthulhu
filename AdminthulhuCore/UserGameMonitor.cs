@@ -18,7 +18,7 @@ namespace Adminthulhu {
             if (userGames == null)
                 userGames = new Dictionary<ulong, List<string>> ();
 
-            Program.discordClient.GuildMemberUpdated += ( before, after ) => {
+            Program.discordClient.UserUpdated += ( before, after ) => {
                 
                 string gameName = after.Game.HasValue ? after.Game.Value.Name.ToString ().ToUpper () : null;
                 AddGame (after, gameName);
@@ -27,7 +27,7 @@ namespace Adminthulhu {
             };
         }
 
-        public static string AddGame (SocketGuildUser user, string gameName) {
+        public static string AddGame (SocketUser user, string gameName) {
             string result = "";
             if (gameName != null && gameName != "") {
                 gameName = gameName.ToUpper ();

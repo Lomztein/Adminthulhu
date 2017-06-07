@@ -53,7 +53,7 @@ namespace Adminthulhu {
         }
 
         public static async Task OnUserUpdated(SocketGuild guild, SocketVoiceChannel before, SocketVoiceChannel after) {
-            // Maybe, just maybe put these into a single function.
+            // Maybe, just maybe put these into a single function. Oh shit I just did.
             if (Program.FullyBooted ()) {
                 AddMissingChannels (guild);
                 await CheckFullAndAddIf (guild);
@@ -88,7 +88,7 @@ namespace Adminthulhu {
                     allVoiceChannels[voice.Id].Unlock (false);
 
                 Dictionary<Game, int> numPlayers = new Dictionary<Game, int> ();
-                List<SocketGuildUser> users = voice.Users.ToList ();
+                List<SocketGuildUser> users = Utility.ForceGetUsers (voice.Id);
                 foreach (SocketGuildUser user in users) {
 
                     SocketGuildUser forcedUser = Utility.GetServer().GetUser (user.Id);

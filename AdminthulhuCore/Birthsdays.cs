@@ -80,7 +80,7 @@ namespace Adminthulhu {
             }
 
             Program.messageControl.SendMessage (main as SocketTextChannel, "It's **" + Utility.GetUserName (user) + "'s** birthday today, wish them congratulations, as you throw them into the depths of hell on their **" + age + ageSuffix + "** birthday!");
-            Program.messageControl.SendMessage (user, "This is an official completely not cold and automated birthday greeting, from the loving ~~nazimods~~ admins of **" + Program.serverName + "**: - Happy birthdsay!");
+            Program.messageControl.SendMessage (user, "This is an official completely not cold and automated birthday greeting, from the loving ~~nazimods~~ admins of **" + Program.serverName + "**: - Happy birthday!");
         }
 
         public static void SetBirthday (ulong userID, DateTime day) {
