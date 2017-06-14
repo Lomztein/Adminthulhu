@@ -14,7 +14,7 @@ namespace Adminthulhu {
             command = "voice";
             name = "Voice Commands";
             help = "A set of commands specifically for voice channels.";
-            commandsInSet = new Command[] { new CLock (), new CUnlock (), new CInvite (), new CMembers (), new CKick (), new CCallVoiceChannel (), new CLooking () };
+            commandsInSet = new Command[] { new CLock (), new CUnlock (), new CInvite (), new CMembers (), new CKick (), new CCallVoiceChannel (), new CLooking (), new CFull (), new CSetDesired (), new CCustomName () };
         }
     }
     class CLock : Command {
@@ -36,21 +36,21 @@ namespace Adminthulhu {
                     if (!vc.IsLocked ()) {
 
                         if (!vc.lockable) {
-                            Program.messageControl.SendMessage (e.Channel, "Error - cannot lock this channel due to *reasons*.");
+                            Program.messageControl.SendMessage (e.Channel, "Error - cannot lock this channel due to *reasons*.", false);
                             return Task.CompletedTask;
                         }
 
                         vc.Lock (e.Author as SocketGuildUser, true);
 
-                        Program.messageControl.SendMessage (e.Channel, "Succesfully locked voice channel **" + vc.name + "**.");
+                        Program.messageControl.SendMessage (e.Channel, "Succesfully locked voice channel **" + vc.name + "**.", false);
                         return Task.CompletedTask;
                     }
 
-                    Program.messageControl.SendMessage (e.Channel, "Error - voice channel **" + vc.name + "** already locked.");
+                    Program.messageControl.SendMessage (e.Channel, "Error - voice channel **" + vc.name + "** already locked.", false);
                     return Task.CompletedTask;
                 }
 
-                Program.messageControl.SendMessage (e.Channel, "Failed to lock channel, are you even in one?");
+                Program.messageControl.SendMessage (e.Channel, "Failed to lock channel, are you even in one?", false);
             }
             return Task.CompletedTask;
         }
@@ -76,22 +76,22 @@ namespace Adminthulhu {
 
                         if (vc.lockerID == e.Author.Id) {
                             vc.Unlock (true);
-                            Program.messageControl.SendMessage (e.Channel, "Succesfully unlocked voice channel **" + vc.name + "**.");
+                            Program.messageControl.SendMessage (e.Channel, "Succesfully unlocked voice channel **" + vc.name + "**.", false);
                             return Task.CompletedTask;
 
                         }
 
-                        Program.messageControl.SendMessage (e.Channel, "Only the person who locked this channel can do that, which is " + vc.GetLocker ().Mention);
+                        Program.messageControl.SendMessage (e.Channel, "Only the person who locked this channel can do that, which is " + vc.GetLocker ().Mention, false);
                         return Task.CompletedTask;
 
                     }
 
-                    Program.messageControl.SendMessage (e.Channel, "Failed to unlock voice channel **" + vc.name + "** - It is not unlocked.");
+                    Program.messageControl.SendMessage (e.Channel, "Failed to unlock voice channel **" + vc.name + "** - It is not unlocked.", false);
                     return Task.CompletedTask;
 
                 }
 
-                Program.messageControl.SendMessage (e.Channel, "Failed to unlock channel, are you even in one?");
+                Program.messageControl.SendMessage (e.Channel, "Failed to unlock channel, are you even in one?", false);
             }
             return Task.CompletedTask;
         }
@@ -114,7 +114,7 @@ namespace Adminthulhu {
                 SocketGuildChannel channel = (e.Author as SocketGuildUser).VoiceChannel;
                 SocketGuildUser user = Utility.FindUserByName ((e.Channel as SocketGuildChannel).Guild, arguments[0]);
                 if (user == null) {
-                    Program.messageControl.SendMessage (e.Channel, "Failed to invite - User **" + arguments[0] + "** couldn't be found on this server.");
+                    Program.messageControl.SendMessage (e.Channel, "Failed to invite - User **" + arguments[0] + "** couldn't be found on this server.", false);
                     return Task.CompletedTask;
 
                 }
@@ -123,17 +123,17 @@ namespace Adminthulhu {
                     AutomatedVoiceChannels.VoiceChannel vc = AutomatedVoiceChannels.allVoiceChannels[channel.Id];
                     if (vc.IsLocked ()) {
                         vc.InviteUser (e.Author as SocketGuildUser, user);
-                        Program.messageControl.SendMessage (e.Channel, "User **" + Utility.GetUserName (user) + "** succesfully invited.");
+                        Program.messageControl.SendMessage (e.Channel, "User **" + Utility.GetUserName (user) + "** succesfully invited.", false);
                         return Task.CompletedTask;
 
                     }
 
-                    Program.messageControl.SendMessage (e.Channel, "The channel isn't locked, but I'm sure " + Utility.GetUserName (user) + " would love to join anyways.");
+                    Program.messageControl.SendMessage (e.Channel, "The channel isn't locked, but I'm sure " + Utility.GetUserName (user) + " would love to join anyways.", false);
                     return Task.CompletedTask;
 
                 }
 
-                Program.messageControl.SendMessage (e.Channel, "Failed to invite, are you even in a channel?");
+                Program.messageControl.SendMessage (e.Channel, "Failed to invite, are you even in a channel?", false);
             }
             return Task.CompletedTask;
         }
@@ -162,17 +162,17 @@ namespace Adminthulhu {
                             //reply += Utility.GetUserName (Utility.GetServer ().GetUser (user)) + "\n";
                         }
                         reply += "```";
-                        Program.messageControl.SendMessage (e.Channel, "Users allowed on your locked channel:\n" + reply);
+                        Program.messageControl.SendMessage (e.Channel, "Users allowed on your locked channel:\n" + reply, false);
                         return Task.CompletedTask;
 
                     }
 
-                    Program.messageControl.SendMessage (e.Channel, "Error - The channel isn't locked.");
+                    Program.messageControl.SendMessage (e.Channel, "Error - The channel isn't locked.", false);
                     return Task.CompletedTask;
 
                 }
 
-                Program.messageControl.SendMessage (e.Channel, "Error - Are you even in a channel?");
+                Program.messageControl.SendMessage (e.Channel, "Error - Are you even in a channel?", false);
             }
             return Task.CompletedTask;
         }
@@ -195,9 +195,8 @@ namespace Adminthulhu {
                 SocketGuildChannel channel = (e.Author as SocketGuildUser).VoiceChannel;
                 SocketGuildUser user = Utility.FindUserByName ((e.Channel as SocketGuildChannel).Guild, arguments[0]);
                 if (user == null) {
-                    Program.messageControl.SendMessage (e.Channel, "Error - User not found.");
+                    Program.messageControl.SendMessage (e.Channel, "Error - User not found.", false);
                     return Task.CompletedTask;
-
                 }
 
                 if (channel != null) {
@@ -206,28 +205,28 @@ namespace Adminthulhu {
 
                         if (vc.lockerID == e.Author.Id) {
                             if (user.GuildPermissions.ManageChannels) {
-                                Program.messageControl.SendMessage (e.Channel, "Nice try, but you can't kick admins >:D.");
+                                Program.messageControl.SendMessage (e.Channel, "Nice try, but you can't kick admins >:D.", false);
                                 return Task.CompletedTask;
 
                             }
                             vc.Kick (user);
-                            Program.messageControl.SendMessage (e.Channel, "User **" + Utility.GetUserName (user) + "** succesfully kicked.");
+                            Program.messageControl.SendMessage (e.Channel, "User **" + Utility.GetUserName (user) + "** succesfully kicked.", false);
                             Program.messageControl.SendMessage (user, "Sorry man, but you have been kicked from voice channel **" + vc.name + "**.");
                             return Task.CompletedTask;
 
                         }
 
-                        Program.messageControl.SendMessage (e.Channel, "Only the person who locked this channel can do that, which is " + vc.GetLocker ().Mention);
+                        Program.messageControl.SendMessage (e.Channel, "Only the person who locked this channel can do that, which is " + vc.GetLocker ().Mention, false);
                         return Task.CompletedTask;
 
                     }
 
-                    Program.messageControl.SendMessage (e.Channel, "Error - The channel isn't locked.");
+                    Program.messageControl.SendMessage (e.Channel, "Error - The channel isn't locked.", false);
                     return Task.CompletedTask;
 
                 }
 
-                Program.messageControl.SendMessage (e.Channel, "Error - Are you even in a channel?");
+                Program.messageControl.SendMessage (e.Channel, "Error - Are you even in a channel?", false);
             }
             return Task.CompletedTask;
         }
@@ -244,8 +243,89 @@ namespace Adminthulhu {
         public override Task ExecuteCommand(SocketUserMessage e, List<string> arguments) {
             base.ExecuteCommand (e, arguments);
             if (AllowExecution (e, arguments)) {
-                AutomatedVoiceChannels.allVoiceChannels [ (e.Author as SocketGuildUser).VoiceChannel.Id ].ToggleLooking ();
-                Program.messageControl.SendMessage (e, "Succesfully toggled \"Looking for players\" tag.");
+                if ((e.Author as SocketGuildUser).VoiceChannel != null) {
+                    AutomatedVoiceChannels.allVoiceChannels [ (e.Author as SocketGuildUser).VoiceChannel.Id ].ToggleStatus (AutomatedVoiceChannels.VoiceChannel.VoiceChannelStatus.Looking);
+                    Program.messageControl.SendMessage (e, "Succesfully toggled \"Looking for players\" tag.", false);
+                } else {
+                    Program.messageControl.SendMessage (e, "Error - You have to be in a channel.", false);
+                }
+            }
+
+            return Task.CompletedTask;
+        }
+    }
+
+    public class CFull : Command {
+        public CFull() {
+            command = "full";
+            name = "Toogle Full";
+            help = "Toggles a tag which informs the world you're full of players.";
+            argumentNumber = 0;
+        }
+
+        public override Task ExecuteCommand(SocketUserMessage e, List<string> arguments) {
+            base.ExecuteCommand (e, arguments);
+            if (AllowExecution (e, arguments)) {
+                if ((e.Author as SocketGuildUser).VoiceChannel != null) {
+                AutomatedVoiceChannels.allVoiceChannels [ (e.Author as SocketGuildUser).VoiceChannel.Id ].ToggleStatus (AutomatedVoiceChannels.VoiceChannel.VoiceChannelStatus.Full);
+                    Program.messageControl.SendMessage (e, "Succesfully toggled \"Full of players\" tag.", false);
+                }
+            } else {
+                Program.messageControl.SendMessage (e, "Error - You have to be in a channel.", false);
+            }
+            return Task.CompletedTask;
+        }
+    }
+
+    public class CCustomName : Command {
+        public CCustomName() {
+            command = "name";
+            name = "Set Custom Name";
+            help = "Sets a custom game name to this channel. Input \"reset\" to reset.";
+            argumentNumber = 1;
+        }
+
+        public override Task ExecuteCommand(SocketUserMessage e, List<string> arguments) {
+            base.ExecuteCommand (e, arguments);
+            if (AllowExecution (e, arguments)) {
+                if ((e.Author as SocketGuildUser).VoiceChannel != null) {
+                    if (arguments [ 0 ].ToLower () == "reset") {
+                        AutomatedVoiceChannels.allVoiceChannels [ (e.Author as SocketGuildUser).VoiceChannel.Id ].SetCustomName ("", true);
+                        Program.messageControl.SendMessage (e, "Succesfully reset channel name.", false);
+                    } else {
+                        AutomatedVoiceChannels.allVoiceChannels [ (e.Author as SocketGuildUser).VoiceChannel.Id ].SetCustomName (arguments[0], true);
+                        Program.messageControl.SendMessage (e, "Succesfully set custom name to **" + arguments[0] + "**.", false);
+                    }
+                }
+            } else {
+                Program.messageControl.SendMessage (e, "Error - You have to be in a channel.", false);
+            }
+            return Task.CompletedTask;
+        }
+    }
+
+    public class CSetDesired : Command {
+        public CSetDesired() {
+            command = "desired";
+            name = "Set Desired Amount";
+            help = "Sets a desired amount of people in this channel.";
+            argumentNumber = 1;
+        }
+
+        public override Task ExecuteCommand(SocketUserMessage e, List<string> arguments) {
+            base.ExecuteCommand (e, arguments);
+            if (AllowExecution (e, arguments)) {
+                if ((e.Author as SocketGuildUser).VoiceChannel != null) {
+                    uint parse;
+                    if (uint.TryParse (arguments [ 0 ], out parse)) {
+                        AutomatedVoiceChannels.allVoiceChannels [ (e.Author as SocketGuildUser).VoiceChannel.Id ].SetDesiredMembers (parse);
+                        Program.messageControl.SendMessage (e, "Succesfully set desired amount of players to " + parse + ".", false);
+                    } else {
+                        Program.messageControl.SendMessage (e, "Failed to set desired amount of players to " + arguments [ 0 ] + " - could not parse.", false);
+                    }
+                }
+            } else {
+                Program.messageControl.SendMessage (e, "Error - You have to be in a channel.", false);
             }
 
             return Task.CompletedTask;

@@ -86,12 +86,12 @@ namespace Adminthulhu {
                 }
 
                 Program.messageControl.SendMessage (
-                    Utility.GetMainChannel (Utility.GetServer ()) as SocketTextChannel,
-                    startText);
+                    Utility.GetMainChannel () as SocketTextChannel,
+                    startText, true);
             } else {
                 Program.messageControl.SendMessage (
-                    Utility.GetMainChannel (Utility.GetServer ()) as SocketTextChannel,
-                    "Event **" + startingEvent.eventName + "** cancelled, since no one showed up. :(");
+                    Utility.GetMainChannel () as SocketTextChannel,
+                    "Event **" + startingEvent.eventName + "** cancelled, since no one showed up. :(", true);
             }
 
         }
@@ -166,8 +166,8 @@ namespace Adminthulhu {
         public CCreateEvent () {
             command = "create";
             name = "Create a new event";
-            argHelp = "<name>;<date>;<desc>";
-            help = "Creates a new event on this server. Date format being D-M-Y H:M:S";
+            argHelp = "<name>;<date (d-m-y h:m:s)>;<desc>";
+            help = "Creates a new event on this server.";
             argumentNumber = 3;
         }
 
@@ -175,11 +175,11 @@ namespace Adminthulhu {
             base.ExecuteCommand (e, arguments);
             if (AllowExecution (e, arguments)) {
                 DateTime parse;
-                if (DateTime.TryParse (arguments[1], out parse)) {
+                if (Utility.TryParseDatetime (arguments[1], out parse)) {
                     AutomatedEventHandling.CreateEvent (arguments[0], parse, arguments[2]);
-                    Program.messageControl.SendMessage (e, "Succesfully created event **" + arguments[0] + "** at " + parse.ToString ());
+                    Program.messageControl.SendMessage (e, "Succesfully created event **" + arguments[0] + "** at " + parse.ToString (), false);
                 }else {
-                    Program.messageControl.SendMessage (e, "Failed to create event, could not parse time.");
+                    Program.messageControl.SendMessage (e, "Failed to create event, could not parse time.", false);
                 }
             }
             return Task.CompletedTask;
@@ -202,9 +202,9 @@ namespace Adminthulhu {
                 AutomatedEventHandling.Event eve = AutomatedEventHandling.FindEvent (arguments[0]);
 
                 if (eve == null) {
-                    Program.messageControl.SendMessage (e, "Unable to cancel event - event by name **" + arguments[0] + "** not found.");
+                    Program.messageControl.SendMessage (e, "Unable to cancel event - event by name **" + arguments[0] + "** not found.", false);
                 }else {
-                    Program.messageControl.SendMessage (e, "Event **" + eve.eventName + "** has been cancelled.");
+                    Program.messageControl.SendMessage (e, "Event **" + eve.eventName + "** has been cancelled.",false);
                     AutomatedEventHandling.upcomingEvents.Remove (eve);
                     AutomatedEventHandling.SaveEvents ();
                 }
@@ -217,7 +217,7 @@ namespace Adminthulhu {
         public CEditEvent () {
             command = "edit";
             name = "Edit Event";
-            argHelp = "<name>;<newname>;<newdesc>;<newtime>";
+            argHelp = "<name>;<newname>;<newdesc>;<newtime (d-m-y h:m:s)>";
             help = "Edits event event <name>";
             isAdminOnly = true;
             argumentNumber = 4;
@@ -229,18 +229,18 @@ namespace Adminthulhu {
                 AutomatedEventHandling.Event eve = AutomatedEventHandling.FindEvent (arguments[0]);
 
                 if (eve == null) {
-                    Program.messageControl.SendMessage (e, "Unable to edit event - event by name **" + arguments[0] + "** not found.");
+                    Program.messageControl.SendMessage (e, "Unable to edit event - event by name **" + arguments[0] + "** not found.", false);
                 }else{
                     DateTime parse;
-                    if (DateTime.TryParse (arguments[2], out parse)) {
+                    if (Utility.TryParseDatetime (arguments[2], out parse)) {
                         eve.eventName = arguments[0];
                         eve.eventDescription = arguments[1];
                         eve.eventTime = parse;
 
-                        Program.messageControl.SendMessage (e, "Event **" + eve.eventName + "** has been edited.");
+                        Program.messageControl.SendMessage (e, "Event **" + eve.eventName + "** has been edited.", false);
                         AutomatedEventHandling.SaveEvents ();
                     } else {
-                        Program.messageControl.SendMessage (e, "Failed to edit event, could not parse time.");
+                        Program.messageControl.SendMessage (e, "Failed to edit event, could not parse time.", false);
                     }
                 }
             }
@@ -265,9 +265,9 @@ namespace Adminthulhu {
                 if (eve != null) {
                     eve.eventMemberIDs.Add (e.Author.Id);
                     AutomatedEventHandling.SaveEvents ();
-                    Program.messageControl.SendMessage (e,"Succesfully joined event **" + eve.eventName + "**. You will be mentioned when it begins.");
+                    Program.messageControl.SendMessage (e,"Succesfully joined event **" + eve.eventName + "**. You will be mentioned when it begins.", false);
                 } else {
-                    Program.messageControl.SendMessage (e, "Failed to join event - event by name **" + arguments[0] + "** could not be found.");
+                    Program.messageControl.SendMessage (e, "Failed to join event - event by name **" + arguments[0] + "** could not be found.", false);
                 }
             }
             return Task.CompletedTask;
@@ -291,9 +291,9 @@ namespace Adminthulhu {
                 if (eve != null) {
                     eve.eventMemberIDs.Remove (e.Author.Id);
                     AutomatedEventHandling.SaveEvents ();
-                    Program.messageControl.SendMessage (e, "Succesfully left event **" + eve.eventName + "**. You will most certainly not be missed.");
+                    Program.messageControl.SendMessage (e, "Succesfully left event **" + eve.eventName + "**. You will most certainly not be missed.", false);
                 } else {
-                    Program.messageControl.SendMessage (e, "Failed to leave event - event by name **" + arguments[0] + "** could not be found.");
+                    Program.messageControl.SendMessage (e, "Failed to leave event - event by name **" + arguments[0] + "** could not be found.", false);
                 }
             }
             return Task.CompletedTask;
@@ -321,7 +321,7 @@ namespace Adminthulhu {
                 }
                 
                 combinedEvents += "```";
-                Program.messageControl.SendMessage (e, combinedEvents);
+                Program.messageControl.SendMessage (e, combinedEvents, false);
             }
             return Task.CompletedTask;
         }
@@ -352,9 +352,9 @@ namespace Adminthulhu {
                     }
 
                     combinedMembers += "```";
-                    Program.messageControl.SendMessage (e, combinedMembers);
+                    Program.messageControl.SendMessage (e, combinedMembers, false);
                 }else {
-                    Program.messageControl.SendMessage (e, "Failed to show event member list - event **" + arguments[0] + "** not found.");
+                    Program.messageControl.SendMessage (e, "Failed to show event member list - event **" + arguments[0] + "** not found.", false);
                 }
             }
             return Task.CompletedTask;

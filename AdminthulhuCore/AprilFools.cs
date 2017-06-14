@@ -41,7 +41,7 @@ namespace Adminthulhu
         private async Task DiscordClient_MessageReceived(SocketMessage arg) {
             if (DateTime.Now.Month == day.Month && DateTime.Now.Day == day.Day && arg.Author.Id != Program.discordClient.CurrentUser.Id) {
                 await arg.DeleteAsync ();
-                Program.messageControl.SendMessage (arg.Channel as SocketTextChannel, arg.Content);
+                Program.messageControl.SendMessage (arg.Channel as SocketTextChannel, arg.Content, true);
             }
         }
     }

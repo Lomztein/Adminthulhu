@@ -31,7 +31,7 @@ namespace Adminthulhu {
                         Random random = new Random ();
                         if (random.Next (100) < chance || chance == 100) {
 
-                            Program.messageControl.SendMessage (e, response);
+                            Program.messageControl.SendMessage (e, response, true);
                             return true;
                         }
                     }

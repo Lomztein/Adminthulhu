@@ -30,7 +30,7 @@ namespace Adminthulhu {
         public static void DebugLog (string message) {
             Log (message);
             if (Utility.GetServer () != null)
-                Program.messageControl.SendMessage (Utility.SearchChannel (Utility.GetServer (), Program.dumpTextChannelName) as SocketTextChannel, message);
+                Program.messageControl.SendMessage (Utility.SearchChannel (Utility.GetServer (), Program.dumpTextChannelName) as SocketTextChannel, message, false);
         }
     }
 }

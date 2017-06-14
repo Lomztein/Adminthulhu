@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Discord.WebSocket;
 using Discord;
+using System.Globalization;
 
 namespace Adminthulhu {
     public static class Utility {
@@ -22,7 +23,7 @@ namespace Adminthulhu {
             int tries = 0;
             while (!user.Roles.Contains (role)) {
                 if (tries > maxTries) {
-                    Program.messageControl.SendMessage (SearchChannel (GetServer (), Program.dumpTextChannelName) as SocketTextChannel, "Error - tried to add role too many times.");
+                    Program.messageControl.SendMessage (SearchChannel (GetServer (), Program.dumpTextChannelName) as SocketTextChannel, "Error - tried to add role too many times.", false);
                     break;
                 }
                 tries++;
@@ -36,7 +37,7 @@ namespace Adminthulhu {
             int tries = 0;
             while (user.Roles.Contains (role)) {
                 if (tries > maxTries) {
-                    Program.messageControl.SendMessage (SearchChannel (GetServer (), Program.dumpTextChannelName) as SocketTextChannel, "Error - tried to remove role too many times.");
+                    Program.messageControl.SendMessage (SearchChannel (GetServer (), Program.dumpTextChannelName) as SocketTextChannel, "Error - tried to remove role too many times.", false);
                     break;
                 }
                 ChatLogger.Log ("Removing role from " + user.Username + " - " + role.Name);
@@ -91,8 +92,8 @@ namespace Adminthulhu {
             }
         }
 
-        public static SocketGuildChannel GetMainChannel(SocketGuild server) {
-            return SearchChannel (server, Program.mainTextChannelName);
+        public static SocketGuildChannel GetMainChannel() {
+            return SearchChannel (GetServer (), Program.mainTextChannelName);
         }
 
         [Obsolete]
@@ -115,18 +116,7 @@ namespace Adminthulhu {
         }
 
         public static SocketGuild GetServer() {
-            if (Program.server != null)
-                return Program.server;
-
-            if (Program.discordClient != null) {
-                IEnumerable<SocketGuild> servers = Program.discordClient.Guilds;
-                if (servers.Count () != 0)
-                    Program.server = servers.ElementAt (0);
-            } else {
-                return null;
-            }
-
-            return Program.server;
+            return Program.discordClient.GetGuild (Program.serverID);
         }
 
         // I thought the TrimStart and TrimEnd functions would work like this, which they may, but I couldn't get them working. Maybe I'm just an idiot, but whatever.
@@ -170,6 +160,26 @@ namespace Adminthulhu {
             if (emojiName != null)
                 return message.Id == desiredMessage && reaction.Emote.Name == emojiName;
             return message.Id == desiredMessage;
+        }
+
+        public static string FormatCommand(Command command, int minSpaces = 26) {
+            string result = command.GetCommand ();
+            int remainingTaps = (int)Math.Floor ((minSpaces - result.Length) / 4d);
+            int remainingSpaces = (minSpaces - result.Length) % 4;
+            for (int i = 0; i < remainingTaps; i++)
+                result += "\t";
+            for (int i = 0; i < remainingSpaces; i++)
+                result += " ";
+            result += "| " + command.GetOnlyName ();
+            return result;
+        }
+
+        /// <summary>
+        /// Formattet for the danish format!
+        /// </summary>
+        public static bool TryParseDatetime(string input, out DateTime result) {
+            CultureInfo danishCulture = new CultureInfo ("da-DK");
+            return DateTime.TryParse (input, danishCulture.DateTimeFormat, DateTimeStyles.None, out result);
         }
     }
 }

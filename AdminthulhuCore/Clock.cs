@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
+using Discord.WebSocket;
 
 namespace Adminthulhu {
     public class Clock {
@@ -11,6 +12,16 @@ namespace Adminthulhu {
         public static Thread timeThread;
         public DateTime lastMesauredTime;
         public int checkDelay = 1000; // The time between each check in milliseconds.
+
+        public ulong [ ] chosenOnes = {
+            94089489227448320,
+            93744415301971968,
+            93732620998819840,
+            169870846507220992,
+            174835518901583872
+        };
+
+        public SocketGuildUser [ ] lastTest = new SocketGuildUser [ 5 ];
 
         public IClockable [ ] clockables = new IClockable [ ] {
             new AutomatedEventHandling (), new AutomatedTextChannels (), new UserActivityMonitor (), new Birthdays (), new AutomatedWeeklyEvent (),

@@ -19,7 +19,7 @@ namespace Adminthulhu {
         public override Task ExecuteCommand ( SocketUserMessage e, List<string> arguments ) {
             base.ExecuteCommand (e, arguments);
             if (AllowExecution (e, arguments)) {
-                Program.messageControl.SendImage (e.Channel as SocketTextChannel, "Looking for this sexy stud?", Program.dataPath + Program.resourceDirectory + "/fizzfyr.jpg");
+                Program.messageControl.SendImage (e.Channel as SocketTextChannel, "Looking for this sexy stud?", Program.dataPath + Program.resourceDirectory + "/fizzfyr.jpg", false);
             }
             return Task.CompletedTask;
         }
@@ -37,7 +37,7 @@ namespace Adminthulhu {
         public override Task ExecuteCommand ( SocketUserMessage e, List<string> arguments ) {
             base.ExecuteCommand (e, arguments);
             if (AllowExecution (e, arguments)) {
-                Program.messageControl.SendImage (e.Channel as SocketTextChannel, "Swiggity swooty I'm coming for dat booty!", Program.dataPath + Program.resourceDirectory + "/scorekarl.jpg");
+                Program.messageControl.SendImage (e.Channel as SocketTextChannel, "Swiggity swooty I'm coming for dat booty!", Program.dataPath + Program.resourceDirectory + "/scorekarl.jpg", false);
             }
             return Task.CompletedTask;
         }

@@ -23,8 +23,8 @@ namespace Adminthulhu {
 
                 SocketGuild guild = Utility.GetServer ();
                 ISocketMessageChannel channel = Utility.SearchChannel (guild, reportTextChannel) as ISocketMessageChannel;
-                Program.messageControl.SendMessage (channel, "**Report from " + e.Author.Username + "**: " + arguments[0]);
-                Program.messageControl.SendMessage (e, "Report has been reported.");
+                Program.messageControl.SendMessage (channel, "**Report from " + e.Author.Username + "**: " + arguments[0], false);
+                Program.messageControl.SendMessage (e, "Report has been reported.", false);
             }
             return Task.CompletedTask;
         }

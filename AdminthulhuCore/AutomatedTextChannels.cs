@@ -37,7 +37,7 @@ namespace Adminthulhu {
         }
 
         public Task OnDayPassed ( DateTime time ) {
-            SocketGuildChannel mainChannel = Utility.GetMainChannel (Utility.GetServer ());
+            SocketGuildChannel mainChannel = Utility.GetMainChannel ();
             SocketTextChannel channel = mainChannel as SocketTextChannel;
 
             Random random = new Random ();
@@ -79,7 +79,7 @@ namespace Adminthulhu {
                 AutomatedTextChannels.AddHeaders (arguments[0]);
                 SerializationIO.SaveTextFile (filePath, arguments[0]);
 
-                Program.messageControl.SendMessage (e, "Succesfully added header to list of additional headers!");
+                Program.messageControl.SendMessage (e, "Succesfully added header to list of additional headers!", false);
             }
 
             return Task.CompletedTask;
@@ -103,7 +103,7 @@ namespace Adminthulhu {
                     complete += "\n" + h;
                 }
                 complete += "```";
-                Program.messageControl.SendMessage (e, "All current possible headers are: " + complete);
+                Program.messageControl.SendMessage (e, "All current possible headers are: " + complete, false);
             }
             return Task.CompletedTask;
         }

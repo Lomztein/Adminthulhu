@@ -24,7 +24,7 @@ namespace Adminthulhu {
 
         public virtual Task ExecuteCommand ( SocketUserMessage e, List<string> arguments) {
             if (arguments.Count > 0 && arguments[0] == "?") {
-                Program.messageControl.SendMessage(e, GetHelp ());
+                Program.messageControl.SendMessage(e, GetHelp (), false);
             }
             return Task.CompletedTask;
         }
@@ -33,24 +33,24 @@ namespace Adminthulhu {
 
             if (!availableInDM && e.Channel as SocketDMChannel != null) {
                 if (returnMessage)
-                    Program.messageControl.SendMessage (e.Channel, "Failed to execute - Not available in direct channels.");
+                    Program.messageControl.SendMessage (e.Channel, "Failed to execute - Not available in DM channels.", false);
                 return false;
             }
 
             if (isAdminOnly && !(e.Author as SocketGuildUser).GuildPermissions.Administrator) {
                 if (returnMessage)
-                    Program.messageControl.SendMessage (e.Channel, "Failed to execute - User is not admin.");
+                    Program.messageControl.SendMessage (e.Channel, "Failed to execute - User is not admin.", false);
                 return false;
             }
 
             if (!availableOnServer && e.Channel as SocketGuildChannel != null) {
                 if (returnMessage)
-                    Program.messageControl.SendMessage (e.Channel, "Failed to execute - Not avaiable on server.");
+                    Program.messageControl.SendMessage (e.Channel, "Failed to execute - Not avaiable on server.", false);
                 return false;
             }
 
             if (returnMessage && args.Count != argumentNumber) { // Arguably a little dirty, but it'll do what it needs to do.
-                Program.messageControl.SendMessage (e.Channel, "Failed to execute - Wrong number of arguments.");
+                Program.messageControl.SendMessage (e.Channel, "Failed to execute - Wrong number of arguments.", false);
                 return false;
             }
 
@@ -63,8 +63,8 @@ namespace Adminthulhu {
         public virtual string GetHelp () {
             string argExists = argHelp.Length > 0 ? " " : "";
             string text = helpPrefix + command + " " + argExists + argHelp + " - " + help;
-            //if (isAdminOnly)
-            //    text += " - ADMIN ONLY";
+            if (isAdminOnly)
+                text += " - ADMIN ONLY";
             return text;
         }
 
@@ -72,6 +72,14 @@ namespace Adminthulhu {
             string argExists = argHelp.Length > 0 ? " " : "";
             string text = name + "\t\t" + helpPrefix + command + argExists + argHelp;
             return text;
+        }
+
+        public virtual string GetCommand() {
+            return helpPrefix + command;
+        }
+
+        public virtual string GetOnlyName() {
+            return name; // Wrapper functions ftw
         }
     }
 }

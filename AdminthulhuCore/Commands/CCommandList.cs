@@ -24,6 +24,7 @@ namespace Adminthulhu {
 
                 List<string> toDisplay = new List<string> ();
                 List<string> adminOnly = new List<string> ();
+                int minSpaces = 30;
 
                 toDisplay.Add ("```");
                 adminOnly.Add ("\nADMIN COMMANDS:");
@@ -31,9 +32,9 @@ namespace Adminthulhu {
                 foreach (Command c in Program.commands) {
                     if (c.AllowExecution (e, null, false)) {
                         if (c.isAdminOnly) {
-                            adminOnly.Add (c.GetShortHelp ());
+                            adminOnly.Add (Utility.FormatCommand (c));
                         } else {
-                            toDisplay.Add (c.GetShortHelp ());
+                            toDisplay.Add (Utility.FormatCommand (c));
                         }
                     }
                 }
@@ -49,7 +50,7 @@ namespace Adminthulhu {
                 }
 
                 // I mean, it works, right?
-                Program.messageControl.SendMessage(e, commands);
+                Program.messageControl.SendMessage(e, commands, false);
             }
             return Task.CompletedTask;
         }

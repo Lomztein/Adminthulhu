@@ -21,7 +21,6 @@ namespace Adminthulhu
         }
 
         public static void OnUserJoined(SocketGuildUser user) {
-            Console.WriteLine ("On user joined.");
             try {
                 SocketRole role = Utility.GetServer ().GetRole (younglingRoleID);
                 Utility.SecureAddRole (user, role);
@@ -49,8 +48,8 @@ namespace Adminthulhu
             foreach (SocketGuildUser user in Utility.GetServer ().Users) {
                 if (user.Roles.Contains (younglingRole) && user.Roles.Contains (presentRole)) {
                     try {
-                        RestInviteMetadata metadata = await Utility.GetMainChannel (Utility.GetServer ()).CreateInviteAsync (null, 1);
-                        await Program.messageControl.SendMessage (user, "Sorry mon, but you've been automatically kicked from **" + Program.serverName + "** due to going inactive within the first month. If you feel this is by mistake (which happens blame Lomztein), or you just want back in, feel free to use the following invite link: " + metadata.Url);
+                        RestInviteMetadata metadata = await Utility.GetMainChannel ().CreateInviteAsync (3600 * 24 * 30, 1, false, true);
+                        await Program.messageControl.SendMessage (user, "Sorry mon, but you've been automatically kicked from **" + Program.serverName + "** due to going inactive within the first two weeks. If you feel this is by mistake (which happens blame Lomztein), or you just want back in, feel free to use the following invite link: " + metadata.Url + "\nThe invite will be valid for a month after this message. If the invite is broken, or you ran out of time, you can get a new link from any member of the server.");
                         await user.KickAsync ();
                     }catch (Exception e) {
                         ChatLogger.DebugLog (e.Message);
@@ -59,9 +58,9 @@ namespace Adminthulhu
 
                 if (user.Roles.Contains (younglingRole)) {
                     if (joinDate.ContainsKey (user.Id)) {
-                        if (time > joinDate[user.Id].AddMonths (1)) {
+                        if (time > joinDate[user.Id].AddDays (14)) {
                             await Utility.SecureRemoveRole (user, younglingRole);
-                            await Program.messageControl.SendMessage (user, "Congratulations! You are no longer a youngling since you've been active here for a month, and you are now allowed permanemt membership on this server! Just in time too, Bananakin Skywalker was just about to go ham on you younglings.");
+                            await Program.messageControl.SendMessage (user, "Congratulations! You are no longer a youngling since you've been active here for two weeks, and you are now allowed permanemt membership on this server! Just in time too, Bananakin Skywanker was just about to go ham on you younglings.");
                             joinDate.Remove (user.Id);
                             SaveData ();
                         }

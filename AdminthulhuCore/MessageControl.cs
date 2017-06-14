@@ -74,15 +74,15 @@ namespace Adminthulhu {
         /// <param name="Content event arguments"></param>
         /// <param name="message"></param>
         /// <returns The same message as is input, for laziness></returns>
-        public string SendMessage(SocketMessage e, string message) {
-            return SendMessage (e.Channel, message);
+        public string SendMessage(SocketMessage e, string message, bool allowInMain) {
+            return SendMessage (e.Channel, message, allowInMain);
         }
 
-        public string SendMessage ( ISocketMessageChannel e, string message ) {
+        public string SendMessage ( ISocketMessageChannel e, string message, bool allowInMain) {
             string[] messages = SplitMessage (message);
             //messages.Add(new MessageTimer(e, message, 5));
             for (int i = 0; i < messages.Length; i++) {
-                AsyncSend (e, messages[i]);
+                AsyncSend (e, messages[i], allowInMain);
             }
 
             return message;
@@ -102,9 +102,11 @@ namespace Adminthulhu {
             return finalMessage;
         }
 
-        public async Task<RestUserMessage> AsyncSend (ISocketMessageChannel e, string message) {
+        public async Task<RestUserMessage> AsyncSend (ISocketMessageChannel e, string message, bool allowInMain) {
             ChatLogger.Log ("Sending a message.");
-            if (message.Length > 0) {
+            if (!allowInMain && e.Name == Program.mainTextChannelName) {
+                return null;
+            } else if (message.Length > 0) {
                 Task<RestUserMessage> messageTask = e.SendMessageAsync (message);
                 await messageTask;
                 return messageTask.Result;
@@ -112,12 +114,16 @@ namespace Adminthulhu {
             return null;
         }
 
-        public async Task SendImage (SocketTextChannel e, string message, string imagePath) {
+        public async Task SendImage(SocketTextChannel e, string message, string imagePath, bool allowInMain) {
             ChatLogger.Log ("Sending an image!");
-            try {
-                await e.SendFileAsync (imagePath, message);
-            } catch (Discord.Net.HttpException exception) {
-                await e.SendMessageAsync ("Access denied! - " + exception.Message);
+            if (allowInMain && e.Name != Program.mainTextChannelName) {
+                return;
+            } else {
+                try {
+                    await e.SendFileAsync (imagePath, message);
+                } catch (Discord.Net.HttpException exception) {
+                    await e.SendMessageAsync ("Access denied! - " + exception.Message);
+                }
             }
         }
 
@@ -126,7 +132,7 @@ namespace Adminthulhu {
         public async Task AskQuestion (SocketGuildUser user, string question, Action ifYes) {
             RestMessage message = await SendMessage (user, question);
 
-            await (message as RestUserMessage).AddReactionAsync (Emote.Parse ("👌"));
+            await (message as RestUserMessage).AddReactionAsync (new Emoji ("👌"));
                 //await (message as RestUserMessage).AddReactionAsync ()
 
             if (!askedUsers.ContainsKey (user.Id)) {

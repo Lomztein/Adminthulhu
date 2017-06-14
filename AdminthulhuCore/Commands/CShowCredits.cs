@@ -22,7 +22,7 @@ namespace Adminthulhu {
 
                 Program.messageControl.SendMessage (e, string.Join ("Main Programmer: Marcus \"Lomztein\" Jensen\n",
                                                     "Additional Programming: Frederik \"Fred\" Rosenberg and Victor \"Nyx\" Koch\n",
-                                                    "This bot is created using the Discord.NET Discord Bot API for C#"));
+                                                    "This bot is created using the Discord.NET Discord Bot API for C#"), false);
             }
             return Task.CompletedTask;
         }

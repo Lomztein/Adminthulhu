@@ -17,8 +17,8 @@ namespace Adminthulhu {
 
         public static string activityFileName = "useractivity";
 
-        private static int activeThresholdDays = 7;
-        private static int presentThresholdDays = 30;
+        public static int activeThresholdDays = 7;
+        public static int presentThresholdDays = 30;
 
         public static ulong activeUserRole = 273017450390487041;
         public static ulong presentUserRole = 273017481600434186;

@@ -36,7 +36,7 @@ namespace Adminthulhu {
                     }
                 }
 
-                Program.messageControl.SendMessage(e, e.Author.Username + ": " + text + ", " + arguments[1]);
+                Program.messageControl.SendMessage(e, e.Author.Username + ": " + text + ", " + arguments[1], false);
             }
             return Task.CompletedTask;
         }

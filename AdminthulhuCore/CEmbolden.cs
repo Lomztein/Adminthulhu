@@ -53,13 +53,13 @@ namespace Adminthulhu {
                         } else if (numbers.Contains (letter)) {
                             outText += NumberToString (letter) + " ";
                         } else if (!ignoreUnavailable) {
-                            Program.messageControl.SendMessage (e, "Unavailable character detected: " + letter);
+                            Program.messageControl.SendMessage (e, "Unavailable character detected: " + letter, true);
                             return Task.CompletedTask;
                         }
                     }
                 }
 
-                Program.messageControl.SendMessage (e, outText);
+                Program.messageControl.SendMessage (e, outText, true);
             }
             return Task.CompletedTask;
         }

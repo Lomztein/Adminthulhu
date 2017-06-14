@@ -46,7 +46,7 @@ namespace Adminthulhu {
             base.ExecuteCommand (e, arguments);
             if (AllowExecution (e, arguments)) {
                 Random random = new Random ();
-                Program.messageControl.SendMessage (e, "I gloriously suggest " + games[random.Next (games.Length)]);
+                Program.messageControl.SendMessage (e, "I gloriously suggest " + games[random.Next (games.Length)], false);
             }
             return Task.CompletedTask;
         }

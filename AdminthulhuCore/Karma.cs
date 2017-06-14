@@ -74,13 +74,13 @@ namespace Adminthulhu {
                 if (arguments[0] != "me") {
                     user = Utility.FindUserByName ((e.Channel as SocketGuildChannel).Guild, arguments[0]);
                     if (user == null) {
-                        Program.messageControl.SendMessage (e.Channel, "User " + arguments[0] + " not found.");
+                        Program.messageControl.SendMessage (e.Channel, "User " + arguments[0] + " not found.", false);
                         return Task.CompletedTask;
                     }
                 }
 
                 karmaCount = Karma.GetKarma (user.Id);
-                Program.messageControl.SendMessage (e.Channel, "User " + Utility.GetUserName (user) + " currently has " + karmaCount + " karma.");
+                Program.messageControl.SendMessage (e.Channel, "User " + Utility.GetUserName (user) + " currently has " + karmaCount + " karma.", false);
             }
             return Task.CompletedTask;
         }

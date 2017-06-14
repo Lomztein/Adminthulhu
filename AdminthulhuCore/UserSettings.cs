@@ -41,12 +41,15 @@ namespace Adminthulhu {
                 foreach (Setting s in set) {
                     if (s.name == key) {
                         s.value = value;
+                        Console.WriteLine ("Found and changed..");
+                        userSettings [ userID ] = set;
                         SaveSettings ();
                         return;
                     }
                 }
 
                 set.Add (new Setting (key, value));
+                userSettings [ userID ] = set;
                 SaveSettings ();
                 return;
             }
@@ -91,9 +94,9 @@ namespace Adminthulhu {
                     int number;
                     if (int.TryParse (arguments[0], out number)) {
                         UserSettings.SetSetting (e.Author.Id, "EventRemindTime", number);
-                        Program.messageControl.SendMessage (e, "You have succesfully changed remind timespan to **" + number.ToString () + "**.");
+                        Program.messageControl.SendMessage (e, "You have succesfully changed remind timespan to **" + number.ToString () + "**.", false);
                     }else {
-                        Program.messageControl.SendMessage (e, "Failed to change event remind timespan");
+                        Program.messageControl.SendMessage (e, "Failed to change event remind timespan", false);
                     }
                 }
             return Task.CompletedTask;
@@ -105,7 +108,7 @@ namespace Adminthulhu {
             public CSetBirthday () {
                 command = "setbirthday";
                 name = "Set Birthday";
-                argHelp = "<date>";
+                argHelp = "<date (d-m-y h:m:s)>";
                 help = "Set your birthday date to " + argHelp + ", so we know when to congratulate you!";
                 argumentNumber = 1;
             }
@@ -114,11 +117,11 @@ namespace Adminthulhu {
                 base.ExecuteCommand (e, arguments);
                 if (AllowExecution (e, arguments)) {
                     DateTime parse;
-                    if (DateTime.TryParse (arguments[0], out parse)) {
+                    if (Utility.TryParseDatetime (arguments[0], out parse)) {
                         Birthdays.SetBirthday (e.Author.Id, parse);
-                        Program.messageControl.SendMessage (e, "You have succesfully set your birthday to **" + parse.ToString () + "**.");
+                        Program.messageControl.SendMessage (e, "You have succesfully set your birthday to **" + parse.ToString () + "**.", false);
                     } else {
-                        Program.messageControl.SendMessage (e, "Failed to set birthday - could not parse date.");
+                        Program.messageControl.SendMessage (e, "Failed to set birthday - could not parse date.", false);
                     }
                 }
             return Task.CompletedTask;

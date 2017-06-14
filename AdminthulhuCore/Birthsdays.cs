@@ -36,7 +36,7 @@ namespace Adminthulhu {
             return Task.CompletedTask;
         }
 
-        public Task OnMinutePassed ( DateTime time ) {
+        public Task OnMinutePassed(DateTime time) {
             if (birthdays != null) {
                 foreach (Date date in birthdays) {
                     // userID = 0 if the user hasn't set a date.
@@ -59,7 +59,7 @@ namespace Adminthulhu {
 
         private void AnnounceBirthday (Date date) {
             SocketGuildUser user = Utility.GetServer ().GetUser (date.userID);
-            SocketGuildChannel main = Utility.GetMainChannel (Utility.GetServer ());
+            SocketGuildChannel main = Utility.GetMainChannel ();
             // I have no idea if this works, and it's possibly the worst possible way I could have done that.
 
             int age = 0;
@@ -69,7 +69,7 @@ namespace Adminthulhu {
                 Console.WriteLine (user.Username + " has somehow set their birthday to be before now. wat.");
             }
 
-            string ageSuffix = "'rd";
+            string ageSuffix = "'th";
             switch (age.ToString ().LastOrDefault ()) {
                 case '1':
                     ageSuffix = "'st";
@@ -77,9 +77,15 @@ namespace Adminthulhu {
                 case '2':
                     ageSuffix = "'nd";
                     break;
+                case '3':
+                    ageSuffix = "'rd";
+                    break;
             }
 
-            Program.messageControl.SendMessage (main as SocketTextChannel, "It's **" + Utility.GetUserName (user) + "'s** birthday today, wish them congratulations, as you throw them into the depths of hell on their **" + age + ageSuffix + "** birthday!");
+            if (age > 10 && age < 14)
+                ageSuffix = "'th";
+
+            Program.messageControl.SendMessage (main as SocketTextChannel, "It's **" + Utility.GetUserName (user) + "'s** birthday today, wish them congratulations, as you throw them into the depths of hell on their **" + age + ageSuffix + "** birthday!", true);
             Program.messageControl.SendMessage (user, "This is an official completely not cold and automated birthday greeting, from the loving ~~nazimods~~ admins of **" + Program.serverName + "**: - Happy birthday!");
         }
 
@@ -95,14 +101,14 @@ namespace Adminthulhu {
 
         public static void SetBirthday (ulong userID, DateTime day) {
             // Well that's a lot easier than looping each time, these could prove useful to fully understand.
-            Date date = birthdays.Find (x => x.userID == userID);
-            if (date == null) {
-                birthdays.Add (new Date (userID, day));
-            }else {
-                date = new Date (userID, day);
-            }
+            Date oldDate = birthdays.Find (x => x.userID == userID);
+            Date newDate;
 
-            UserSettings.SetSetting (userID, "Birthday", date);
+            newDate = new Date (userID, day);
+
+            birthdays.Remove (oldDate);
+            birthdays.Add (newDate);
+            UserSettings.SetSetting (userID, "Birthday", newDate);
         }
 
         public class Date {

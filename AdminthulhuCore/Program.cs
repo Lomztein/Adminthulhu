@@ -46,10 +46,9 @@ namespace Adminthulhu
         public static string mainTextChannelName = "main";
         public static string dumpTextChannelName = "dump";
         public static string serverName = "Monster Mash";
-        public static SocketGuild server;
+        public static ulong serverID = 93733172440739840;
 
-        public static Phrase[] phrases = new Phrase[] {
-            new Phrase ("!", "", 100, "Please don't use bot commands in the main channel, so we avoid spamizzle forshizzle.", mainTextChannelName),
+        public static Phrase [ ] phrases = new Phrase [ ] {
             new Phrase ("Neat!", "", 100, "Very!"),
             new Phrase ("", "Nyx", 1, "*Allegedly...*"),
             new Phrase ("", "Peacekeeper", 2, "*It's always crits..*"),
@@ -60,10 +59,11 @@ namespace Adminthulhu
             new Phrase ("<:Serviet:255721870828109824> Privet Comrades!", "", 100, "Privet!"),
             new Phrase ("Who is best gem?", "Nyx", 100, "*Obviously* <:Lapis:230346614064021505> ..."),
             new Phrase ("Who is best gem?", "", 100, "Obviously <:PeriWow:230381627669348353>"),
-            new Phrase ("https://www.youtube.com/", "Gizmo Gizmo", 100, "Wow, this is some very interesting conte- <:residentsleeper:257933177631277056> Zzz", "links"),
+            new Phrase ("https://www.reddit.com/", "Nyx", 100, "Wow, this is some very interesting conte- <:residentsleeper:257933177631277056> Zzz", "links"),
             new Phrase ("", "khave", 2, "¯\\_(ツ)_/¯"),
             new Phrase ("(╯°□°）╯︵ ┻━┻", 100, "Please respect tables. ┬─┬ノ(ಠ_ಠノ)"),
             new Phrase ("nice", "Twistbonk", 25, "Very nice!"),
+            new Phrase ("Neato", "", 100, "Burrito!"),
         };
         public static List<string> allowedDeletedMessages = new List<string>();
 
@@ -132,7 +132,7 @@ namespace Adminthulhu
 
             discordClient.UserJoined += async (e) => {
                 Younglings.OnUserJoined (e);
-                messageControl.SendMessage (Utility.GetMainChannel (e.Guild) as SocketTextChannel, "**" + e.Username + "** has joined this server. Bid them welcome or murder them in cold blood, it's really up to you.");
+                messageControl.SendMessage (Utility.GetMainChannel () as SocketTextChannel, "**" + e.Username + "** has joined this server. Bid them welcome or murder them in cold blood, it's really up to you.", true);
 
                 string[] welcomeMessage = SerializationIO.LoadTextFile (dataPath + "welcomemessage" + gitHubIgnoreType);
                 string combined = "";
@@ -144,7 +144,7 @@ namespace Adminthulhu
             };
 
             discordClient.UserLeft += (e) => {
-                messageControl.SendMessage (Utility.GetMainChannel (e.Guild) as SocketTextChannel, "**" + Utility.GetUserName (e) + "** has left the server. Don't worry, they'll come crawling back soon.");
+                messageControl.SendMessage (Utility.GetMainChannel () as SocketTextChannel, "**" + Utility.GetUserName (e) + "** has left the server. Don't worry, they'll come crawling back soon.", true);
                 return Task.CompletedTask;
             };
 
@@ -163,46 +163,46 @@ namespace Adminthulhu
             discordClient.GuildMemberUpdated += async (before, after) => {
                 SocketGuild guild = (before as SocketGuildUser).Guild;
 
-                SocketGuildChannel channel = Utility.GetMainChannel ((after as SocketGuildUser).Guild);
+                SocketGuildChannel channel = Utility.GetMainChannel ();
                 await AutomatedVoiceChannels.OnUserUpdated (guild, before.VoiceChannel, after.VoiceChannel);
 
                 if ((before as SocketGuildUser).Nickname != (after as SocketGuildUser).Nickname) {
-                    messageControl.SendMessage (channel as SocketTextChannel, "**" + Utility.GetUserUpdateName (before as SocketGuildUser, after as SocketGuildUser, true) + "** has changed their nickname to **" + Utility.GetUserUpdateName (before as SocketGuildUser, after as SocketGuildUser, false) + "**");
+                    messageControl.SendMessage (channel as SocketTextChannel, "**" + Utility.GetUserUpdateName (before as SocketGuildUser, after as SocketGuildUser, true) + "** has changed their nickname to **" + Utility.GetUserUpdateName (before as SocketGuildUser, after as SocketGuildUser, false) + "**", true);
                 }
             };
 
             discordClient.UserUpdated += (before, after) => {
                 Console.WriteLine ("User " + before.Username + " updated.");
 
-                SocketTextChannel channel = Utility.GetMainChannel (Utility.GetServer ()) as SocketTextChannel;
+                SocketTextChannel channel = Utility.GetMainChannel () as SocketTextChannel;
 
                 if (channel == null)
                     return Task.CompletedTask;
 
                 if (before.Username != after.Username) {
-                    messageControl.SendMessage (channel as SocketTextChannel, "**" + Utility.GetUserUpdateName (before as SocketGuildUser, after as SocketGuildUser, true) + "** has changed their name to **" + after.Username + "**");
+                    messageControl.SendMessage (channel as SocketTextChannel, "**" + Utility.GetUserUpdateName (before as SocketGuildUser, after as SocketGuildUser, true) + "** has changed their name to **" + after.Username + "**", true);
                 }
 
                 return Task.CompletedTask;
             };
 
             discordClient.UserBanned += (e, guild) => {
-                SocketChannel channel = Utility.GetMainChannel (guild);
+                SocketChannel channel = Utility.GetMainChannel ();
                 if (channel == null)
                     return Task.CompletedTask;
 
-                messageControl.SendMessage (channel as SocketTextChannel, "**" + Utility.GetUserName (e as SocketGuildUser) + "** has been banned from this server, they will not be missed.");
+                messageControl.SendMessage (channel as SocketTextChannel, "**" + Utility.GetUserName (e as SocketGuildUser) + "** has been banned from this server, they will not be missed.", true);
                 messageControl.SendMessage (e as SocketGuildUser, "Sorry to tell you like this, but you have been permabanned from Monster Mash. ;-;");
 
                 return Task.CompletedTask;
             };
 
             discordClient.UserUnbanned += (e, guild) => {
-                SocketChannel channel = Utility.GetMainChannel (guild);
+                SocketChannel channel = Utility.GetMainChannel ();
                 if (channel == null)
                     return Task.CompletedTask;
 
-                messageControl.SendMessage (channel as SocketTextChannel, "**" + Utility.GetUserName (e as SocketGuildUser) + "** has been unbanned from this server, They are once more welcome in our glorious embrace.");
+                messageControl.SendMessage (channel as SocketTextChannel, "**" + Utility.GetUserName (e as SocketGuildUser) + "** has been unbanned from this server, They are once more welcome in our glorious embrace.", true);
                 messageControl.SendMessage (e as SocketGuildUser, "You have been unbanned from Monster Mash, we love you once more! :D");
 
                 return Task.CompletedTask;
@@ -214,7 +214,7 @@ namespace Adminthulhu
 
                 if (message.HasValue) {
                     if (!allowedDeletedMessages.Contains (message.Value.Content)) {
-                        messageControl.SendMessage (channel as SocketTextChannel, "In order disallow *any* secrets except for admin secrets, I'd like to tell you that **" + Utility.GetUserName (message.Value.Author as SocketGuildUser) + "** just had a message deleted on **" + message.Value.Channel.Name + "**.");
+                        messageControl.SendMessage (channel as SocketTextChannel, "In order disallow *any* secrets except for admin secrets, I'd like to tell you that **" + Utility.GetUserName (message.Value.Author as SocketGuildUser) + "** just had a message deleted on **" + message.Value.Channel.Name + "**.", true);
                     } else {
                         allowedDeletedMessages.Remove (message.Value.Content);
                     }

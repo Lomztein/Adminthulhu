@@ -45,9 +45,9 @@ namespace Adminthulhu {
 
         public bool GuessLetter (SocketMessage e, char letter) {
             SocketTextChannel channel = (e.Channel as SocketTextChannel);
-            Program.messageControl.SendMessage (channel, Utility.GetUserName (e.Author as SocketGuildUser) + " guessed the letter **" + letter + "**.");
+            Program.messageControl.SendMessage (channel, Utility.GetUserName (e.Author as SocketGuildUser) + " guessed the letter **" + letter + "**.", false);
             if (!letterWhitelist.Contains (letter)) {
-                Program.messageControl.SendMessage (channel, "Error: No numbers or special characters allowed.");
+                Program.messageControl.SendMessage (channel, "Error: No numbers or special characters allowed.", false);
                 return false;
             }
 
@@ -70,10 +70,10 @@ namespace Adminthulhu {
                         progress = firstPart.ToUpper ();
                     }
 
-                    Program.messageControl.SendMessage (channel, "Success! Current progress: `" + progress + "`");
+                    Program.messageControl.SendMessage (channel, "Success! Current progress: `" + progress + "`", false);
 
                     if (progress.ToLower () == word.ToLower ()) {
-                        Program.messageControl.SendMessage (channel, "Well I'll be damned, it seems you are victorious!");
+                        Program.messageControl.SendMessage (channel, "Well I'll be damned, it seems you are victorious!", false);
                         currentGame = null;
                         Utility.SetGame (null);
                     }
@@ -82,15 +82,15 @@ namespace Adminthulhu {
                     tries++;
 
                     if (tries > maxTries) {
-                        Program.messageControl.SendMessage (channel, "Bad news, you've lost the game. Also this game. Word was **" + word.ToUpper () + "**.");
+                        Program.messageControl.SendMessage (channel, "Bad news, you've lost the game. Also this game. Word was **" + word.ToUpper () + "**.", false);
                         currentGame = null;
                     } else {
-                        Program.messageControl.SendMessage (channel, "Sorry, but that letter isn't in the word you're trying to guess. You are now one step closer to eternal doom. Try " + tries + " / " + maxTries + ".");
+                        Program.messageControl.SendMessage (channel, "Sorry, but that letter isn't in the word you're trying to guess. You are now one step closer to eternal doom. Try " + tries + " / " + maxTries + ".", false);
                     }
                     return false;
                 }
             }
-            Program.messageControl.SendMessage (channel, "Can't do that, that letter has already been guessed.");
+            Program.messageControl.SendMessage (channel, "Can't do that, that letter has already been guessed.", false);
             return false;
         }
     }
@@ -128,12 +128,12 @@ namespace Adminthulhu {
                         if (anyHidden) {
 
                         Hangman.currentGame = new Hangman (arguments[0]);
-                        Program.messageControl.SendMessage (e, "Succesfully started new game of Hangman! Care to take a guess? `" + Hangman.ToUnderscores (arguments[0]) + "`.");
+                        Program.messageControl.SendMessage (e, "Succesfully started new game of Hangman! Care to take a guess? `" + Hangman.ToUnderscores (arguments[0]) + "`.", false);
                         }else {
-                            Program.messageControl.SendMessage (e, "Failed to start a new game of Hangman - word must contain letters of the alfabet.");
+                            Program.messageControl.SendMessage (e, "Failed to start a new game of Hangman - word must contain letters of the alfabet.", false);
                         }
                     } else {
-                        Program.messageControl.SendMessage (e, "Failed to start new game of Hangman - a game is already in progress!");
+                        Program.messageControl.SendMessage (e, "Failed to start new game of Hangman - a game is already in progress!", false);
                     }
                 }
             return Task.CompletedTask;
@@ -153,12 +153,12 @@ namespace Adminthulhu {
                 base.ExecuteCommand (e, arguments);
                 if (AllowExecution (e, arguments)) {
                     if (Hangman.currentGame == null) {
-                        Program.messageControl.SendMessage (e, "Sorry man, but no game of Hangman is in progress. Why not start one? :D");
+                        Program.messageControl.SendMessage (e, "Sorry man, but no game of Hangman is in progress. Why not start one? :D", false);
                     } else {
                         if (arguments[0].Length == 1) {
                             Hangman.currentGame.GuessLetter (e, arguments[0].ToLower ()[0]);
                         }else {
-                            Program.messageControl.SendMessage (e, "Failed to guess - you can only guess one letter at a time.");
+                            Program.messageControl.SendMessage (e, "Failed to guess - you can only guess one letter at a time.", false);
                         }
                     }
                 }
@@ -178,14 +178,14 @@ namespace Adminthulhu {
                 base.ExecuteCommand (e, arguments);
                 if (AllowExecution (e, arguments)) {
                     if (Hangman.currentGame == null) {
-                        Program.messageControl.SendMessage (e, "No current Hangman game in progress.");
+                        Program.messageControl.SendMessage (e, "No current Hangman game in progress.", false);
                     } else {
                         string combined = "Currently used letters: `";
                         foreach (char c in Hangman.currentGame.guessedLetters) {
                             combined += c.ToString ().ToUpper () + " ";
                         }
                         combined += "`";
-                        Program.messageControl.SendMessage (e, combined);
+                        Program.messageControl.SendMessage (e, combined, false);
                     }
                 }
             return Task.CompletedTask;
@@ -204,9 +204,9 @@ namespace Adminthulhu {
                 base.ExecuteCommand (e, arguments);
                 if (AllowExecution (e, arguments)) {
                     if (Hangman.currentGame == null) {
-                        Program.messageControl.SendMessage (e, "No current Hangman game in progress.");
+                        Program.messageControl.SendMessage (e, "No current Hangman game in progress.", false);
                     } else {
-                        Program.messageControl.SendMessage (e, "Current progress: `" + Hangman.currentGame.progress + "`");
+                        Program.messageControl.SendMessage (e, "Current progress: `" + Hangman.currentGame.progress + "`", false);
                     }
                 }
                 return Task.CompletedTask;

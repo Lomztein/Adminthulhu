@@ -32,10 +32,10 @@ namespace Adminthulhu {
                 // Display all commands within command.
                 string commands = "Commands in the **" + command + "** command set:\n```";
                 foreach (Command c in commandsInSet) {
-                    commands += c.GetShortHelp () + "\n";
+                    commands += Utility.FormatCommand (c) + "\n";
                 }
                 commands += "```";
-                Program.messageControl.SendMessage (e, commands);
+                Program.messageControl.SendMessage (e, commands, false);
             } else {
                 // Standard command format is !command arg1;arg2;arg3
                 // Commandset format is !command secondaryCommand arg1;arg2;arg3
@@ -59,7 +59,7 @@ namespace Adminthulhu {
             return Task.CompletedTask;
         }
 
-        public override string GetShortHelp () {
+        public override string GetCommand () {
             return helpPrefix + command + " (set)";
         }
     }

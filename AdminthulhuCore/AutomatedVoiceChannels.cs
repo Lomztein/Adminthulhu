@@ -47,10 +47,15 @@ namespace Adminthulhu {
                 data.hasTag = Utility.ForceGetUsers (data.channel.id).Find (x => x.Roles.Contains (internationalRole)) != null;  }),
             new VoiceChannelTag ("🔒", delegate (VoiceChannelTag.ActionData data) { data.hasTag = data.channel.IsLocked (); }),
             //new VoiceChannelTag ("🍞", delegate (VoiceChannelTag.ActionData data) { data.hasTag = Utility.ForceGetUsers (data.channel.id).Where (x => x.Id == 110406708299329536).Count () != 0; } ),
-            new VoiceChannelTag ("🎮", delegate (VoiceChannelTag.ActionData data) { data.hasTag = data.channel.looking; }),
-            new VoiceChannelTag ("🗓", delegate (VoiceChannelTag.ActionData data) { data.hasTag = ((DateTime.Now.DayOfWeek == DayOfWeek.Friday) && (DateTime.Now.Hour >= 20)); }),
+            new VoiceChannelTag ("🎮", delegate (VoiceChannelTag.ActionData data) { data.hasTag = data.channel.status == VoiceChannel.VoiceChannelStatus.Looking; }),
+            new VoiceChannelTag ("❌", delegate (VoiceChannelTag.ActionData data) { data.hasTag = data.channel.status == VoiceChannel.VoiceChannelStatus.Full; }),
+            new VoiceChannelTag ("📆", delegate (VoiceChannelTag.ActionData data) { data.hasTag = ((DateTime.Now.DayOfWeek == DayOfWeek.Friday) && (DateTime.Now.Hour >= 20) && Utility.ForceGetUsers (data.channel.id).Count >= 3); }),
             new VoiceChannelTag ("🍰", delegate (VoiceChannelTag.ActionData data) { data.hasTag = Utility.ForceGetUsers (data.channel.id).Find (x => Birthdays.IsUsersBirthday (x)) != null; }),
             new VoiceChannelTag ("📹", delegate (VoiceChannelTag.ActionData data) { data.hasTag = Utility.ForceGetUsers (data.channel.id).Where (x => x.Game.HasValue).Where (x => x.Game.Value.StreamType > 0).Count () != 0; }),
+            new VoiceChannelTag ("🔥", delegate (VoiceChannelTag.ActionData data) { data.hasTag = Utility.ForceGetUsers (data.channel.id).Where (x => x.GuildPermissions.Administrator).Count () >= 3; }),
+            new VoiceChannelTag ("👶", delegate (VoiceChannelTag.ActionData data) {
+                SocketRole younglingRole = Utility.GetServer ().GetRole (316171882867064843);
+                data.hasTag = Utility.ForceGetUsers (data.channel.id).Find (x => x.Roles.Contains (younglingRole)) != null;  }),
         };
 
         public static void InitializeData() {
@@ -93,17 +98,28 @@ namespace Adminthulhu {
 
             if (voice != null && allVoiceChannels.ContainsKey (voice.Id)) {
 
+                VoiceChannel voiceChannel = allVoiceChannels [ voice.Id ];
+                List<SocketGuildUser> users = Utility.ForceGetUsers (voice.Id);
+
                 if (voice.Name == afkChannel.name)
                     return;
 
                 if (voice.Users.Count () == 0) {
-                    allVoiceChannels [ voice.Id ].Unlock (false);
-                    allVoiceChannels [ voice.Id ].looking = false;
+                    voiceChannel.Unlock (false);
+                    voiceChannel.status = VoiceChannel.VoiceChannelStatus.None;
+                    voiceChannel.desiredMembers = 0;
+                    voiceChannel.SetCustomName ("", false);
+                } else {
+                    if (voiceChannel.desiredMembers > 0) {
+                        if (users.Count >= voiceChannel.desiredMembers)
+                            voiceChannel.SetStatus (VoiceChannel.VoiceChannelStatus.Full, false);
+                        else
+                            voiceChannel.SetStatus (VoiceChannel.VoiceChannelStatus.Looking, false);
+                    }
                 }
 
-                GetTags (allVoiceChannels [ voice.Id ]);
+                GetTags (voiceChannel);
                 Dictionary<Game, int> numPlayers = new Dictionary<Game, int> ();
-                List<SocketGuildUser> users = Utility.ForceGetUsers (voice.Id);
                 foreach (SocketGuildUser user in users) {
 
                     SocketGuildUser forcedUser = Utility.GetServer ().GetUser (user.Id);
@@ -129,19 +145,22 @@ namespace Adminthulhu {
                 }
 
                 string tagsString = "";
-                foreach (VoiceChannelTag tag in allVoiceChannels [ voice.Id ].currentTags) {
+                foreach (VoiceChannelTag tag in voiceChannel.currentTags) {
                     tagsString += tag.tagEmoji;
                 }
                 tagsString += tagsString.Length > 0 ? " " : "";
 
                 // Trying to optimize API calls here, just to spare those poor souls at the Discord API HQ stuff
-                string nameLetter = allVoiceChannels [ voice.Id ].name [ 0 ] + ""; // Eeeeeeuhhh, yes.
-                string newName = highestGame.Name != "" ? tagsString + nameLetter + nameLetter + " - " + highestGame.Name : tagsString + allVoiceChannels [ voice.Id ].name;
+                string nameLetter = voiceChannel.name [ 0 ] + ""; // Eeeeeeuhhh, yes.
+                string newName = highestGame.Name != "" ? tagsString + nameLetter + nameLetter + " - " + highestGame.Name : tagsString + voiceChannel.name;
+                if (voiceChannel.customName != "")
+                    newName = tagsString + nameLetter + nameLetter + " - " + voiceChannel.customName;
+
                 if (voice.Name != newName) {
                     ChatLogger.Log ("Channel name updated: " + newName);
                     await voice.ModifyAsync ((delegate (VoiceChannelProperties properties) { properties.Name = newName; }));
                 }
-                allVoiceChannels [ voice.Id ].CheckLocker ();
+                voiceChannel.CheckLocker ();
             }
         }
 
@@ -333,12 +352,17 @@ namespace Adminthulhu {
 
         public class VoiceChannel {
 
+            public enum VoiceChannelStatus {
+                None, Looking, Full
+            }
+
             public ulong id;
             public string name;
             public int position;
             public bool lockable = true;
-
-            public bool looking = false;
+            public VoiceChannelStatus status = VoiceChannelStatus.None;
+            public uint desiredMembers = 0;
+            public string customName = "";
 
             public List<VoiceChannelTag> currentTags = new List<VoiceChannelTag> ();
 
@@ -413,6 +437,18 @@ namespace Adminthulhu {
                 }
             }
 
+            public void UpdateLockPermissions() {
+                if (IsLocked ()) {
+                    GetChannel ().ModifyAsync (delegate (VoiceChannelProperties properties) {
+                        properties.UserLimit = allowedUsers.Count;
+                    });
+                } else {
+                    GetChannel ().ModifyAsync (delegate (VoiceChannelProperties properties) {
+                        properties.UserLimit = 0;
+                    });
+                }
+            }
+
             public void Kick ( SocketGuildUser user ) {
                 allowedUsers.Remove (user.Id);
                 OnUserJoined (user);
@@ -422,9 +458,32 @@ namespace Adminthulhu {
                 return Utility.GetServer ().GetUser (lockerID);
             }
 
-            public void ToggleLooking() {
-                looking = !looking;
+            public void ToggleStatus (VoiceChannelStatus stat) {
+                if (desiredMembers > 0) {
+                    SetDesiredMembers (0);
+                    SetStatus (stat, true);
+                    return;
+                }
+
+                status = status == stat ? VoiceChannelStatus.None : stat;
                 UpdateVoiceChannel (GetChannel ());
+            }
+
+            public void SetStatus(VoiceChannelStatus stat, bool update) {
+                status = stat;
+                if (update)
+                    UpdateVoiceChannel (GetChannel ());
+            }
+
+            public void SetDesiredMembers(uint number) {
+                desiredMembers = number;
+                UpdateVoiceChannel (GetChannel ());
+            }
+
+            public void SetCustomName(string n, bool update) {
+                customName = n;
+                if (update)
+                    UpdateVoiceChannel (GetChannel ());
             }
 
             public void CheckLocker () {

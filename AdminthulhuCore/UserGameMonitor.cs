@@ -18,7 +18,7 @@ namespace Adminthulhu {
             if (userGames == null)
                 userGames = new Dictionary<ulong, List<string>> ();
 
-            Program.discordClient.UserUpdated += ( before, after ) => {
+            Program.discordClient.GuildMemberUpdated += ( before, after ) => {
                 
                 string gameName = after.Game.HasValue ? after.Game.Value.Name.ToString ().ToUpper () : null;
                 AddGame (after, gameName);
@@ -104,14 +104,14 @@ namespace Adminthulhu {
                 if (AllowExecution (e, arguments)) {
                     List<SocketGuildUser> foundUsers = UserGameMonitor.FindUsersWithGame (arguments[0]);
                     if (foundUsers.Count == 0) {
-                        Program.messageControl.SendMessage (e, "Sorry, no records of **" + arguments[0] + "** being played were found.");
+                        Program.messageControl.SendMessage (e, "Sorry, no records of **" + arguments[0] + "** being played were found.", false);
                     }else {
                         string total = "Here is the list of everyone who've been seen playing **" + arguments[0] + "**:```\n";
                         foreach (SocketGuildUser user in foundUsers) {
                             total += Utility.GetUserName (user) + "\n";
                         }
                         total += "```";
-                        Program.messageControl.SendMessage (e, total);
+                        Program.messageControl.SendMessage (e, total, false);
                     }
                 }
             return Task.CompletedTask;
@@ -132,7 +132,7 @@ namespace Adminthulhu {
             base.ExecuteCommand (e, arguments);
             if (AllowExecution (e, arguments)) {
                 string result = UserGameMonitor.AddGame ((e.Author as SocketGuildUser), arguments[0]);
-                Program.messageControl.SendMessage (e, result);
+                Program.messageControl.SendMessage (e, result, false);
             }            
             return Task.CompletedTask;
         }
@@ -151,7 +151,7 @@ namespace Adminthulhu {
             base.ExecuteCommand (e, arguments);
             if (AllowExecution (e, arguments)) {
                 string result = UserGameMonitor.RemoveGame ((e.Author as SocketGuildUser), arguments[0]);
-                Program.messageControl.SendMessage (e, result);
+                Program.messageControl.SendMessage (e, result, false);
             }
             return Task.CompletedTask;
         }
@@ -197,7 +197,7 @@ namespace Adminthulhu {
                         break;
                 }
                 all += "```";
-                Program.messageControl.SendMessage (e, all);
+                Program.messageControl.SendMessage (e, all, false);
             }
             return Task.CompletedTask;
         }

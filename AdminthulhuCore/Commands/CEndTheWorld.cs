@@ -26,7 +26,7 @@ namespace Adminthulhu {
                     complete += deathItself[i] + "\n";
                 }
 
-                Program.messageControl.SendMessage (e, complete);
+                Program.messageControl.SendMessage (e, complete, false);
             }
             return Task.CompletedTask;
         }

@@ -24,7 +24,7 @@ namespace Adminthulhu {
                 int number;
 
                 if (int.TryParse (arguments[0], out number)) {
-                    Program.messageControl.SendMessage(e, "You rolled " + (random.Next(number) + 1).ToString());
+                    Program.messageControl.SendMessage(e, "You rolled " + (random.Next(number) + 1).ToString(), false);
                 }
             }
             return Task.CompletedTask;

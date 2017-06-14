@@ -68,13 +68,13 @@ namespace Adminthulhu {
             votingMessageID = SerializationIO.LoadObjectFromFile<ulong> (Program.dataPath + Program.eventDirectory + statusFileName + Program.gitHubIgnoreType);
             allGames = SerializationIO.LoadObjectFromFile<List<Game>> (Program.dataPath + Program.eventDirectory + "allGames" + Program.gitHubIgnoreType); // At some point you just stop caring.
 
-            if (votes == null)
-                votes = new List<Vote> ();
+            if (allGames == null)
+                allGames = new List<Game> ();
 
             while (Utility.GetServer () == null)
                 await Task.Delay (1000);
 
-            if (games == null)
+            if (votes == null)
                 BeginNewVote ();
 
             Program.discordClient.ReactionAdded += async (message, channel, reaction) => {
@@ -90,6 +90,9 @@ namespace Adminthulhu {
         }
 
         private static void OnReactionChanged (Cacheable<IUserMessage, ulong> message, ISocketMessageChannel channel, SocketReaction reaction, bool add) {
+            if (message.HasValue && message.Value.Author.IsBot)
+                return;
+
             if (message.Id == votingMessageID) {
                 int reactionID = -1;
                 for (int i = 0; i < gamesPerWeek; i++) {
@@ -160,8 +163,8 @@ namespace Adminthulhu {
             DateTime eventDay = new DateTime (now.Year, now.Month, now.Day, eventHour, 0, 0).AddDays (daysBetween);
             AutomatedEventHandling.CreateEvent ("Friday Event", eventDay, highestGame.name + " has been chosen by vote!");
 
-            SocketGuildChannel mainChannel = Utility.GetMainChannel (Utility.GetServer ());
-            Program.messageControl.SendMessage (mainChannel as SocketTextChannel, "The game for this fridays event has been chosen by vote: **" + highestGame.name + "**! It can be joined using command `!event join friday event`");
+            SocketGuildChannel mainChannel = Utility.GetMainChannel ();
+            Program.messageControl.SendMessage (mainChannel as SocketTextChannel, "The game for this fridays event has been chosen by vote: **" + highestGame.name + "**! It can be joined using command `!event join friday event`", true);
 
             Dictionary<ulong, bool> didWin = new Dictionary<ulong, bool>();
 
@@ -204,27 +207,34 @@ namespace Adminthulhu {
             highestGame = null;
             List<Game> possibilities = allGames.ToList ();
             List<Game> highlightedGames = possibilities.FindAll (x => x.highlight);
+            possibilities.RemoveAll (x => x.highlight);
+
             List<Game> selectedGames = new List<Game> ();
             Random rand = new Random ();
             games = new Game[gamesPerWeek];
 
-            // A C++ programmer would possibly kill me for this memory management.
-            for (int i = 0; i < gamesPerWeek; i++) {
-                int index = rand.Next (0, highlightedGames.Count > 0 ? highlightedGames.Count : possibilities.Count);
-                if (highlightedGames.Count > 0) {
-                    selectedGames [ i ] = highlightedGames[ index ];
-                    highlightedGames.RemoveAt (index);
-                } else {
-                    selectedGames [ i ] = possibilities [ index ];
-                    possibilities.RemoveAt (index);
-                }
-            }
+            try {
 
+
+                // A C++ programmer would possibly kill me for this memory management.
+                for (int i = 0; i < gamesPerWeek; i++) {
+                    int index = rand.Next (0, highlightedGames.Count > 0 ? highlightedGames.Count : possibilities.Count);
+                    if (highlightedGames.Count > 0) {
+                        selectedGames.Add (highlightedGames [ index ]);
+                        highlightedGames.RemoveAt (index);
+                    } else {
+                        selectedGames.Add (possibilities [ index ]);
+                        possibilities.RemoveAt (index);
+                    }
+                }
+            } catch (Exception e) {
+                ChatLogger.DebugLog (e.StackTrace);
+            }
             // Shuffle dat shite.
             for (int i = 0; i < gamesPerWeek; i++) {
                 int index = rand.Next (0, selectedGames.Count);
-                games [ i ] = selectedGames [ i ];
-                selectedGames.RemoveAt (i);
+                games [ i ] = selectedGames [ index ];
+                selectedGames.RemoveAt (index);
             }
 
             // Well that's the least optimized code I've written in ages, and that says something.
@@ -235,9 +245,9 @@ namespace Adminthulhu {
             votes = new List<Vote> ();
             await UpdateVoteMessage (true);
 
-            SocketGuildChannel mainChannel = Utility.GetMainChannel (Utility.GetServer ());
+            SocketGuildChannel mainChannel = Utility.GetMainChannel ();
 
-            Program.messageControl.SendMessage (mainChannel as SocketTextChannel, Utility.GetServer ().EveryoneRole.Mention + "! A new vote for next friday event has begun, see pinned messages in <#188106821154766848> for votesheet.");
+            Program.messageControl.SendMessage (mainChannel as SocketTextChannel, Utility.GetServer ().EveryoneRole.Mention + "! A new vote for next friday event has begun, see pinned messages in <#188106821154766848> for votesheet.", true);
             SaveData ();
         }
 
@@ -250,7 +260,7 @@ namespace Adminthulhu {
                 if (e == null) {
                     Program.messageControl.SendMessage (user, locText);
                 } else {
-                    Program.messageControl.SendMessage (e, locText);
+                    Program.messageControl.SendMessage (e, locText, false);
                 }
                 return false;
             }
@@ -261,7 +271,7 @@ namespace Adminthulhu {
                     if (e == null) {
                         Program.messageControl.SendMessage (user, locText);
                     } else {
-                        Program.messageControl.SendMessage (e, locText);
+                        Program.messageControl.SendMessage (e, locText, false);
                     }
                     return false;
                 }
@@ -269,7 +279,7 @@ namespace Adminthulhu {
 
             if (e != null) {
                 string text = "Succesfully voted for **" + games [ id ].name + "**, in the upcoming friday event.";
-                Program.messageControl.SendMessage (e, text);
+                Program.messageControl.SendMessage (e, text, false);
             }
 
             votes.Add (new Vote (userID, id));
@@ -321,14 +331,14 @@ namespace Adminthulhu {
         public static bool RemoveVote (SocketMessage e, ulong userID, int gameID) {
             Vote vote = votes.Find (x => x.voterID == userID && x.votedGameID == gameID);
             if (vote == null && e != null) {
-                Program.messageControl.SendMessage (e, "Failed to remove vote, you haven't voted for **" + games [ gameID ].name + "**");
+                Program.messageControl.SendMessage (e, "Failed to remove vote, you haven't voted for **" + games [ gameID ].name + "**", false);
                 return false;
             }
             if (vote != null) {
                 games[gameID].votes--;
                 votes.Remove (vote);
                 if (e != null)
-                    Program.messageControl.SendMessage (e, "Succesfully removed vote from **" + games[gameID].name + "**.");
+                    Program.messageControl.SendMessage (e, "Succesfully removed vote from **" + games[gameID].name + "**.", false);
             }
 
             UpdateVoteMessage (false);
@@ -363,31 +373,31 @@ namespace Adminthulhu {
 
             ChatLogger.Log ("Updating vote message.");
 
-            if (message == null || forceNew) {
+            try {
+                if (message == null || forceNew) {
 
-                if (message != null)
-                    await message.DeleteAsync ();
+                    if (message != null)
+                        await message.DeleteAsync ();
 
-                Task<RestUserMessage> task = Program.messageControl.AsyncSend (channel as SocketTextChannel, text);
-                await task;
-                votingMessageID = task.Result.Id;
+                    Task<RestUserMessage> task = Program.messageControl.AsyncSend (channel as SocketTextChannel, text, false);
+                    await task;
+                    votingMessageID = task.Result.Id;
 
-                for (int i = 0; i < gamesPerWeek; i++) {
-                    string emoji = GetUnicodeEmoji (i);
-                    await task.Result.AddReactionAsync (Emote.Parse (emoji));
-                }
+                    for (int i = 0; i < gamesPerWeek; i++) {
+                        string emoji = GetUnicodeEmoji (i);
+                        await task.Result.AddReactionAsync (new Emoji (emoji));
+                    }
 
-            } else {
-                try {
+                } else {
                     RestUserMessage m = message as RestUserMessage;
                     await m.ModifyAsync (delegate (MessageProperties properties) {
                         properties.Content = text;
                     });
-                } catch (Exception e) {
-                    ChatLogger.DebugLog (e.Message);
-                }
-            }
 
+                }
+            } catch (Exception e) {
+                ChatLogger.DebugLog (e.Message + " - " + e.StackTrace);
+            }
         }
 
         public class Game {
@@ -435,13 +445,13 @@ namespace Adminthulhu {
                         if (withinRange) {
                             AutomatedWeeklyEvent.VoteForGame (e, e.Author.Id, parse - 1);
                         } else {
-                            Program.messageControl.SendMessage (e, "Failed to vote - outside range ( 1-" + (AutomatedWeeklyEvent.games.Length) + " ).");
+                            Program.messageControl.SendMessage (e, "Failed to vote - outside range ( 1-" + (AutomatedWeeklyEvent.games.Length) + " ).", false);
                         }
                     } else {
-                        Program.messageControl.SendMessage (e, "Failed to vote - could not parse vote.");
+                        Program.messageControl.SendMessage (e, "Failed to vote - could not parse vote.", false);
                     }
                 } else {
-                    Program.messageControl.SendMessage (e, "Failed to vote - voting not in progress.");
+                    Program.messageControl.SendMessage (e, "Failed to vote - voting not in progress.", false);
                 }
             }
             return Task.CompletedTask;
@@ -468,10 +478,10 @@ namespace Adminthulhu {
                     if (withinRange) {
                         AutomatedWeeklyEvent.RemoveGame (parse);
                     } else {
-                        Program.messageControl.SendMessage (e, "Failed to remove - outside range ( 0-" + (AutomatedWeeklyEvent.allGames.Count - 1) + " ).");
+                        Program.messageControl.SendMessage (e, "Failed to remove - outside range ( 0-" + (AutomatedWeeklyEvent.allGames.Count - 1) + " ).", false);
                     }
                 } else {
-                    Program.messageControl.SendMessage (e, "Failed to remove, could not parse number.");
+                    Program.messageControl.SendMessage (e, "Failed to remove, could not parse number.", false);
                 }
             }
             return Task.CompletedTask;
@@ -494,12 +504,12 @@ namespace Adminthulhu {
                 bool parse;
                 if (bool.TryParse (arguments [ 1 ], out parse)) {
                     if (AutomatedWeeklyEvent.AddGame (arguments [ 0 ], parse)) {
-                        Program.messageControl.SendMessage (e, "Succesfully added game to automated events.");
+                        Program.messageControl.SendMessage (e, "Succesfully added game to automated events.", false);
                     } else {
-                        Program.messageControl.SendMessage (e, "Failed to add game, it might already be on the list.");
+                        Program.messageControl.SendMessage (e, "Failed to add game, it might already be on the list.", false);
                     }
                 } else {
-                    Program.messageControl.SendMessage (e, "Failed to add, could not parse highlight bool.");
+                    Program.messageControl.SendMessage (e, "Failed to add, could not parse highlight bool.", false);
                 }
             }
             return Task.CompletedTask;
@@ -520,9 +530,9 @@ namespace Adminthulhu {
             base.ExecuteCommand (e, arguments);
             if (AllowExecution (e, arguments)) {
                 if (AutomatedWeeklyEvent.HighlightGame (arguments [ 0 ])) {
-                    Program.messageControl.SendMessage (e, "Succesfully toggled game highlight automated events.");
+                    Program.messageControl.SendMessage (e, "Succesfully toggled game highlight automated events.", false);
                 } else {
-                    Program.messageControl.SendMessage (e, "Failed to toggle game highlight.");
+                    Program.messageControl.SendMessage (e, "Failed to toggle game highlight.", false);
                 }
             }
             return Task.CompletedTask;
@@ -545,7 +555,7 @@ namespace Adminthulhu {
                     result += "\n" + AutomatedWeeklyEvent.allGames [ i ].name + (AutomatedWeeklyEvent.allGames[i].highlight ? " *" : "");
                 }
                 result += "```";
-                Program.messageControl.SendMessage (e, result);
+                Program.messageControl.SendMessage (e, result, false);
             }
             return Task.CompletedTask;
         }
@@ -571,13 +581,13 @@ namespace Adminthulhu {
                         if (withinRange) {
                             AutomatedWeeklyEvent.RemoveVote (e, e.Author.Id, parse - 1);
                         } else {
-                            Program.messageControl.SendMessage (e, "Failed to remove vote - outside range ( 1-" + (AutomatedWeeklyEvent.games.Length) + " ).");
+                            Program.messageControl.SendMessage (e, "Failed to remove vote - outside range ( 1-" + (AutomatedWeeklyEvent.games.Length) + " ).", false);
                         }
                     } else {
-                        Program.messageControl.SendMessage (e, "Failed to remove vote - could not parse vote.");
+                        Program.messageControl.SendMessage (e, "Failed to remove vote - could not parse vote.", false);
                     }
                 } else {
-                    Program.messageControl.SendMessage (e, "Failed to remove vote - voting not in progress.");
+                    Program.messageControl.SendMessage (e, "Failed to remove vote - voting not in progress.", false);
                 }
             }
             return Task.CompletedTask;

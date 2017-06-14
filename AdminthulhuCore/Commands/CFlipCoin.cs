@@ -21,9 +21,9 @@ namespace Adminthulhu {
             if (AllowExecution (e, arguments)) {
                 Random random = new Random ();
                 if (random.Next (2) == 0) {
-                    Program.messageControl.SendMessage (e, "Your coin flipped to show heads.");
+                    Program.messageControl.SendMessage (e, "Your coin flipped to show heads.", false);
                 } else {
-                    Program.messageControl.SendMessage (e, "Your coin flipped to show tails.");
+                    Program.messageControl.SendMessage (e, "Your coin flipped to show tails.", false);
                 }
             }
             return Task.CompletedTask;

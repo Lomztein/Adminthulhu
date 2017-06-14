@@ -35,12 +35,12 @@ namespace Adminthulhu {
                             await Task.Delay (1000);
                             UserActivityMonitor.userActivity.Remove (user.Id);
                             UserActivityMonitor.lastUserUpdate.Remove (user.Id);
-                            Program.messageControl.SendMessage (e, "Succesfully reset activity of " + Utility.GetUserName (user));
+                            Program.messageControl.SendMessage (e, "Succesfully reset activity of " + Utility.GetUserName (user), false);
                         }else {
-                            Program.messageControl.SendMessage (e, "Failed to reset - could not find user.");
+                            Program.messageControl.SendMessage (e, "Failed to reset - could not find user.", false);
                         }
                     } else {
-                        Program.messageControl.SendMessage (e, "Failed to reset - could not parse user ID.");
+                        Program.messageControl.SendMessage (e, "Failed to reset - could not parse user ID.", false);
                     }
                 }
             }
