@@ -15,10 +15,10 @@ namespace Adminthulhu
         public static Command[] commands = new Command[] {
             new CCommandList (), new CSetColor (), new CRollTheDice (),
             new CFlipCoin (), new CRandomGame (), new CQuote (), new CEmbolden (),
-            new CEndTheWorld (), new CFizzfyr (), new CSwiggity (),
             new CAddHeader (), new CShowHeaders (), new CKarma (), new CReport (),
             new VoiceCommands (), new EventCommands (), new UserSettingsCommands (), new DebugCommands (), new HangmanCommands (),
             new GameCommands (), new StrikeCommandSet (), new CAddEventGame (), new CRemoveEventGame (), new CHighlightEventGame (),
+            new CAcceptYoungling (),
         };
 
         public static string dataPath = "";
@@ -74,7 +74,7 @@ namespace Adminthulhu
             try {
                 await new Program ().Start (args);
             } catch (Exception e) {
-                Console.WriteLine (e.Message);
+                Console.WriteLine (e.Message + "\n" + e.StackTrace);
             }
         }
 
@@ -89,7 +89,7 @@ namespace Adminthulhu
 
             dataPath = dataPath.Replace ('\\', '/');
             InitializeDirectories ();
-            ChatLogger.Log ("Booting.. Datapath: " + dataPath);
+            Console.WriteLine ("Booting.. Datapath: " + dataPath);
 
             clock = new Clock ();
 
@@ -106,7 +106,7 @@ namespace Adminthulhu
 
             discordClient.MessageReceived += (e) => {
 
-                ChatLogger.Log (Utility.GetChannelName (e) + " says: " + e.Content);
+                Console.WriteLine (Utility.GetChannelName (e) + " says: " + e.Content);
                 if (e.Author != discordClient.CurrentUser && e.Content.Length > 0 && e.Content[0] == commandChar) {
                     string message = e.Content;
 
@@ -224,20 +224,15 @@ namespace Adminthulhu
             };
 
             discordClient.Ready += () => {
-                ChatLogger.Log ("Bot is ready and running!");
+                Console.WriteLine ("Bot is ready and running!");
                 return Task.CompletedTask;
             };
 
             string token = SerializationIO.LoadTextFile (dataPath + "bottoken" + gitHubIgnoreType)[0];
 
-            ChatLogger.Log ("Connecting to Discord..");
+            Console.WriteLine ("Connecting to Discord..");
             await discordClient.LoginAsync (TokenType.Bot, token);
             await discordClient.StartAsync ();
-
-            await discordClient.CurrentUser.ModifyAsync (delegate (SelfUserProperties properties) {
-                properties.Username = "Adminthulhu";
-                properties.Avatar = new Optional<Image?> (new Image (dataPath + avatarPath));
-            });
 
             await Task.Delay (-1);
         }
@@ -249,7 +244,7 @@ namespace Adminthulhu
 
             if (DateTime.Now > bootedTime) {
                 hasBooted = true;
-                ChatLogger.Log ("Booted flag set to true.");
+                Console.WriteLine ("Booted flag set to true.");
             }
             return hasBooted;
         }
@@ -287,7 +282,10 @@ namespace Adminthulhu
         public static bool FindAndExecuteCommand (SocketMessage e, string commandName, List<string> arguements, Command[] commandList) {
             for (int i = 0; i < commandList.Length; i++) {
                 if (commandList[i].command == commandName) {
-                    commandList[i].ExecuteCommand (e as SocketUserMessage, arguements);
+                    if (arguements.Count > 0 && arguements [ 0 ] == "?")
+                        messageControl.SendMessage (e as SocketUserMessage, commandList [ i ].GetHelp (), false);
+                    else
+                        commandList [ i ].ExecuteCommand (e as SocketUserMessage, arguements);
                     return true;
                 }
             }

@@ -105,10 +105,7 @@ namespace Adminthulhu {
                     return;
 
                 if (voice.Users.Count () == 0) {
-                    voiceChannel.Unlock (false);
-                    voiceChannel.status = VoiceChannel.VoiceChannelStatus.None;
-                    voiceChannel.desiredMembers = 0;
-                    voiceChannel.SetCustomName ("", false);
+                    voiceChannel.Reset ();
                 } else {
                     if (voiceChannel.desiredMembers > 0) {
                         if (users.Count >= voiceChannel.desiredMembers)
@@ -122,12 +119,14 @@ namespace Adminthulhu {
                 Dictionary<Game, int> numPlayers = new Dictionary<Game, int> ();
                 foreach (SocketGuildUser user in users) {
 
-                    SocketGuildUser forcedUser = Utility.GetServer ().GetUser (user.Id);
-                    if (forcedUser.Game.HasValue) {
+                    if (UserSettings.GetSetting<bool> (user.Id, "AutoLooking", false) && users.Count == 1)
+                        voiceChannel.SetStatus (VoiceChannel.VoiceChannelStatus.Looking, false);
+
+                    if (user.Game.HasValue && user.IsBot == false) {
                         if (numPlayers.ContainsKey (user.Game.Value)) {
-                            numPlayers [ forcedUser.Game.Value ]++;
+                            numPlayers [ user.Game.Value ]++;
                         } else {
-                            numPlayers.Add (forcedUser.Game.Value, 1);
+                            numPlayers.Add (user.Game.Value, 1);
                         }
                     }
 
@@ -151,8 +150,11 @@ namespace Adminthulhu {
                 tagsString += tagsString.Length > 0 ? " " : "";
 
                 // Trying to optimize API calls here, just to spare those poor souls at the Discord API HQ stuff
+                int mixedLimit = highest >= 2 ? 2 : 1;
+                string gameName = numPlayers.Where (x => x.Value >= mixedLimit).Count () >= mixedLimit ? "Mixed Games" : highestGame.Name;
                 string nameLetter = voiceChannel.name [ 0 ] + ""; // Eeeeeeuhhh, yes.
-                string newName = highestGame.Name != "" ? tagsString + nameLetter + nameLetter + " - " + highestGame.Name : tagsString + voiceChannel.name;
+
+                string newName = gameName != "" ? tagsString + nameLetter + nameLetter + " - " + gameName : tagsString + voiceChannel.name;
                 if (voiceChannel.customName != "")
                     newName = tagsString + nameLetter + nameLetter + " - " + voiceChannel.customName;
 
@@ -311,8 +313,11 @@ namespace Adminthulhu {
         }
 
         public static void GetTags(VoiceChannel channel) {
-            for (int i = 0; i < voiceChannelTags.Length; i++) {
-                VoiceChannelTag curTag = voiceChannelTags [ i ];
+            List<VoiceChannelTag> tags = channel.currentTags;
+            tags.AddRange (voiceChannelTags.Where (x => tags.Contains (x)));
+
+            for (int i = 0; i < tags.Count; i++) {
+                VoiceChannelTag curTag = tags [ i ];
 
                 VoiceChannelTag.ActionData data = new VoiceChannelTag.ActionData (channel);
                 try {
@@ -404,6 +409,13 @@ namespace Adminthulhu {
                 lockerID = 0;
                 if (update)
                     UpdateVoiceChannel (GetChannel ());
+            }
+
+            public void Reset() {
+                Unlock (false);
+                status = VoiceChannel.VoiceChannelStatus.None;
+                desiredMembers = 0;
+                SetCustomName ("", false);
             }
 
             public bool InviteUser (SocketGuildUser sender, SocketGuildUser user ) {

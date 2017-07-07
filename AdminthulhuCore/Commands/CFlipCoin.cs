@@ -11,8 +11,8 @@ namespace Adminthulhu {
 
         public CFlipCoin () {
             command = "flipcoin";
-            name = "Flip a Coin";
-            help = "Flip a coin that has an equal chance of heads or tails.";
+            shortHelp = "Flip a coin.";
+            longHelp = "Flip a coin that has an equal chance of heads or tails.";
             argumentNumber = 0;
         }
 

@@ -37,8 +37,8 @@ namespace Adminthulhu {
 
         public CRandomGame () {
             command = "whattoplay";
-            name = "What to Play?";
-            help = "Select a random game out from a list, that could be played.";
+            shortHelp = "What to play?";
+            longHelp = "Select a random game out from a list, that could be played.";
             argumentNumber = 0;
         }
 

@@ -9,8 +9,8 @@ namespace Adminthulhu {
 
         public CReport () {
             command = "report";
-            name = "Report Something";
-            help = "Reports something you don't like to the admins. Your name is recorded.";
+            shortHelp = "Report something.";
+            longHelp = "Reports something you don't like to the admins. Your name is recorded.";
             argumentNumber = 1;
 
             availableInDM = true;

@@ -13,8 +13,8 @@ namespace Adminthulhu {
 
         public CommandSet () {
             command = "commandset";
-            name = "Default Command Set";
-            help = "A placeholder, shouldn't be accessable in final version.";
+            shortHelp = "DEFAULT_COMMAND_SET";
+            longHelp = "A placeholder, shouldn't be accessable in final version.";
         }
 
         public override void Initialize () {

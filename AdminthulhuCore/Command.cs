@@ -12,8 +12,8 @@ namespace Adminthulhu {
         public const int CHARS_TO_HELP = 4;
 
         public string command = null;
-        public string name = null;
-        public string help = null;
+        public string shortHelp = null;
+        public string longHelp = null;
         public string argHelp = "";
         public int argumentNumber = 1;
         public string helpPrefix = Program.commandChar.ToString ();
@@ -23,9 +23,6 @@ namespace Adminthulhu {
         public bool availableOnServer = true;
 
         public virtual Task ExecuteCommand ( SocketUserMessage e, List<string> arguments) {
-            if (arguments.Count > 0 && arguments[0] == "?") {
-                Program.messageControl.SendMessage(e, GetHelp (), false);
-            }
             return Task.CompletedTask;
         }
 
@@ -62,7 +59,7 @@ namespace Adminthulhu {
 
         public virtual string GetHelp () {
             string argExists = argHelp.Length > 0 ? " " : "";
-            string text = helpPrefix + command + " " + argExists + argHelp + " - " + help;
+            string text = helpPrefix + command + " " + argExists + argHelp + " - " + longHelp;
             if (isAdminOnly)
                 text += " - ADMIN ONLY";
             return text;
@@ -70,7 +67,7 @@ namespace Adminthulhu {
 
         public virtual string GetShortHelp () {
             string argExists = argHelp.Length > 0 ? " " : "";
-            string text = name + "\t\t" + helpPrefix + command + argExists + argHelp;
+            string text = shortHelp + "\t\t" + helpPrefix + command + argExists + argHelp;
             return text;
         }
 
@@ -79,7 +76,7 @@ namespace Adminthulhu {
         }
 
         public virtual string GetOnlyName() {
-            return name; // Wrapper functions ftw
+            return shortHelp; // Wrapper functions ftw
         }
     }
 }

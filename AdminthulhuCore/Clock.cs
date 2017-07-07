@@ -24,7 +24,7 @@ namespace Adminthulhu {
         public SocketGuildUser [ ] lastTest = new SocketGuildUser [ 5 ];
 
         public IClockable [ ] clockables = new IClockable [ ] {
-            new AutomatedEventHandling (), new AutomatedTextChannels (), new UserActivityMonitor (), new Birthdays (), new AutomatedWeeklyEvent (),
+            new DiscordEvents (), new AutomatedTextChannels (), new UserActivityMonitor (), new Birthdays (), new AutomatedWeeklyEvent (),
             new Strikes (), new AprilFools (), new Younglings (),
         };
 

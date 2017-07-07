@@ -38,7 +38,7 @@ namespace Adminthulhu {
                 if (reaction.Emote.Name == upvote) {
                     ChangeKarma (iMessage.Author.Id, -1);
                 } else if (reaction.Emote.Name == downvote) {
-                    ChangeKarma (iMessage.Author.Id, +1);
+                    ChangeKarma (iMessage.Author.Id, 1);
                 }
             };
         }
@@ -59,8 +59,8 @@ namespace Adminthulhu {
     public class CKarma : Command {
         public CKarma () {
             command = "karma";
-            name = "Show Karma";
-            help = "Shows karma of <me/user>.";
+            shortHelp = "Show karma.";
+            longHelp = "Shows karma of <me/user>.";
             argumentNumber = 1;
         }
 

@@ -97,18 +97,18 @@ namespace Adminthulhu {
 
     public class HangmanCommands : CommandSet {
         public HangmanCommands () {
-            name = "Hangman Command Set";
+            shortHelp = "Hangman command set.";
             command = "hangman";
-            help = "A set of Hangman related commands.";
+            longHelp = "A set of Hangman related commands.";
             commandsInSet = new Command[] { new CStartHangman (), new CGuessHangman (), new CShowUsed (), new CShowProgress () };
         }
 
         public class CStartHangman : Command {
             public CStartHangman () {
                 command = "start";
-                name = "Start New Hangman";
+                shortHelp = "Start new hangman.";
                 argHelp = "<word>";
-                help = "Creates a new game of Hangman with the word " + argHelp + ".";
+                longHelp = "Creates a new game of Hangman with the word " + argHelp + ".";
                 argumentNumber = 1;
             }
 
@@ -143,9 +143,9 @@ namespace Adminthulhu {
         public class CGuessHangman : Command {
             public CGuessHangman () {
                 command = "guess";
-                name = "Start New Hangman";
+                shortHelp = "Start new hangman.";
                 argHelp = "<letter>";
-                help = "Guesses the letter " + argHelp + " to the current game of Hangman.";
+                longHelp = "Guesses the letter " + argHelp + " to the current game of Hangman.";
                 argumentNumber = 1;
             }
 
@@ -169,8 +169,8 @@ namespace Adminthulhu {
         public class CShowUsed : Command {
             public CShowUsed () {
                 command = "used";
-                name = "Show Used Letters";
-                help = "Shows the currently used letters of hangman.";
+                shortHelp = "Show used letters.";
+                longHelp = "Shows the currently used letters of hangman.";
                 argumentNumber = 0;
             }
 
@@ -195,8 +195,8 @@ namespace Adminthulhu {
         public class CShowProgress : Command {
             public CShowProgress () {
                 command = "progress";
-                name = "Show Current Progress";
-                help = "Shows the currently progress letters of Hangman.";
+                shortHelp = "Show current progress.";
+                longHelp = "Shows the currently progress letters of Hangman.";
                 argumentNumber = 0;
             }
 

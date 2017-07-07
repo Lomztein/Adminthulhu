@@ -19,7 +19,10 @@ namespace Adminthulhu {
                 userGames = new Dictionary<ulong, List<string>> ();
 
             Program.discordClient.GuildMemberUpdated += ( before, after ) => {
-                
+
+                if (!UserSettings.GetSetting<bool> (after.Id, "AllowSnooping", true))
+                    return Task.CompletedTask;
+
                 string gameName = after.Game.HasValue ? after.Game.Value.Name.ToString ().ToUpper () : null;
                 AddGame (after, gameName);
 
@@ -79,13 +82,22 @@ namespace Adminthulhu {
 
             return foundUsers;
         }
+
+        public static void PurgeData() {
+            foreach (KeyValuePair<ulong, List<string>> pair in userGames) {
+                SocketGuildUser user = Utility.GetServer ().GetUser (pair.Key);
+                if (user == null) {
+                    userGames.Remove (pair.Key);
+                }
+            }
+        }
     }
 
     public class GameCommands : CommandSet {
         public GameCommands () {
             command = "games";
-            name = "Game Commands";
-            help = "A set of commands specifically for game related shinanegans.";
+            shortHelp = "Game command set.";
+            longHelp = "A set of commands specifically for game related shinanegans.";
             commandsInSet = new Command[] { new CGameOwners (), new CAddGame (), new CRemoveGame (), new CAllGames () };
         }
 
@@ -93,15 +105,16 @@ namespace Adminthulhu {
         public class CGameOwners : Command {
             public CGameOwners () {
                 command = "players";
-                name = "Show Game Players";
+                shortHelp = "Show game players.";
                 argHelp = "<gamename>";
-                help = "Shows a list of everyone who've played " + argHelp;
+                longHelp = "Shows a list of everyone who've played " + argHelp;
                 argumentNumber = 1;
             }
 
             public override Task ExecuteCommand ( SocketUserMessage e, List<string> arguments ) {
                 base.ExecuteCommand (e, arguments);
                 if (AllowExecution (e, arguments)) {
+                    UserGameMonitor.PurgeData ();
                     List<SocketGuildUser> foundUsers = UserGameMonitor.FindUsersWithGame (arguments[0]);
                     if (foundUsers.Count == 0) {
                         Program.messageControl.SendMessage (e, "Sorry, no records of **" + arguments[0] + "** being played were found.", false);
@@ -122,9 +135,9 @@ namespace Adminthulhu {
     public class CAddGame : Command {
         public CAddGame () {
             command = "add";
-            name = "Manually Add Game";
+            shortHelp = "Manually add game.";
             argHelp = "<gamename>";
-            help = "Manually adds " + argHelp + " to your gamelist.";
+            longHelp = "Manually adds " + argHelp + " to your gamelist.";
             argumentNumber = 1;
         }
 
@@ -141,9 +154,9 @@ namespace Adminthulhu {
     public class CRemoveGame : Command {
         public CRemoveGame () {
             command = "remove";
-            name = "Manually Remove Game";
+            shortHelp = "Manually remove game.";
             argHelp = "<gamename>";
-            help = "Manually removes " + argHelp + " from your gamelist.";
+            longHelp = "Manually removes " + argHelp + " from your gamelist.";
             argumentNumber = 1;
         }
 
@@ -160,8 +173,8 @@ namespace Adminthulhu {
     public class CAllGames : Command {
         public CAllGames () {
             command = "all";
-            name = "Show All Games";
-            help = "Shows all games ever recorded on this server.";
+            shortHelp = "Show all games.";
+            longHelp = "Shows all games ever recorded on this server.";
             argumentNumber = 0;
         }
 
@@ -169,6 +182,7 @@ namespace Adminthulhu {
             base.ExecuteCommand (e, arguments);
             if (AllowExecution (e, arguments)) {
 
+                UserGameMonitor.PurgeData ();
                 string all = "Top " + UserGameMonitor.MAX_GAMES_TO_DISPLAY + " most played games on this server:```\n";
                 Dictionary<string, int> passedGames = new Dictionary<string, int> ();
                 int count = UserGameMonitor.userGames.Count ();

@@ -12,8 +12,8 @@ namespace Adminthulhu {
     public class VoiceCommands : CommandSet {
         public VoiceCommands () {
             command = "voice";
-            name = "Voice Commands";
-            help = "A set of commands specifically for voice channels.";
+            shortHelp = "Voice command set.";
+            longHelp = "A set of commands specifically for voice channels.";
             commandsInSet = new Command[] { new CLock (), new CUnlock (), new CInvite (), new CMembers (), new CKick (), new CCallVoiceChannel (), new CLooking (), new CFull (), new CSetDesired (), new CCustomName () };
         }
     }
@@ -21,8 +21,8 @@ namespace Adminthulhu {
 
         public CLock () {
             command = "lock";
-            name = "Lock Voice Channel";
-            help = "locks your current voice channel.";
+            shortHelp = "Lock voice channel.";
+            longHelp = "locks your current voice channel.";
             argumentNumber = 0;
         }
 
@@ -60,8 +60,8 @@ namespace Adminthulhu {
 
         public CUnlock () {
             command = "unlock";
-            name = "Unlock Voice Channel";
-            help = "unlocks your current voice channel if locked.";
+            shortHelp = "Unlock voice channel.";
+            longHelp = "unlocks your current voice channel if locked.";
             argumentNumber = 0;
         }
 
@@ -101,9 +101,9 @@ namespace Adminthulhu {
 
         public CInvite () {
             command = "invite";
-            name = "Invite User";
+            shortHelp = "Invite user.";
             argHelp = "<username>";
-            help = "Invites " + argHelp + " your current locked voice channel.";
+            longHelp = "Invites " + argHelp + " your current locked voice channel.";
             argumentNumber = 1;
         }
 
@@ -143,8 +143,8 @@ namespace Adminthulhu {
 
         public CMembers () {
             command = "members";
-            name = "Member List";
-            help = "Display list of members of your locked voice channel.";
+            shortHelp = "Member list.";
+            longHelp = "Display list of allowed members of your locked voice channel.";
             argumentNumber = 0;
         }
 
@@ -182,9 +182,9 @@ namespace Adminthulhu {
 
         public CKick () {
             command = "kick";
-            name = "Kick Member";
+            shortHelp = "Kick member.";
             argHelp = "<username>";
-            help = "Kicks member from your locked voice channel. You must be the one who locked.";
+            longHelp = "Kicks member from your locked voice channel. You must be the one who locked.";
             argumentNumber = 1;
         }
 
@@ -235,8 +235,8 @@ namespace Adminthulhu {
     public class CLooking : Command {
         public CLooking() {
             command = "looking";
-            name = "Toogle Looking";
-            help = "Toggles a tag which informs the world you're looking for players.";
+            shortHelp = "Toogle looking.";
+            longHelp = "Toggles a tag which informs the world you're looking for players.";
             argumentNumber = 0;
         }
 
@@ -258,8 +258,8 @@ namespace Adminthulhu {
     public class CFull : Command {
         public CFull() {
             command = "full";
-            name = "Toogle Full";
-            help = "Toggles a tag which informs the world you're full of players.";
+            shortHelp = "Toogle full.";
+            longHelp = "Toggles a tag which informs the world you're full of players.";
             argumentNumber = 0;
         }
 
@@ -280,8 +280,8 @@ namespace Adminthulhu {
     public class CCustomName : Command {
         public CCustomName() {
             command = "name";
-            name = "Set Custom Name";
-            help = "Sets a custom game name to this channel. Input \"reset\" to reset.";
+            shortHelp = "Set channel name.";
+            longHelp = "Sets a custom game name to this channel. Input \"reset\" to reset.";
             argumentNumber = 1;
         }
 
@@ -307,8 +307,8 @@ namespace Adminthulhu {
     public class CSetDesired : Command {
         public CSetDesired() {
             command = "desired";
-            name = "Set Desired Amount";
-            help = "Sets a desired amount of people in this channel.";
+            shortHelp = "Set desired members.";
+            longHelp = "Sets a desired amount of people in this channel.";
             argumentNumber = 1;
         }
 

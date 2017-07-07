@@ -11,8 +11,8 @@ namespace Adminthulhu {
 
         public CFizzfyr () {
             command = "fizzfyr13";
-            name = "Fizzfyr13";
-            help = "Get litteraly the sexiest picture in existance.";
+            shortHelp = "Fizzfyr13";
+            longHelp = "Get litteraly the sexiest picture in existance.";
             argumentNumber = 0;
         }
 
@@ -29,8 +29,8 @@ namespace Adminthulhu {
 
         public CSwiggity () {
             command = "swiggity";
-            name = "Swiggity";
-            help = "Swiggity swooty I'm coming for dat booty!";
+            shortHelp = "Swiggity";
+            longHelp = "Swiggity swooty I'm coming for dat booty!";
             argumentNumber = 0;
         }
 

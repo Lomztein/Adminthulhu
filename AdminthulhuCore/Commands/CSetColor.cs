@@ -24,9 +24,9 @@ namespace Adminthulhu {
 
         public CSetColor () {
             command = "setcolor";
-            name = "Set Color";
+            shortHelp = "Set username color.";
             argHelp = "<colorname>";
-            help = "Sets your color to " + argHelp + ", if available.";
+            longHelp = "Sets your color to " + argHelp + ", if available.";
             argumentNumber = 1;
         }
 

@@ -107,8 +107,8 @@ namespace Adminthulhu
     public class StrikeCommandSet : CommandSet {
         public StrikeCommandSet() {
             command = "strikes";
-            name = "Strike Commands";
-            help = "A set of commands specifically for strikes.";
+            shortHelp = "Strike commands.";
+            longHelp = "A set of commands specifically for strikes.";
             commandsInSet = new Command [ ] { new CAddStrike (), new CRemoveStrike () };
 
             isAdminOnly = true;
@@ -118,8 +118,8 @@ namespace Adminthulhu
 
             public CAddStrike() {
                 command = "add";
-                name = "Strike Someone";
-                help = "Strike a user who've broken a rule.";
+                shortHelp = "Strike someone unlawful.";
+                longHelp = "Strike a user who've broken a rule.";
                 argumentNumber = 3;
             }
 
@@ -140,8 +140,8 @@ namespace Adminthulhu
 
             public CRemoveStrike() {
                 command = "remove";
-                name = "Raise Strike";
-                help = "Raises a strike from someone who doesn't deserve it anymore.";
+                shortHelp = "Raise strike.";
+                longHelp = "Raises a strike from someone who doesn't deserve it anymore.";
                 argumentNumber = 1;
             }
 

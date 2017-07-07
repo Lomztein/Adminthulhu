@@ -17,8 +17,8 @@ namespace Adminthulhu {
 
         public CEmbolden () {
             command = "embolden";
-            name = "Embolden";
-            help = "Makes your text much more bold, and kind of spammy.";
+            shortHelp = "Embolden.";
+            longHelp = "Makes your text much more bold, and kind of spammy.";
             argumentNumber = 1;
 
             availableInDM = true;

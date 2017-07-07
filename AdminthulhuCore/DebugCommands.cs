@@ -10,8 +10,8 @@ namespace Adminthulhu {
     public class DebugCommands : CommandSet {
         public DebugCommands () {
             command = "debug";
-            name = "Debug Command Set";
-            help = "A set of debugging commands for *admins*.";
+            shortHelp = "Debug command set.";
+            longHelp = "A set of debugging commands for *admins*.";
             isAdminOnly = true;
             commandsInSet = new Command[] { new ResetUserActivity () };
         }
@@ -19,9 +19,9 @@ namespace Adminthulhu {
         public class ResetUserActivity : Command {
             public ResetUserActivity () {
                 command = "resetuseractivity";
-                name = "Reset User Activity";
+                shortHelp = "Reset user activity.";
                 argHelp = "<userid>";
-                help = "Resets the user with id " + argHelp + "'s activity, for debugging reasons.";
+                longHelp = "Resets the user with id " + argHelp + "'s activity, for debugging reasons.";
                 argumentNumber = 1;
             }
 

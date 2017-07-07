@@ -10,9 +10,9 @@ namespace Adminthulhu {
     public class CShowCredits : Command {
 
         public CShowCredits () {
-            command = "showcredits";
-            name = "Show Creidts";
-            help = "Shows the people behind the bot.";
+            command = "credits";
+            shortHelp = "Show butt credits.";
+            longHelp = "Shows the people behind the bot.";
             argumentNumber = 0;
         }
 

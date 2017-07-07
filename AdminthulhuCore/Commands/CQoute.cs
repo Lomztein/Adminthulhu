@@ -27,8 +27,8 @@ namespace Adminthulhu {
 
         public CQuote () {
             command = "quote";
-            name = "Quote";
-            help = "Display an incredibly meaningful quote.";
+            shortHelp = "Show glorious quote.";
+            longHelp = "Display an incredibly meaningful quote.";
             argumentNumber = 0;
         }
 

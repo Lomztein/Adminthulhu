@@ -11,8 +11,8 @@ namespace Adminthulhu {
 
         public CEndTheWorld () {
             command = "endtheworld";
-            name = "End the World";
-            help = "Whatever you do, do not call this function. The world will end in fire.";
+            shortHelp = "End the world.";
+            longHelp = "Whatever you do, do not call this function. The world will end in fire.";
             argumentNumber = 0;
         }
 

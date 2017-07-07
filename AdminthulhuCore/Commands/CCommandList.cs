@@ -11,8 +11,8 @@ namespace Adminthulhu {
 
         public CCommandList () {
             command = "clist";
-            name = "Command List";
-            help = "Reveals a full list of all commands.";
+            shortHelp = "Show command list.";
+            longHelp = "Reveals a full list of all commands.";
             argumentNumber = 0;
 
             availableInDM = true;

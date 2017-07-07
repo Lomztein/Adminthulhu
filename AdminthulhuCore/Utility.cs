@@ -162,23 +162,27 @@ namespace Adminthulhu {
             return message.Id == desiredMessage;
         }
 
-        public static string FormatCommand(Command command, int minSpaces = 26) {
-            string result = command.GetCommand ();
+        public static string FormatCommand(Command command, int minSpaces = 25) {
+            return UniformStrings (command.GetCommand (), command.GetOnlyName (), " | ");
+        }
+
+        public static string UniformStrings (string firstString, string secondString, string connector, int minSpaces = 25) {
+            string result = firstString;
             int remainingTaps = (int)Math.Floor ((minSpaces - result.Length) / 4d);
             int remainingSpaces = (minSpaces - result.Length) % 4;
             for (int i = 0; i < remainingTaps; i++)
                 result += "\t";
             for (int i = 0; i < remainingSpaces; i++)
                 result += " ";
-            result += "| " + command.GetOnlyName ();
+            result += connector + secondString;
             return result;
         }
 
         /// <summary>
         /// Formattet for the danish format!
         /// </summary>
-        public static bool TryParseDatetime(string input, out DateTime result) {
-            CultureInfo danishCulture = new CultureInfo ("da-DK");
+        public static bool TryParseDatetime(string input, ulong userID, out DateTime result) {
+            CultureInfo danishCulture = new CultureInfo (UserSettings.GetSetting<string>(userID, "Culture", "da-DK"));
             return DateTime.TryParse (input, danishCulture.DateTimeFormat, DateTimeStyles.None, out result);
         }
     }

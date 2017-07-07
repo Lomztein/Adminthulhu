@@ -65,9 +65,9 @@ namespace Adminthulhu {
 
         public CAddHeader () {
             command = "addheader";
-            name = "Add New Header";
+            shortHelp = "Add new header.";
             argHelp = "<header>";
-            help = "Adds a new header " + argHelp + " to main channel";
+            longHelp = "Adds a new header " + argHelp + " to main channel";
             argumentNumber = 1;
             isAdminOnly = true;
         }
@@ -90,8 +90,8 @@ namespace Adminthulhu {
 
         public CShowHeaders () {
             command = "showheaders";
-            name = "Show Header";
-            help = "Shows all current possible headers of the main channel.";
+            shortHelp = "Show header.";
+            longHelp = "Shows all current possible headers of the main channel.";
             argumentNumber = 0;
         }
 

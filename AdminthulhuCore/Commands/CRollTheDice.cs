@@ -11,9 +11,9 @@ namespace Adminthulhu {
 
         public CRollTheDice () {
             command = "rtd";
-            name = "Roll the Dice";
+            shortHelp = "Roll the dice.";
             argHelp = "<maxnumber>";
-            help = "Rolls a dice that returns a number between one and " + argHelp + ".";
+            longHelp = "Rolls a dice that returns a number between one and " + argHelp + ".";
             argumentNumber = 1;
         }
 

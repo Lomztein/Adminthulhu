@@ -24,10 +24,10 @@ namespace Adminthulhu {
 
                     return (T)data;
                 }
-                ChatLogger.Log ("Failed to load file at " + path);
+                Console.WriteLine ("Failed to load file at " + path);
                 return default (T);
             } catch (Exception e) {
-                ChatLogger.DebugLog ("Error: " + e.Message);
+                Console.WriteLine ("Error: " + e.Message);
                 return default (T);
             }
         }
@@ -41,7 +41,7 @@ namespace Adminthulhu {
 
                 writer.Dispose ();
             } catch (Exception e) {
-                ChatLogger.DebugLog ("Error: Failed to save file: " + e.Message);
+                Console.WriteLine ("Error: Failed to save file: " + e.Message);
             }
         }
 

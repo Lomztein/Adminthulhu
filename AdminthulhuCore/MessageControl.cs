@@ -51,9 +51,14 @@ namespace Adminthulhu {
 
         private Task CheckForQuestions(Cacheable<IUserMessage, ulong> message, ISocketMessageChannel channel, SocketReaction reaction) {
             Question question = FindByMessageID (reaction.UserId, message.Id);
-            if (question != null && reaction.Emote.Name[0] == "ok_hand"[1])  { // Emojis are wierd or something
-                question.ifYes ();
-                askedUsers [ reaction.UserId ].Remove (question);
+            ChatLogger.Log (reaction.User.Value.Username + " responded to a question with " + reaction.Emote.Name);
+            if (question != null) {
+                if (reaction.Emote.Name == "thumbsup") {
+                    question.ifYes ();
+                    askedUsers [ reaction.UserId ].Remove (question);
+                } else if (reaction.Emote.Name == "thumbsdown") {
+                    askedUsers [ reaction.UserId ].Remove (question);
+                }
             }
             return Task.CompletedTask;
         }
@@ -88,13 +93,13 @@ namespace Adminthulhu {
             return message;
         }
 
-        public async Task<RestMessage> SendMessage (SocketGuildUser e, string message) {
-            RestMessage finalMessage = null;
+        public async Task<IUserMessage> SendMessage (SocketGuildUser e, string message) {
+            IUserMessage finalMessage = null;
 
             string[] split = SplitMessage (message);
 
-            Task<RestDMChannel> channel = e.CreateDMChannelAsync ();
-            RestDMChannel result = await channel;
+            Task<IDMChannel> channel = e.GetOrCreateDMChannelAsync ();
+            IDMChannel result = await channel;
 
             for (int i = 0; i < split.Length; i++) {
                 finalMessage = await result.SendMessageAsync (split[i]);
@@ -116,7 +121,7 @@ namespace Adminthulhu {
 
         public async Task SendImage(SocketTextChannel e, string message, string imagePath, bool allowInMain) {
             ChatLogger.Log ("Sending an image!");
-            if (allowInMain && e.Name != Program.mainTextChannelName) {
+            if (!allowInMain && e.Name == Program.mainTextChannelName) {
                 return;
             } else {
                 try {
@@ -130,10 +135,10 @@ namespace Adminthulhu {
         private Dictionary<ulong, List<Question>> askedUsers = new Dictionary<ulong, List<Question>>();
 
         public async Task AskQuestion (SocketGuildUser user, string question, Action ifYes) {
-            RestMessage message = await SendMessage (user, question);
+            IUserMessage message = await SendMessage (user, question);
 
-            await (message as RestUserMessage).AddReactionAsync (new Emoji ("👌"));
-                //await (message as RestUserMessage).AddReactionAsync ()
+            await (message as RestUserMessage).AddReactionAsync (new Emoji ("👍"));
+            await (message as RestUserMessage).AddReactionAsync (new Emoji ("👎"));
 
             if (!askedUsers.ContainsKey (user.Id)) {
                 askedUsers.Add (user.Id, new List<Question> ());
@@ -142,13 +147,15 @@ namespace Adminthulhu {
             Question newQuestion = new Question (message.Id, ifYes);
             askedUsers [user.Id].Add (newQuestion);
 
-            await Task.Delay (5 * 60 * 1000);
+            await Task.Delay (24 * 60 * 60 * 1000);
 
             if (askedUsers.ContainsKey (user.Id)) {
-                askedUsers[user.Id].Remove (newQuestion);
+                if (askedUsers [ user.Id ].Contains (newQuestion)) {
+                    askedUsers [ user.Id ].Remove (newQuestion);
+                    await SendMessage (user, "Question timed out after 24 hours.");
+                }
                 if (askedUsers[user.Id].Count == 0) {
                     askedUsers.Remove (user.Id);
-                    await SendMessage (user, "Question timed out after 5 minutes.");
                 }
             }
         }

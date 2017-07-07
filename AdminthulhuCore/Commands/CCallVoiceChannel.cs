@@ -11,9 +11,9 @@ namespace Adminthulhu {
 
         public CCallVoiceChannel () {
             command = "call";
-            name = "Mention Voice Channel";
+            shortHelp = "Mention voice channel.";
             argHelp = "<voicechannel>";
-            help = "Mentions all members in " + argHelp + ".";
+            longHelp = "Mentions all members in " + argHelp + ".";
             argumentNumber = 2;
         }
 
