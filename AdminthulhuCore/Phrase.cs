@@ -10,28 +10,32 @@ namespace Adminthulhu {
     public class Phrase {
 
         public string inputText;
-        public string user;
+        public ulong user;
         public int chance;
         public string response;
-        public string channel;
+        public string reaction;
+        public ulong channel;
 
         public bool CheckAndRespond (SocketMessage e) {
 
             string message = e.Content;
-            string sender = e.Author.Username;
-            string locChannel = e.Channel.Name;
+            ulong sender = e.Author.Id;
+            ulong locChannel = e.Channel.Id;
 
             if (message.Length < inputText.Length)
                 return false;
 
             if (inputText == "" || message.Substring (0, inputText.Length).ToUpper () == inputText.ToUpper ()) {
-                if (user == "" || sender.ToUpper() == user.ToUpper ()) {
-                    if (channel == "" || locChannel.ToUpper () == channel.ToUpper ()) {
+                if (user == 0 || sender == user) {
+                    if (channel == 0 || locChannel == channel) {
 
                         Random random = new Random ();
                         if (random.Next (100) < chance || chance == 100) {
 
-                            Program.messageControl.SendMessage (e, response, true);
+                            if (message != "")
+                                Program.messageControl.SendMessage (e, response, true);
+                            if (reaction != "")
+                                (e as SocketUserMessage).AddReactionAsync (new Emoji (reaction));
                             return true;
                         }
                     }
@@ -40,28 +44,13 @@ namespace Adminthulhu {
             return false;
         }
 
-        public Phrase (string input, string us, int ch, string re, string cha) {
-            inputText = input;
-            user = us;
-            chance = ch;
-            response = re;
-            channel = cha;
-        }
-
-        public Phrase ( string input, int ch, string re ) {
-            inputText = input;
-            chance = ch;
-            response = re;
-            user = "";
-            channel = "";
-        }
-
-        public Phrase ( string input, string us, int ch, string re ) {
-            inputText = input;
-            user = us;
-            chance = ch;
-            response = re;
-            channel = "";
+        public Phrase (string _input, ulong _user, int _chance, string _response, ulong _channel, string _reaction) {
+            inputText = _input;
+            user = _user;
+            chance = _chance;
+            response = _response;
+            channel = _channel;
+            reaction = _reaction;
         }
     }
 }

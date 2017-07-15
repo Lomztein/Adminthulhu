@@ -49,21 +49,19 @@ namespace Adminthulhu
         public static ulong serverID = 93733172440739840;
 
         public static Phrase [ ] phrases = new Phrase [ ] {
-            new Phrase ("Neat!", "", 100, "Very!"),
-            new Phrase ("", "Nyx", 1, "*Allegedly...*"),
-            new Phrase ("", "Peacekeeper", 2, "*It's always crits..*"),
-            new Phrase ("wow!", "Gizmo Gizmo", 100, "INSANE AIR TIME!"),
-            new Phrase ("Thx fam", "", 100, "No probs. We Gucci."),
-            new Phrase ("Fuck yis", "Lomztein", 100, "Fuck no."),
-            new Phrase ("<:Serviet:255721870828109824> Privet Comrades!", "Creeperskull", 100, "Privet, federal leader!"),
-            new Phrase ("<:Serviet:255721870828109824> Privet Comrades!", "", 100, "Privet!"),
-            new Phrase ("Who is best gem?", "Nyx", 100, "*Obviously* <:Lapis:230346614064021505> ..."),
-            new Phrase ("Who is best gem?", "", 100, "Obviously <:PeriWow:230381627669348353>"),
-            new Phrase ("https://www.reddit.com/", "Nyx", 100, "Wow, this is some very interesting conte- <:residentsleeper:257933177631277056> Zzz", "links"),
-            new Phrase ("", "khave", 2, "¯\\_(ツ)_/¯"),
-            new Phrase ("(╯°□°）╯︵ ┻━┻", 100, "Please respect tables. ┬─┬ノ(ಠ_ಠノ)"),
-            new Phrase ("nice", "Twistbonk", 25, "Very nice!"),
-            new Phrase ("Neato", "", 100, "Burrito!"),
+            new Phrase ("Neat!", 0, 100, "Very!", 0, ""),
+            new Phrase ("", 93732620998819840, 1, "*Allegedly...*", 0, ""),
+            new Phrase ("wow!", 94089489227448320, 100, "INSANE AIR TIME!", 0, ""),
+            new Phrase ("Thx fam", 0, 100, "No probs. We Gucci.", 0, ""),
+            new Phrase ("<:Serviet:255721870828109824> Privet Comrades!", 172012092407152640, 100, "Privet, federal leader!", 0, ""),
+            new Phrase ("<:Serviet:255721870828109824> Privet Comrades!", 0, 100, "Privet!", 0, ""),
+            new Phrase ("Who is best gem?", 93732620998819840, 100, "*Obviously* <:Lapis:230346614064021505> ...", 0, ""),
+            new Phrase ("Who is best gem?", 0, 100, "Obviously <:PeriWow:230381627669348353>", 0, ""),
+            new Phrase ("https://www.reddit.com/", 93732620998819840, 100, "Wow, this is some very interesting conte- <:residentsleeper:257933177631277056> Zzz", 171667949155778561, ""),
+            new Phrase ("", 174097001003220992, 2, "¯\\_(ツ)_/¯", 0, ""),
+            new Phrase ("(╯°□°）╯︵ ┻━┻", 0, 100, "Please respect tables. ┬─┬ノ(ಠ_ಠノ)", 0, ""),
+            new Phrase ("nice", 95463258181345280, 25, "Very nice!", 0, ""),
+            new Phrase ("Neato", 0, 100, "", 0, "🌯"),
         };
         public static List<string> allowedDeletedMessages = new List<string>();
 
