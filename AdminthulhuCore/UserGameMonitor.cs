@@ -69,14 +69,17 @@ namespace Adminthulhu {
             return result;
         }
 
-        public static List<SocketGuildUser> FindUsersWithGame (string gameName) {
+        public static List<SocketGuildUser> FindUsersWithGame (string gameName, out string foundGame) {
             // I feel retarded right now, something seems off.
             gameName = gameName.ToUpper ();
+            foundGame = gameName;
 
             List<SocketGuildUser> foundUsers = new List<SocketGuildUser> ();
             int count = userGames.Count ();
             for (int i = 0; i < count; i++) {
-                if (userGames.ElementAt (i).Value.Contains (gameName))
+                foundGame = userGames.ElementAt (i).Value.Find (x => new SoftStringComparer ().Equals (x, gameName));
+
+                if (userGames.ElementAt (i).Value.Contains (foundGame, new SoftStringComparer ()))
                     foundUsers.Add (Utility.GetServer ().GetUser (userGames.ElementAt (i).Key));
             }
 
@@ -84,11 +87,16 @@ namespace Adminthulhu {
         }
 
         public static void PurgeData() {
-            foreach (KeyValuePair<ulong, List<string>> pair in userGames) {
+            List<ulong> toRemove = new List<ulong> ();
+                foreach (KeyValuePair<ulong, List<string>> pair in userGames) {
                 SocketGuildUser user = Utility.GetServer ().GetUser (pair.Key);
-                if (user == null) {
-                    userGames.Remove (pair.Key);
+                if (user == null || user.IsBot) {
+                    toRemove.Add (pair.Key);
                 }
+            }
+
+            foreach (ulong id in toRemove) {
+                userGames.Remove (id);
             }
         }
     }
@@ -115,11 +123,12 @@ namespace Adminthulhu {
                 base.ExecuteCommand (e, arguments);
                 if (AllowExecution (e, arguments)) {
                     UserGameMonitor.PurgeData ();
-                    List<SocketGuildUser> foundUsers = UserGameMonitor.FindUsersWithGame (arguments[0]);
+                    string foundGame = "";
+                    List<SocketGuildUser> foundUsers = UserGameMonitor.FindUsersWithGame (arguments[0], out foundGame);
                     if (foundUsers.Count == 0) {
-                        Program.messageControl.SendMessage (e, "Sorry, no records of **" + arguments[0] + "** being played were found.", false);
+                        Program.messageControl.SendMessage (e, "Sorry, no records of **" + foundGame + "** being played were found.", false);
                     }else {
-                        string total = "Here is the list of everyone who've been seen playing **" + arguments[0] + "**:```\n";
+                        string total = "Here is the list of everyone who've been seen playing **" + foundGame + "**:```\n";
                         foreach (SocketGuildUser user in foundUsers) {
                             total += Utility.GetUserName (user) + "\n";
                         }
@@ -183,10 +192,10 @@ namespace Adminthulhu {
             if (AllowExecution (e, arguments)) {
 
                 UserGameMonitor.PurgeData ();
-                string all = "Top " + UserGameMonitor.MAX_GAMES_TO_DISPLAY + " most played games on this server:```\n";
                 Dictionary<string, int> passedGames = new Dictionary<string, int> ();
                 int count = UserGameMonitor.userGames.Count ();
 
+                string all = "";
                 for (int i = 0; i < count; i++) {
                     List<string> within = UserGameMonitor.userGames.ElementAt (i).Value;
                     foreach (string game in within) {
@@ -204,14 +213,11 @@ namespace Adminthulhu {
                             select pair;
 
                 count = items.Count ();
-                for (int i = 0; i < Math.Min (count, UserGameMonitor.MAX_GAMES_TO_DISPLAY); i++) {
-                    if (all.Length < 1900)
-                        all += items.ElementAt (i).Key + " - Players: " + items.ElementAt (i).Value + "\n";
-                    else
-                        break;
+                for (int i = 0; i < count; i++) {
+                    all += Utility.UniformStrings (items.ElementAt (i).Key, "Players: " + items.ElementAt (i).Value + "\n", " - ");
                 }
-                all += "```";
-                Program.messageControl.SendMessage (e, all, false);
+                Program.messageControl.SendMessage (e, "All games played on this server:", false);
+                Program.messageControl.SendMessage (e.Channel, all, false, "```");
             }
             return Task.CompletedTask;
         }

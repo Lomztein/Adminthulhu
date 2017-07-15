@@ -13,7 +13,7 @@ namespace Adminthulhu {
 
         private static string [ ] unicodeEmojis = new string [ ] { "1⃣", "2⃣", "3⃣", "4⃣", "5⃣", "6⃣", "7⃣", "8⃣", "9⃣", "🔟" };
 
-        public static List<Game> allGames = new List<Game>() {
+        public static List<Game> allGames = new List<Game> () {
             /*new Game ("Overwatch"),
             new Game ("GMod"),
             new Game ("Counter Strike: GO"),
@@ -37,15 +37,12 @@ namespace Adminthulhu {
             new Game ("Robot Roller-Derby Disco Dodgeball"),*/
         };
 
-        public static Game[] games;
+        public static Game [ ] games;
         public static List<Vote> votes;
 
-        public static string votesFileName = "votes";
-        public static string allGamesFileName = "allgames";
-        public static string gamesFileName = "games";
-        public static string statusFileName = "status";
+        public static string dataFileName = "weeklyevent";
 
-        public static DayOfWeek voteStartDay = DayOfWeek.Friday;
+        public static DayOfWeek voteStartDay = DayOfWeek.Monday;
         public static DayOfWeek voteEndDay = DayOfWeek.Thursday;
         public static string eventDayName = "friday";
         public static int daysBetween = 1;
@@ -60,14 +57,18 @@ namespace Adminthulhu {
         public static Game highestGame = null;
 
         public static ulong votingMessageID = 0;
+        public static ulong joinMessageID;
 
         public int eventHour = 20;
 
         public async Task Initialize(DateTime time) {
-            votes = SerializationIO.LoadObjectFromFile<List<Vote>> (Program.dataPath + Program.eventDirectory + votesFileName + Program.gitHubIgnoreType);
-            games = SerializationIO.LoadObjectFromFile<Game [ ]> (Program.dataPath + Program.eventDirectory + gamesFileName + Program.gitHubIgnoreType);
-            votingMessageID = SerializationIO.LoadObjectFromFile<ulong> (Program.dataPath + Program.eventDirectory + statusFileName + Program.gitHubIgnoreType);
-            allGames = SerializationIO.LoadObjectFromFile<List<Game>> (Program.dataPath + Program.eventDirectory + "allGames" + Program.gitHubIgnoreType); // At some point you just stop caring.
+            Data loadedData = SerializationIO.LoadObjectFromFile<Data> (Program.dataPath + dataFileName + Program.gitHubIgnoreType);
+
+            votes = loadedData.votes;
+            games = loadedData.games;
+            votingMessageID = loadedData.votingMessageID;
+            joinMessageID = loadedData.joinMessageID;
+            allGames = loadedData.allGames;
 
             if (allGames == null)
                 allGames = new List<Game> ();
@@ -90,7 +91,7 @@ namespace Adminthulhu {
             return unicodeEmojis [ index ];
         }
 
-        private static void OnReactionChanged (Cacheable<IUserMessage, ulong> message, ISocketMessageChannel channel, SocketReaction reaction, bool add) {
+        private static void OnReactionChanged(Cacheable<IUserMessage, ulong> message, ISocketMessageChannel channel, SocketReaction reaction, bool add) {
             if (reaction.UserId == 192707822876622850) // Hardcoded to avoid selv-voting ftw.
                 return;
 
@@ -113,24 +114,26 @@ namespace Adminthulhu {
                     message.Value.RemoveReactionAsync (reaction.Emote, message.Value.Author);
                 }
             }
+
+            if (message.Id == joinMessageID) {
+                if (reaction.Emote.Name == "🗓") {
+                    DiscordEvents.JoinEvent (reaction.UserId, "Friday Event");
+                    Program.messageControl.SendMessage (Utility.GetServer ().GetUser (reaction.UserId), "Thank you for joining the upcoming friday event, we are looking forward for your sacrifice!");
+                }
+            }
         }
 
         public static void SaveData() {
-            SerializationIO.SaveObjectToFile(Program.dataPath + Program.eventDirectory + votesFileName + Program.gitHubIgnoreType, votes);
-            SerializationIO.SaveObjectToFile(Program.dataPath + Program.eventDirectory + gamesFileName + Program.gitHubIgnoreType, games);
-            SerializationIO.SaveObjectToFile(Program.dataPath + Program.eventDirectory + statusFileName + Program.gitHubIgnoreType, votingMessageID);
-            SerializationIO.SaveObjectToFile (Program.dataPath + Program.eventDirectory + "allGames" + Program.gitHubIgnoreType, allGames);
+            SerializationIO.SaveObjectToFile (Program.dataPath + Program.eventDirectory + dataFileName + Program.gitHubIgnoreType, new Data (games, votes, votingMessageID, joinMessageID, allGames));
         }
 
         public Task OnDayPassed(DateTime time) {
             if (votes == null) {
                 if (time.DayOfWeek == voteStartDay) {
-                    ChatLogger.DebugLog ("Beginning new event vote..");
                     BeginNewVote ();
                 }
-            }else{
+            } else {
                 if (time.DayOfWeek == voteEndDay) {
-                    ChatLogger.DebugLog ("Counting event votes..");
                     CountVotes ();
                 }
             }
@@ -141,15 +144,15 @@ namespace Adminthulhu {
             return Task.CompletedTask;
         }
 
-        public Task OnHourPassed ( DateTime time ) {
+        public Task OnHourPassed(DateTime time) {
             return Task.CompletedTask;
         }
 
-        public Task OnSecondPassed ( DateTime time ) {
+        public Task OnSecondPassed(DateTime time) {
             return Task.CompletedTask;
         }
 
-        private void CountVotes () {
+        private async void CountVotes() {
             status = WeeklyEventStatus.Waiting;
 
             highestGame = null;
@@ -167,9 +170,11 @@ namespace Adminthulhu {
             DiscordEvents.CreateEvent ("Friday Event", eventDay, highestGame.name + " has been chosen by vote!");
 
             SocketGuildChannel mainChannel = Utility.GetMainChannel ();
-            Program.messageControl.SendMessage (mainChannel as SocketTextChannel, "The game for this fridays event has been chosen by vote: **" + highestGame.name + "**! It can be joined using command `!event join friday event`", true);
+            RestUserMessage joinMessage = await Program.messageControl.AsyncSend (mainChannel as SocketTextChannel, "The game for this fridays event has been chosen by vote: **" + highestGame.name + "**! It can be joined by pressing the calender below!", true);
+            joinMessageID = joinMessage.Id;
+            joinMessage.AddReactionAsync (new Emoji ("🗓"));
 
-            Dictionary<ulong, bool> didWin = new Dictionary<ulong, bool>();
+            Dictionary <ulong, bool> didWin = new Dictionary<ulong, bool> ();
 
             foreach (Vote vote in votes) {
                 if (!didWin.ContainsKey (vote.voterID))
@@ -188,12 +193,12 @@ namespace Adminthulhu {
                 if (!pair.Value) {
                     SocketGuildUser user = Utility.GetServer ().GetUser (pair.Key);
                     // AutomatedEventHandling seriously lacks wrapper functions.
-                    Program.messageControl.AskQuestion (user, "The friday event you voted for sadly lost to **" + highestGame.name + "** , do you want to join the event anyways?",
+                    await Program.messageControl.AskQuestion (user, "The friday event you voted for sadly lost to **" + highestGame.name + "** , do you want to join the event anyways?",
                         delegate () {
                             DiscordEvents.JoinEvent (pair.Key, "friday event");
-                            Program.messageControl.SendMessage (user, "You have joined the friday event succesfully!"); 
-                        } );
-                }else {
+                            Program.messageControl.SendMessage (user, "You have joined the friday event succesfully!");
+                        });
+                } else {
                     DiscordEvents.JoinEvent (pair.Key, "friday event");
                 }
             }
@@ -201,13 +206,13 @@ namespace Adminthulhu {
             games = null;
             votes = null;
 
-            UpdateVoteMessage (false);
+            await UpdateVoteMessage (false);
             SaveData ();
 
             ChatLogger.DebugLog ("Ending counting of new votes..");
         }
 
-        private async Task BeginNewVote () {
+        private async Task BeginNewVote() {
             status = WeeklyEventStatus.Voting;
 
             for (int i = 0; i < allGames.Count; i++) {
@@ -221,7 +226,7 @@ namespace Adminthulhu {
 
             List<Game> selectedGames = new List<Game> ();
             Random rand = new Random ();
-            games = new Game[gamesPerWeek];
+            games = new Game [ gamesPerWeek ];
 
             try {
 
@@ -259,8 +264,6 @@ namespace Adminthulhu {
 
             Program.messageControl.SendMessage (mainChannel as SocketTextChannel, Utility.GetServer ().EveryoneRole.Mention + "! A new vote for next friday event has begun, see pinned messages in <#188106821154766848> for votesheet.", true);
             SaveData ();
-
-            ChatLogger.DebugLog ("Ending beginning of new vote..");
         }
 
         public static bool VoteForGame(ulong userID, int id) {
@@ -268,7 +271,7 @@ namespace Adminthulhu {
             List<Vote> userVotes;
 
             if (HasReachedVoteLimit (userID, out userVotes)) {
-                string locText = "You've already voted for " + votesPerPerson + " games, you'll have to remove one vote by removing a reaction, or by using `!event removevote <id>` before you can place another.";
+                string locText = "You've already voted for " + votesPerPerson + " games, you'll have to remove one vote by removing a reaction before you can place another.";
                 Program.messageControl.SendMessage (user, locText);
                 return false;
             }
@@ -282,7 +285,7 @@ namespace Adminthulhu {
             }
 
             votes.Add (new Vote (userID, id));
-            games[id].votes++;
+            games [ id ].votes++;
 
             UpdateVoteMessage (false);
             SaveData ();
@@ -327,12 +330,12 @@ namespace Adminthulhu {
             SaveData ();
         }
 
-        public static bool RemoveVote (ulong userID, int gameID) {
+        public static bool RemoveVote(ulong userID, int gameID) {
             Vote vote = votes.Find (x => x.voterID == userID && x.votedGameID == gameID);
             if (vote == null)
                 return false;
             else {
-                games[gameID].votes--;
+                games [ gameID ].votes--;
                 votes.Remove (vote);
             }
 
@@ -366,8 +369,6 @@ namespace Adminthulhu {
                 }
             }
 
-            ChatLogger.Log ("Updating vote message.");
-
             try {
                 if (message == null || forceNew) {
 
@@ -392,6 +393,22 @@ namespace Adminthulhu {
                 }
             } catch (Exception e) {
                 ChatLogger.DebugLog (e.Message + " - " + e.StackTrace);
+            }
+        }
+
+        public class Data {
+            public Game [ ] games;
+            public List<Game> allGames;
+            public List<Vote> votes;
+            public ulong votingMessageID;
+            public ulong joinMessageID;
+
+            public Data(Game[] _games, List<Vote> _votes, ulong _votingMessageID, ulong _joinMessageID, List<Game> _allGames) {
+                games = _games;
+                allGames = _allGames;
+                votes = _votes;
+                votingMessageID = _votingMessageID;
+                joinMessageID = _joinMessageID;
             }
         }
 

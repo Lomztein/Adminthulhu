@@ -10,18 +10,19 @@ using Discord.Rest;
 namespace Adminthulhu {
 
     public class MessageControl {
-        public static int maxCharacters = 2000;
 
-        // Honestly I have no clue if this works properly, as it is kind of difficult to test out.
-        private string[] SplitMessage (string message) {
+        public static int maxCharacters = 2000;
+        public Dictionary<ulong, BookMessage> bookMessages = new Dictionary<ulong, BookMessage>();
+
+        // Honestly I have no clue if this works properly, as it is kind of difficult to test out. Sorrounder is placed on the start and end of the message.
+        private string[] SplitMessage (string message, string sorrounder) {
             List<string> splitted = new List<string> ();
 
             int counted = 0;
-
             while (message.Length > 0) {
 
                 // Give some wiggle room, to avoid any shenanagens.
-                if (counted > maxCharacters - 10) {
+                if (counted > maxCharacters - (10 + sorrounder.Length * 2)) {
 
                     int spaceSearch = counted;
                     while (message[spaceSearch] != '\n') {
@@ -29,13 +30,13 @@ namespace Adminthulhu {
                     }
 
                     string substring = message.Substring (0, spaceSearch);
-                    splitted.Add (substring);
+                    splitted.Add (sorrounder + substring + sorrounder);
                     message = message.Substring (spaceSearch);
 
                     counted = 0;
                 } else if (counted >= message.Length) {
 
-                    splitted.Add (message);
+                    splitted.Add (sorrounder + message + sorrounder);
                     message = "";
                 }
 
@@ -46,10 +47,20 @@ namespace Adminthulhu {
         }
 
         public MessageControl () {
-            Program.discordClient.ReactionAdded += CheckForQuestions;
+            Program.discordClient.ReactionAdded += OnReactionAdded;
         }
 
-        private Task CheckForQuestions(Cacheable<IUserMessage, ulong> message, ISocketMessageChannel channel, SocketReaction reaction) {
+        public async void ConstructBookMessage(RestUserMessage message, string[] pages) {
+            bookMessages.Add (message.Id, new BookMessage (message.Channel.Id, message.Id, pages));
+            await message.AddReactionAsync (new Emoji ("⬅"));
+            await message.AddReactionAsync (new Emoji ("➡"));
+            bookMessages [ message.Id ].TurnPage (0);
+        }
+
+        private async Task OnReactionAdded(Cacheable<IUserMessage, ulong> message, ISocketMessageChannel channel, SocketReaction reaction) {
+            if (reaction.User.Value.IsBot)
+                return;
+
             Question question = FindByMessageID (reaction.UserId, message.Id);
             ChatLogger.Log (reaction.User.Value.Username + " responded to a question with " + reaction.Emote.Name);
             if (question != null) {
@@ -60,7 +71,19 @@ namespace Adminthulhu {
                     askedUsers [ reaction.UserId ].Remove (question);
                 }
             }
-            return Task.CompletedTask;
+
+            if (bookMessages.ContainsKey (message.Id)) {
+                IMessage iMessage = await bookMessages [ message.Id ].GetMessage ();
+                if (reaction.Emote.Name == "⬅") {
+                    bookMessages [ message.Id ].TurnPage (-1);
+                    await (iMessage as RestUserMessage).RemoveReactionAsync (new Emoji ("⬅"), reaction.User.Value);
+                } else if (reaction.Emote.Name == "➡") {
+                    bookMessages [ message.Id ].TurnPage (1);
+                    await (iMessage as RestUserMessage).RemoveReactionAsync (new Emoji ("➡"), reaction.User.Value);
+                }
+
+            }
+            return;
         }
 
         public Question FindByMessageID(ulong userID, ulong messageID) {
@@ -73,48 +96,54 @@ namespace Adminthulhu {
             return null;
         }
 
-        /// <summary>
-        /// Sends a message lol.
-        /// </summary>
-        /// <param name="Content event arguments"></param>
-        /// <param name="message"></param>
-        /// <returns The same message as is input, for laziness></returns>
-        public string SendMessage(SocketMessage e, string message, bool allowInMain) {
-            return SendMessage (e.Channel, message, allowInMain);
+        public void SendMessage(SocketMessage e, string message, bool allowInMain) {
+            SendMessage (e.Channel, message, allowInMain);
         }
 
-        public string SendMessage ( ISocketMessageChannel e, string message, bool allowInMain) {
-            string[] messages = SplitMessage (message);
-            //messages.Add(new MessageTimer(e, message, 5));
-            for (int i = 0; i < messages.Length; i++) {
-                AsyncSend (e, messages[i], allowInMain);
-            }
+        public async void SendMessage ( ISocketMessageChannel e, string message, bool allowInMain, string splitSorrounder = "") {
+            if (message.Length == 0)
+                return;
 
-            return message;
+            string[] messages = SplitMessage (message, splitSorrounder);
+            Task<RestUserMessage> rMessage = AsyncSend (e, messages[0], allowInMain);
+            await rMessage;
+
+            if (messages.Length > 1) // Might just want to put this check into the function istead.
+                ConstructBookMessage (rMessage.Result, messages);
         }
 
-        public async Task<IUserMessage> SendMessage (SocketGuildUser e, string message) {
+        public async Task<IUserMessage> SendMessage (SocketGuildUser e, string message, string splitSorrounder = "") {
             IUserMessage finalMessage = null;
 
-            string[] split = SplitMessage (message);
+            string[] split = SplitMessage (message, splitSorrounder);
 
-            Task<IDMChannel> channel = e.GetOrCreateDMChannelAsync ();
-            IDMChannel result = await channel;
+            try {
+                Task<IDMChannel> channel = e.GetOrCreateDMChannelAsync ();
+                IDMChannel result = await channel;
 
-            for (int i = 0; i < split.Length; i++) {
-                finalMessage = await result.SendMessageAsync (split[i]);
+                finalMessage = await result.SendMessageAsync (split[0]);
+                if (split.Length > 1)
+                    ConstructBookMessage (finalMessage as RestUserMessage, split);
+
+            } catch (Exception exception) {
+                ChatLogger.Log ("Failed to send message: " + exception.Message + " - " + exception.StackTrace);
             }
             return finalMessage;
         }
 
-        public async Task<RestUserMessage> AsyncSend (ISocketMessageChannel e, string message, bool allowInMain) {
+        public async Task<RestUserMessage> AsyncSend(ISocketMessageChannel e, string message, bool allowInMain) {
             ChatLogger.Log ("Sending a message.");
-            if (!allowInMain && e.Name == Program.mainTextChannelName) {
-                return null;
-            } else if (message.Length > 0) {
-                Task<RestUserMessage> messageTask = e.SendMessageAsync (message);
-                await messageTask;
-                return messageTask.Result;
+            try {
+
+                if (!allowInMain && e.Name == Program.mainTextChannelName) {
+                    return null;
+                } else if (message.Length > 0) {
+                    Task<RestUserMessage> messageTask = e.SendMessageAsync (message);
+                    await messageTask;
+                    return messageTask.Result;
+                }
+            } catch (Exception exception) {
+                ChatLogger.Log ("Failed to send message: " + exception.Message + " - " + exception.StackTrace);
             }
             return null;
         }
@@ -170,6 +199,44 @@ namespace Adminthulhu {
                 this.ifYes = ifYes;
             }
 
+        }
+
+        public class BookMessage {
+            ulong channelID;
+            ulong messageID;
+
+            int currentPage;
+            string[] content;
+
+            public BookMessage(ulong _channelID, ulong _messageID, string[] newContent) {
+                channelID = _channelID;
+                messageID = _messageID;
+                content = newContent;
+            }
+
+            public async void TurnPage(int pagesToTurn) {
+                currentPage = (currentPage + pagesToTurn) % content.Length;
+                if (currentPage < 0)
+                    currentPage = content.Length - 1;
+                IMessage message = await GetMessage ();
+                await (message as RestUserMessage).ModifyAsync (delegate (MessageProperties properties) {
+                    properties.Content = "Page " + (currentPage + 1) + "/" + content.Length + "\n" + content [ currentPage ];
+                });
+            }
+
+            public async Task<IMessage> GetMessage() {
+                SocketTextChannel channel = Utility.GetServer ().GetChannel (channelID) as SocketTextChannel;
+                if (channel != null) {
+                    return await channel.GetMessageAsync (messageID);
+                }
+                SocketUser user = Utility.GetServer ().GetUser (messageID);
+                if (user != null) {
+                    IDMChannel userChannel = await user.GetOrCreateDMChannelAsync ();
+                    return await userChannel.GetMessageAsync (messageID);
+                }
+
+                return null;
+            }
         }
     }
 }

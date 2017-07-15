@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
 using System.Globalization;
+using Newtonsoft.Json;
 
 namespace Adminthulhu {
     public static class UserSettings {
@@ -28,6 +29,10 @@ namespace Adminthulhu {
                 List<Setting> set = userSettings[userID];
                 foreach (Setting s in set) {
                     if (s.name == key) {
+                        Newtonsoft.Json.Linq.JObject obj = s.value as Newtonsoft.Json.Linq.JObject;
+                        if (obj != null) {
+                            s.value = JsonConvert.DeserializeObject<T> (obj.ToString ());
+                        }
                         return (T)s.value;
                     }
                 }
@@ -42,7 +47,6 @@ namespace Adminthulhu {
                 foreach (Setting s in set) {
                     if (s.name == key) {
                         s.value = value;
-                        Console.WriteLine ("Found and changed..");
                         userSettings [ userID ] = set;
                         SaveSettings ();
                         return;

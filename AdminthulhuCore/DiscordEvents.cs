@@ -40,8 +40,6 @@ namespace Adminthulhu {
                 if (e.eventState == Event.EventState.Awaiting) {
                     if (now > e.eventTime) {
                         StartEvent (e);
-
-                        toRemove.Add (e);
                         SaveEvents ();
                     }
 
@@ -56,6 +54,7 @@ namespace Adminthulhu {
                 }
             }
 
+            toRemove.AddRange (upcomingEvents.Where (x => x.eventState == Event.EventState.Ended));
             foreach (Event r in toRemove)
                 upcomingEvents.Remove (r);
             return Task.CompletedTask;
