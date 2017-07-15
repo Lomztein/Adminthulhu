@@ -124,7 +124,7 @@ namespace Adminthulhu {
         }
 
         public static void SaveData() {
-            SerializationIO.SaveObjectToFile (Program.dataPath + Program.eventDirectory + dataFileName + Program.gitHubIgnoreType, new Data (games, votes, votingMessageID, joinMessageID, allGames));
+            SerializationIO.SaveObjectToFile (Program.dataPath + dataFileName + Program.gitHubIgnoreType, new Data (games, votes, votingMessageID, joinMessageID, allGames));
         }
 
         public Task OnDayPassed(DateTime time) {
@@ -208,8 +208,6 @@ namespace Adminthulhu {
 
             await UpdateVoteMessage (false);
             SaveData ();
-
-            ChatLogger.DebugLog ("Ending counting of new votes..");
         }
 
         private async Task BeginNewVote() {
@@ -229,8 +227,6 @@ namespace Adminthulhu {
             games = new Game [ gamesPerWeek ];
 
             try {
-
-
                 // A C++ programmer would possibly kill me for this memory management.
                 for (int i = 0; i < gamesPerWeek; i++) {
                     int index = rand.Next (0, highlightedGames.Count > 0 ? highlightedGames.Count : possibilities.Count);
@@ -262,7 +258,7 @@ namespace Adminthulhu {
 
             SocketGuildChannel mainChannel = Utility.GetMainChannel ();
 
-            Program.messageControl.SendMessage (mainChannel as SocketTextChannel, Utility.GetServer ().EveryoneRole.Mention + "! A new vote for next friday event has begun, see pinned messages in <#188106821154766848> for votesheet.", true);
+            Program.messageControl.SendMessage (mainChannel as SocketTextChannel, Utility.GetServer ().EveryoneRole.Mention + "! A new vote for next friday event has begun, see <#188106821154766848> for votesheet.", true);
             SaveData ();
         }
 

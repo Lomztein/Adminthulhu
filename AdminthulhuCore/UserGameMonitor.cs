@@ -14,7 +14,7 @@ namespace Adminthulhu {
         public const int MAX_GAMES_TO_DISPLAY = 20;
 
         public static void Initialize () {
-            userGames = SerializationIO.LoadObjectFromFile < Dictionary<ulong, List<string>>> (Program.dataPath + fileName);
+            userGames = SerializationIO.LoadObjectFromFile < Dictionary<ulong, List<string>>> (Program.dataPath + fileName + Program.gitHubIgnoreType);
             if (userGames == null)
                 userGames = new Dictionary<ulong, List<string>> ();
 
@@ -54,7 +54,7 @@ namespace Adminthulhu {
                 }
 
                 if (doSave)
-                    SerializationIO.SaveObjectToFile (Program.dataPath + fileName, userGames);
+                    SerializationIO.SaveObjectToFile (Program.dataPath + fileName + Program.gitHubIgnoreType, userGames);
             }
             return result;
         }

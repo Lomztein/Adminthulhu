@@ -59,15 +59,15 @@ namespace Adminthulhu {
 
         public virtual string GetHelp () {
             string argExists = argHelp.Length > 0 ? " " : "";
-            string text = helpPrefix + command + " " + argExists + argHelp + " - " + longHelp;
+            string text = "`" + helpPrefix + command + argExists + argHelp + " - " + longHelp;
             if (isAdminOnly)
                 text += " - ADMIN ONLY";
-            return text;
+            return text + "`";
         }
 
         public virtual string GetShortHelp () {
             string argExists = argHelp.Length > 0 ? " " : "";
-            string text = shortHelp + "\t\t" + helpPrefix + command + argExists + argHelp;
+            string text = "`" + shortHelp + "\t\t" + helpPrefix + command + argExists + argHelp + "`";
             return text;
         }
 

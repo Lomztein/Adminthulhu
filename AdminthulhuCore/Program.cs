@@ -105,7 +105,7 @@ namespace Adminthulhu
             discordClient.MessageReceived += (e) => {
 
                 Console.WriteLine (Utility.GetChannelName (e) + " says: " + e.Content);
-                if (e.Author != discordClient.CurrentUser && e.Content.Length > 0 && e.Content[0] == commandChar) {
+                if (e.Author.Id != discordClient.CurrentUser.Id && e.Content.Length > 0 && e.Content[0] == commandChar) {
                     string message = e.Content;
 
                     if (message.Length > 0) {
@@ -280,9 +280,10 @@ namespace Adminthulhu
         public static bool FindAndExecuteCommand (SocketMessage e, string commandName, List<string> arguements, Command[] commandList) {
             for (int i = 0; i < commandList.Length; i++) {
                 if (commandList[i].command == commandName) {
-                    if (arguements.Count > 0 && arguements [ 0 ] == "?")
-                        messageControl.SendMessage (e as SocketUserMessage, commandList [ i ].GetHelp (), false);
-                    else
+                    if (arguements.Count > 0 && arguements [ 0 ] == "?") {
+                        Command command = commandList [ i ];
+                        messageControl.SendMessage (e as SocketUserMessage, command.GetHelp (), false);
+                    } else
                         commandList [ i ].ExecuteCommand (e as SocketUserMessage, arguements);
                     return true;
                 }

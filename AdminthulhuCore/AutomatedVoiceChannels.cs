@@ -151,8 +151,8 @@ namespace Adminthulhu {
 
                 // Trying to optimize API calls here, just to spare those poor souls at the Discord API HQ stuff
                 int mixedLimit = highest >= 2 ? 2 : 1;
-                string gameName = numPlayers.Where (x => x.Value >= mixedLimit).Count () >= mixedLimit ? "Mixed Games" : highestGame.Name;
-                string nameLetter = voiceChannel.name [ 0 ] + ""; // Eeeeeeuhhh, yes.
+                string gameName = numPlayers.Where (x => x.Value >= mixedLimit).Count () >= mixedLimit && numPlayers.Count > 1 ? "Mixed Games" : highestGame.Name;
+                char nameLetter = voiceChannel.name [ 0 ]; // Eeeeeeuhhh, yes.
 
                 string newName = gameName != "" ? tagsString + nameLetter + nameLetter + " - " + gameName : tagsString + voiceChannel.name;
                 if (voiceChannel.customName != "")
@@ -160,7 +160,9 @@ namespace Adminthulhu {
 
                 if (voice.Name != newName) {
                     ChatLogger.Log ("Channel name updated: " + newName);
-                    await voice.ModifyAsync ((delegate (VoiceChannelProperties properties) { properties.Name = newName; }));
+                    await voice.ModifyAsync ((delegate (VoiceChannelProperties properties) {
+                        properties.Name = newName;
+                    }));
                 }
                 voiceChannel.CheckLocker ();
             }
