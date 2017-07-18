@@ -118,7 +118,6 @@ namespace Adminthulhu {
         public static SocketGuild GetServer() {
             if (Program.discordClient != null) {
                 SocketGuild guild = Program.discordClient.GetGuild (Program.serverID);
-                Console.WriteLine (Program.serverID);
                 return guild;
             }
             return null;

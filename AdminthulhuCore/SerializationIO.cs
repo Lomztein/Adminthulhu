@@ -24,10 +24,10 @@ namespace Adminthulhu {
 
                     return (T)data;
                 }
-                Console.WriteLine ("Failed to load file at " + path);
+                ChatLogger.Log ("Failed to load file at " + path);
                 return default (T);
             } catch (Exception e) {
-                Console.WriteLine ("Error: " + e.Message);
+                ChatLogger.Log ("Error: " + e.Message);
                 if (critical)
                     throw e;
                 else
@@ -39,12 +39,12 @@ namespace Adminthulhu {
             try {
                 StreamWriter writer = File.CreateText (fileName);
                 
-                string jsonString = JsonConvert.SerializeObject (obj, format == true ? Formatting.Indented : Formatting.None);
+                string jsonString = JsonConvert.SerializeObject (obj, format ? Formatting.Indented : Formatting.None);
                 writer.Write (jsonString);
 
                 writer.Dispose ();
             } catch (Exception e) {
-                Console.WriteLine ("Error: Failed to save file: " + e.Message);
+                ChatLogger.Log ("Error: Failed to save file: " + e.Message);
             }
         }
 

@@ -6,15 +6,22 @@ using Discord.WebSocket;
 
 namespace Adminthulhu
 {
-    public class AprilFools : IClockable {
+    public class AprilFools : IClockable, IConfigurable {
 
         public DateTime day = new DateTime (2000, 4, 1);
         public ulong ignoreUserID = 0;
+        public ulong activeRoleID = 0;
 
         public async Task Initialize(DateTime time) {
             await Task.Delay (10000);
+            LoadConfiguration ();
+            BotConfiguration.AddConfigurable (this);
             Program.discordClient.MessageReceived += DiscordClient_MessageReceived; // Eh whatever
             OnHourPassed (DateTime.Now);
+        }
+
+        public void LoadConfiguration() {
+            activeRoleID = BotConfiguration.GetSetting<ulong> ("ActiveRoleID", 0);
         }
 
         public Task OnDayPassed(DateTime time) {
@@ -23,7 +30,7 @@ namespace Adminthulhu
 
         public async Task OnHourPassed(DateTime time) {
             await Task.Delay (10000);
-            SocketRole role = Utility.GetServer ().GetRole (273017450390487041); // Yay for hardcoding!
+            SocketRole role = Utility.GetServer ().GetRole (activeRoleID); // Yay for hardcoding!
             IEnumerable<SocketGuildUser> activeUsers = Utility.GetServer ().Users.Where (x => x.Roles.Contains (role));
             Random random = new Random ();
 

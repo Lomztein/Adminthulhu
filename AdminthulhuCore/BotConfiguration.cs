@@ -17,6 +17,11 @@ namespace Adminthulhu {
             LoadSettings ();
             if (settings == null)
                 settings = new Dictionary<string, object>();
+            else
+                SerializationIO.SaveObjectToFile (Program.dataPath + settingsFileName + "_BACKUP" + Program.gitHubIgnoreType, settings, true);
+        }
+
+        public static void PostInit() {
             SaveSettings ();
         }
 
@@ -77,7 +82,6 @@ namespace Adminthulhu {
             } else {
                 settings.Add (key, value);
             }
-            SaveSettings ();
         }
     }
 

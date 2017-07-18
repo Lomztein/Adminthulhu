@@ -7,7 +7,7 @@ using Discord;
 using Discord.WebSocket;
 
 namespace Adminthulhu {
-    public class Command {
+    public class Command : IConfigurable {
 
         public enum Catagory {
             None, Utility, Fun, Set, Admin
@@ -64,7 +64,8 @@ namespace Adminthulhu {
         }
 
         public virtual void Initialize () {
-            commandEnabled = BotConfiguration.GetSetting<bool> ("Command" + command.Substring (0,1).ToUpper () + command.Substring (1) + "Enabled", false); // Gotta capitalize that shite.
+            LoadConfiguration ();
+            BotConfiguration.AddConfigurable (this);
         }
 
         public virtual string GetHelp () {
@@ -87,6 +88,10 @@ namespace Adminthulhu {
 
         public virtual string GetOnlyName() {
             return shortHelp; // Wrapper functions ftw
+        }
+
+        public virtual void LoadConfiguration() {
+            commandEnabled = BotConfiguration.GetSetting<bool> ("Command" + command.Substring (0, 1).ToUpper () + command.Substring (1) + "Enabled", false); // Gotta capitalize that shite.
         }
     }
 }

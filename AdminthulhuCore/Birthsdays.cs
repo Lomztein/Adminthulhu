@@ -73,7 +73,7 @@ namespace Adminthulhu {
             try {
                 age = DateTime.MinValue.Add (DateTime.Now - new DateTime (date.day.Year, date.day.Month, date.day.Day)).Year - DateTime.MinValue.Year;
             } catch (IndexOutOfRangeException) {
-                Console.WriteLine (user.Username + " has somehow set their birthday to be before now. wat.");
+                ChatLogger.Log (user.Username + " has somehow set their birthday to be before now. wat.");
             }
 
             string ageSuffix = "'th";
