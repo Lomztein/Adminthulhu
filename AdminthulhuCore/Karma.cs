@@ -7,7 +7,7 @@ using Discord.WebSocket;
 using Discord;
 
 namespace Adminthulhu {
-    public class Karma {
+    public class Karma : IConfigurable {
 
         public static Dictionary<ulong, long> karmaCollection;
         public static string karmaFileName = "karmaCollection";
@@ -15,12 +15,14 @@ namespace Adminthulhu {
         public static string upvote = "upvote";
         public static string downvote = "downvote";
 
-        public Karma () {
+        public Karma() {
+            LoadConfiguration ();
+            BotConfiguration.AddConfigurable (this);
             karmaCollection = SerializationIO.LoadObjectFromFile<Dictionary<ulong, long>> (Program.dataPath + karmaFileName + Program.gitHubIgnoreType);
             if (karmaCollection == null)
                 karmaCollection = new Dictionary<ulong, long> ();
 
-            Program.discordClient.ReactionAdded += async ( message, channel, reaction ) => {
+            Program.discordClient.ReactionAdded += async (message, channel, reaction) => {
 
                 IMessage iMessage = await channel.GetMessageAsync (message.Id);
 
@@ -31,8 +33,8 @@ namespace Adminthulhu {
                 }
             };
 
-            Program.discordClient.ReactionRemoved += async ( message, channel, reaction ) => {
-                
+            Program.discordClient.ReactionRemoved += async (message, channel, reaction) => {
+
                 IMessage iMessage = await channel.GetMessageAsync (message.Id);
 
                 if (reaction.Emote.Name == upvote) {
@@ -54,6 +56,11 @@ namespace Adminthulhu {
         public static long GetKarma (ulong userID) {
             return karmaCollection.ContainsKey (userID) ? karmaCollection[userID] : 0;
         }
+
+        public void LoadConfiguration() {
+            upvote = BotConfiguration.GetSetting("UpvoteEmojiName", "upvote");
+            downvote = BotConfiguration.GetSetting("DownvoteEmojiName", "downvote");
+        }
     }
 
     public class CKarma : Command {
@@ -62,6 +69,7 @@ namespace Adminthulhu {
             shortHelp = "Show karma.";
             longHelp = "Shows karma of <me/user>.";
             argumentNumber = 1;
+            catagory = Catagory.Fun;
         }
 
         public override Task ExecuteCommand ( SocketUserMessage e, List<string> arguments ) {

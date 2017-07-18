@@ -9,7 +9,7 @@ using Newtonsoft.Json;
 namespace Adminthulhu {
     class SerializationIO {
 
-        public static T LoadObjectFromFile<T> ( string path ) {
+        public static T LoadObjectFromFile<T> ( string path, bool critical = false ) {
             try {
                 if (File.Exists (path)) {
                     
@@ -28,16 +28,19 @@ namespace Adminthulhu {
                 return default (T);
             } catch (Exception e) {
                 Console.WriteLine ("Error: " + e.Message);
-                return default (T);
+                if (critical)
+                    throw e;
+                else
+                    return default (T);
             }
         }
 
-        public static void SaveObjectToFile (string fileName, object obj) {
+        public static void SaveObjectToFile (string fileName, object obj, bool format = false) {
             try {
                 StreamWriter writer = File.CreateText (fileName);
                 
-                JsonSerializer serializer = new JsonSerializer ();
-                serializer.Serialize (writer, obj);
+                string jsonString = JsonConvert.SerializeObject (obj, format == true ? Formatting.Indented : Formatting.None);
+                writer.Write (jsonString);
 
                 writer.Dispose ();
             } catch (Exception e) {

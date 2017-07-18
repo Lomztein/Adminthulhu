@@ -15,6 +15,7 @@ namespace Adminthulhu {
             shortHelp = "Voice command set.";
             longHelp = "A set of commands specifically for voice channels.";
             commandsInSet = new Command[] { new CLock (), new CUnlock (), new CInvite (), new CMembers (), new CKick (), new CCallVoiceChannel (), new CLooking (), new CFull (), new CSetDesired (), new CCustomName () };
+            catagory = Catagory.Utility;
         }
     }
     class CLock : Command {

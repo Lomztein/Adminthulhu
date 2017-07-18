@@ -9,10 +9,11 @@ using Discord.WebSocket;
 namespace Adminthulhu {
     class CEmbolden : Command {
 
-        private char[] available = new char[] { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't'
+        private char[] available = new char[] { 'a', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't'
                                               , 'u', 'v', 'w', 'x', 'y', 'z'};
 
         private char[] numbers = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
+        private Dictionary<char, string> specifics = new Dictionary<char, string> ();
         private bool ignoreUnavailable = true;
 
         public CEmbolden () {
@@ -20,8 +21,10 @@ namespace Adminthulhu {
             shortHelp = "Embolden.";
             longHelp = "Makes your text much more bold, and kind of spammy.";
             argumentNumber = 1;
-
+            catagory = Catagory.Fun;
             availableInDM = true;
+
+            specifics.Add ('b', "🅱");
         }
 
         public override Task ExecuteCommand ( SocketUserMessage e, List<string> arguments ) {
@@ -49,7 +52,9 @@ namespace Adminthulhu {
                     }else {
                         char letter = inText.ToLower ()[i];
                         if (available.Contains (letter)) {
-                            outText += ":regional_indicator_" + inText.ToLower ()[i] + ": ";
+                            outText += ":regional_indicator_" + inText.ToLower () [ i ] + ": ";
+                        } else if (specifics.ContainsKey (letter)) {
+                            outText += specifics [ letter ];
                         } else if (numbers.Contains (letter)) {
                             outText += NumberToString (letter) + " ";
                         } else if (!ignoreUnavailable) {

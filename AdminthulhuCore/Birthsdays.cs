@@ -15,22 +15,23 @@ namespace Adminthulhu {
         public static List<Date> birthdays;
 
         public async Task Initialize(DateTime time) {
-            while (Utility.GetServer () == null)
-                await Task.Delay (1000);
 
-            IEnumerable<SocketGuildUser> users = Utility.GetServer ().Users;
-            birthdays = new List<Date> ();
+                while (Utility.GetServer () == null)
+                    await Task.Delay (1000);
 
-            foreach (SocketGuildUser u in users) {
-                try {
-                    // Heres to hoping no user ever has the ID 0.
-                    Date date = UserSettings.GetSetting<Date> (u.Id, "Birthday", null);
-                    if (date != null)
-                        birthdays.Add (date);
-                } catch (Exception fuck) {
-                    ChatLogger.Log (fuck.Message);
+                IEnumerable<SocketGuildUser> users = Utility.GetServer ().Users;
+                birthdays = new List<Date> ();
+
+                foreach (SocketGuildUser u in users) {
+                    try {
+                        // Heres to hoping no user ever has the ID 0.
+                        Date date = UserConfiguration.GetSetting<Date> (u.Id, "Birthday", null);
+                        if (date != null)
+                            birthdays.Add (date);
+                    } catch (Exception fuck) {
+                        ChatLogger.Log (fuck.Message);
+                    }
                 }
-            }
         }
 
         public Task OnHourPassed ( DateTime time ) {
@@ -48,7 +49,7 @@ namespace Adminthulhu {
                     if (DateTime.Now > dateThisYear && date.lastPassedYear != DateTime.Now.Year) {
                         AnnounceBirthday (date);
                         date.lastPassedYear = DateTime.Now.Year;
-                        UserSettings.SetSetting (date.userID, "Birthday", date);
+                        UserConfiguration.SetSetting (date.userID, "Birthday", date);
                     }
                 }
             }
@@ -114,7 +115,7 @@ namespace Adminthulhu {
 
             birthdays.Remove (oldDate);
             birthdays.Add (newDate);
-            UserSettings.SetSetting (userID, "Birthday", newDate);
+            UserConfiguration.SetSetting (userID, "Birthday", newDate);
         }
 
         public class Date {

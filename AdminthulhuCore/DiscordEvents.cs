@@ -44,7 +44,7 @@ namespace Adminthulhu {
                     }
 
                     foreach (ulong userID in e.eventMemberIDs) {
-                        if (e.eventTime.AddDays (UserSettings.GetSetting<int>(userID, "EventRemindTime, ", 2)) < now) {
+                        if (e.eventTime.AddDays (UserConfiguration.GetSetting<int>(userID, "EventRemindTime, ", 2)) < now) {
                             DateTime remindTime = new DateTime (now.Year, now.Month, now.Day, 12, 00, 0);
                             if (remindTime < now && e.lastRemind[userID].Day != remindTime.Day) {
                                 SendEventReminder (userID, e);
@@ -157,6 +157,7 @@ namespace Adminthulhu {
             shortHelp = "Event command set.";
             longHelp = "A set of commands about events.";
             commandsInSet = new Command[] { new CCreateEvent (), new CCancelEvent (), new CEditEvent (), new CJoinEvent (), new CLeaveEvent (), new CEventList (), new CEventMembers (), new CListEventGames () };
+            catagory = Catagory.Utility;
         }
     }
 

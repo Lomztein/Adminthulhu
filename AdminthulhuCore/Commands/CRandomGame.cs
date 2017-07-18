@@ -9,44 +9,23 @@ using Discord.WebSocket;
 namespace Adminthulhu {
     public class CRandomGame : Command {
 
-        public string[] games = new string[] {
-            "Overwatch",
-            "Team Fortress 2",
-            "Counter Strike: Global Offensive",
-            "Garry's Mod",
-            "Portal 2",
-            "Guns of Icarus",
-            "Rocket League",
-            "Brawlshalla",
-            "Battlefield",
-            "Left 4 Dead 2",
-            "PlanetSide 2",
-            "RollerCoaster Tycoon 2 Multiplayer",
-            "Killing Floor",
-            "Burnout Paradise",
-            "Tribes: Ascend",
-            "Terraria",
-            "Quake Live",
-            "Air Brawl",
-            "Duck Game",
-            "Toribash",
-            "Robocraft",
-            "TrackMania",
-            "Robot Roller-Derby Disco Dodgeball"
-        };
-
         public CRandomGame () {
             command = "whattoplay";
             shortHelp = "What to play?";
             longHelp = "Select a random game out from a list, that could be played.";
             argumentNumber = 0;
+            catagory = Catagory.Utility;
+        }
+
+        public override void Initialize() {
+            base.Initialize ();
         }
 
         public override Task ExecuteCommand ( SocketUserMessage e, List<string> arguments ) {
             base.ExecuteCommand (e, arguments);
             if (AllowExecution (e, arguments)) {
                 Random random = new Random ();
-                Program.messageControl.SendMessage (e, "I gloriously suggest " + games[random.Next (games.Length)], false);
+                Program.messageControl.SendMessage (e, "I gloriously suggest " + AutomatedWeeklyEvent.allGames[random.Next (AutomatedWeeklyEvent.allGames.Count)], false);
             }
             return Task.CompletedTask;
         }

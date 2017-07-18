@@ -9,24 +9,24 @@ using System.Globalization;
 using Newtonsoft.Json;
 
 namespace Adminthulhu {
-    public static class UserSettings {
+    public static class UserConfiguration {
 
         public static Dictionary<ulong, List<Setting>> userSettings;
         public static string settingsFileName = "usersettings";
 
-        public static void Initialize () {
+        public static void Initialize() {
             userSettings = SerializationIO.LoadObjectFromFile<Dictionary<ulong, List<Setting>>> (Program.dataPath + settingsFileName + Program.gitHubIgnoreType);
             if (userSettings == null)
                 userSettings = new Dictionary<ulong, List<Setting>> ();
         }
 
-        public static void SaveSettings () {
+        public static void SaveSettings() {
             SerializationIO.SaveObjectToFile (Program.dataPath + settingsFileName + Program.gitHubIgnoreType, userSettings);
         }
 
-        public static T GetSetting<T> (ulong userID, string key, object defaultValue) {
+        public static T GetSetting<T>(ulong userID, string key, object defaultValue) {
             if (userSettings.ContainsKey (userID)) {
-                List<Setting> set = userSettings[userID];
+                List<Setting> set = userSettings [ userID ];
                 foreach (Setting s in set) {
                     if (s.name == key) {
                         Newtonsoft.Json.Linq.JObject obj = s.value as Newtonsoft.Json.Linq.JObject;
@@ -41,9 +41,9 @@ namespace Adminthulhu {
             return (T)defaultValue;
         }
 
-        public static void SetSetting ( ulong userID, string key, object value ) {
+        public static void SetSetting(ulong userID, string key, object value) {
             if (userSettings.ContainsKey (userID)) {
-                List<Setting> set = userSettings[userID];
+                List<Setting> set = userSettings [ userID ];
                 foreach (Setting s in set) {
                     if (s.name == key) {
                         s.value = value;
@@ -60,7 +60,7 @@ namespace Adminthulhu {
             }
 
             userSettings.Add (userID, new List<Setting> ());
-            userSettings [userID].Add (new Setting (key, value));
+            userSettings [ userID ].Add (new Setting (key, value));
             SaveSettings ();
         }
 
@@ -74,7 +74,7 @@ namespace Adminthulhu {
             public string name;
             public object value;
 
-            public Setting (string _name, object _value) {
+            public Setting(string _name, object _value) {
                 name = _name;
                 value = _value;
             }
@@ -82,17 +82,17 @@ namespace Adminthulhu {
     }
 
     public class UserSettingsCommands : CommandSet {
-        public UserSettingsCommands () {
+        public UserSettingsCommands() {
             command = "settings";
             shortHelp = "User settings command set.";
             longHelp = "A set of commands about user settings.";
-            commandsInSet = new Command[] { new CReminderTime (), new CSetBirthday (), new CSetCulture (), new CToggleRole (), new CToggleInternational (), new CAutomaticLooking (),
+            commandsInSet = new Command [ ] { new CReminderTime (), new CSetBirthday (), new CSetCulture (), new CToggleRole (), new CToggleInternational (), new CAutomaticLooking (),
             new CToggleSnooping () };
         }
 
         public class CReminderTime : Command {
 
-            public CReminderTime () {
+            public CReminderTime() {
                 command = "evt";
                 shortHelp = "Event reminder timespan.";
                 argHelp = "<time in hours>";
@@ -100,24 +100,24 @@ namespace Adminthulhu {
                 argumentNumber = 1;
             }
 
-            public override Task ExecuteCommand ( SocketUserMessage e, List<string> arguments ) {
+            public override Task ExecuteCommand(SocketUserMessage e, List<string> arguments) {
                 base.ExecuteCommand (e, arguments);
                 if (AllowExecution (e, arguments)) {
                     int number;
-                    if (int.TryParse (arguments[0], out number)) {
-                        UserSettings.SetSetting (e.Author.Id, "EventRemindTime", number);
+                    if (int.TryParse (arguments [ 0 ], out number)) {
+                        UserConfiguration.SetSetting (e.Author.Id, "EventRemindTime", number);
                         Program.messageControl.SendMessage (e, "You have succesfully changed remind timespan to **" + number.ToString () + "**.", false);
-                    }else {
+                    } else {
                         Program.messageControl.SendMessage (e, "Failed to change event remind timespan", false);
                     }
                 }
-            return Task.CompletedTask;
+                return Task.CompletedTask;
             }
         }
 
         public class CSetBirthday : Command {
 
-            public CSetBirthday () {
+            public CSetBirthday() {
                 command = "birthday";
                 shortHelp = "Set birthday.";
                 argHelp = "<date (d-m-y h:m:s)>";
@@ -125,19 +125,19 @@ namespace Adminthulhu {
                 argumentNumber = 1;
             }
 
-            public override Task ExecuteCommand ( SocketUserMessage e, List<string> arguments ) {
+            public override Task ExecuteCommand(SocketUserMessage e, List<string> arguments) {
                 base.ExecuteCommand (e, arguments);
                 if (AllowExecution (e, arguments)) {
                     DateTime parse;
-                    if (Utility.TryParseDatetime (arguments[0], e.Author.Id, out parse)) {
+                    if (Utility.TryParseDatetime (arguments [ 0 ], e.Author.Id, out parse)) {
                         Birthdays.SetBirthday (e.Author.Id, parse);
-                        CultureInfo info = new CultureInfo (UserSettings.GetSetting<string> (e.Author.Id, "Culture", "da-DK"));
+                        CultureInfo info = new CultureInfo (UserConfiguration.GetSetting<string> (e.Author.Id, "Culture", "da-DK"));
                         Program.messageControl.SendMessage (e, "You have succesfully set your birthday to **" + parse.ToString (info) + "**.", false);
                     } else {
                         Program.messageControl.SendMessage (e, "Failed to set birthday - could not parse date.", false);
                     }
                 }
-            return Task.CompletedTask;
+                return Task.CompletedTask;
             }
         }
 
@@ -155,9 +155,9 @@ namespace Adminthulhu {
                 if (AllowExecution (e, arguments)) {
                     try {
                         CultureInfo info = new CultureInfo (arguments [ 0 ]);
-                        UserSettings.SetSetting (e.Author.Id, "Culture", arguments [ 0 ]);
+                        UserConfiguration.SetSetting (e.Author.Id, "Culture", arguments [ 0 ]);
                     } catch (CultureNotFoundException) {
-                        Program.messageControl.SendMessage (e, "Failed to set culture - culture **" + arguments[0] + "** not found.", false);
+                        Program.messageControl.SendMessage (e, "Failed to set culture - culture **" + arguments [ 0 ] + "** not found.", false);
                     }
                 }
                 return Task.CompletedTask;
@@ -175,7 +175,7 @@ namespace Adminthulhu {
             public override Task ExecuteCommand(SocketUserMessage e, List<string> arguments) {
                 base.ExecuteCommand (e, arguments);
                 if (AllowExecution (e, arguments)) {
-                    bool result = UserSettings.ToggleBoolean (e.Author.Id, "AutoLooking");
+                    bool result = UserConfiguration.ToggleBoolean (e.Author.Id, "AutoLooking");
                     Program.messageControl.SendMessage (e, "Autolooking on voice channels enabled: " + result.ToString (), false);
                 }
                 return Task.CompletedTask;
@@ -193,7 +193,7 @@ namespace Adminthulhu {
             public override Task ExecuteCommand(SocketUserMessage e, List<string> arguments) {
                 base.ExecuteCommand (e, arguments);
                 if (AllowExecution (e, arguments)) {
-                    bool result = UserSettings.ToggleBoolean (e.Author.Id, "AllowSnooping");
+                    bool result = UserConfiguration.ToggleBoolean (e.Author.Id, "AllowSnooping");
                     Program.messageControl.SendMessage (e, "Adminthulhu snooping enabled: " + result.ToString (), false);
                 }
                 return Task.CompletedTask;
@@ -205,7 +205,7 @@ namespace Adminthulhu {
         /// </summary>
         public class CToggleRole : Command {
             public ulong roleID = 266882682930069504;
-            public CToggleRole () {
+            public CToggleRole() {
                 command = "nsfw";
                 shortHelp = "Toggle NSFW access.";
                 longHelp = "Toggles access to NSFW channels, by removing or adding the @Pervert role to you.";

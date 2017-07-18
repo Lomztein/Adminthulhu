@@ -1,11 +1,12 @@
 ﻿using Discord.WebSocket;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System;
 
 namespace Adminthulhu {
-    public class CReport : Command {
+    public class CReport : Command, IConfigurable {
 
-        public static string reportTextChannel = "reports";
+        public static ulong reportTextChannel;
 
         public CReport () {
             command = "report";
@@ -15,6 +16,13 @@ namespace Adminthulhu {
 
             availableInDM = true;
             availableOnServer = false;
+            catagory = Catagory.Utility;
+        }
+
+        public override void Initialize() {
+            base.Initialize ();
+            LoadConfiguration ();
+            BotConfiguration.AddConfigurable (this);
         }
 
         public override Task ExecuteCommand (SocketUserMessage e, List<string> arguments) {
@@ -22,11 +30,15 @@ namespace Adminthulhu {
             if (AllowExecution (e, arguments)) {
 
                 SocketGuild guild = Utility.GetServer ();
-                ISocketMessageChannel channel = Utility.SearchChannel (guild, reportTextChannel) as ISocketMessageChannel;
+                ISocketMessageChannel channel = Utility.GetServer ().GetChannel (reportTextChannel) as ISocketMessageChannel;
                 Program.messageControl.SendMessage (channel, "**Report from " + e.Author.Username + "**: " + arguments[0], false);
                 Program.messageControl.SendMessage (e, "Report has been reported.", false);
             }
             return Task.CompletedTask;
+        }
+
+        public void LoadConfiguration() {
+            reportTextChannel = BotConfiguration.GetSetting<ulong> ("ReportChannelID", 0);
         }
     }
 }

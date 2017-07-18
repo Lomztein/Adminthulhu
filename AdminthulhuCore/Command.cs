@@ -9,6 +9,10 @@ using Discord.WebSocket;
 namespace Adminthulhu {
     public class Command {
 
+        public enum Catagory {
+            None, Utility, Fun, Set, Admin
+        }
+
         public const int CHARS_TO_HELP = 4;
 
         public string command = null;
@@ -17,16 +21,21 @@ namespace Adminthulhu {
         public string argHelp = "";
         public int argumentNumber = 1;
         public string helpPrefix = Program.commandChar.ToString ();
+        public Catagory catagory = Catagory.None;
 
         public bool isAdminOnly = false;
         public bool availableInDM = false;
         public bool availableOnServer = true;
+        public bool commandEnabled = false;
 
         public virtual Task ExecuteCommand ( SocketUserMessage e, List<string> arguments) {
             return Task.CompletedTask;
         }
 
         public bool AllowExecution (SocketMessage e, List<string> args, bool returnMessage = true) {
+
+            if (commandEnabled == false)
+                return false;
 
             if (!availableInDM && e.Channel as SocketDMChannel != null) {
                 if (returnMessage)
@@ -55,6 +64,7 @@ namespace Adminthulhu {
         }
 
         public virtual void Initialize () {
+            commandEnabled = BotConfiguration.GetSetting<bool> ("Command" + command.Substring (0,1).ToUpper () + command.Substring (1) + "Enabled", false); // Gotta capitalize that shite.
         }
 
         public virtual string GetHelp () {

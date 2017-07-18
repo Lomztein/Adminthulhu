@@ -8,17 +8,17 @@ using Discord.WebSocket;
 
 namespace Adminthulhu
 {
-    class Program {
+    class Program : IConfigurable {
 
         public static char commandChar = '!';
 
-        public static Command[] commands = new Command[] {
+        public static Command [ ] commands = new Command [ ] {
             new CCommandList (), new CSetColor (), new CRollTheDice (),
             new CFlipCoin (), new CRandomGame (), new CQuote (), new CEmbolden (),
             new CAddHeader (), new CShowHeaders (), new CKarma (), new CReport (),
             new VoiceCommands (), new EventCommands (), new UserSettingsCommands (), new DebugCommands (), new HangmanCommands (),
             new GameCommands (), new StrikeCommandSet (), new CAddEventGame (), new CRemoveEventGame (), new CHighlightEventGame (),
-            new CAcceptYoungling (),
+            new CAcceptYoungling (), new CReloadConfiguration (),
         };
 
         public static string dataPath = "";
@@ -43,10 +43,10 @@ namespace Adminthulhu
         private static DateTime bootedTime = new DateTime ();
 
         // SocketGuild data
-        public static string mainTextChannelName = "main";
-        public static string dumpTextChannelName = "dump";
-        public static string serverName = "Monster Mash";
-        public static ulong serverID = 93733172440739840;
+        public static string mainTextChannelName = "";
+        public static string dumpTextChannelName = "";
+        public static string serverName = "";
+        public static ulong serverID = 0;
 
         public static Phrase [ ] phrases = new Phrase [ ] {
             new Phrase ("Neat!", 0, 100, "Very!", 0, ""),
@@ -76,11 +76,19 @@ namespace Adminthulhu
             }
         }
 
-        public async Task Start (string[] args) {
+        public void LoadConfiguration() {
+            mainTextChannelName = BotConfiguration.GetSetting ("MainTextChannelName", "general");
+            dumpTextChannelName = BotConfiguration.GetSetting ("DumpTextChannelName", "dump");
+            serverName = BotConfiguration.GetSetting ("ServerName", "Discord Server");
+            serverID = BotConfiguration.GetSetting<ulong> ("ServerID", 0);
+            phrases = BotConfiguration.GetSetting ("ResponsePhrases", new Phrase [ ] { new Phrase ("Neat!", 0, 100, "Very!", 0, ""), new Phrase ("Neato", 0, 100, "", 0, "🌯") });
+        }
+
+        public async Task Start(string [ ] args) {
 
             // Linux specific test
             if (args.Length > 0) {
-                dataPath = args[0] + "/data/";
+                dataPath = args [ 0 ] + "/data/";
             } else {
                 dataPath = AppContext.BaseDirectory + "/data/";
             }
@@ -88,16 +96,19 @@ namespace Adminthulhu
             dataPath = dataPath.Replace ('\\', '/');
             InitializeDirectories ();
             Console.WriteLine ("Booting.. Datapath: " + dataPath);
-
-            clock = new Clock ();
+            BotConfiguration.Initialize ();
+            BotConfiguration.AddConfigurable (this);
 
             discordClient = new DiscordSocketClient ();
             messageControl = new MessageControl ();
             karma = new Karma ();
 
+            UserConfiguration.Initialize ();
+            LoadConfiguration ();
+            clock = new Clock ();
+
             InitializeData ();
             InitializeCommands ();
-            UserSettings.Initialize ();
             UserGameMonitor.Initialize ();
 
             bootedTime = DateTime.Now.AddSeconds (BOOT_WAIT_TIME);
@@ -105,7 +116,7 @@ namespace Adminthulhu
             discordClient.MessageReceived += (e) => {
 
                 Console.WriteLine (Utility.GetChannelName (e) + " says: " + e.Content);
-                if (e.Author.Id != discordClient.CurrentUser.Id && e.Content.Length > 0 && e.Content[0] == commandChar) {
+                if (e.Author.Id != discordClient.CurrentUser.Id && e.Content.Length > 0 && e.Content [ 0 ] == commandChar) {
                     string message = e.Content;
 
                     if (message.Length > 0) {
@@ -120,7 +131,7 @@ namespace Adminthulhu
 
                 FindPhraseAndRespond (e);
 
-                if (e.Content.Length > 0 && e.Content[0] == commandChar) {
+                if (e.Content.Length > 0 && e.Content [ 0 ] == commandChar) {
                     e.DeleteAsync ();
                     allowedDeletedMessages.Add (e.Content);
                 }
@@ -252,10 +263,7 @@ namespace Adminthulhu
         }
 
         public static void InitializeDirectories () {
-            CreateAbsentDirectory (dataPath + commandSettingsDirectory);
             CreateAbsentDirectory (dataPath + chatlogDirectory);
-            CreateAbsentDirectory (dataPath + chatlogDirectory);
-            CreateAbsentDirectory (dataPath + eventDirectory);
         }
 
         public static void CreateAbsentDirectory (string path) {

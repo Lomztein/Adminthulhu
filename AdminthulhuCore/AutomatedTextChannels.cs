@@ -13,17 +13,16 @@ namespace Adminthulhu {
 
         public static string additionalHeaderPath = "additionalheaders.dat";
 
-        public static List<string> headers = new List<string> {
-            "<:pogchamp:245217372137455616> When that ass is thicc",
+        public static List<string> headers = new List<string> ();
+        /* "<:pogchamp:245217372137455616> When that ass is thicc",
             "<:Serviet:255721870828109824> Privet, comrades!",
             "When life gives you lemons, take them - its free stuff!",
             "\"Tiderne var bedre dengang Nick var admin\" - Nick.",
             "The massively oversexualised unofficial offical fanclub of Rênëgédë CROWBAR Rèvêngéncë, the god of eternal faggotry.. <3",
-            "Where is the walrus pit! <:gooseman:271588350677221377>",
-        };
+            "Where is the walrus pit! <:gooseman:271588350677221377>", */
 
         public static void AddHeaders (params string[] additional) {
-            headers.AddRange (additional);
+           headers.AddRange (additional);
         }
 
         public Task Initialize ( DateTime time ) {
@@ -70,6 +69,7 @@ namespace Adminthulhu {
             longHelp = "Adds a new header " + argHelp + " to main channel";
             argumentNumber = 1;
             isAdminOnly = true;
+            catagory = Catagory.Admin;
         }
 
         public override Task ExecuteCommand ( SocketUserMessage e, List<string> arguments ) {
@@ -93,6 +93,7 @@ namespace Adminthulhu {
             shortHelp = "Show header.";
             longHelp = "Shows all current possible headers of the main channel.";
             argumentNumber = 0;
+            catagory = Catagory.Utility;
         }
 
         public override Task ExecuteCommand ( SocketUserMessage e, List<string> arguments ) {

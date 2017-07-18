@@ -14,6 +14,7 @@ namespace Adminthulhu {
             shortHelp = "Fizzfyr13";
             longHelp = "Get litteraly the sexiest picture in existance.";
             argumentNumber = 0;
+            catagory = Catagory.Fun;
         }
 
         public override Task ExecuteCommand ( SocketUserMessage e, List<string> arguments ) {

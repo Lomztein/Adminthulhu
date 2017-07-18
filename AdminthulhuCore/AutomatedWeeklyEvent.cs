@@ -9,7 +9,7 @@ using Discord.Rest;
 
 namespace Adminthulhu {
 
-    public class AutomatedWeeklyEvent : IClockable {
+    public class AutomatedWeeklyEvent : IClockable, IConfigurable {
 
         private static string [ ] unicodeEmojis = new string [ ] { "1⃣", "2⃣", "3⃣", "4⃣", "5⃣", "6⃣", "7⃣", "8⃣", "9⃣", "🔟" };
 
@@ -61,7 +61,21 @@ namespace Adminthulhu {
 
         public int eventHour = 20;
 
+        public void LoadConfiguration() {
+            votesPerPerson = BotConfiguration.GetSetting ("EventVotesPerPerson", votesPerPerson);
+            gamesPerWeek = BotConfiguration.GetSetting ("EventGamesPerWeek", gamesPerWeek);
+            announcementsChannelName = BotConfiguration.GetSetting ("AnnouncementsChannelName", "announcements");
+
+            voteStartDay = BotConfiguration.GetSetting ("EventVoteStartDay", voteStartDay);
+            voteEndDay = BotConfiguration.GetSetting ("EventVoteEndDay", voteEndDay);
+            eventDayName = BotConfiguration.GetSetting ("EventDayName", eventDayName);
+            daysBetween = BotConfiguration.GetSetting ("DaysBetweenVoteEndAndEvent", daysBetween);
+            eventHour = BotConfiguration.GetSetting ("EventHour", eventHour);
+        }
+
         public async Task Initialize(DateTime time) {
+            LoadConfiguration ();
+            BotConfiguration.AddConfigurable (this);
             Data loadedData = SerializationIO.LoadObjectFromFile<Data> (Program.dataPath + dataFileName + Program.gitHubIgnoreType);
 
             votes = loadedData.votes;
@@ -92,7 +106,7 @@ namespace Adminthulhu {
         }
 
         private static void OnReactionChanged(Cacheable<IUserMessage, ulong> message, ISocketMessageChannel channel, SocketReaction reaction, bool add) {
-            if (reaction.UserId == 192707822876622850) // Hardcoded to avoid selv-voting ftw.
+            if (reaction.User.Value.IsBot)
                 return;
 
             if (message.Id == votingMessageID) {
@@ -441,6 +455,7 @@ namespace Adminthulhu {
             longHelp = "Remove a game from automated friday events.";
             argumentNumber = 1;
             isAdminOnly = true;
+            catagory = Catagory.Admin;
         }
 
         public override Task ExecuteCommand(SocketUserMessage e, List<string> arguments) {
@@ -471,6 +486,7 @@ namespace Adminthulhu {
             longHelp = "Remove a game from automated friday events.";
             argumentNumber = 2;
             isAdminOnly = true;
+            catagory = Catagory.Admin;
         }
 
         public override Task ExecuteCommand(SocketUserMessage e, List<string> arguments) {
@@ -499,6 +515,7 @@ namespace Adminthulhu {
             longHelp = "Toggles whether or not a game is highlighted.";
             argumentNumber = 1;
             isAdminOnly = true;
+            catagory = Catagory.Admin;
         }
 
         public override Task ExecuteCommand(SocketUserMessage e, List<string> arguments) {
@@ -520,6 +537,7 @@ namespace Adminthulhu {
             shortHelp = "List event games.";
             longHelp = "Lists all possible event games.";
             argumentNumber = 0;
+            catagory = Catagory.Utility;
         }
 
         public override Task ExecuteCommand(SocketUserMessage e, List<string> arguments) {

@@ -15,6 +15,7 @@ namespace Adminthulhu {
             command = "commandset";
             shortHelp = "DEFAULT_COMMAND_SET";
             longHelp = "A placeholder, shouldn't be accessable in final version.";
+            catagory = Catagory.Set;
         }
 
         public override void Initialize() {

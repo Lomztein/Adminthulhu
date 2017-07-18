@@ -7,12 +7,19 @@ using Discord.Rest;
 
 namespace Adminthulhu
 {
-    public class Younglings : IClockable {
+    public class Younglings : IClockable, IConfigurable {
 
         public static ulong younglingRoleID = 316171882867064843;
         private static Dictionary<ulong, DateTime> joinDate;
 
+        public void LoadConfiguration() {
+            younglingRoleID = BotConfiguration.GetSetting<ulong> ("YounglingRoleID", 0);
+        }
+
         public Task Initialize(DateTime time) {
+            LoadConfiguration ();
+            BotConfiguration.AddConfigurable (this);
+
             LoadData ();
             if (joinDate == null)
                 joinDate = new Dictionary<ulong, DateTime> ();
@@ -95,6 +102,7 @@ namespace Adminthulhu
             argHelp = "<younglingID>";
             argumentNumber = 1;
             isAdminOnly = true;
+            catagory = Catagory.Admin;
         }
 
         public override Task ExecuteCommand(SocketUserMessage e, List<string> arguments) {

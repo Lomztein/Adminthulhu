@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
 using Discord.Rest;
+using Newtonsoft.Json;
 
 namespace Adminthulhu {
-    public static class AutomatedVoiceChannels {
+    public class AutomatedVoiceChannels : IConfigurable {
 
         public static Dictionary<ulong, VoiceChannel> defaultChannels = new Dictionary<ulong, VoiceChannel> ();
         public static Dictionary<ulong, VoiceChannel> allVoiceChannels = new Dictionary<ulong, VoiceChannel> ();
@@ -16,6 +17,10 @@ namespace Adminthulhu {
 
         public static int addChannelsIndex = 2;
         public static int fullChannels = 0;
+        public static bool autoAddChannels = false;
+        public static bool autoRenameChannels = false;
+        public static bool shortenChannelNames = false;
+        public static bool enableVoiceChannelTags = false;
 
         public static string [ ] extraChannelNames = new string [ ] {
             "Gorgeous Green",
@@ -38,7 +43,7 @@ namespace Adminthulhu {
 
         public static Queue<string> nameQueue = new Queue<string> ();
         public static List<IVoiceChannel> temporaryChannels = new List<IVoiceChannel> ();
-        public static VoiceChannel afkChannel = new VoiceChannel (265832231845625858, "Corner of Shame", int.MaxValue);
+        public static VoiceChannel afkChannel = null;
 
         public static VoiceChannelTag [ ] voiceChannelTags = {
             new VoiceChannelTag ("🎵", delegate (VoiceChannelTag.ActionData data) { data.hasTag = Utility.ForceGetUsers (data.channel.id).Find (x => x.Id == 174535711632916480) != null; } ),
@@ -58,10 +63,29 @@ namespace Adminthulhu {
                 data.hasTag = Utility.ForceGetUsers (data.channel.id).Find (x => x.Roles.Contains (younglingRole)) != null;  }),
         };
 
+        public void LoadConfiguration() {
+            extraChannelNames = BotConfiguration.GetSetting<string [ ]> ("ExtraVoiceChannelNames", new string [ ] { "EXTRA_CHANNEL_1;EXTRA_CHANNEL_SHORT_NAME_1", "EXTRA_CHANNEL_1;EXTRA_CHANNEL_SHORT_NAME_2" });
+            loadedChannels = BotConfiguration.GetSetting ("DefaultVoiceChannels", new VoiceChannel [ ] { new VoiceChannel (0, "DEFAULT_CHANNEL_NAME_1;SHORT_NAME_1", 0), new VoiceChannel (1, "DEFAULT_CHANNEL_NAME_2;SHORT_NAME_2", 0) });
+            afkChannel = BotConfiguration.GetSetting ("AFKChannel", new VoiceChannel (2, "AFK_CHANNEL_NAME", int.MaxValue - 1));
+            autoAddChannels = BotConfiguration.GetSetting ("AutoAddVoiceChannels", autoAddChannels);
+            autoRenameChannels = BotConfiguration.GetSetting ("AutoRenameVoiceChannels", autoRenameChannels);
+            shortenChannelNames = BotConfiguration.GetSetting ("ShortenVoiceChannelNames", shortenChannelNames);
+            enableVoiceChannelTags = BotConfiguration.GetSetting ("VoiceChannelTagsEnabled", enableVoiceChannelTags);
+        }
+
+        public static VoiceChannel [ ] loadedChannels;
         public static void InitializeData() {
-            AddDefaultChannel (250545007797207040, "Radical Red", 0);
-            AddDefaultChannel (250545037790674944, "Beautiful Blue", 1);
-            AddDefaultChannel (afkChannel);
+            AutomatedVoiceChannels configurable = new AutomatedVoiceChannels ();
+            configurable.LoadConfiguration ();
+            BotConfiguration.AddConfigurable (configurable);
+
+            foreach (VoiceChannel channel in loadedChannels) {
+                AddDefaultChannel (channel);
+            }
+            addChannelsIndex = defaultChannels.Count;
+
+            if (afkChannel.id != 0)
+                AddDefaultChannel (afkChannel);
             afkChannel.lockable = false;
 
             for (int i = 0; i < extraChannelNames.Length; i++) {
@@ -72,12 +96,18 @@ namespace Adminthulhu {
         public static async Task OnUserUpdated(SocketGuild guild, SocketVoiceChannel before, SocketVoiceChannel after) {
             // Maybe, just maybe put these into a single function. Oh shit I just did.
             if (Program.FullyBooted ()) {
-                AddMissingChannels (guild);
-                await CheckFullAndAddIf (guild);
-                RemoveLeftoverChannels (guild);
+                try {
+                    if (autoAddChannels) {
+                        AddMissingChannels (guild);
+                        await CheckFullAndAddIf (guild);
+                        RemoveLeftoverChannels (guild);
+                    }
 
-                await UpdateVoiceChannel (before);
-                await UpdateVoiceChannel (after);
+                    await UpdateVoiceChannel (before);
+                    await UpdateVoiceChannel (after);
+                } catch (Exception e) {
+                    ChatLogger.Log (e.Message + " - " + e.StackTrace);
+                }
             }
         }
 
@@ -115,11 +145,10 @@ namespace Adminthulhu {
                     }
                 }
 
-                GetTags (voiceChannel);
                 Dictionary<Game, int> numPlayers = new Dictionary<Game, int> ();
                 foreach (SocketGuildUser user in users) {
 
-                    if (UserSettings.GetSetting<bool> (user.Id, "AutoLooking", false) && users.Count == 1)
+                    if (UserConfiguration.GetSetting<bool> (user.Id, "AutoLooking", false) && users.Count == 1)
                         voiceChannel.SetStatus (VoiceChannel.VoiceChannelStatus.Looking, false);
 
                     if (user.Game.HasValue && user.IsBot == false) {
@@ -143,20 +172,30 @@ namespace Adminthulhu {
                     }
                 }
 
+                if (enableVoiceChannelTags)
+                    GetTags (voiceChannel);
+
                 string tagsString = "";
                 foreach (VoiceChannelTag tag in voiceChannel.currentTags) {
                     tagsString += tag.tagEmoji;
                 }
                 tagsString += tagsString.Length > 0 ? " " : "";
 
+                string [ ] splitVoice = voiceChannel.name.Split (';');
+                string possibleShorten = shortenChannelNames && splitVoice.Length > 1 ? splitVoice [ 1 ] : splitVoice [ 0 ];
                 // Trying to optimize API calls here, just to spare those poor souls at the Discord API HQ stuff
                 int mixedLimit = highest >= 2 ? 2 : 1;
                 string gameName = numPlayers.Where (x => x.Value >= mixedLimit).Count () >= mixedLimit && numPlayers.Count > 1 ? "Mixed Games" : highestGame.Name;
-                char nameLetter = voiceChannel.name [ 0 ]; // Eeeeeeuhhh, yes.
 
-                string newName = gameName != "" ? tagsString + nameLetter + nameLetter + " - " + gameName : tagsString + voiceChannel.name;
+                string newName;
+                if (autoRenameChannels) {
+                    newName = gameName != "" ? tagsString + possibleShorten + " - " + gameName : tagsString + splitVoice [ 0 ];
+                } else {
+                    newName = tagsString + splitVoice [ 0 ];
+                }
+
                 if (voiceChannel.customName != "")
-                    newName = tagsString + nameLetter + nameLetter + " - " + voiceChannel.customName;
+                    newName = tagsString + " - " + voiceChannel.customName;
 
                 if (voice.Name != newName) {
                     ChatLogger.Log ("Channel name updated: " + newName);
@@ -175,7 +214,7 @@ namespace Adminthulhu {
 
             foreach (SocketVoiceChannel channel in server.VoiceChannels) {
                 if (!allVoiceChannels.ContainsKey (channel.Id)) {
-                    allVoiceChannels.Add (channel.Id, new VoiceChannel (channel.Id, GetChannelDefaultName (channel.Name), allVoiceChannels.Count));
+                    allVoiceChannels.Add (channel.Id, new VoiceChannel (channel.Id, "REBOOT CHANNEL", allVoiceChannels.Count));
                 }
                 if (channel.Users.Count () == 0) {
                     allVoiceChannels [ channel.Id ].Unlock (true);
@@ -183,21 +222,6 @@ namespace Adminthulhu {
             }
 
             hasChecked = true;
-        }
-
-        public static string GetChannelDefaultName(string channelName) {
-            int spaceAmount = 0;
-
-            // Start at two to ignore the locked channel icon. This will cause issues with channels with very, very short names.
-            for (int i = 2; i < channelName.Length; i++) {
-                if (channelName [ i ] == ' ')
-                    spaceAmount++;
-
-                if (spaceAmount == 2 || channelName.Length < i + 1)
-                    return channelName.Substring (0, i);
-            }
-
-            return null;
         }
 
         public static void RemoveLeftoverChannels(SocketGuild server) {
@@ -252,7 +276,7 @@ namespace Adminthulhu {
         public static bool IsDefaultFull() {
             IEnumerable<VoiceChannel> defaultChannelsList = defaultChannels.Values.ToList ();
             foreach (VoiceChannel channel in defaultChannelsList) {
-                if (afkChannel != channel && channel.GetChannel ().Users.Count () == 0)
+                if (afkChannel != channel && Utility.ForceGetUsers (channel.id).Count () == 0)
                     return false;
             }
 
@@ -284,7 +308,7 @@ namespace Adminthulhu {
 
                     RestVoiceChannel channel;
                     try {
-                        Task<RestVoiceChannel> createTask = server.CreateVoiceChannelAsync (channelName);
+                        Task<RestVoiceChannel> createTask = server.CreateVoiceChannelAsync (channelName.Split(';')[0]);
                         channel = await createTask;
                     } catch (Exception e) {
                         throw;
@@ -293,7 +317,7 @@ namespace Adminthulhu {
                     int channelPos = temporaryChannels.Count + addChannelsIndex;
 
                     temporaryChannels.Add (channel);
-                    allVoiceChannels.Add (channel.Id, new VoiceChannel (channel.Id, channel.Name, channelPos));
+                    allVoiceChannels.Add (channel.Id, new VoiceChannel (channel.Id, channelName, channelPos));
                     awaitingChannels.Remove (channelName);
 
                     IEnumerable<VoiceChannel> allChannels = allVoiceChannels.Values.ToList ();
@@ -367,14 +391,14 @@ namespace Adminthulhu {
             public string name;
             public int position;
             public bool lockable = true;
-            public VoiceChannelStatus status = VoiceChannelStatus.None;
-            public uint desiredMembers = 0;
-            public string customName = "";
+            [JsonIgnore] public VoiceChannelStatus status = VoiceChannelStatus.None;
+            [JsonIgnore] public uint desiredMembers = 0;
+            [JsonIgnore] public string customName = "";
 
-            public List<VoiceChannelTag> currentTags = new List<VoiceChannelTag> ();
+            [JsonIgnore] public List<VoiceChannelTag> currentTags = new List<VoiceChannelTag> ();
 
-            public ulong lockerID;
-            public List<ulong> allowedUsers = new List<ulong>();
+            [JsonIgnore] public ulong lockerID;
+            [JsonIgnore] public List<ulong> allowedUsers = new List<ulong>();
 
             public VoiceChannel (ulong _id, string n, int pos) {
                 id = _id;
@@ -384,7 +408,8 @@ namespace Adminthulhu {
             }
 
             public SocketVoiceChannel GetChannel () {
-                return Program.discordClient.GetChannel (id) as SocketVoiceChannel;
+                SocketChannel channel = Utility.GetServer ().GetChannel (id);
+                return channel as SocketVoiceChannel;
             }
 
             public bool IsLocked () {
@@ -435,7 +460,7 @@ namespace Adminthulhu {
                         delegate () {
                             allowedUsers.Add (requester.Id);
                             Program.messageControl.SendMessage (requester, "Your request to join **" + name + "** has been accepted.");
-                            Program.messageControl.SendMessage (GetLocker (), "Succesfully accepted requiest.");
+                            Program.messageControl.SendMessage (GetLocker (), "Succesfully accepted request.");
                         } );
                 }
             }

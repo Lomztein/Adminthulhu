@@ -14,6 +14,7 @@ namespace Adminthulhu {
             shortHelp = "Show butt credits.";
             longHelp = "Shows the people behind the bot.";
             argumentNumber = 0;
+            catagory = Catagory.Utility;
         }
 
         public override Task ExecuteCommand ( SocketUserMessage e, List<string> arguments ) {

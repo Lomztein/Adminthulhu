@@ -101,6 +101,7 @@ namespace Adminthulhu {
             command = "hangman";
             longHelp = "A set of Hangman related commands.";
             commandsInSet = new Command[] { new CStartHangman (), new CGuessHangman (), new CShowUsed (), new CShowProgress () };
+            catagory = Catagory.Fun;
         }
 
         public class CStartHangman : Command {

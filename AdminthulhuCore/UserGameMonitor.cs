@@ -7,20 +7,25 @@ using Discord;
 using Discord.WebSocket;
 
 namespace Adminthulhu {
-    public class UserGameMonitor {
+    public class UserGameMonitor : IConfigurable {
 
         public static Dictionary<ulong, List<string>> userGames;
         public static string fileName = "usergames";
-        public const int MAX_GAMES_TO_DISPLAY = 20;
 
-        public static void Initialize () {
-            userGames = SerializationIO.LoadObjectFromFile < Dictionary<ulong, List<string>>> (Program.dataPath + fileName + Program.gitHubIgnoreType);
+        public static bool enabled = false;
+
+        public static void Initialize() {
+            UserGameMonitor config = new UserGameMonitor ();
+            config.LoadConfiguration ();
+            BotConfiguration.AddConfigurable (config);
+
+            userGames = SerializationIO.LoadObjectFromFile<Dictionary<ulong, List<string>>> (Program.dataPath + fileName + Program.gitHubIgnoreType);
             if (userGames == null)
                 userGames = new Dictionary<ulong, List<string>> ();
 
-            Program.discordClient.GuildMemberUpdated += ( before, after ) => {
+            Program.discordClient.GuildMemberUpdated += (before, after) => {
 
-                if (!UserSettings.GetSetting<bool> (after.Id, "AllowSnooping", true))
+                if (UserConfiguration.GetSetting<bool> (after.Id, "AllowSnooping", true))
                     return Task.CompletedTask;
 
                 string gameName = after.Game.HasValue ? after.Game.Value.Name.ToString ().ToUpper () : null;
@@ -99,6 +104,10 @@ namespace Adminthulhu {
                 userGames.Remove (id);
             }
         }
+
+        public void LoadConfiguration() {
+            enabled = BotConfiguration.GetSetting("UserGameMonitorEnabled", enabled);
+        }
     }
 
     public class GameCommands : CommandSet {
@@ -107,6 +116,7 @@ namespace Adminthulhu {
             shortHelp = "Game command set.";
             longHelp = "A set of commands specifically for game related shinanegans.";
             commandsInSet = new Command[] { new CGameOwners (), new CAddGame (), new CRemoveGame (), new CAllGames () };
+            catagory = Catagory.Utility;
         }
 
         // Move this command to a seperate file later, this is just for ease of writing.

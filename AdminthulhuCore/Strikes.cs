@@ -6,7 +6,7 @@ using Discord.WebSocket;
 
 namespace Adminthulhu
 {
-    public class Strikes : IClockable {
+    public class Strikes : IClockable, IConfigurable {
 
         public static ulong strikeRoleID = 272389160705327105;
         public static string strikeDataPath = "strikes";
@@ -28,7 +28,8 @@ namespace Adminthulhu
         }
 
         public Task Initialize(DateTime time) {
-
+            LoadConfiguration ();
+            BotConfiguration.AddConfigurable (this);
             Load ();
             return Task.CompletedTask;
         }
@@ -95,6 +96,10 @@ namespace Adminthulhu
             Save ();
         }
 
+        public void LoadConfiguration() {
+            strikeRoleID = BotConfiguration.GetSetting<ulong> ("StrikeRoleID", 0);
+        }
+
         public class Strike {
 
             public string reason;
@@ -110,7 +115,7 @@ namespace Adminthulhu
             shortHelp = "Strike commands.";
             longHelp = "A set of commands specifically for strikes.";
             commandsInSet = new Command [ ] { new CAddStrike (), new CRemoveStrike () };
-
+            catagory = Catagory.Admin;
             isAdminOnly = true;
         }
 

@@ -7,7 +7,7 @@ using System.Threading;
 using Discord.WebSocket;
 
 namespace Adminthulhu {
-    public class Clock {
+    public class Clock : IConfigurable {
 
         public static Thread timeThread;
         public DateTime lastMesauredTime;
@@ -27,8 +27,12 @@ namespace Adminthulhu {
             new DiscordEvents (), new AutomatedTextChannels (), new UserActivityMonitor (), new Birthdays (), new AutomatedWeeklyEvent (),
             new Strikes (), new AprilFools (), new Younglings (),
         };
+        private bool [ ] clockablesEnabled;
 
         public Clock () {
+            LoadConfiguration ();
+            BotConfiguration.AddConfigurable (this);
+
             timeThread = new Thread (new ThreadStart (Initialize));
             timeThread.Start ();
             while (!timeThread.IsAlive) {
@@ -39,8 +43,9 @@ namespace Adminthulhu {
 
         public void Initialize () {
             DateTime now = DateTime.Now;
-            foreach (IClockable c in clockables) {
-                c.Initialize (now);
+            for (int i = 0; i < clockables.Length; i++) {
+                if (clockablesEnabled[i])
+                    clockables[i].Initialize (now);
             }
 
             while (timeThread.IsAlive) {
@@ -48,26 +53,34 @@ namespace Adminthulhu {
 
                 // This could possibly be improved with delegates, but I have no idea how they work.
                 // Don't do anything before the server is ready.
-                if (Utility.GetServer () != null) {
+                if (Program.FullyBooted ()) {
 
                     if (now.Second != lastMesauredTime.Second) {
-                        foreach (IClockable c in clockables)
-                            c.OnSecondPassed (now);
+                        for (int i = 0; i < clockables.Length; i++) {
+                            if (clockablesEnabled [ i ])
+                                clockables [ i ].OnSecondPassed (now);
+                        }
                     }
 
                     if (now.Minute != lastMesauredTime.Minute) {
-                        foreach (IClockable c in clockables)
-                            c.OnMinutePassed (now);
+                        for (int i = 0; i < clockables.Length; i++) {
+                            if (clockablesEnabled [ i ])
+                                clockables [ i ].OnMinutePassed (now);
+                        }
                     }
 
                     if (now.Hour != lastMesauredTime.Hour) {
-                        foreach (IClockable c in clockables)
-                            c.OnHourPassed (now);
+                        for (int i = 0; i < clockables.Length; i++) {
+                            if (clockablesEnabled [ i ])
+                                clockables [ i ].OnHourPassed (now);
+                        }
                     }
 
                     if (now.Day != lastMesauredTime.Day) {
-                        foreach (IClockable c in clockables)
-                            c.OnDayPassed (now);
+                        for (int i = 0; i < clockables.Length; i++) {
+                            if (clockablesEnabled [ i ])
+                                clockables [ i ].OnDayPassed (now);
+                        }
                     }
                 }
 
@@ -95,6 +108,13 @@ namespace Adminthulhu {
                 }
             }
             throw new ArgumentException ("Input didn't work, dummy.");
+        }
+
+        public void LoadConfiguration() {
+            clockablesEnabled = new bool [ clockables.Length ];
+            for (int i = 0; i < clockablesEnabled.Length; i++) {
+                clockablesEnabled [ i ] = BotConfiguration.GetSetting<bool> (clockables [ i ].GetType ().Name + "Enabled", false);
+            }
         }
     }
 }

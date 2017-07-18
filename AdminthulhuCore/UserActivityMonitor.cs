@@ -9,7 +9,7 @@ using Discord.WebSocket;
 
 namespace Adminthulhu {
 
-    public class UserActivityMonitor : IClockable {
+    public class UserActivityMonitor : IClockable, IConfigurable {
 
         public static Dictionary<ulong, DateTime> userActivity;
         public static Dictionary<ulong, DateTime> lastUserUpdate = new Dictionary<ulong, DateTime>();
@@ -24,7 +24,17 @@ namespace Adminthulhu {
         public static ulong presentUserRole = 273017481600434186;
         public static ulong inactiveUserRole = 273017511468072960;
 
-        public async Task Initialize ( DateTime time ) {
+        public void LoadConfiguration() {
+            activeThresholdDays = BotConfiguration.GetSetting<int> ("ActivityActiveThresholdDays", 7);
+            presentThresholdDays = BotConfiguration.GetSetting<int> ("ActivityPresentThresholdDays", 14);
+            activeUserRole = BotConfiguration.GetSetting<ulong> ("ActiveRoleID", 0);
+            presentUserRole = BotConfiguration.GetSetting<ulong> ("PresentRoleID", 0);
+            inactiveUserRole = BotConfiguration.GetSetting<ulong> ("InactiveRoleID", 0);
+        }
+
+        public async Task Initialize(DateTime time) {
+            LoadConfiguration ();
+            BotConfiguration.AddConfigurable (this);
             userActivity = SerializationIO.LoadObjectFromFile<Dictionary<ulong, DateTime>> (Program.dataPath + activityFileName + Program.gitHubIgnoreType);
             if (userActivity == null)
                 userActivity = new Dictionary<ulong, DateTime> ();

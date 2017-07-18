@@ -116,7 +116,12 @@ namespace Adminthulhu {
         }
 
         public static SocketGuild GetServer() {
-            return Program.discordClient.GetGuild (Program.serverID);
+            if (Program.discordClient != null) {
+                SocketGuild guild = Program.discordClient.GetGuild (Program.serverID);
+                Console.WriteLine (Program.serverID);
+                return guild;
+            }
+            return null;
         }
 
         // I thought the TrimStart and TrimEnd functions would work like this, which they may, but I couldn't get them working. Maybe I'm just an idiot, but whatever.
@@ -182,7 +187,7 @@ namespace Adminthulhu {
         /// Formattet for the danish format!
         /// </summary>
         public static bool TryParseDatetime(string input, ulong userID, out DateTime result) {
-            CultureInfo danishCulture = new CultureInfo (UserSettings.GetSetting<string>(userID, "Culture", "da-DK"));
+            CultureInfo danishCulture = new CultureInfo (UserConfiguration.GetSetting<string>(userID, "Culture", "da-DK"));
             return DateTime.TryParse (input, danishCulture.DateTimeFormat, DateTimeStyles.None, out result);
         }
     }

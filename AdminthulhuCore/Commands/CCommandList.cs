@@ -14,6 +14,7 @@ namespace Adminthulhu {
             shortHelp = "Show command list.";
             longHelp = "Reveals a full list of all commands.";
             argumentNumber = 0;
+            catagory = Catagory.Utility;
 
             availableInDM = true;
         }
@@ -22,35 +23,19 @@ namespace Adminthulhu {
             base.ExecuteCommand (e, arguments);
             if (AllowExecution (e, arguments)) {
 
-                List<string> toDisplay = new List<string> ();
-                List<string> adminOnly = new List<string> ();
-                int minSpaces = 30;
+                var catagories = Program.commands.Where (x => x.AllowExecution (e, new List<string>(), false)).GroupBy (x => x.catagory);
+                string result = "";
 
-                toDisplay.Add ("```");
-                adminOnly.Add ("\nADMIN COMMANDS:");
-
-                foreach (Command c in Program.commands) {
-                    if (c.AllowExecution (e, null, false)) {
-                        if (c.isAdminOnly) {
-                            adminOnly.Add (Utility.FormatCommand (c));
-                        } else {
-                            toDisplay.Add (Utility.FormatCommand (c));
-                        }
+                foreach (var catagory in catagories) {
+                    result += catagory.ElementAt (0).catagory.ToString () + " Commands\n";
+                    foreach (var item in catagory) {
+                        result += Utility.FormatCommand (item) + "\n";
                     }
-                }
-
-                adminOnly.Add ("```");
-                string commands = "";
-                for (int i = 0; i < toDisplay.Count; i++) {
-                    commands += toDisplay[i] + "\n";
-                }
-
-                for (int i = 0; i < adminOnly.Count; i++) {
-                    commands += adminOnly[i] + "\n";
+                    result += "\n";
                 }
 
                 // I mean, it works, right?
-                Program.messageControl.SendMessage(e, commands, false);
+                Program.messageControl.SendMessage(e.Channel, result, false, "```");
             }
             return Task.CompletedTask;
         }

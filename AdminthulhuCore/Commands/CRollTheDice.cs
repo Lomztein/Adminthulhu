@@ -15,6 +15,7 @@ namespace Adminthulhu {
             argHelp = "<maxnumber>";
             longHelp = "Rolls a dice that returns a number between one and " + argHelp + ".";
             argumentNumber = 1;
+            catagory = Catagory.Utility;
         }
 
         public override Task ExecuteCommand ( SocketUserMessage e, List<string> arguments ) {

@@ -14,6 +14,7 @@ namespace Adminthulhu {
             shortHelp = "Flip a coin.";
             longHelp = "Flip a coin that has an equal chance of heads or tails.";
             argumentNumber = 0;
+            catagory = Catagory.Utility;
         }
 
         public override Task ExecuteCommand ( SocketUserMessage e, List<string> arguments ) {

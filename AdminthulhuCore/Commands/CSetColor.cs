@@ -8,7 +8,7 @@ using Discord.WebSocket;
 
 namespace Adminthulhu {
 
-    public class CSetColor : Command {
+    public class CSetColor : Command, IConfigurable {
 
         public string[] allowed = new string[] {
             "GREEN", "RED", "YELLOW", "BLUE",
@@ -28,6 +28,13 @@ namespace Adminthulhu {
             argHelp = "<colorname>";
             longHelp = "Sets your color to " + argHelp + ", if available.";
             argumentNumber = 1;
+            catagory = Catagory.Utility;
+        }
+
+        public override void Initialize() {
+            base.Initialize ();
+            LoadConfiguration ();
+            BotConfiguration.AddConfigurable (this);
         }
 
         public override async Task ExecuteCommand ( SocketUserMessage e, List<string> arguments ) {
@@ -55,6 +62,10 @@ namespace Adminthulhu {
                     Program.messageControl.SendMessage(e, failText + colors, false);
                 }
             }
+        }
+
+        public void LoadConfiguration() {
+            allowed = BotConfiguration.GetSetting<string [ ]> ("AvaiableUsernameColors", new string [ ] { "RED", "BLUE" });
         }
     }
 }

@@ -14,6 +14,7 @@ namespace Adminthulhu {
             longHelp = "A set of debugging commands for *admins*.";
             isAdminOnly = true;
             commandsInSet = new Command[] { new ResetUserActivity () };
+            catagory = Catagory.Admin;
         }
 
         public class ResetUserActivity : Command {

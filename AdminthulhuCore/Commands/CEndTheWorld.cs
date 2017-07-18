@@ -14,6 +14,7 @@ namespace Adminthulhu {
             shortHelp = "End the world.";
             longHelp = "Whatever you do, do not call this function. The world will end in fire.";
             argumentNumber = 0;
+            catagory = Catagory.Fun;
         }
 
         public override Task ExecuteCommand ( SocketUserMessage e, List<string> arguments ) {
