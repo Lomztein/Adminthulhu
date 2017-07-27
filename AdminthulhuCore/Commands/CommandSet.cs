@@ -54,11 +54,13 @@ namespace Adminthulhu {
             return helpPrefix + command + " (set)";
         }
 
-        public override string GetHelp() {
+        public override string GetHelp(SocketMessage e) {
             // Display all commands within command.
             string result = "Commands in the **" + command + "** command set:\n```";
             foreach (Command c in commandsInSet) {
-                result += Utility.FormatCommand (c) + "\n";
+                if (c.AllowExecution (e, null, false)) {
+                    result += Utility.FormatCommand (c) + "\n";
+                }
             }
             result += "```";
             return result;

@@ -13,26 +13,33 @@ namespace Adminthulhu {
         public static string fileName = "usergames";
 
         public static bool enabled = false;
+        public static Dictionary<string, ulong> gameRoles = new Dictionary<string, ulong>();
 
         public static void Initialize() {
             UserGameMonitor config = new UserGameMonitor ();
             config.LoadConfiguration ();
             BotConfiguration.AddConfigurable (config);
 
-            userGames = SerializationIO.LoadObjectFromFile<Dictionary<ulong, List<string>>> (Program.dataPath + fileName + Program.gitHubIgnoreType);
+            if (enabled) {
+                userGames = SerializationIO.LoadObjectFromFile<Dictionary<ulong, List<string>>> (Program.dataPath + fileName + Program.gitHubIgnoreType);
             if (userGames == null)
                 userGames = new Dictionary<ulong, List<string>> ();
 
-            Program.discordClient.GuildMemberUpdated += (before, after) => {
+                Program.discordClient.GuildMemberUpdated += (before, after) => {
 
-                if (UserConfiguration.GetSetting<bool> (after.Id, "AllowSnooping", true))
+                    try {
+                        if (!UserConfiguration.GetSetting<bool> (after.Id, "AllowSnooping"))
+                            return Task.CompletedTask;
+
+                        string gameName = after.Game.HasValue ? after.Game.Value.Name.ToString ().ToUpper () : null;
+                        AddGame (after, gameName);
+                    } catch (Exception e) {
+                        ChatLogger.Log (e.Message + " - " + e.StackTrace);
+                    }
                     return Task.CompletedTask;
+                };
+            }
 
-                string gameName = after.Game.HasValue ? after.Game.Value.Name.ToString ().ToUpper () : null;
-                AddGame (after, gameName);
-
-                return Task.CompletedTask;
-            };
         }
 
         public static string AddGame (SocketUser user, string gameName) {
@@ -58,6 +65,8 @@ namespace Adminthulhu {
                     doSave = true;
                 }
 
+                ChangeGameRole (user, gameName, true);
+
                 if (doSave)
                     SerializationIO.SaveObjectToFile (Program.dataPath + fileName + Program.gitHubIgnoreType, userGames);
             }
@@ -71,7 +80,25 @@ namespace Adminthulhu {
                 userGames[user.Id].Remove (gameName);
                 result = "Succesfully removed **" + gameName + "** from your gamelist.";
             }
+            ChangeGameRole (user, gameName, false);
+
             return result;
+        }
+
+        public static void ChangeGameRole(SocketUser user, string gameName, bool add) {
+            if (gameRoles.ContainsKey (gameName) && UserConfiguration.GetSetting<bool> (user.Id, "AutoManageGameRoles")) {
+                ulong roleID = gameRoles [ gameName ];
+                SocketRole role = Utility.GetServer ().GetRole (roleID);
+                if (role != null) {
+                    if (add) {
+                        Utility.SecureAddRole (user as SocketGuildUser, role);
+                    } else {
+                        Utility.SecureRemoveRole (user as SocketGuildUser, role);
+                    }
+                } else {
+                    ChatLogger.Log ("WARNING - Failed to find game role for " + gameName + " despite the data being present, please make sure the ID's match up as well.");
+                }
+            }
         }
 
         public static List<SocketGuildUser> FindUsersWithGame (string gameName, out string foundGame) {
@@ -106,7 +133,12 @@ namespace Adminthulhu {
         }
 
         public void LoadConfiguration() {
-            enabled = BotConfiguration.GetSetting("UserGameMonitorEnabled", enabled);
+            enabled = BotConfiguration.GetSetting("Games.Enabled", "Misc.UserGameMonitorEnabled", enabled);
+
+            gameRoles = new Dictionary<string, ulong> ();
+            gameRoles.Add ("GAME NAME #1", 0);
+            gameRoles.Add ("GAME NAME #2", 0); // Dictionaries are bitches to defaultize. Defaultize?
+            gameRoles = BotConfiguration.GetSetting("Games.GameRoles", "", gameRoles);
         }
     }
 

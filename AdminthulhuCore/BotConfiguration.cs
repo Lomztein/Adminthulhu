@@ -50,38 +50,76 @@ namespace Adminthulhu {
             }
         }
 
-        public static T GetSetting<T>(string key, T fallback) {
+        // This feels very wrong..
+        public static T GetSetting<T>(string key, string oldKey, T fallback) {
             T obj;
-            if (settings.ContainsKey (key)) {
+            string [ ] path = key.Split ('.');
+            // Search for uncatagorised value, in order to maintain backwards compatability.
+            if (settings.ContainsKey (oldKey)) {
+                T result = Utility.SecureConvertObject<T> (settings [oldKey]);
+                PurgeSetting (oldKey);
+                SetSetting (key, result);
+                return result;
+            } else {
+                object result = null;
+                Dictionary<string, object> dict = settings;
+                for (int i = 0; i < path.Length; i++) {
+                    if (i != path.Length - 1) {
+                        if (dict.ContainsKey (path [ i ])) {
+                            dict = Utility.SecureConvertObject<Dictionary<string, object>> (dict [ path [ i ] ]) as Dictionary<string, object>;
+                        }
 
-                try {
-                    string possibleJSON = settings [ key ].ToString ();
-                    obj = JsonConvert.DeserializeObject<T> (possibleJSON);
-                    if (obj != null)
-                        settings [ key ] = obj;
-                } catch (Exception) {
-                    try {
-                        Type curType = settings [ key ].GetType ();
-                        obj = (T)Convert.ChangeType (settings [ key ], typeof (T));
-                    } catch (Exception) {
-                        obj = (T)settings [ key ];
+                        if (dict == null)
+                            break;
+                    } else if (dict.ContainsKey (path [ i ])) {
+                        result = Utility.SecureConvertObject<T> (dict [ path [ i ] ]);
                     }
                 }
 
-                return obj;
-            } else {
-                ChatLogger.Log ("WARNING: Failed to load setting " + key + ", returning " + fallback.ToString () + "..");
-                SetSetting (key, fallback);
-                return fallback;
+
+                if (result == null) {
+                    if (fallback != null) ChatLogger.Log ("WARNING: Failed to load setting " + key + ", returning fallback \"" + fallback.ToString () + "\"..");
+                    SetSetting (key, fallback);
+                    return fallback;
+                } else {
+                    SetSetting (key, result); // Resave in case of format changes
+                    return Utility.SecureConvertObject<T> (result);
+                }
             }
         }
 
         public static void SetSetting(string key, object value) {
-            if (settings.ContainsKey (key)) {
-                settings [ key ] = value;
-            } else {
-                settings.Add (key, value);
+            try {
+                string [ ] path = key.Split ('.');
+
+                Dictionary<string, object> dict = settings;
+                for (int i = 0; i < path.Length; i++) {
+                    if (i != path.Length - 1) {
+                        if (dict.ContainsKey (path [ i ])) {
+                            dict[path[i]] = Utility.SecureConvertObject<Dictionary<string, object>> (dict [ path [ i ] ]) as Dictionary<string, object>;
+                            dict = dict [ path [ i ] ] as Dictionary<string, object>; // The memory abuse is real.
+                        } else {
+                            dict.Add (path [ i ], new Dictionary<string, object> ());
+                            dict = dict [ path [ i ] ] as Dictionary<string, object>;
+                        }
+                    } else {
+                        if (dict.ContainsKey (path [ i ])) {
+                            dict [ path [ i ] ] = value;
+                        } else {
+                            dict.Add (path [ i ], value);
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                ChatLogger.Log (e.Message + " - " + e.StackTrace);
             }
+        }
+
+        public static void PurgeSetting(string key) {
+            if (settings.ContainsKey (key)) {
+                settings.Remove (key);
+            }
+            ChatLogger.Log ("Purged old config key: " + key);
         }
     }
 

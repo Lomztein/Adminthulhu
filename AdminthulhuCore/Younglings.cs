@@ -11,9 +11,18 @@ namespace Adminthulhu
 
         public static ulong younglingRoleID = 316171882867064843;
         private static Dictionary<ulong, DateTime> joinDate;
+        public static uint daysActiveRequired = 14;
+
+        public static string onKickedDM;
+        public static string onAcceptedDM;
+        public static string onAcceptedPublicAnnouncement;
 
         public void LoadConfiguration() {
-            younglingRoleID = BotConfiguration.GetSetting<ulong> ("YounglingRoleID", 0);
+            younglingRoleID = BotConfiguration.GetSetting<ulong> ("Roles.YounglingID", "YounglingRoleID", 0);
+            onKickedDM = BotConfiguration.GetSetting ("Activity.Younglings.OnKickedDM", "", "Sorry, but you've been kicked from my server due to early inactivity. If you feel this was a mistake, feel free to use this invite link: {INVITELINK}");
+            onKickedDM = BotConfiguration.GetSetting ("Activity.Younglings.OnAcceptedDM", "", "Congratulations, you now have full membership of my server!");
+            onAcceptedPublicAnnouncement = BotConfiguration.GetSetting ("Activity.Younglings.OnAcceptedPublicAnnouncement", "", "Congratulations to {USERNAME} as they've today been granted permanemt membership of this server!");
+            daysActiveRequired = BotConfiguration.GetSetting ("Activity.Younglings.DaysActiveRequired", "", daysActiveRequired);
         }
 
         public Task Initialize(DateTime time) {
@@ -56,7 +65,7 @@ namespace Adminthulhu
                 if (user.Roles.Contains (younglingRole) && user.Roles.Contains (presentRole)) {
                     try {
                         RestInviteMetadata metadata = await Utility.GetMainChannel ().CreateInviteAsync (null, 1, false, true);
-                        await Program.messageControl.SendMessage (user, "Sorry mon, but you've been automatically kicked from **" + Program.serverName + "** due to going inactive within the first two weeks. If you feel this is by mistake (which happens blame Lomztein), or you just want back in, feel free to use the following invite link: " + metadata.Url + "\nThe invite will be valid for a month after this message. If the invite is broken, or you ran out of time, you can get a new link from any member of the server.");
+                        await Program.messageControl.SendMessage (user, onKickedDM.Replace ("{INVITELINK}", metadata.Url));
                         await user.KickAsync ();
                     }catch (Exception e) {
                         ChatLogger.DebugLog (e.Message);
@@ -65,9 +74,10 @@ namespace Adminthulhu
 
                 if (user.Roles.Contains (younglingRole)) {
                     if (joinDate.ContainsKey (user.Id)) {
-                        if (time > joinDate[user.Id].AddDays (14)) {
+                        if (time > joinDate[user.Id].AddDays (daysActiveRequired) && UserActivityMonitor.GetLastActivity (user.Id) > joinDate[user.Id].AddDays (daysActiveRequired - UserActivityMonitor.activeThresholdDays)) {
                             await Utility.SecureRemoveRole (user, younglingRole);
-                            await Program.messageControl.SendMessage (user, "Congratulations! You are no longer a youngling since you've been active here for two weeks, and you are now allowed permanemt membership on " + Program.serverName + "! Just in time too, Bananakin Skywanker was just about to go ham on you younglings.");
+                            await Program.messageControl.SendMessage (user, onAcceptedDM);
+                            Program.messageControl.SendMessage (Utility.GetMainChannel () as SocketTextChannel, onAcceptedPublicAnnouncement.Replace ("{USERNAME}", Utility.GetUserName (user)), true);
                             joinDate.Remove (user.Id);
                             SaveData ();
                         }

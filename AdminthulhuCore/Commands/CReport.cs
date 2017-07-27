@@ -22,6 +22,7 @@ namespace Adminthulhu {
         public override void Initialize() {
             base.Initialize ();
             LoadConfiguration ();
+            BotConfiguration.AddConfigurable (this);
         }
 
         public override Task ExecuteCommand (SocketUserMessage e, List<string> arguments) {
@@ -38,7 +39,7 @@ namespace Adminthulhu {
 
         public override void LoadConfiguration() {
             base.LoadConfiguration ();
-            reportTextChannel = BotConfiguration.GetSetting<ulong> ("ReportChannelID", 0);
+            reportTextChannel = BotConfiguration.GetSetting<ulong> ("Server.ReportChannelID", "ReportChannelID", 0);
         }
     }
 }

@@ -25,11 +25,11 @@ namespace Adminthulhu {
         public static ulong inactiveUserRole = 273017511468072960;
 
         public void LoadConfiguration() {
-            activeThresholdDays = BotConfiguration.GetSetting<int> ("ActivityActiveThresholdDays", 7);
-            presentThresholdDays = BotConfiguration.GetSetting<int> ("ActivityPresentThresholdDays", 14);
-            activeUserRole = BotConfiguration.GetSetting<ulong> ("ActiveRoleID", 0);
-            presentUserRole = BotConfiguration.GetSetting<ulong> ("PresentRoleID", 0);
-            inactiveUserRole = BotConfiguration.GetSetting<ulong> ("InactiveRoleID", 0);
+            activeThresholdDays = BotConfiguration.GetSetting ("Activity.ActiveThresholdDays", "ActivityActiveThresholdDays", 7);
+            presentThresholdDays = BotConfiguration.GetSetting ("Activity.PresentThresholdDays", "ActivityPresentThresholdDays", 14);
+            activeUserRole = BotConfiguration.GetSetting<ulong> ("Roles.ActiveID", "ActiveRoleID", 0);
+            presentUserRole = BotConfiguration.GetSetting<ulong> ("Roles.PresentID", "PresentRoleID", 0);
+            inactiveUserRole = BotConfiguration.GetSetting<ulong> ("Roles.InactiveID", "InactiveRoleID", 0);
         }
 
         public async Task Initialize(DateTime time) {
@@ -101,6 +101,10 @@ namespace Adminthulhu {
 
             SerializationIO.SaveObjectToFile (Program.dataPath + activityFileName + Program.gitHubIgnoreType, userActivity);
             return Task.CompletedTask;
+        }
+
+        public static DateTime GetLastActivity(ulong userID) {
+            return userActivity [ userID ];
         }
 
         private static async Task UpdateUser ( ulong id, SocketRole activeRole, SocketRole presentRole, SocketRole inactiveRole ) {

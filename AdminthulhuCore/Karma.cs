@@ -58,8 +58,8 @@ namespace Adminthulhu {
         }
 
         public void LoadConfiguration() {
-            upvote = BotConfiguration.GetSetting("UpvoteEmojiName", "upvote");
-            downvote = BotConfiguration.GetSetting("DownvoteEmojiName", "downvote");
+            upvote = BotConfiguration.GetSetting("Karma.UpvoteEmojiName", "UpvoteEmojiName", "upvote");
+            downvote = BotConfiguration.GetSetting("Karma.DownvoteEmojiName", "DownvoteEmojiName", "downvote");
         }
     }
 

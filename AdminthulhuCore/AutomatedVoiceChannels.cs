@@ -21,6 +21,9 @@ namespace Adminthulhu {
         public static bool autoRenameChannels = false;
         public static bool shortenChannelNames = false;
         public static bool enableVoiceChannelTags = false;
+        public static ulong musicBotID = 0;
+        public static ulong internationalRoleID = 0;
+        public static ulong younglingRoleID = 0;
 
         public static string [ ] extraChannelNames = new string [ ] {
             "Gorgeous Green",
@@ -46,31 +49,33 @@ namespace Adminthulhu {
         public static VoiceChannel afkChannel = null;
 
         public static VoiceChannelTag [ ] voiceChannelTags = {
-            new VoiceChannelTag ("🎵", delegate (VoiceChannelTag.ActionData data) { data.hasTag = Utility.ForceGetUsers (data.channel.id).Find (x => x.Id == 174535711632916480) != null; } ),
+            new VoiceChannelTag ("🎵", delegate (VoiceChannelTag.ActionData data) { data.hasTag = Utility.ForceGetUsers (data.channel.id).Find (x => x.Id == musicBotID) != null; } ),
             new VoiceChannelTag ("🌎", delegate (VoiceChannelTag.ActionData data) {
-                SocketRole internationalRole = Utility.GetServer ().GetRole (182563086186577920);
+                SocketRole internationalRole = Utility.GetServer ().GetRole (internationalRoleID);
                 data.hasTag = Utility.ForceGetUsers (data.channel.id).Find (x => x.Roles.Contains (internationalRole)) != null;  }),
             new VoiceChannelTag ("🔒", delegate (VoiceChannelTag.ActionData data) { data.hasTag = data.channel.IsLocked (); }),
             //new VoiceChannelTag ("🍞", delegate (VoiceChannelTag.ActionData data) { data.hasTag = Utility.ForceGetUsers (data.channel.id).Where (x => x.Id == 110406708299329536).Count () != 0; } ),
             new VoiceChannelTag ("🎮", delegate (VoiceChannelTag.ActionData data) { data.hasTag = data.channel.status == VoiceChannel.VoiceChannelStatus.Looking; }),
             new VoiceChannelTag ("❌", delegate (VoiceChannelTag.ActionData data) { data.hasTag = data.channel.status == VoiceChannel.VoiceChannelStatus.Full; }),
-            new VoiceChannelTag ("📆", delegate (VoiceChannelTag.ActionData data) { data.hasTag = ((DateTime.Now.DayOfWeek == DayOfWeek.Friday) && (DateTime.Now.Hour >= 20) && Utility.ForceGetUsers (data.channel.id).Count >= 3); }),
+            new VoiceChannelTag ("📆", delegate (VoiceChannelTag.ActionData data) { data.hasTag = ((DateTime.Now.DayOfWeek == DayOfWeek.Friday) && (DateTime.Now.Hour >= AutomatedWeeklyEvent.eventHour) && Utility.ForceGetUsers (data.channel.id).Count >= 3); }),
             new VoiceChannelTag ("🍰", delegate (VoiceChannelTag.ActionData data) { data.hasTag = Utility.ForceGetUsers (data.channel.id).Find (x => Birthdays.IsUsersBirthday (x)) != null; }),
             new VoiceChannelTag ("📹", delegate (VoiceChannelTag.ActionData data) { data.hasTag = Utility.ForceGetUsers (data.channel.id).Where (x => x.Game.HasValue).Where (x => x.Game.Value.StreamType > 0).Count () != 0; }),
             new VoiceChannelTag ("🔥", delegate (VoiceChannelTag.ActionData data) { data.hasTag = Utility.ForceGetUsers (data.channel.id).Where (x => x.GuildPermissions.Administrator).Count () >= 3; }),
             new VoiceChannelTag ("👶", delegate (VoiceChannelTag.ActionData data) {
-                SocketRole younglingRole = Utility.GetServer ().GetRole (316171882867064843);
+                SocketRole younglingRole = Utility.GetServer ().GetRole (younglingRoleID);
                 data.hasTag = Utility.ForceGetUsers (data.channel.id).Find (x => x.Roles.Contains (younglingRole)) != null;  }),
         };
 
         public void LoadConfiguration() {
-            extraChannelNames = BotConfiguration.GetSetting<string [ ]> ("ExtraVoiceChannelNames", new string [ ] { "EXTRA_CHANNEL_1;EXTRA_CHANNEL_SHORT_NAME_1", "EXTRA_CHANNEL_1;EXTRA_CHANNEL_SHORT_NAME_2" });
-            loadedChannels = BotConfiguration.GetSetting ("DefaultVoiceChannels", new VoiceChannel [ ] { new VoiceChannel (0, "DEFAULT_CHANNEL_NAME_1;SHORT_NAME_1", 0), new VoiceChannel (1, "DEFAULT_CHANNEL_NAME_2;SHORT_NAME_2", 0) });
-            afkChannel = BotConfiguration.GetSetting ("AFKChannel", new VoiceChannel (2, "AFK_CHANNEL_NAME", int.MaxValue - 1));
-            autoAddChannels = BotConfiguration.GetSetting ("AutoAddVoiceChannels", autoAddChannels);
-            autoRenameChannels = BotConfiguration.GetSetting ("AutoRenameVoiceChannels", autoRenameChannels);
-            shortenChannelNames = BotConfiguration.GetSetting ("ShortenVoiceChannelNames", shortenChannelNames);
-            enableVoiceChannelTags = BotConfiguration.GetSetting ("VoiceChannelTagsEnabled", enableVoiceChannelTags);
+            extraChannelNames = BotConfiguration.GetSetting<string [ ]> ("Voice.ExtraChannelNames", "ExtraVoiceChannelNames", new string [ ] { "EXTRA_CHANNEL_1;EXTRA_CHANNEL_SHORT_NAME_1", "EXTRA_CHANNEL_1;EXTRA_CHANNEL_SHORT_NAME_2" });
+            loadedChannels = BotConfiguration.GetSetting ("Voice.DefaultChannels", "DefaultVoiceChannels", new VoiceChannel [ ] { new VoiceChannel (0, "DEFAULT_CHANNEL_NAME_1;SHORT_NAME_1", 0), new VoiceChannel (1, "DEFAULT_CHANNEL_NAME_2;SHORT_NAME_2", 0) });
+            afkChannel = BotConfiguration.GetSetting ("Voice.AFKChannel", "AFKChannel", new VoiceChannel (2, "AFK_CHANNEL_NAME", int.MaxValue - 1));
+            autoAddChannels = BotConfiguration.GetSetting ("Voice.AutoAddChannels", "AutoAddVoiceChannels", autoAddChannels);
+            autoRenameChannels = BotConfiguration.GetSetting ("Voice.AutoRenameChannels", "AutoRenameVoiceChannels", autoRenameChannels);
+            shortenChannelNames = BotConfiguration.GetSetting ("Voice.ShortenChannelNames", "ShortenVoiceChannelNames", shortenChannelNames);
+            enableVoiceChannelTags = BotConfiguration.GetSetting ("Voice.ChannelTagsEnabled", "VoiceChannelTagsEnabled", enableVoiceChannelTags);
+            younglingRoleID = BotConfiguration.GetSetting ("Roles.YounglingID", "YounglingRoleID", younglingRoleID);
+            musicBotID = BotConfiguration.GetSetting ("Misc.MusicBotID", "MusicBotID", musicBotID);
         }
 
         public static VoiceChannel [ ] loadedChannels;
@@ -84,9 +89,7 @@ namespace Adminthulhu {
             }
             addChannelsIndex = defaultChannels.Count;
 
-            if (afkChannel.id != 0)
-                AddDefaultChannel (afkChannel);
-            afkChannel.lockable = false;
+            AddDefaultChannel (afkChannel);
 
             for (int i = 0; i < extraChannelNames.Length; i++) {
                 nameQueue.Enqueue (extraChannelNames [ i ]);
@@ -131,7 +134,7 @@ namespace Adminthulhu {
                 VoiceChannel voiceChannel = allVoiceChannels [ voice.Id ];
                 List<SocketGuildUser> users = Utility.ForceGetUsers (voice.Id);
 
-                if (voice.Name == afkChannel.name)
+                if (allVoiceChannels[voice.Id].ignore)
                     return;
 
                 if (voice.Users.Count () == 0) {
@@ -148,7 +151,7 @@ namespace Adminthulhu {
                 Dictionary<Game, int> numPlayers = new Dictionary<Game, int> ();
                 foreach (SocketGuildUser user in users) {
 
-                    if (UserConfiguration.GetSetting<bool> (user.Id, "AutoLooking", false) && users.Count == 1)
+                    if (UserConfiguration.GetSetting<bool> (user.Id, "AutoLooking") && users.Count == 1)
                         voiceChannel.SetStatus (VoiceChannel.VoiceChannelStatus.Looking, false);
 
                     if (user.Game.HasValue && user.IsBot == false) {
@@ -249,7 +252,7 @@ namespace Adminthulhu {
             IEnumerable<VoiceChannel> channels = allVoiceChannels.Values.ToList ();
 
             foreach (VoiceChannel channel in channels) {
-                if (channel == afkChannel)
+                if (channel.ignore)
                     continue;
 
                 int sunkenPos = channel.position;
@@ -276,7 +279,7 @@ namespace Adminthulhu {
         public static bool IsDefaultFull() {
             IEnumerable<VoiceChannel> defaultChannelsList = defaultChannels.Values.ToList ();
             foreach (VoiceChannel channel in defaultChannelsList) {
-                if (afkChannel != channel && Utility.ForceGetUsers (channel.id).Count () == 0)
+                if (channel != afkChannel && Utility.ForceGetUsers (channel.id).Count () == 0)
                     return false;
             }
 
@@ -339,8 +342,7 @@ namespace Adminthulhu {
         }
 
         public static void GetTags(VoiceChannel channel) {
-            List<VoiceChannelTag> tags = channel.currentTags;
-            tags.AddRange (voiceChannelTags.Where (x => tags.Contains (x)));
+            List<VoiceChannelTag> tags = voiceChannelTags.ToList ();
 
             for (int i = 0; i < tags.Count; i++) {
                 VoiceChannelTag curTag = tags [ i ];
@@ -391,6 +393,7 @@ namespace Adminthulhu {
             public string name;
             public int position;
             public bool lockable = true;
+            public bool ignore;
             [JsonIgnore] public VoiceChannelStatus status = VoiceChannelStatus.None;
             [JsonIgnore] public uint desiredMembers = 0;
             [JsonIgnore] public string customName = "";

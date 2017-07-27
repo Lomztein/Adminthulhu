@@ -20,7 +20,7 @@ namespace Adminthulhu {
         public string longHelp = null;
         public string argHelp = "";
         public int argumentNumber = 1;
-        public string helpPrefix = Program.commandChar.ToString ();
+        public string helpPrefix = Program.commandTrigger;
         public Catagory catagory = Catagory.None;
 
         public bool isAdminOnly = false;
@@ -68,12 +68,16 @@ namespace Adminthulhu {
             BotConfiguration.AddConfigurable (this);
         }
 
-        public virtual string GetHelp () {
-            string argExists = argHelp.Length > 0 ? " " : "";
-            string text = "`" + helpPrefix + command + argExists + argHelp + " - " + longHelp;
-            if (isAdminOnly)
-                text += " - ADMIN ONLY";
-            return text + "`";
+        public virtual string GetHelp (SocketMessage e) {
+            if (AllowExecution (e, null, false)) {
+                string argExists = argHelp.Length > 0 ? " " : "";
+                string text = "`" + helpPrefix + command + argExists + argHelp + " - " + longHelp;
+                if (isAdminOnly)
+                    text += " - ADMIN ONLY";
+                return text + "`";
+            } else {
+                return "";
+            }
         }
 
         public virtual string GetShortHelp () {
@@ -91,7 +95,13 @@ namespace Adminthulhu {
         }
 
         public virtual void LoadConfiguration() {
-            commandEnabled = BotConfiguration.GetSetting<bool> ("Command" + command.Substring (0, 1).ToUpper () + command.Substring (1) + "Enabled", false); // Gotta capitalize that shite.
+            string [ ] parts = helpPrefix.Length > 1 ? helpPrefix.Substring(1).Split (' ') : new string [0];
+            string path = "";
+            foreach (string part in parts) {
+                if (part.Length > 0)
+                    path += part.Substring (0, 1).ToUpper () + part.Substring (1) + ".";
+            }
+            commandEnabled = BotConfiguration.GetSetting<bool> ("Command." + path + command.Substring (0, 1).ToUpper () + command.Substring (1) + "Enabled", "Command" + command.Substring (0, 1).ToUpper () + command.Substring (1) + "Enabled", false);
         }
     }
 }

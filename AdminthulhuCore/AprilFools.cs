@@ -21,7 +21,7 @@ namespace Adminthulhu
         }
 
         public void LoadConfiguration() {
-            activeRoleID = BotConfiguration.GetSetting<ulong> ("ActiveRoleID", 0);
+            activeRoleID = BotConfiguration.GetSetting<ulong> ("Roles.ActiveID", "ActiveRoleID", 0);
         }
 
         public Task OnDayPassed(DateTime time) {

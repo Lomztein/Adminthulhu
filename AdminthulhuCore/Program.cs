@@ -10,7 +10,8 @@ namespace Adminthulhu
 {
     class Program : IConfigurable {
 
-        public static char commandChar = '!';
+        public static string commandTrigger = "!";
+        public static string commandTriggerHidden = "/";
 
         public static Command [ ] commands = new Command [ ] {
             new CCommandList (), new CSetColor (), new CRollTheDice (),
@@ -48,21 +49,14 @@ namespace Adminthulhu
         public static string serverName = "";
         public static ulong serverID = 0;
 
-        public static Phrase [ ] phrases = new Phrase [ ] {
-            new Phrase ("Neat!", 0, 100, "Very!", 0, ""),
-            new Phrase ("", 93732620998819840, 1, "*Allegedly...*", 0, ""),
-            new Phrase ("wow!", 94089489227448320, 100, "INSANE AIR TIME!", 0, ""),
-            new Phrase ("Thx fam", 0, 100, "No probs. We Gucci.", 0, ""),
-            new Phrase ("<:Serviet:255721870828109824> Privet Comrades!", 172012092407152640, 100, "Privet, federal leader!", 0, ""),
-            new Phrase ("<:Serviet:255721870828109824> Privet Comrades!", 0, 100, "Privet!", 0, ""),
-            new Phrase ("Who is best gem?", 93732620998819840, 100, "*Obviously* <:Lapis:230346614064021505> ...", 0, ""),
-            new Phrase ("Who is best gem?", 0, 100, "Obviously <:PeriWow:230381627669348353>", 0, ""),
-            new Phrase ("https://www.reddit.com/", 93732620998819840, 100, "Wow, this is some very interesting conte- <:residentsleeper:257933177631277056> Zzz", 171667949155778561, ""),
-            new Phrase ("", 174097001003220992, 2, "¯\\_(ツ)_/¯", 0, ""),
-            new Phrase ("(╯°□°）╯︵ ┻━┻", 0, 100, "Please respect tables. ┬─┬ノ(ಠ_ಠノ)", 0, ""),
-            new Phrase ("nice", 95463258181345280, 25, "Very nice!", 0, ""),
-            new Phrase ("Neato", 0, 100, "", 0, "🌯"),
-        };
+        public static string onUserJoinMessage;
+        public static string onUserLeaveMessage;
+        public static string onUserBannedMessage;
+        public static string onUserUnbannedMessage;
+        public static string onUserChangedNameMessage;
+
+
+        public static Phrase [ ] phrases = new Phrase [ ] { };
         public static List<string> allowedDeletedMessages = new List<string>();
 
         // Feedback
@@ -77,11 +71,21 @@ namespace Adminthulhu
         }
 
         public void LoadConfiguration() {
-            mainTextChannelName = BotConfiguration.GetSetting ("MainTextChannelName", "general");
-            dumpTextChannelName = BotConfiguration.GetSetting ("DumpTextChannelName", "dump");
-            serverName = BotConfiguration.GetSetting ("ServerName", "Discord Server");
-            serverID = BotConfiguration.GetSetting<ulong> ("ServerID", 0);
-            phrases = BotConfiguration.GetSetting ("ResponsePhrases", new Phrase [ ] { new Phrase ("Neat!", 0, 100, "Very!", 0, ""), new Phrase ("Neato", 0, 100, "", 0, "🌯") });
+            mainTextChannelName = BotConfiguration.GetSetting ("Server.MainTextChannelName", "MainTextChannelName", "general");
+            dumpTextChannelName = BotConfiguration.GetSetting ("Server.DumpTextChannelName", "DumpTextChannelName", "dump");
+            serverName = BotConfiguration.GetSetting ("Server.Name", "ServerName", "Discord Server");
+            serverID = BotConfiguration.GetSetting<ulong> ("Server.ID", "ServerID", 0);
+
+            onUserJoinMessage = BotConfiguration.GetSetting ("Server.Messages.OnUserJoin", "", "{USERNAME} has joined this server!");
+            onUserLeaveMessage = BotConfiguration.GetSetting ("Server.Messages.OnUserLeave", "", "{USERNAME} has left this server.");
+            onUserBannedMessage = BotConfiguration.GetSetting ("Server.Messages.OnUserBanned", "", "{USERNAME} has been banned from this server.");
+            onUserUnbannedMessage = BotConfiguration.GetSetting ("Server.Messages.OnUserUnbanned", "", "{USERNAME} has been unbanned from this server!");
+            onUserChangedNameMessage = BotConfiguration.GetSetting ("Server.Messages.OnUserChangedName", "", "{OLDNAME} has changed their name to {NEWNAME}!");
+
+            commandTrigger = BotConfiguration.GetSetting ("Command.Trigger", "","!");
+            commandTriggerHidden = BotConfiguration.GetSetting ("Command.HiddenTrigger", "", "/");
+
+            phrases = BotConfiguration.GetSetting ("Misc.ResponsePhrases", "ResponsePhrases", new Phrase [ ] { new Phrase ("Neat!", 0, 100, "Very!", 0, ""), new Phrase ("Neato", 0, 100, "", 0, "🌯") });
         }
 
         public async Task Start(string [ ] args) {
@@ -95,28 +99,32 @@ namespace Adminthulhu
 
             dataPath = dataPath.Replace ('\\', '/');
             InitializeDirectories ();
-            ChatLogger.Log ("Booting.. Datapath: " + dataPath);
+            ChatLogger.Log ("Initializing bot.. Datapath: " + dataPath);
             BotConfiguration.Initialize ();
             BotConfiguration.AddConfigurable (this);
+            LoadConfiguration ();
 
             discordClient = new DiscordSocketClient ();
             messageControl = new MessageControl ();
             karma = new Karma ();
 
+            ChatLogger.Log ("Loading data..");
+            InitializeCommands ();
             UserConfiguration.Initialize ();
-            LoadConfiguration ();
             clock = new Clock ();
 
             InitializeData ();
-            InitializeCommands ();
             UserGameMonitor.Initialize ();
 
             bootedTime = DateTime.Now.AddSeconds (BOOT_WAIT_TIME);
 
+            ChatLogger.Log ("Setting up events..");
             discordClient.MessageReceived += (e) => {
 
                 ChatLogger.Log (Utility.GetChannelName (e) + " says: " + e.Content);
-                if (e.Author.Id != discordClient.CurrentUser.Id && e.Content.Length > 0 && e.Content [ 0 ] == commandChar) {
+                bool hideTrigger = false;
+                bool foundCommand = false;
+                if (e.Author.Id != discordClient.CurrentUser.Id && e.Content.Length > 0 && ContainsCommandTrigger (e.Content, out hideTrigger)) {
                     string message = e.Content;
 
                     if (message.Length > 0) {
@@ -125,13 +133,13 @@ namespace Adminthulhu
                         string command = "";
                         List<string> arguments = Utility.ConstructArguments (message, out command);
 
-                        FindAndExecuteCommand (e, command, arguments, commands);
+                        foundCommand = FindAndExecuteCommand (e, command, arguments, commands);
                     }
                 }
 
                 FindPhraseAndRespond (e);
 
-                if (e.Content.Length > 0 && e.Content [ 0 ] == commandChar) {
+                if (e.Content.Length > 0 && hideTrigger && foundCommand) {
                     e.DeleteAsync ();
                     allowedDeletedMessages.Add (e.Content);
                 }
@@ -141,7 +149,7 @@ namespace Adminthulhu
 
             discordClient.UserJoined += async (e) => {
                 Younglings.OnUserJoined (e);
-                messageControl.SendMessage (Utility.GetMainChannel () as SocketTextChannel, "**" + e.Username + "** has joined this server. Bid them welcome or murder them in cold blood, it's really up to you.", true);
+                messageControl.SendMessage (Utility.GetMainChannel () as SocketTextChannel, onUserJoinMessage.Replace ("{USERNAME}", Utility.GetUserName (e)), true);
 
                 string[] welcomeMessage = SerializationIO.LoadTextFile (dataPath + "welcomemessage" + gitHubIgnoreType);
                 string combined = "";
@@ -153,7 +161,7 @@ namespace Adminthulhu
             };
 
             discordClient.UserLeft += (e) => {
-                messageControl.SendMessage (Utility.GetMainChannel () as SocketTextChannel, "**" + Utility.GetUserName (e) + "** has left the server. Don't worry, they'll come crawling back soon.", true);
+                messageControl.SendMessage (Utility.GetMainChannel () as SocketTextChannel, onUserLeaveMessage.Replace ("{USERNAME}", Utility.GetUserName (e)), true);
                 return Task.CompletedTask;
             };
 
@@ -176,20 +184,15 @@ namespace Adminthulhu
                 await AutomatedVoiceChannels.OnUserUpdated (guild, before.VoiceChannel, after.VoiceChannel);
 
                 if ((before as SocketGuildUser).Nickname != (after as SocketGuildUser).Nickname) {
-                    messageControl.SendMessage (channel as SocketTextChannel, "**" + Utility.GetUserUpdateName (before as SocketGuildUser, after as SocketGuildUser, true) + "** has changed their nickname to **" + Utility.GetUserUpdateName (before as SocketGuildUser, after as SocketGuildUser, false) + "**", true);
+                    MentionNameChange (before, after);
                 }
             };
 
             discordClient.UserUpdated += (before, after) => {
                 ChatLogger.Log ("User " + before.Username + " updated.");
 
-                SocketTextChannel channel = Utility.GetMainChannel () as SocketTextChannel;
-
-                if (channel == null)
-                    return Task.CompletedTask;
-
-                if (before.Username != after.Username) {
-                    messageControl.SendMessage (channel as SocketTextChannel, "**" + Utility.GetUserUpdateName (before as SocketGuildUser, after as SocketGuildUser, true) + "** has changed their name to **" + after.Username + "**", true);
+                if (before.Username != after.Username && (after as SocketGuildUser).Nickname == "") {
+                    MentionNameChange (before as SocketGuildUser, after as SocketGuildUser);
                 }
 
                 return Task.CompletedTask;
@@ -200,8 +203,7 @@ namespace Adminthulhu
                 if (channel == null)
                     return Task.CompletedTask;
 
-                messageControl.SendMessage (channel as SocketTextChannel, "**" + Utility.GetUserName (e as SocketGuildUser) + "** has been banned from this server, they will not be missed.", true);
-                messageControl.SendMessage (e as SocketGuildUser, "Sorry to tell you like this, but you have been permabanned from Monster Mash. ;-;");
+                messageControl.SendMessage (channel as SocketTextChannel, onUserBannedMessage.Replace ("{USERNAME}", Utility.GetUserName (e as SocketGuildUser)), true);
 
                 return Task.CompletedTask;
             };
@@ -211,23 +213,7 @@ namespace Adminthulhu
                 if (channel == null)
                     return Task.CompletedTask;
 
-                messageControl.SendMessage (channel as SocketTextChannel, "**" + Utility.GetUserName (e as SocketGuildUser) + "** has been unbanned from this server, They are once more welcome in our glorious embrace.", true);
-                messageControl.SendMessage (e as SocketGuildUser, "You have been unbanned from Monster Mash, we love you once more! :D");
-
-                return Task.CompletedTask;
-            };
-
-            discordClient.MessageDeleted += (message, channel) => {
-                if (channel == null)
-                    return Task.CompletedTask;
-
-                if (message.HasValue) {
-                    if (!allowedDeletedMessages.Contains (message.Value.Content)) {
-                        messageControl.SendMessage (channel as SocketTextChannel, "In order disallow *any* secrets except for admin secrets, I'd like to tell you that **" + Utility.GetUserName (message.Value.Author as SocketGuildUser) + "** just had a message deleted on **" + message.Value.Channel.Name + "**.", true);
-                    } else {
-                        allowedDeletedMessages.Remove (message.Value.Content);
-                    }
-                }
+                messageControl.SendMessage (channel as SocketTextChannel, onUserUnbannedMessage.Replace ("{USERNAME}", Utility.GetUserName (e as SocketGuildUser)), true);
 
                 return Task.CompletedTask;
             };
@@ -248,6 +234,23 @@ namespace Adminthulhu
             await Task.Delay (-1);
         }
 
+        public bool ContainsCommandTrigger(string message, out bool isHidden) {
+            isHidden = false;
+            if (commandTrigger.Length > 0 && message.Substring (0, commandTrigger.Length) == commandTrigger) {
+                isHidden = false;
+                return true;
+            }else if (commandTriggerHidden.Length > 0 && message.Substring (0, commandTriggerHidden.Length) == commandTriggerHidden) {
+                isHidden = true;
+                return true;
+            }
+            return false;
+        }
+
+        private void MentionNameChange(SocketGuildUser before, SocketGuildUser after) {
+            SocketTextChannel channel = Utility.GetMainChannel () as SocketTextChannel;
+            messageControl.SendMessage (channel, onUserChangedNameMessage.Replace ("{OLDNAME}", Utility.GetUserUpdateName (before, after, true)).Replace ("{NEWNAME}", Utility.GetUserUpdateName (before, after, false)), true);
+        }
+
         private static bool hasBooted = false;
         public static bool FullyBooted () {
             if (hasBooted)
@@ -255,7 +258,7 @@ namespace Adminthulhu
 
             if (Utility.GetServer () != null) {
                 hasBooted = true;
-                ChatLogger.Log ("Booted flag set to true.");
+                ChatLogger.Log ("Bot has fully booted.");
             }
             return hasBooted;
         }
@@ -292,7 +295,7 @@ namespace Adminthulhu
                 if (commandList[i].command == commandName) {
                     if (arguements.Count > 0 && arguements [ 0 ] == "?") {
                         Command command = commandList [ i ];
-                        messageControl.SendMessage (e as SocketUserMessage, command.GetHelp (), false);
+                        messageControl.SendMessage (e as SocketUserMessage, command.GetHelp (e), false);
                     } else
                         commandList [ i ].ExecuteCommand (e as SocketUserMessage, arguements);
                     return true;

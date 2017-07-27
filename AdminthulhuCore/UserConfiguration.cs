@@ -9,36 +9,41 @@ using System.Globalization;
 using Newtonsoft.Json;
 
 namespace Adminthulhu {
-    public static class UserConfiguration {
+    public class UserConfiguration : IConfigurable {
 
         public static Dictionary<ulong, List<Setting>> userSettings;
         public static string settingsFileName = "usersettings";
+        public static List<UserSettingsCommandBase> commands = new List<UserSettingsCommandBase> ();
+        public static Dictionary<string, object> defaultValues = new Dictionary<string, object> ();
 
         public static void Initialize() {
             userSettings = SerializationIO.LoadObjectFromFile<Dictionary<ulong, List<Setting>>> (Program.dataPath + settingsFileName + Program.gitHubIgnoreType);
             if (userSettings == null)
                 userSettings = new Dictionary<ulong, List<Setting>> ();
+
+            UserConfiguration config = new UserConfiguration ();
+            config.LoadConfiguration ();
         }
 
         public static void SaveSettings() {
             SerializationIO.SaveObjectToFile (Program.dataPath + settingsFileName + Program.gitHubIgnoreType, userSettings);
         }
 
-        public static T GetSetting<T>(ulong userID, string key, object defaultValue) {
+        public static void AddCommand(UserSettingsCommandBase command) {
+            commands.Add (command);
+        }
+
+        public static T GetSetting<T>(ulong userID, string key) {
             if (userSettings.ContainsKey (userID)) {
                 List<Setting> set = userSettings [ userID ];
                 foreach (Setting s in set) {
                     if (s.name == key) {
-                        Newtonsoft.Json.Linq.JObject obj = s.value as Newtonsoft.Json.Linq.JObject;
-                        if (obj != null) {
-                            s.value = JsonConvert.DeserializeObject<T> (obj.ToString ());
-                        }
-                        return (T)s.value;
+                        return Utility.SecureConvertObject<T> (s.value);
                     }
                 }
             }
 
-            return (T)defaultValue;
+          return (T)Convert.ChangeType (defaultValues[key], typeof (T));
         }
 
         public static void SetSetting(ulong userID, string key, object value) {
@@ -65,9 +70,15 @@ namespace Adminthulhu {
         }
 
         public static bool ToggleBoolean(ulong userID, string key) {
-            bool newSetting = !GetSetting<bool> (userID, key, false);
+            bool newSetting = !GetSetting<bool> (userID, key);
             SetSetting (userID, key, newSetting);
             return newSetting;
+        }
+
+        public void LoadConfiguration() {
+            foreach (UserSettingsCommandBase settingBase in commands) {
+                defaultValues.Add (settingBase.key, BotConfiguration.GetSetting ("UserSettings." + settingBase.key + "Default", "", settingBase.superDefaultValue));
+            }
         }
 
         public class Setting {
@@ -81,22 +92,35 @@ namespace Adminthulhu {
         }
     }
 
+    public class UserSettingsCommandBase : Command { // It is said that names close to each other is a bad idea. /shrug
+
+        public string key;
+        public object superDefaultValue; // The value default from the code.
+
+        public override void Initialize() {
+            base.Initialize ();
+            UserConfiguration.AddCommand (this);
+        }
+    }
+
     public class UserSettingsCommands : CommandSet {
         public UserSettingsCommands() {
             command = "settings";
             shortHelp = "User settings command set.";
             longHelp = "A set of commands about user settings.";
             commandsInSet = new Command [ ] { new CReminderTime (), new CSetBirthday (), new CSetCulture (), new CToggleRole (), new CToggleInternational (), new CAutomaticLooking (),
-            new CToggleSnooping () };
+            new CToggleSnooping (), new CAutoManageGameRoles () };
         }
 
-        public class CReminderTime : Command {
+        public class CReminderTime : UserSettingsCommandBase {
 
             public CReminderTime() {
                 command = "evt";
                 shortHelp = "Event reminder timespan.";
                 argHelp = "<time in hours>";
                 longHelp = "Change time reminds about events to" + argHelp + ". Works in hours.";
+                key = "EventRemindTime";
+                superDefaultValue = 2;
                 argumentNumber = 1;
             }
 
@@ -115,7 +139,7 @@ namespace Adminthulhu {
             }
         }
 
-        public class CSetBirthday : Command {
+        public class CSetBirthday : UserSettingsCommandBase {
 
             public CSetBirthday() {
                 command = "birthday";
@@ -123,6 +147,8 @@ namespace Adminthulhu {
                 argHelp = "<date (d-m-y h:m:s)>";
                 longHelp = "Set your birthday date to " + argHelp + ", so we know when to congratulate you!";
                 argumentNumber = 1;
+                key = "Birthday";
+                superDefaultValue = null;
             }
 
             public override Task ExecuteCommand(SocketUserMessage e, List<string> arguments) {
@@ -131,7 +157,7 @@ namespace Adminthulhu {
                     DateTime parse;
                     if (Utility.TryParseDatetime (arguments [ 0 ], e.Author.Id, out parse)) {
                         Birthdays.SetBirthday (e.Author.Id, parse);
-                        CultureInfo info = new CultureInfo (UserConfiguration.GetSetting<string> (e.Author.Id, "Culture", "da-DK"));
+                        CultureInfo info = new CultureInfo (UserConfiguration.GetSetting<string> (e.Author.Id, "Culture"));
                         Program.messageControl.SendMessage (e, "You have succesfully set your birthday to **" + parse.ToString (info) + "**.", false);
                     } else {
                         Program.messageControl.SendMessage (e, "Failed to set birthday - could not parse date.", false);
@@ -141,12 +167,14 @@ namespace Adminthulhu {
             }
         }
 
-        public class CSetCulture : Command {
+        public class CSetCulture : UserSettingsCommandBase {
             public CSetCulture() {
                 command = "culture";
                 shortHelp = "Set culture.";
                 argHelp = "<culture (language-COUNTRY)>";
                 longHelp = "Sets your preferred culture. Used for proper formatting of stuff such as datetime.";
+                key = "Culture";
+                superDefaultValue = "da-DK";
                 argumentNumber = 1;
             }
 
@@ -164,12 +192,14 @@ namespace Adminthulhu {
             }
         }
 
-        public class CAutomaticLooking : Command {
+        public class CAutomaticLooking : UserSettingsCommandBase {
             public CAutomaticLooking() {
                 command = "autolooking";
                 shortHelp = "Toggle automatic !looking command.";
                 longHelp = "Toggles automatically enabling the !looking command.";
                 argumentNumber = 1;
+                key = "AutoLooking";
+                superDefaultValue = false;
             }
 
             public override Task ExecuteCommand(SocketUserMessage e, List<string> arguments) {
@@ -182,19 +212,41 @@ namespace Adminthulhu {
             }
         }
 
-        public class CToggleSnooping : Command {
+        public class CToggleSnooping : UserSettingsCommandBase {
             public CToggleSnooping() {
                 command = "snooping";
                 shortHelp = "Toggle Adminthulhu snooping.";
-                longHelp = "Disables non-critical Adminthulhu snooping on you, if toggled off.";
-                argumentNumber = 1;
+                longHelp = "Disables non-critical bot snooping on you, if toggled off.";
+                key = "AllowSnooping";
+                superDefaultValue = true;
+                argumentNumber = 0;
             }
 
             public override Task ExecuteCommand(SocketUserMessage e, List<string> arguments) {
                 base.ExecuteCommand (e, arguments);
                 if (AllowExecution (e, arguments)) {
                     bool result = UserConfiguration.ToggleBoolean (e.Author.Id, "AllowSnooping");
-                    Program.messageControl.SendMessage (e, "Adminthulhu snooping enabled: " + result.ToString (), false);
+                    Program.messageControl.SendMessage (e, "Bot snooping enabled: " + result.ToString (), false);
+                }
+                return Task.CompletedTask;
+            }
+        }
+
+        public class CAutoManageGameRoles : UserSettingsCommandBase {
+            public CAutoManageGameRoles() {
+                command = "autoroles";
+                shortHelp = "Toggle automanage game roles.";
+                longHelp = "Determines if game roles will be added to you automatically.";
+                argumentNumber = 0;
+                key = "AutoManageGameRoles";
+                superDefaultValue = false;
+            }
+
+            public override Task ExecuteCommand(SocketUserMessage e, List<string> arguments) {
+                base.ExecuteCommand (e, arguments);
+                if (AllowExecution (e, arguments)) {
+                    bool result = UserConfiguration.ToggleBoolean (e.Author.Id, "AutoManageGameRoles");
+                    Program.messageControl.SendMessage (e, "Auto roles enabled: " + result.ToString (), false);
                 }
                 return Task.CompletedTask;
             }
@@ -208,21 +260,22 @@ namespace Adminthulhu {
             public CToggleRole() {
                 command = "nsfw";
                 shortHelp = "Toggle NSFW access.";
-                longHelp = "Toggles access to NSFW channels, by removing or adding the @Pervert role to you.";
+                longHelp = "Toggles access to NSFW channels, by removing or adding the NSFW role to you.";
                 argumentNumber = 0;
             }
 
-            public override Task ExecuteCommand(SocketUserMessage e, List<string> arguments) {
-                base.ExecuteCommand (e, arguments);
+            public override async Task ExecuteCommand(SocketUserMessage e, List<string> arguments) {
+                await base.ExecuteCommand (e, arguments);
                 if (AllowExecution (e, arguments)) {
                     SocketRole role = Utility.GetServer ().GetRole (roleID);
                     if ((e.Author as SocketGuildUser).Roles.Contains (role)) {
-                        Utility.SecureRemoveRole (e.Author as SocketGuildUser, role);
+                        await Utility.SecureRemoveRole (e.Author as SocketGuildUser, role);
+                        Program.messageControl.SendMessage (e, "Succesfully removed " + command + " role.", false);
                     } else {
-                        Utility.SecureAddRole (e.Author as SocketGuildUser, role);
+                        await Utility.SecureAddRole (e.Author as SocketGuildUser, role);
+                        Program.messageControl.SendMessage (e, "Succesfully added " + command + " role.", false);
                     }
                 }
-                return Task.CompletedTask;
             }
         }
 

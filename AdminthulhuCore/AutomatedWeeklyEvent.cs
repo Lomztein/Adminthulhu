@@ -59,18 +59,35 @@ namespace Adminthulhu {
         public static ulong votingMessageID = 0;
         public static ulong joinMessageID;
 
-        public int eventHour = 20;
+        public static int eventHour = 20;
+        public static string EVENT_NAME = ""+ eventDayName.Substring (0, 1).ToUpper () + eventDayName.Substring (1) +" Event"; // This is like the worst solution ever.
+
+        public static string onEventJoinedDM = "Thank you for joining this fridays event!";
+        public static string onEventLeftDM = "You've succesfully left this fridays event.";
+        public static string onEventChosenByVoteMessage = "The game for this fridays event has been chosen by vote: **{VOTEDGAME}**! It can be joined by pressing the calender below!";
+        public static string onVotedEventLostDM = "The game you voted for for this friday event sadly lost to **{VOTEDGAME}**, would you like to join anyways?";
+        public static string onNewVoteStartedMessage = "{EVERYONEMENTION}! A new friday event vote has begun, check {ANNOUNCEMENTCHANNEL} for the votesheet!";
+        public static string onMaxVotesReachedDM = "You've reached your max amount of three votes, please remove one if you wish to vote for another.";
+        public static string onVotedForGameTwiceDM = "You've voted for the same game twice, which you cannot do.";
 
         public void LoadConfiguration() {
-            votesPerPerson = BotConfiguration.GetSetting ("EventVotesPerPerson", votesPerPerson);
-            gamesPerWeek = BotConfiguration.GetSetting ("EventGamesPerWeek", gamesPerWeek);
-            announcementsChannelName = BotConfiguration.GetSetting ("AnnouncementsChannelName", "announcements");
+            votesPerPerson = BotConfiguration.GetSetting ("WeeklyEvent.VotesPerPerson", "EventVotesPerPerson", votesPerPerson);
+            gamesPerWeek = BotConfiguration.GetSetting ("WeeklyEvent.GamesPerWeek", "EventGamesPerWeek", gamesPerWeek);
+            announcementsChannelName = BotConfiguration.GetSetting ("Server.AnnouncementsChannelName", "AnnouncementsChannelName", "announcements");
 
-            voteStartDay = BotConfiguration.GetSetting ("EventVoteStartDay", voteStartDay);
-            voteEndDay = BotConfiguration.GetSetting ("EventVoteEndDay", voteEndDay);
-            eventDayName = BotConfiguration.GetSetting ("EventDayName", eventDayName);
-            daysBetween = BotConfiguration.GetSetting ("DaysBetweenVoteEndAndEvent", daysBetween);
-            eventHour = BotConfiguration.GetSetting ("EventHour", eventHour);
+            voteStartDay = BotConfiguration.GetSetting ("WeeklyEvent.VoteStartDay", "EventVoteStartDay", voteStartDay);
+            voteEndDay = BotConfiguration.GetSetting ("WeeklyEvent.VoteEndDay", "EventVoteEndDay", voteEndDay);
+            eventDayName = BotConfiguration.GetSetting ("WeeklyEvent.EventDayName", "EventDayName", eventDayName);
+            daysBetween = BotConfiguration.GetSetting ("WeeklyEvent.DaysBetweenVoteAndEvent", "DaysBetweenVoteEndAndEvent", daysBetween);
+            eventHour = BotConfiguration.GetSetting ("WeeklyEvent.Hour", "EventHour", eventHour);
+
+            onEventJoinedDM = BotConfiguration.GetSetting ("WeeklyEvent.Messages.OnEventJoinedDM", "", onEventJoinedDM);
+            onEventLeftDM = BotConfiguration.GetSetting ("WeeklyEvent.Messages.OnEventLeftDM", "", onEventLeftDM);
+            onEventChosenByVoteMessage = BotConfiguration.GetSetting ("WeeklyEvent.Messages.OnEventChosenByVoteMessage", "", onEventChosenByVoteMessage);
+            onVotedEventLostDM = BotConfiguration.GetSetting ("WeeklyEvent.Messages.OnVotedEventLostDM", "", onVotedEventLostDM);
+            onNewVoteStartedMessage = BotConfiguration.GetSetting ("WeeklyEvent.Messages.OnNewVoteStartedMessage", "", onNewVoteStartedMessage);
+            onMaxVotesReachedDM = BotConfiguration.GetSetting ("WeeklyEvent.Messages.OnMaxVotesReachedDM", "", onMaxVotesReachedDM);
+            onVotedForGameTwiceDM = BotConfiguration.GetSetting ("WeeklyEvent.Messages.OnVotedForGameTwiceDM", "", onVotedForGameTwiceDM);
         }
 
         public async Task Initialize(DateTime time) {
@@ -83,6 +100,7 @@ namespace Adminthulhu {
             votingMessageID = loadedData.votingMessageID;
             joinMessageID = loadedData.joinMessageID;
             allGames = loadedData.allGames;
+            status = loadedData.status;
 
             if (allGames == null)
                 allGames = new List<Game> ();
@@ -90,7 +108,7 @@ namespace Adminthulhu {
             while (Utility.GetServer () == null)
                 await Task.Delay (1000);
 
-            if (votes == null && (int)DateTime.Now.DayOfWeek < 2)
+            if (status == WeeklyEventStatus.Waiting && (int)DateTime.Now.DayOfWeek < (int)voteEndDay)
                 BeginNewVote ();
 
             Program.discordClient.ReactionAdded += async (message, channel, reaction) => {
@@ -119,7 +137,9 @@ namespace Adminthulhu {
                 }
 
                 if (add) {
-                    VoteForGame (reaction.User.Value.Id, reactionID);
+                    if (!VoteForGame (reaction.User.Value.Id, reactionID)) {
+                        message.Value.RemoveReactionAsync (reaction.Emote, message.Value.Author);
+                    }
                 } else {
                     RemoveVote (reaction.UserId, reactionID);
                 }
@@ -131,27 +151,29 @@ namespace Adminthulhu {
 
             if (message.Id == joinMessageID) {
                 if (reaction.Emote.Name == "🗓") {
-                    DiscordEvents.JoinEvent (reaction.UserId, "Friday Event");
-                    Program.messageControl.SendMessage (Utility.GetServer ().GetUser (reaction.UserId), "Thank you for joining the upcoming friday event, we are looking forward for your sacrifice!");
+                    if (add) {
+                        if (DiscordEvents.JoinEvent (reaction.UserId, EVENT_NAME)) {
+                            Program.messageControl.SendMessage (Utility.GetServer ().GetUser (reaction.UserId), onEventJoinedDM);
+                        }
+                    } else {
+                        if (DiscordEvents.LeaveEvent (reaction.UserId, EVENT_NAME)) {
+                            Program.messageControl.SendMessage (Utility.GetServer ().GetUser (reaction.UserId), onEventLeftDM);
+                        }
+                    }
                 }
             }
         }
 
         public static void SaveData() {
-            SerializationIO.SaveObjectToFile (Program.dataPath + dataFileName + Program.gitHubIgnoreType, new Data (games, votes, votingMessageID, joinMessageID, allGames));
+            SerializationIO.SaveObjectToFile (Program.dataPath + dataFileName + Program.gitHubIgnoreType, new Data (games, votes, votingMessageID, joinMessageID, allGames, status));
         }
 
         public Task OnDayPassed(DateTime time) {
-            if (votes == null) {
-                if (time.DayOfWeek == voteStartDay) {
-                    BeginNewVote ();
-                }
-            } else {
-                if (time.DayOfWeek == voteEndDay) {
-                    CountVotes ();
-                }
-            }
-            return Task.CompletedTask;
+            if (time.DayOfWeek == voteStartDay)
+                BeginNewVote ();
+            if (time.DayOfWeek == voteEndDay)
+                CountVotes ();
+            return Task.CompletedTask; // Lets try without the votes possibly standing in the way. We trust the timer now.
         }
 
         public Task OnMinutePassed(DateTime time) {
@@ -167,61 +189,62 @@ namespace Adminthulhu {
         }
 
         private async void CountVotes() {
-            status = WeeklyEventStatus.Waiting;
+            try {
+                status = WeeklyEventStatus.Waiting;
 
-            highestGame = null;
-            int highestVote = int.MinValue;
+                highestGame = null;
+                int highestVote = int.MinValue;
 
-            foreach (Game game in games) {
-                if (game.votes > highestVote) {
-                    highestGame = game;
-                    highestVote = game.votes;
-                }
-            }
-
-            DateTime now = DateTime.Now;
-            DateTime eventDay = new DateTime (now.Year, now.Month, now.Day, eventHour, 0, 0).AddDays (daysBetween);
-            DiscordEvents.CreateEvent ("Friday Event", eventDay, highestGame.name + " has been chosen by vote!");
-
-            SocketGuildChannel mainChannel = Utility.GetMainChannel ();
-            RestUserMessage joinMessage = await Program.messageControl.AsyncSend (mainChannel as SocketTextChannel, "The game for this fridays event has been chosen by vote: **" + highestGame.name + "**! It can be joined by pressing the calender below!", true);
-            joinMessageID = joinMessage.Id;
-            joinMessage.AddReactionAsync (new Emoji ("🗓"));
-
-            Dictionary <ulong, bool> didWin = new Dictionary<ulong, bool> ();
-
-            foreach (Vote vote in votes) {
-                if (!didWin.ContainsKey (vote.voterID))
-                    didWin.Add (vote.voterID, false);
-
-                if (!didWin [ vote.voterID ]) {
-                    if (highestGame == games [ vote.votedGameID ]) {
-                        didWin [ vote.voterID ] = true;
+                foreach (Game game in games) {
+                    if (game.votes > highestVote) {
+                        highestGame = game;
+                        highestVote = game.votes;
                     }
                 }
-            }
 
-            int count = didWin.Count ();
-            for (int i = 0; i < count; i++) {
-                KeyValuePair<ulong, bool> pair = didWin.ElementAt (i);
-                if (!pair.Value) {
-                    SocketGuildUser user = Utility.GetServer ().GetUser (pair.Key);
-                    // AutomatedEventHandling seriously lacks wrapper functions.
-                    await Program.messageControl.AskQuestion (user, "The friday event you voted for sadly lost to **" + highestGame.name + "** , do you want to join the event anyways?",
-                        delegate () {
-                            DiscordEvents.JoinEvent (pair.Key, "friday event");
-                            Program.messageControl.SendMessage (user, "You have joined the friday event succesfully!");
-                        });
-                } else {
-                    DiscordEvents.JoinEvent (pair.Key, "friday event");
+                DateTime now = DateTime.Now;
+                DateTime eventDay = new DateTime (now.Year, now.Month, now.Day, eventHour, 0, 0).AddDays (daysBetween);
+                DiscordEvents.CreateEvent (EVENT_NAME, eventDay, highestGame.name + " has been chosen by vote!");
+
+                SocketGuildChannel mainChannel = Utility.GetMainChannel ();
+                RestUserMessage joinMessage = await Program.messageControl.AsyncSend (mainChannel as SocketTextChannel, onEventChosenByVoteMessage.Replace ("{VOTEDGAME}", highestGame.name), true);
+                joinMessageID = joinMessage.Id;
+                joinMessage.AddReactionAsync (new Emoji ("🗓"));
+
+                Dictionary<ulong, bool> didWin = new Dictionary<ulong, bool> ();
+
+                foreach (Vote vote in votes) {
+                    if (!didWin.ContainsKey (vote.voterID))
+                        didWin.Add (vote.voterID, false);
+
+                    if (!didWin [ vote.voterID ]) {
+                        if (highestGame == games [ vote.votedGameID ]) {
+                            didWin [ vote.voterID ] = true;
+                        }
+                    }
                 }
+
+                int count = didWin.Count ();
+                for (int i = 0; i < count; i++) {
+                    KeyValuePair<ulong, bool> pair = didWin.ElementAt (i);
+                    if (!pair.Value) {
+                        SocketGuildUser user = Utility.GetServer ().GetUser (pair.Key);
+                        // AutomatedEventHandling seriously lacks wrapper functions.
+                        await Program.messageControl.AskQuestion (user, onVotedEventLostDM.Replace ("{VOTEDGAME}", highestGame.name),
+                            delegate () {
+                                DiscordEvents.JoinEvent (pair.Key, EVENT_NAME);
+                                Program.messageControl.SendMessage (user, onEventJoinedDM);
+                            });
+                    } else {
+                        DiscordEvents.JoinEvent (pair.Key, EVENT_NAME);
+                    }
+                }
+
+                await UpdateVoteMessage (false);
+                SaveData ();
+            } catch (Exception e) {
+                ChatLogger.DebugLog (e.Message + " - " + e.StackTrace);
             }
-
-            games = null;
-            votes = null;
-
-            await UpdateVoteMessage (false);
-            SaveData ();
         }
 
         private async Task BeginNewVote() {
@@ -272,7 +295,8 @@ namespace Adminthulhu {
 
             SocketGuildChannel mainChannel = Utility.GetMainChannel ();
 
-            Program.messageControl.SendMessage (mainChannel as SocketTextChannel, Utility.GetServer ().EveryoneRole.Mention + "! A new vote for next friday event has begun, see <#188106821154766848> for votesheet.", true);
+            Program.messageControl.SendMessage (mainChannel as SocketTextChannel, onNewVoteStartedMessage.Replace ("{EVERYONEMENTION}",
+                Utility.GetServer ().EveryoneRole.Mention).Replace ("{ANNOUNCEMENTCHANNEL}", "<#" + Utility.SearchChannel (Utility.GetServer (), announcementsChannelName).Id+">"), true);
             SaveData ();
         }
 
@@ -281,14 +305,14 @@ namespace Adminthulhu {
             List<Vote> userVotes;
 
             if (HasReachedVoteLimit (userID, out userVotes)) {
-                string locText = "You've already voted for " + votesPerPerson + " games, you'll have to remove one vote by removing a reaction before you can place another.";
+                string locText = onMaxVotesReachedDM;
                 Program.messageControl.SendMessage (user, locText);
                 return false;
             }
 
             foreach (Vote v in userVotes) {
                 if (v.votedGameID == id) {
-                    string locText = "You've already voted for **" + games [ id ].name + "**. You can't vote for the same game more than once.";
+                    string locText = onVotedForGameTwiceDM;
                     Program.messageControl.SendMessage (user, locText);
                     return false;
                 }
@@ -355,31 +379,31 @@ namespace Adminthulhu {
         }
 
         public static async Task UpdateVoteMessage(bool forceNew) {
-            string text = "Vote for this " + eventDayName + "s event!```\n";
-            int index = 0;
-            foreach (Game game in games) {
-                text += Utility.UniformStrings ((index + 1) + " - " + game.name + (game.highlight ? " *" : ""), game.votes.ToString () + " votes.\n", " - ");
-                index++;
-            }
-
-            text += "```\n";
-            if (status == WeeklyEventStatus.Waiting) {
-                text += "**VOTING HAS ENDED, " + highestGame.name.ToUpper () + " HAS WON THE VOTE.**";
-            } else {
-                text += "**Vote using the reactions below. You can vote 3 times!**";
-            }
-
-            SocketGuildChannel channel = Utility.SearchChannel (Utility.GetServer (), "announcements");
-            IMessage message = null;
-            if (votingMessageID != 0) {
-                try {
-                    message = await (channel as SocketTextChannel).GetMessageAsync (votingMessageID);
-                } catch {
-                    message = null;
-                }
-            }
-
             try {
+                string text = "Vote for this " + eventDayName + "s event!```\n";
+                int index = 0;
+                foreach (Game game in games) {
+                    text += Utility.UniformStrings ((index + 1) + " - " + game.name + (game.highlight ? " *" : ""), game.votes.ToString () + " votes.\n", " - ");
+                    index++;
+                }
+
+                text += "```\n";
+                if (status == WeeklyEventStatus.Waiting) {
+                    text += "**VOTING HAS ENDED, " + highestGame.name.ToUpper () + " HAS WON THE VOTE.**";
+                } else {
+                    text += "**Vote using the reactions below. You can vote " + votesPerPerson + " times!**";
+                }
+
+                SocketGuildChannel channel = Utility.SearchChannel (Utility.GetServer (), announcementsChannelName);
+                IMessage message = null;
+                if (votingMessageID != 0) {
+                    try {
+                        message = await (channel as SocketTextChannel).GetMessageAsync (votingMessageID);
+                    } catch {
+                        message = null;
+                    }
+                }
+
                 if (message == null || forceNew) {
 
                     if (message != null)
@@ -412,13 +436,15 @@ namespace Adminthulhu {
             public List<Vote> votes;
             public ulong votingMessageID;
             public ulong joinMessageID;
+            public WeeklyEventStatus status;
 
-            public Data(Game[] _games, List<Vote> _votes, ulong _votingMessageID, ulong _joinMessageID, List<Game> _allGames) {
+            public Data(Game[] _games, List<Vote> _votes, ulong _votingMessageID, ulong _joinMessageID, List<Game> _allGames, WeeklyEventStatus _status) {
                 games = _games;
                 allGames = _allGames;
                 votes = _votes;
                 votingMessageID = _votingMessageID;
                 joinMessageID = _joinMessageID;
+                status = _status;
             }
         }
 
@@ -452,7 +478,7 @@ namespace Adminthulhu {
             command = "removeeventgame";
             shortHelp = "Remove a game.";
             argHelp = "<id>";
-            longHelp = "Remove a game from automated friday events.";
+            longHelp = "Remove a game from automated weekly events.";
             argumentNumber = 1;
             isAdminOnly = true;
             catagory = Catagory.Admin;
@@ -483,7 +509,7 @@ namespace Adminthulhu {
             command = "addeventgame";
             shortHelp = "Add a game.";
             argHelp = "<name>;<highlight(true,false)>";
-            longHelp = "Remove a game from automated friday events.";
+            longHelp = "Remove a game from automated weekly events.";
             argumentNumber = 2;
             isAdminOnly = true;
             catagory = Catagory.Admin;

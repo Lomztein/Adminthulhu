@@ -44,7 +44,7 @@ namespace Adminthulhu {
                     }
 
                     foreach (ulong userID in e.eventMemberIDs) {
-                        if (e.eventTime.AddDays (UserConfiguration.GetSetting<int>(userID, "EventRemindTime, ", 2)) < now) {
+                        if (e.eventTime.AddDays (UserConfiguration.GetSetting<int>(userID, "EventRemindTime")) < now) {
                             DateTime remindTime = new DateTime (now.Year, now.Month, now.Day, 12, 00, 0);
                             if (remindTime < now && e.lastRemind[userID].Day != remindTime.Day) {
                                 SendEventReminder (userID, e);
@@ -103,10 +103,24 @@ namespace Adminthulhu {
             return null;
         }
 
-        public static void JoinEvent (ulong userID, string eventName) {
+        public static bool JoinEvent (ulong userID, string eventName) {
             Event e = FindEvent (eventName);
-            e.eventMemberIDs.Add (userID);
-            SaveEvents ();
+            if (e != null && !e.eventMemberIDs.Contains (userID)) {
+                e.eventMemberIDs.Add (userID);
+                SaveEvents ();
+                return true;
+            }
+            return false;
+        }
+
+        public static bool LeaveEvent(ulong userID, string eventName) {
+            Event e = FindEvent (eventName);
+            if (e != null && e.eventMemberIDs.Contains (userID)) {
+                e.eventMemberIDs.Remove (userID);
+                SaveEvents ();
+                return true;
+            }
+            return false;
         }
 
         public static void CreateEvent (string eventName, DateTime date, string description = null) {

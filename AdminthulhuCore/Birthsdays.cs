@@ -9,12 +9,18 @@ using Newtonsoft.Json;
 
 namespace Adminthulhu {
 
-    class Birthdays : IClockable {
+    class Birthdays : IClockable, IConfigurable {
 
         // This contains birthday dates, should only use month and day value.
         public static List<Date> birthdays;
 
+        public static string onBirthdayAnnouncementMessage = "Congratulations to **{USERNAME}**, as they today celebrate their {AGE} birthday!";
+        public static string onBirthdayCongratulationsDM = "Hello, I just wanted to wish you happy birthday today, and I hope you have a great day! :D";
+
         public async Task Initialize(DateTime time) {
+
+            LoadConfiguration ();
+            BotConfiguration.AddConfigurable (this);
 
                 while (Utility.GetServer () == null)
                     await Task.Delay (1000);
@@ -25,7 +31,7 @@ namespace Adminthulhu {
                 foreach (SocketGuildUser u in users) {
                     try {
                         // Heres to hoping no user ever has the ID 0.
-                        Date date = UserConfiguration.GetSetting<Date> (u.Id, "Birthday", null);
+                        Date date = UserConfiguration.GetSetting<Date> (u.Id, "Birthday");
                         if (date != null)
                             birthdays.Add (date);
                     } catch (Exception fuck) {
@@ -92,11 +98,14 @@ namespace Adminthulhu {
             if (age > 10 && age < 14)
                 ageSuffix = "'th";
 
-            Program.messageControl.SendMessage (main as SocketTextChannel, "It's **" + Utility.GetUserName (user) + "s** birthday today, wish them congratulations, as you throw them into the depths of hell on their **" + age + ageSuffix + "** birthday!", true);
-            Program.messageControl.SendMessage (user, "This is an official completely not cold and automated birthday greeting, from the loving ~~nazimods~~ admins of **" + Program.serverName + "**: - Happy birthday!");
+            Program.messageControl.SendMessage (main as SocketTextChannel, onBirthdayAnnouncementMessage.Replace ("{USERNAME}", Utility.GetUserName (user)).Replace ("{AGE}", age + ageSuffix), true);
+            Program.messageControl.SendMessage (user, onBirthdayCongratulationsDM);
         }
 
         public static bool IsUsersBirthday(SocketUser user) {
+            if (birthdays == null)
+                return false;
+
             Date date = birthdays.Find (x => x.userID == user.Id);
             if (date == null)
                 return false;
@@ -116,6 +125,11 @@ namespace Adminthulhu {
             birthdays.Remove (oldDate);
             birthdays.Add (newDate);
             UserConfiguration.SetSetting (userID, "Birthday", newDate);
+        }
+
+        public void LoadConfiguration() {
+            onBirthdayAnnouncementMessage = BotConfiguration.GetSetting ("Birthdays.OnBirthdayAnnouncementMessage", "", onBirthdayAnnouncementMessage);
+            onBirthdayCongratulationsDM = BotConfiguration.GetSetting ("Birthdays.OnBirthdayCongratulationsDM", "", onBirthdayCongratulationsDM);
         }
 
         public class Date {

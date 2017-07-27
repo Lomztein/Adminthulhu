@@ -34,6 +34,7 @@ namespace Adminthulhu {
         public override void Initialize() {
             base.Initialize ();
             LoadConfiguration ();
+            BotConfiguration.AddConfigurable (this);
         }
 
         public override async Task ExecuteCommand ( SocketUserMessage e, List<string> arguments ) {
@@ -65,7 +66,7 @@ namespace Adminthulhu {
 
         public override void LoadConfiguration() {
             base.LoadConfiguration ();
-            allowed = BotConfiguration.GetSetting<string [ ]> ("AvaiableUsernameColors", new string [ ] { "RED", "BLUE" });
+            allowed = BotConfiguration.GetSetting("Misc.AvailableUsernameColors", "AvaiableUsernameColors", new string [ ] { "RED", "BLUE" });
         }
     }
 }

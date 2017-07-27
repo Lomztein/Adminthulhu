@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Discord.WebSocket;
 using Discord;
 using System.Globalization;
+using Newtonsoft.Json;
 
 namespace Adminthulhu {
     public static class Utility {
@@ -182,11 +183,27 @@ namespace Adminthulhu {
             return result;
         }
 
+        public static T SecureConvertObject<T>(object obj) {
+            try {
+                string possibleJSON = obj.ToString ();
+                obj = JsonConvert.DeserializeObject<T> (possibleJSON);
+            } catch (Exception) {
+                try {
+                    Type curType = obj.GetType ();
+                    obj = (T)Convert.ChangeType (obj, typeof (T));
+                } catch (Exception) {
+                    obj = (T)obj;
+                }
+            }
+
+            return (T)obj;
+        }
+
         /// <summary>
         /// Formattet for the danish format!
         /// </summary>
         public static bool TryParseDatetime(string input, ulong userID, out DateTime result) {
-            CultureInfo danishCulture = new CultureInfo (UserConfiguration.GetSetting<string>(userID, "Culture", "da-DK"));
+            CultureInfo danishCulture = new CultureInfo (UserConfiguration.GetSetting<string>(userID, "Culture"));
             return DateTime.TryParse (input, danishCulture.DateTimeFormat, DateTimeStyles.None, out result);
         }
     }

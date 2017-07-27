@@ -10,6 +10,8 @@ namespace Adminthulhu
 
         public static ulong strikeRoleID = 272389160705327105;
         public static string strikeDataPath = "strikes";
+        public static string strikeGivenMessage = "";
+        public static string strikeRaisedMessage = "";
 
         public static Dictionary<ulong, Strike> strikes;
 
@@ -76,8 +78,7 @@ namespace Adminthulhu
                 Utility.SecureAddRole (socketUser, role);
             }
 
-            Program.messageControl.SendMessage (socketUser, "https://media.giphy.com/media/l2SpND5MD3Ig5QVc4/giphy.gif You've recieved a strike: " + strikeReason + 
-                "\nYou will be unable to use some server features untill " + strikes[user].strikeDate.Add(strikes[user].strikeTime).ToString ());
+            Program.messageControl.SendMessage (socketUser, strikeGivenMessage.Replace ("{STRIKEREASON}", strikeReason).Replace ("{STRIKERAISEDATE}", strikes[user].strikeDate.Add(strikes[user].strikeTime).ToString ()));
 
             Save ();
         }
@@ -90,14 +91,16 @@ namespace Adminthulhu
                 Utility.SecureRemoveRole (socketUser, role);
                 strikes.Remove (user);
 
-                Program.messageControl.SendMessage (socketUser, "Congratulations, you've served your time. You strike has been raised, and you have full access to features once more.");
+                Program.messageControl.SendMessage (socketUser, strikeRaisedMessage);
             }
 
             Save ();
         }
 
         public void LoadConfiguration() {
-            strikeRoleID = BotConfiguration.GetSetting<ulong> ("StrikeRoleID", 0);
+            strikeRoleID = BotConfiguration.GetSetting<ulong> ("Roles.StrikeID", "StrikeRoleID", 0);
+            strikeGivenMessage = BotConfiguration.GetSetting ("Strikes.OnGivenMessage", "", "Sorry, but you've recieved a strike due to {STRIKEREASON}. This strike will automatically be raised on {STRIKERAISEDATE}");
+            strikeRaisedMessage = BotConfiguration.GetSetting ("Strikes.OnRaisedMessage", "", "You've done your time, and your strike has now been risen.");
         }
 
         public class Strike {

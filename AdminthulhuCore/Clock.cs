@@ -113,7 +113,7 @@ namespace Adminthulhu {
         public void LoadConfiguration() {
             clockablesEnabled = new bool [ clockables.Length ];
             for (int i = 0; i < clockablesEnabled.Length; i++) {
-                clockablesEnabled [ i ] = BotConfiguration.GetSetting<bool> (clockables [ i ].GetType ().Name + "Enabled", false);
+                clockablesEnabled [ i ] = BotConfiguration.GetSetting ("Clockables." + clockables[i].GetType ().Name + "Enabled", clockables [ i ].GetType ().Name + "Enabled", false);
             }
         }
     }
