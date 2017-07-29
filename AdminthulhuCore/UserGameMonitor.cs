@@ -101,17 +101,19 @@ namespace Adminthulhu {
             }
         }
 
-        public static List<SocketGuildUser> FindUsersWithGame (string gameName, out string foundGame) {
+        public static List<SocketGuildUser> FindUsersWithGame (ref string gameName) {
             // I feel retarded right now, something seems off.
             gameName = gameName.ToUpper ();
-            foundGame = gameName;
+            string copy = gameName;
 
             List<SocketGuildUser> foundUsers = new List<SocketGuildUser> ();
             int count = userGames.Count ();
             for (int i = 0; i < count; i++) {
-                foundGame = userGames.ElementAt (i).Value.Find (x => new SoftStringComparer ().Equals (x, gameName));
+                string foundGame = userGames.ElementAt (i).Value.Find (x => new SoftStringComparer ().Equals (x, copy));
+                if (foundGame != null)
+                    gameName = foundGame;
 
-                if (userGames.ElementAt (i).Value.Contains (foundGame, new SoftStringComparer ()))
+                if (userGames.ElementAt (i).Value.Contains (copy, new SoftStringComparer ()))
                     foundUsers.Add (Utility.GetServer ().GetUser (userGames.ElementAt (i).Key));
             }
 
@@ -165,8 +167,8 @@ namespace Adminthulhu {
                 base.ExecuteCommand (e, arguments);
                 if (AllowExecution (e, arguments)) {
                     UserGameMonitor.PurgeData ();
-                    string foundGame = "";
-                    List<SocketGuildUser> foundUsers = UserGameMonitor.FindUsersWithGame (arguments[0], out foundGame);
+                    string foundGame = arguments [ 0 ];
+                    List<SocketGuildUser> foundUsers = UserGameMonitor.FindUsersWithGame (ref foundGame);
                     if (foundUsers.Count == 0) {
                         Program.messageControl.SendMessage (e, "Sorry, no records of **" + foundGame + "** being played were found.", false);
                     }else {

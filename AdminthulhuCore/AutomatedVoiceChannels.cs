@@ -49,19 +49,19 @@ namespace Adminthulhu {
         public static VoiceChannel afkChannel = null;
 
         public static VoiceChannelTag [ ] voiceChannelTags = {
-            new VoiceChannelTag ("🎵", delegate (VoiceChannelTag.ActionData data) { data.hasTag = Utility.ForceGetUsers (data.channel.id).Find (x => x.Id == musicBotID) != null; } ),
-            new VoiceChannelTag ("🌎", delegate (VoiceChannelTag.ActionData data) {
+            new VoiceChannelTag ("MusicBotPresent", "🎵", delegate (VoiceChannelTag.ActionData data) { data.hasTag = Utility.ForceGetUsers (data.channel.id).Find (x => x.Id == musicBotID) != null; } ),
+            new VoiceChannelTag ("InternationalMemberPresent", "🌎", delegate (VoiceChannelTag.ActionData data) {
                 SocketRole internationalRole = Utility.GetServer ().GetRole (internationalRoleID);
                 data.hasTag = Utility.ForceGetUsers (data.channel.id).Find (x => x.Roles.Contains (internationalRole)) != null;  }),
-            new VoiceChannelTag ("🔒", delegate (VoiceChannelTag.ActionData data) { data.hasTag = data.channel.IsLocked (); }),
+            new VoiceChannelTag ("ChannelLocked", "🔒", delegate (VoiceChannelTag.ActionData data) { data.hasTag = data.channel.IsLocked (); }),
             //new VoiceChannelTag ("🍞", delegate (VoiceChannelTag.ActionData data) { data.hasTag = Utility.ForceGetUsers (data.channel.id).Where (x => x.Id == 110406708299329536).Count () != 0; } ),
-            new VoiceChannelTag ("🎮", delegate (VoiceChannelTag.ActionData data) { data.hasTag = data.channel.status == VoiceChannel.VoiceChannelStatus.Looking; }),
-            new VoiceChannelTag ("❌", delegate (VoiceChannelTag.ActionData data) { data.hasTag = data.channel.status == VoiceChannel.VoiceChannelStatus.Full; }),
-            new VoiceChannelTag ("📆", delegate (VoiceChannelTag.ActionData data) { data.hasTag = ((DateTime.Now.DayOfWeek == DayOfWeek.Friday) && (DateTime.Now.Hour >= AutomatedWeeklyEvent.eventHour) && Utility.ForceGetUsers (data.channel.id).Count >= 3); }),
-            new VoiceChannelTag ("🍰", delegate (VoiceChannelTag.ActionData data) { data.hasTag = Utility.ForceGetUsers (data.channel.id).Find (x => Birthdays.IsUsersBirthday (x)) != null; }),
-            new VoiceChannelTag ("📹", delegate (VoiceChannelTag.ActionData data) { data.hasTag = Utility.ForceGetUsers (data.channel.id).Where (x => x.Game.HasValue).Where (x => x.Game.Value.StreamType > 0).Count () != 0; }),
-            new VoiceChannelTag ("🔥", delegate (VoiceChannelTag.ActionData data) { data.hasTag = Utility.ForceGetUsers (data.channel.id).Where (x => x.GuildPermissions.Administrator).Count () >= 3; }),
-            new VoiceChannelTag ("👶", delegate (VoiceChannelTag.ActionData data) {
+            new VoiceChannelTag ("ChannelLooking", "🎮", delegate (VoiceChannelTag.ActionData data) { data.hasTag = data.channel.status == VoiceChannel.VoiceChannelStatus.Looking; }),
+            new VoiceChannelTag ("ChannelFull", "❌", delegate (VoiceChannelTag.ActionData data) { data.hasTag = data.channel.status == VoiceChannel.VoiceChannelStatus.Full; }),
+            new VoiceChannelTag ("WeeklyEventOngoing", "📆", delegate (VoiceChannelTag.ActionData data) { data.hasTag = ((DateTime.Now.DayOfWeek == DayOfWeek.Friday) && (DateTime.Now.Hour >= AutomatedWeeklyEvent.eventHour) && Utility.ForceGetUsers (data.channel.id).Count >= 3); }),
+            new VoiceChannelTag ("BirthdayCelebratorPresent", "🍰", delegate (VoiceChannelTag.ActionData data) { data.hasTag = Utility.ForceGetUsers (data.channel.id).Find (x => Birthdays.IsUsersBirthday (x)) != null; }),
+            new VoiceChannelTag ("StreamingCurrently","📹", delegate (VoiceChannelTag.ActionData data) { data.hasTag = Utility.ForceGetUsers (data.channel.id).Where (x => x.Game.HasValue).Where (x => x.Game.Value.StreamType > 0).Count () != 0; }),
+            new VoiceChannelTag ("ChannelIsLit","🔥", delegate (VoiceChannelTag.ActionData data) { data.hasTag = Utility.ForceGetUsers (data.channel.id).Where (x => x.GuildPermissions.Administrator).Count () >= 3; }),
+            new VoiceChannelTag ("YounglingPresent", "👶", delegate (VoiceChannelTag.ActionData data) {
                 SocketRole younglingRole = Utility.GetServer ().GetRole (younglingRoleID);
                 data.hasTag = Utility.ForceGetUsers (data.channel.id).Find (x => x.Roles.Contains (younglingRole)) != null;  }),
         };
@@ -76,6 +76,11 @@ namespace Adminthulhu {
             enableVoiceChannelTags = BotConfiguration.GetSetting ("Voice.ChannelTagsEnabled", "VoiceChannelTagsEnabled", enableVoiceChannelTags);
             younglingRoleID = BotConfiguration.GetSetting ("Roles.YounglingID", "YounglingRoleID", younglingRoleID);
             musicBotID = BotConfiguration.GetSetting ("Misc.MusicBotID", "MusicBotID", musicBotID);
+
+            foreach (VoiceChannelTag tag in voiceChannelTags) {
+                tag.enabled = BotConfiguration.GetSetting ("Voice.Tags." + tag.name + ".Enabled", "", tag.enabled);
+                tag.tagEmoji = BotConfiguration.GetSetting ("Voice.Tags." + tag.name + ".Emoji", "", tag.tagEmoji);
+            }
         }
 
         public static VoiceChannel [ ] loadedChannels;
@@ -198,7 +203,7 @@ namespace Adminthulhu {
                 }
 
                 if (voiceChannel.customName != "")
-                    newName = tagsString + " - " + voiceChannel.customName;
+                    newName = tagsString + possibleShorten + " - " + voiceChannel.customName;
 
                 if (voice.Name != newName) {
                     ChatLogger.Log ("Channel name updated: " + newName);
@@ -366,9 +371,12 @@ namespace Adminthulhu {
 
         public class VoiceChannelTag {
             public string tagEmoji = "🍞";
-            public Action<ActionData> run;
+            [JsonIgnore] public Action<ActionData> run;
+            [JsonIgnore] public string name = "";
+            public bool enabled = false;
 
-            public VoiceChannelTag(string emoji, Action<ActionData> command) {
+            public VoiceChannelTag(string _name, string emoji, Action<ActionData> command) {
+                name = _name;
                 tagEmoji = emoji;
                 run = command;
             }

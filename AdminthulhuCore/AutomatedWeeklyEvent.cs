@@ -218,7 +218,7 @@ namespace Adminthulhu {
                         didWin.Add (vote.voterID, false);
 
                     if (!didWin [ vote.voterID ]) {
-                        if (highestGame == games [ vote.votedGameID ]) {
+                        if (highestGame.name == games [ vote.votedGameID ].name) {
                             didWin [ vote.voterID ] = true;
                         }
                     }
