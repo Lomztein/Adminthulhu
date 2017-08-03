@@ -75,6 +75,7 @@ namespace Adminthulhu {
             shortenChannelNames = BotConfiguration.GetSetting ("Voice.ShortenChannelNames", "ShortenVoiceChannelNames", shortenChannelNames);
             enableVoiceChannelTags = BotConfiguration.GetSetting ("Voice.ChannelTagsEnabled", "VoiceChannelTagsEnabled", enableVoiceChannelTags);
             younglingRoleID = BotConfiguration.GetSetting ("Roles.YounglingID", "YounglingRoleID", younglingRoleID);
+            internationalRoleID = BotConfiguration.GetSetting ("Roles.InternationalID", "", internationalRoleID);
             musicBotID = BotConfiguration.GetSetting ("Misc.MusicBotID", "MusicBotID", musicBotID);
 
             foreach (VoiceChannelTag tag in voiceChannelTags) {
@@ -192,8 +193,9 @@ namespace Adminthulhu {
                 string [ ] splitVoice = voiceChannel.name.Split (';');
                 string possibleShorten = shortenChannelNames && splitVoice.Length > 1 ? splitVoice [ 1 ] : splitVoice [ 0 ];
                 // Trying to optimize API calls here, just to spare those poor souls at the Discord API HQ stuff
-                int mixedLimit = highest >= 2 ? 2 : 1;
-                string gameName = numPlayers.Where (x => x.Value >= mixedLimit).Count () >= mixedLimit && numPlayers.Count > 1 ? "Mixed Games" : highestGame.Name;
+                int mixedLimit = highest >= 2 ? 2 : Utility.ForceGetUsers (voice.Id).Count == 1 ? 0 : 1; // Nested compact if statements? What could go wrong!
+
+                string gameName = numPlayers.Where (x => x.Value >= mixedLimit).Count () >= mixedLimit ? "Mixed Games" : highestGame.Name;
 
                 string newName;
                 if (autoRenameChannels) {
@@ -354,7 +356,8 @@ namespace Adminthulhu {
 
                 VoiceChannelTag.ActionData data = new VoiceChannelTag.ActionData (channel);
                 try {
-                    curTag.run (data);
+                    if (curTag.enabled)
+                        curTag.run (data);
                 }catch (Exception e) {
                     ChatLogger.DebugLog (e.StackTrace);
                 }
@@ -421,6 +424,10 @@ namespace Adminthulhu {
             public SocketVoiceChannel GetChannel () {
                 SocketChannel channel = Utility.GetServer ().GetChannel (id);
                 return channel as SocketVoiceChannel;
+            }
+
+            public string GetName() {
+                return name.Split (';') [ 0 ];
             }
 
             public bool IsLocked () {

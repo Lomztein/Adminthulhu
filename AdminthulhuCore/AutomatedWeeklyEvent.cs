@@ -229,8 +229,8 @@ namespace Adminthulhu {
                     KeyValuePair<ulong, bool> pair = didWin.ElementAt (i);
                     if (!pair.Value) {
                         SocketGuildUser user = Utility.GetServer ().GetUser (pair.Key);
-                        // AutomatedEventHandling seriously lacks wrapper functions.
-                        await Program.messageControl.AskQuestion (user, onVotedEventLostDM.Replace ("{VOTEDGAME}", highestGame.name),
+
+                        Program.messageControl.AskQuestion (user, onVotedEventLostDM.Replace ("{VOTEDGAME}", highestGame.name),
                             delegate () {
                                 DiscordEvents.JoinEvent (pair.Key, EVENT_NAME);
                                 Program.messageControl.SendMessage (user, onEventJoinedDM);
