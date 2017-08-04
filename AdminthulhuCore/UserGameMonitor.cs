@@ -22,8 +22,8 @@ namespace Adminthulhu {
 
             if (enabled) {
                 userGames = SerializationIO.LoadObjectFromFile<Dictionary<ulong, List<string>>> (Program.dataPath + fileName + Program.gitHubIgnoreType);
-            if (userGames == null)
-                userGames = new Dictionary<ulong, List<string>> ();
+                if (userGames == null)
+                    userGames = new Dictionary<ulong, List<string>> ();
 
                 Program.discordClient.GuildMemberUpdated += (before, after) => {
 

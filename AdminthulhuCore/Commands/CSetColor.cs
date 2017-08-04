@@ -10,7 +10,7 @@ namespace Adminthulhu {
 
     public class CSetColor : Command, IConfigurable {
 
-        public string[] allowed = new string[] {
+        public static string[] allowed = new string[] {
             "GREEN", "RED", "YELLOW", "BLUE",
             "ORANGE", "PINK", "PURPLE", "WHITE",
             "DARKBLUE", "TURQUOISE", "MAGENTA",
@@ -62,6 +62,18 @@ namespace Adminthulhu {
                     Program.messageControl.SendMessage(e, failText + colors, false);
                 }
             }
+        }
+
+        public static SocketRole GetUserColor(ulong userID) {
+            SocketGuildUser user = Utility.GetServer ().GetUser (userID);
+            if (user != null) {
+                IEnumerable<SocketRole> roles = user.Roles.Where (x => allowed.Contains (x.Name)); // Ew, Contains () functions D:
+                if (roles.Count () == 0)
+                    return Utility.GetServer ().EveryoneRole;
+                return roles.FirstOrDefault ();
+            }
+
+            return Utility.GetServer ().EveryoneRole;
         }
 
         public override void LoadConfiguration() {

@@ -14,7 +14,7 @@ namespace Adminthulhu {
             command = "voice";
             shortHelp = "Voice command set.";
             longHelp = "A set of commands specifically for voice channels.";
-            commandsInSet = new Command[] { new CLock (), new CUnlock (), new CInvite (), new CMembers (), new CKick (), new CCallVoiceChannel (), new CLooking (), new CFull (), new CSetDesired (), new CCustomName () };
+            commandsInSet = new Command[] { new CLock (), new CUnlock (), new CInvite (), new CMembers (), new CKick (), new CCallVoiceChannel (), new CLooking (), new CFull (), new CSetDesired (), new CCustomName (), new CCreate () };
             catagory = Catagory.Utility;
         }
     }
@@ -93,6 +93,30 @@ namespace Adminthulhu {
                 }
 
                 Program.messageControl.SendMessage (e.Channel, "Failed to unlock channel, are you even in one?", false);
+            }
+            return Task.CompletedTask;
+        }
+    }
+
+    class CCreate : Command {
+
+        public CCreate() {
+            command = "create";
+            shortHelp = "Create temporary voice channel.";
+            longHelp = "Creates a temporary voice channel for whatever you need.";
+            argumentNumber = 2;
+        }
+
+        public override Task ExecuteCommand(SocketUserMessage e, List<string> arguments) {
+            base.ExecuteCommand (e, arguments);
+            if (AllowExecution (e, arguments)) {
+                TimeSpan timeSpan;
+                if (Utility.TryParseSimpleTimespan (arguments [ 1 ], out timeSpan)) {
+                    AutomatedVoiceChannels.CreateTemporaryChannel (arguments [ 0 ], timeSpan);
+                    Program.messageControl.SendMessage (e, "Succesfully created voice channel by name **" + arguments[0] + "**!", false);
+                } else {
+                    Program.messageControl.SendMessage (e, "Failed to create voice channel - TimeSpan could not be parsed.", false);
+                }
             }
             return Task.CompletedTask;
         }

@@ -69,6 +69,7 @@ namespace Adminthulhu {
         public static string onNewVoteStartedMessage = "{EVERYONEMENTION}! A new friday event vote has begun, check {ANNOUNCEMENTCHANNEL} for the votesheet!";
         public static string onMaxVotesReachedDM = "You've reached your max amount of three votes, please remove one if you wish to vote for another.";
         public static string onVotedForGameTwiceDM = "You've voted for the same game twice, which you cannot do.";
+        public static string onVotedPostCount = "The voting has ended, and you are no longer able to vote untill next time.";
 
         public void LoadConfiguration() {
             votesPerPerson = BotConfiguration.GetSetting ("WeeklyEvent.VotesPerPerson", "EventVotesPerPerson", votesPerPerson);
@@ -88,6 +89,7 @@ namespace Adminthulhu {
             onNewVoteStartedMessage = BotConfiguration.GetSetting ("WeeklyEvent.Messages.OnNewVoteStartedMessage", "", onNewVoteStartedMessage);
             onMaxVotesReachedDM = BotConfiguration.GetSetting ("WeeklyEvent.Messages.OnMaxVotesReachedDM", "", onMaxVotesReachedDM);
             onVotedForGameTwiceDM = BotConfiguration.GetSetting ("WeeklyEvent.Messages.OnVotedForGameTwiceDM", "", onVotedForGameTwiceDM);
+            onVotedPostCount = BotConfiguration.GetSetting ("WeeklyEvent.Messages.OnVotedPostCount", "", onVotedPostCount);
         }
 
         public async Task Initialize(DateTime time) {
@@ -123,9 +125,10 @@ namespace Adminthulhu {
             return unicodeEmojis [ index ];
         }
 
-        private static void OnReactionChanged(Cacheable<IUserMessage, ulong> message, ISocketMessageChannel channel, SocketReaction reaction, bool add) {
+        private static async void OnReactionChanged(Cacheable<IUserMessage, ulong> message, ISocketMessageChannel channel, SocketReaction reaction, bool add) {
             if (reaction.User.Value.IsBot)
                 return;
+            IUserMessage messageValue = await channel.GetMessageAsync (message.Id) as IUserMessage;
 
             if (message.Id == votingMessageID) {
                 int reactionID = -1;
@@ -136,16 +139,16 @@ namespace Adminthulhu {
                     }
                 }
 
-                if (add) {
-                    if (!VoteForGame (reaction.User.Value.Id, reactionID)) {
-                        message.Value.RemoveReactionAsync (reaction.Emote, message.Value.Author);
+                if (reactionID != -1) {
+                    if (add) {
+                        if (!VoteForGame (reaction.User.Value.Id, reactionID)) {
+                            await messageValue.RemoveReactionAsync (reaction.Emote, reaction.User.Value);
+                        }
+                    } else {
+                        RemoveVote (reaction.UserId, reactionID);
                     }
                 } else {
-                    RemoveVote (reaction.UserId, reactionID);
-                }
-
-                if (reactionID == -1) {
-                    message.Value.RemoveReactionAsync (reaction.Emote, message.Value.Author);
+                    messageValue.RemoveReactionAsync (reaction.Emote, reaction.User.Value);
                 }
             }
 
@@ -204,7 +207,7 @@ namespace Adminthulhu {
 
                 DateTime now = DateTime.Now;
                 DateTime eventDay = new DateTime (now.Year, now.Month, now.Day, eventHour, 0, 0).AddDays (daysBetween);
-                DiscordEvents.CreateEvent (EVENT_NAME, eventDay, highestGame.name + " has been chosen by vote!");
+                DiscordEvents.CreateEvent (EVENT_NAME, eventDay, new TimeSpan (4, 0, 0), Program.discordClient.CurrentUser.Id, highestGame.iconUrl, highestGame.name + " has been chosen by vote!", new TimeSpan (0));
 
                 SocketGuildChannel mainChannel = Utility.GetMainChannel ();
                 RestUserMessage joinMessage = await Program.messageControl.AsyncSend (mainChannel as SocketTextChannel, onEventChosenByVoteMessage.Replace ("{VOTEDGAME}", highestGame.name), true);
@@ -300,9 +303,16 @@ namespace Adminthulhu {
             SaveData ();
         }
 
+        // This entire function might need a rewrite.
         public static bool VoteForGame(ulong userID, int id) {
             SocketGuildUser user = Utility.GetServer ().GetUser (userID);
             List<Vote> userVotes;
+
+            if (status == WeeklyEventStatus.Waiting) {
+                string locText = onVotedPostCount;
+                Program.messageControl.SendMessage (user, locText);
+                return false;
+            }
 
             if (HasReachedVoteLimit (userID, out userVotes)) {
                 string locText = onMaxVotesReachedDM;
@@ -413,9 +423,11 @@ namespace Adminthulhu {
                     await task;
                     votingMessageID = task.Result.Id;
 
-                    for (int i = 0; i < gamesPerWeek; i++) {
-                        string emoji = GetUnicodeEmoji (i);
-                        await task.Result.AddReactionAsync (new Emoji (emoji));
+                    if (status == WeeklyEventStatus.Voting) {
+                        for (int i = 0; i < gamesPerWeek; i++) {
+                            string emoji = GetUnicodeEmoji (i);
+                            await task.Result.AddReactionAsync (new Emoji (emoji));
+                        }
                     }
 
                 } else {
@@ -424,6 +436,9 @@ namespace Adminthulhu {
                         properties.Content = text;
                     });
 
+                    if (status == WeeklyEventStatus.Waiting) {
+                        await m.RemoveAllReactionsAsync ();
+                    }
                 }
             } catch (Exception e) {
                 ChatLogger.DebugLog (e.Message + " - " + e.StackTrace);
@@ -452,6 +467,7 @@ namespace Adminthulhu {
             public string name;
             public int votes;
             public bool highlight;
+            public string iconUrl;
 
             public Game ( string gameName ) {
                 name = gameName;

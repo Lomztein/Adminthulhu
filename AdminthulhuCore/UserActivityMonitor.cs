@@ -69,6 +69,11 @@ namespace Adminthulhu {
                 return Task.CompletedTask;
             };
 
+            Program.discordClient.UserJoined += (user) => {
+                RecordActivity (user.Id, DateTime.Now, true);
+                return Task.CompletedTask;
+            };
+
             await OnDayPassed (DateTime.Now);
         }
 

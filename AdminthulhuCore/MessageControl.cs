@@ -48,6 +48,7 @@ namespace Adminthulhu {
 
         public MessageControl () {
             Program.discordClient.ReactionAdded += OnReactionAdded;
+            Program.discordClient.MessageReceived += OnMessageRecieved;
         }
 
         public async void ConstructBookMessage(RestUserMessage message, string[] pages) {
@@ -86,6 +87,12 @@ namespace Adminthulhu {
             return;
         }
 
+        public async Task OnMessageRecieved(SocketMessage e) {
+            if (questionnarireMessageQueue.ContainsKey (e.Author.Id))
+                questionnarireMessageQueue[e.Author.Id].Enqueue (e.Content);
+            return;
+        }
+
         public Question FindByMessageID(ulong userID, ulong messageID) {
             if (askedUsers.ContainsKey (userID)) {
                 foreach (Question question in askedUsers [ userID ]) {
@@ -115,9 +122,9 @@ namespace Adminthulhu {
         public async Task<IUserMessage> SendMessage (SocketGuildUser e, string message, string splitSorrounder = "") {
             IUserMessage finalMessage = null;
 
-            string[] split = SplitMessage (message, splitSorrounder);
-
             try {
+                string [ ] split = SplitMessage (message, splitSorrounder);
+
                 Task<IDMChannel> channel = e.GetOrCreateDMChannelAsync ();
                 IDMChannel result = await channel;
 
@@ -129,6 +136,10 @@ namespace Adminthulhu {
                 ChatLogger.Log ("Failed to send message: " + exception.Message + " - " + exception.StackTrace);
             }
             return finalMessage;
+        }
+
+        public async Task<IUserMessage> SendEmbed(ITextChannel channel, Embed embed, string text = "") {
+            return await channel.SendMessageAsync (text, false, embed);
         }
 
         public async Task<RestUserMessage> AsyncSend(ISocketMessageChannel e, string message, bool allowInMain) {
@@ -187,6 +198,54 @@ namespace Adminthulhu {
                     askedUsers.Remove (user.Id);
                 }
             }
+        }
+
+        /// <summary>
+        /// QuestionnaireElement shortened to QE to save space when using the CreateQuestionnaire function.
+        /// </summary>
+        public class QE {
+            public string name;
+            public Type type;
+
+            public QE(string _name, Type _type) {
+                name = _name;
+                type = _type;
+            }
+        }
+
+        // This might be incredibly fancy, or might not work. We'll see!
+        private static Dictionary<ulong, Queue<string>> questionnarireMessageQueue = new Dictionary<ulong, Queue<string>>();
+        public static async Task<List<object>> CreateQuestionnaire(ulong userID, ISocketMessageChannel channel, params QE [] elements) {
+            if (questionnarireMessageQueue.ContainsKey (userID)) {
+                throw new Exception ("User attempted a new questionnaire while they had one ongoing.");
+            } else {
+                questionnarireMessageQueue.Add (userID, new Queue<string> ());
+            }
+
+            List<object> result = new List<object> ();
+            foreach (QE e in elements) {
+                while (true) {
+                    Program.messageControl.SendMessage (channel, e.name, false);
+                    while (questionnarireMessageQueue [ userID ].Count == 0) {
+                        await Task.Delay (100);
+                    }
+                    string input = questionnarireMessageQueue [ userID ].Dequeue ();
+                    if (input == "cancel") {
+                        questionnarireMessageQueue.Remove (userID);
+                        throw new TimeoutException ("Questionnaire was cancelled.");
+                    }
+
+                    try {
+                        result.Add (Convert.ChangeType (input, e.type));
+                        break;
+                    } catch (Exception exception) {
+                        Program.messageControl.SendMessage (channel, exception.Message, false);
+                    }
+                }
+            }
+
+            questionnarireMessageQueue.Remove (userID);
+            return result;
         }
 
         public class Question {

@@ -57,7 +57,9 @@ namespace Adminthulhu {
             //new VoiceChannelTag ("🍞", delegate (VoiceChannelTag.ActionData data) { data.hasTag = Utility.ForceGetUsers (data.channel.id).Where (x => x.Id == 110406708299329536).Count () != 0; } ),
             new VoiceChannelTag ("ChannelLooking", "🎮", delegate (VoiceChannelTag.ActionData data) { data.hasTag = data.channel.status == VoiceChannel.VoiceChannelStatus.Looking; }),
             new VoiceChannelTag ("ChannelFull", "❌", delegate (VoiceChannelTag.ActionData data) { data.hasTag = data.channel.status == VoiceChannel.VoiceChannelStatus.Full; }),
-            new VoiceChannelTag ("WeeklyEventOngoing", "📆", delegate (VoiceChannelTag.ActionData data) { data.hasTag = ((DateTime.Now.DayOfWeek == DayOfWeek.Friday) && (DateTime.Now.Hour >= AutomatedWeeklyEvent.eventHour) && Utility.ForceGetUsers (data.channel.id).Count >= 3); }),
+            new VoiceChannelTag ("ContainsEventMembers", "📆", delegate (VoiceChannelTag.ActionData data) {
+                DiscordEvents.Event evt = null;
+                data.hasTag = DiscordEvents.ContainsEventMembers ( out evt, Utility.ForceGetUsers (data.channel.id).ToArray ()); }),
             new VoiceChannelTag ("BirthdayCelebratorPresent", "🍰", delegate (VoiceChannelTag.ActionData data) { data.hasTag = Utility.ForceGetUsers (data.channel.id).Find (x => Birthdays.IsUsersBirthday (x)) != null; }),
             new VoiceChannelTag ("StreamingCurrently","📹", delegate (VoiceChannelTag.ActionData data) { data.hasTag = Utility.ForceGetUsers (data.channel.id).Where (x => x.Game.HasValue).Where (x => x.Game.Value.StreamType > 0).Count () != 0; }),
             new VoiceChannelTag ("ChannelIsLit","🔥", delegate (VoiceChannelTag.ActionData data) { data.hasTag = Utility.ForceGetUsers (data.channel.id).Where (x => x.GuildPermissions.Administrator).Count () >= 3; }),
@@ -67,6 +69,7 @@ namespace Adminthulhu {
         };
 
         public void LoadConfiguration() {
+            ResetData ();
             extraChannelNames = BotConfiguration.GetSetting<string [ ]> ("Voice.ExtraChannelNames", "ExtraVoiceChannelNames", new string [ ] { "EXTRA_CHANNEL_1;EXTRA_CHANNEL_SHORT_NAME_1", "EXTRA_CHANNEL_1;EXTRA_CHANNEL_SHORT_NAME_2" });
             loadedChannels = BotConfiguration.GetSetting ("Voice.DefaultChannels", "DefaultVoiceChannels", new VoiceChannel [ ] { new VoiceChannel (0, "DEFAULT_CHANNEL_NAME_1;SHORT_NAME_1", 0), new VoiceChannel (1, "DEFAULT_CHANNEL_NAME_2;SHORT_NAME_2", 0) });
             afkChannel = BotConfiguration.GetSetting ("Voice.AFKChannel", "AFKChannel", new VoiceChannel (2, "AFK_CHANNEL_NAME", int.MaxValue - 1));
@@ -82,6 +85,23 @@ namespace Adminthulhu {
                 tag.enabled = BotConfiguration.GetSetting ("Voice.Tags." + tag.name + ".Enabled", "", tag.enabled);
                 tag.tagEmoji = BotConfiguration.GetSetting ("Voice.Tags." + tag.name + ".Emoji", "", tag.tagEmoji);
             }
+
+            foreach (VoiceChannel channel in loadedChannels) {
+                AddDefaultChannel (channel);
+            }
+            addChannelsIndex = defaultChannels.Count;
+            AddDefaultChannel (afkChannel);
+
+            for (int i = 0; i < extraChannelNames.Length; i++) {
+                nameQueue.Enqueue (extraChannelNames [ i ]);
+            }
+        }
+
+        public static void ResetData() {
+            allVoiceChannels = new Dictionary<ulong, VoiceChannel> ();
+            defaultChannels = new Dictionary<ulong, VoiceChannel> ();
+            awaitingChannels = new List<string> ();
+            afkChannel = null;
         }
 
         public static VoiceChannel [ ] loadedChannels;
@@ -89,17 +109,6 @@ namespace Adminthulhu {
             AutomatedVoiceChannels configurable = new AutomatedVoiceChannels ();
             configurable.LoadConfiguration ();
             BotConfiguration.AddConfigurable (configurable);
-
-            foreach (VoiceChannel channel in loadedChannels) {
-                AddDefaultChannel (channel);
-            }
-            addChannelsIndex = defaultChannels.Count;
-
-            AddDefaultChannel (afkChannel);
-
-            for (int i = 0; i < extraChannelNames.Length; i++) {
-                nameQueue.Enqueue (extraChannelNames [ i ]);
-            }
         }
 
         public static async Task OnUserUpdated(SocketGuild guild, SocketVoiceChannel before, SocketVoiceChannel after) {
@@ -126,7 +135,7 @@ namespace Adminthulhu {
             defaultChannels.Add (id, newChannel);
             allVoiceChannels.Add (id, newChannel);
         }
-
+        
         private static void AddDefaultChannel(VoiceChannel channel) {
             defaultChannels.Add (channel.id, channel);
             allVoiceChannels.Add (channel.id, channel);
@@ -140,7 +149,16 @@ namespace Adminthulhu {
                 VoiceChannel voiceChannel = allVoiceChannels [ voice.Id ];
                 List<SocketGuildUser> users = Utility.ForceGetUsers (voice.Id);
 
-                if (allVoiceChannels[voice.Id].ignore)
+                if (voiceChannel.lifeTime.Ticks > 0) {
+                    if (voiceChannel.creationTime.Add (voiceChannel.lifeTime) < DateTime.Now && voice.Users.Count > 0) {
+                        defaultChannels.Remove (voiceChannel.id);
+                        allVoiceChannels.Remove (voiceChannel.id);
+                        voiceChannel.GetChannel ().DeleteAsync ();
+                        return;
+                    }
+                }
+
+                if (voiceChannel.ignore)
                     return;
 
                 if (voice.Users.Count () == 0) {
@@ -192,10 +210,9 @@ namespace Adminthulhu {
 
                 string [ ] splitVoice = voiceChannel.name.Split (';');
                 string possibleShorten = shortenChannelNames && splitVoice.Length > 1 ? splitVoice [ 1 ] : splitVoice [ 0 ];
-                // Trying to optimize API calls here, just to spare those poor souls at the Discord API HQ stuff
-                int mixedLimit = highest >= 2 ? 2 : Utility.ForceGetUsers (voice.Id).Count == 1 ? 0 : 1; // Nested compact if statements? What could go wrong!
+                int mixedLimit = highest >= 2 ? 2 : Utility.ForceGetUsers (voice.Id).Count == 1 ? int.MaxValue : 1; // Nested compact if statements? What could go wrong!
 
-                string gameName = numPlayers.Where (x => x.Value >= mixedLimit).Count () >= mixedLimit ? "Mixed Games" : highestGame.Name;
+                string gameName = numPlayers.Where (x => x.Value >= mixedLimit).Count () > mixedLimit ? "Mixed Games" : highestGame.Name;
 
                 string newName;
                 if (autoRenameChannels) {
@@ -207,6 +224,7 @@ namespace Adminthulhu {
                 if (voiceChannel.customName != "")
                     newName = tagsString + possibleShorten + " - " + voiceChannel.customName;
 
+                // Trying to optimize API calls here, just to spare those poor souls at the Discord API HQ stuff
                 if (voice.Name != newName) {
                     ChatLogger.Log ("Channel name updated: " + newName);
                     await voice.ModifyAsync ((delegate (VoiceChannelProperties properties) {
@@ -224,7 +242,7 @@ namespace Adminthulhu {
 
             foreach (SocketVoiceChannel channel in server.VoiceChannels) {
                 if (!allVoiceChannels.ContainsKey (channel.Id)) {
-                    allVoiceChannels.Add (channel.Id, new VoiceChannel (channel.Id, "REBOOT CHANNEL", allVoiceChannels.Count));
+                    allVoiceChannels.Add (channel.Id, new VoiceChannel (channel.Id, "ERROR - REBOOT CHANNEL;RBC", allVoiceChannels.Count));
                 }
                 if (channel.Users.Count () == 0) {
                     allVoiceChannels [ channel.Id ].Unlock (true);
@@ -295,12 +313,12 @@ namespace Adminthulhu {
 
         public static async Task CheckFullAndAddIf(SocketGuild server) {
             IEnumerable<VoiceChannel> channels = allVoiceChannels.Values.ToList ();
-            int count = channels.Count ();
+            int count = channels.Where(x => !x.ignore).Count ();
 
             fullChannels = 0;
             for (int i = 0; i < count; i++) {
                 VoiceChannel cur = channels.ElementAt (i);
-                if (cur == afkChannel)
+                if (cur.ignore)
                     continue;
 
                 if (cur.GetChannel () != null) {
@@ -312,7 +330,7 @@ namespace Adminthulhu {
             }
 
             // If the amount of full channels are more than or equal to the amount of channels, add a new one.
-            if (fullChannels == count - 1) {
+            if (fullChannels == count) {
                 if (nameQueue.Count > 0 && awaitingChannels.Count == 0) {
                     string channelName = nameQueue.Dequeue ();
 
@@ -372,6 +390,14 @@ namespace Adminthulhu {
             }
         }
 
+        public static async void CreateTemporaryChannel(string channelName, TimeSpan lifeTime) {
+            RestVoiceChannel channel = await Utility.GetServer ().CreateVoiceChannelAsync (channelName);
+            VoiceChannel newVoice = new VoiceChannel (channel.Id, channelName, allVoiceChannels.Count);
+            newVoice.lifeTime = lifeTime;
+            defaultChannels.Add (channel.Id, newVoice);
+            allVoiceChannels.Add (channel.Id, newVoice);
+        }
+
         public class VoiceChannelTag {
             public string tagEmoji = "🍞";
             [JsonIgnore] public Action<ActionData> run;
@@ -413,6 +439,10 @@ namespace Adminthulhu {
 
             [JsonIgnore] public ulong lockerID;
             [JsonIgnore] public List<ulong> allowedUsers = new List<ulong>();
+
+            // Stuff used only for tempoary channels.
+            [JsonIgnore] public DateTime creationTime = DateTime.Now;
+            [JsonIgnore] public TimeSpan lifeTime = new TimeSpan (0);
 
             public VoiceChannel (ulong _id, string n, int pos) {
                 id = _id;

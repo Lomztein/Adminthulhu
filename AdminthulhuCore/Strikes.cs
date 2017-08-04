@@ -136,8 +136,13 @@ namespace Adminthulhu
                 if (AllowExecution (e, arguments)) {
                     ulong id;
                     if (ulong.TryParse (arguments [ 0 ], out id)) {
-                        TimeSpan span = Clock.GetTimespan (arguments [ 1 ]);
-                        Strikes.AddStrike (id, e.CreatedAt.ToLocalTime().DateTime, span, arguments[2]);
+                        TimeSpan span;
+
+                        if (Utility.TryParseSimpleTimespan (arguments [ 1 ], out span)) {
+                            Strikes.AddStrike (id, e.CreatedAt.ToLocalTime ().DateTime, span, arguments [ 2 ]);
+                        } else {
+                            Program.messageControl.SendMessage (e, "Failed to add strike - Could not parse timespan.", false);
+                        }
                     }
                 }
                 return Task.CompletedTask;

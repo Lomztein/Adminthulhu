@@ -206,5 +206,30 @@ namespace Adminthulhu {
             CultureInfo danishCulture = new CultureInfo (UserConfiguration.GetSetting<string>(userID, "Culture"));
             return DateTime.TryParse (input, danishCulture.DateTimeFormat, DateTimeStyles.None, out result);
         }
+
+        public static bool TryParseSimpleTimespan(string input, out TimeSpan result) {
+            int count;
+
+            if (int.TryParse (input.Substring (0, input.Length - 1), out count)) {
+                switch (input [ input.Length - 1 ]) {
+                    case 'm':
+                        result = new TimeSpan (0, count, 0);
+                        break;
+
+                    case 'h':
+                        result = new TimeSpan (count, 0, 0);
+                        break;
+
+                    case 'd':
+                        result = new TimeSpan (count, 0, 0, 0);
+                        break;
+
+                    case 'w':
+                        result = new TimeSpan (count * 7, 0, 0, 0, 0);
+                        break;
+                }
+            }
+            return result != null;
+        }
     }
 }

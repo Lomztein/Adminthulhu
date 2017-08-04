@@ -12,17 +12,15 @@ namespace Adminthulhu {
         public static T LoadObjectFromFile<T> ( string path, bool critical = false ) {
             try {
                 if (File.Exists (path)) {
-                    
-                    StreamReader reader = File.OpenText (path);
-                    JsonTextReader jReader = new JsonTextReader (reader);
+                    using (StreamReader reader = File.OpenText (path)) {
+                        using (JsonTextReader jReader = new JsonTextReader (reader)) {
+                            JsonSerializer serializer = new JsonSerializer ();
+                            object data = serializer.Deserialize<T> (jReader);
 
-                    JsonSerializer serializer = new JsonSerializer ();
-                    object data = serializer.Deserialize<T> (jReader);
-
-                    reader.Dispose ();
-                    jReader.Close ();
-
-                    return (T)data;
+                            jReader.Close ();
+                            return (T)data;
+                        }
+                    }
                 }
                 ChatLogger.Log ("Failed to load file at " + path);
                 return default (T);
@@ -37,12 +35,10 @@ namespace Adminthulhu {
 
         public static void SaveObjectToFile (string fileName, object obj, bool format = false) {
             try {
-                StreamWriter writer = File.CreateText (fileName);
-                
-                string jsonString = JsonConvert.SerializeObject (obj, format ? Formatting.Indented : Formatting.None);
-                writer.Write (jsonString);
-
-                writer.Dispose ();
+                using (StreamWriter writer = File.CreateText (fileName)) {
+                    string jsonString = JsonConvert.SerializeObject (obj, format ? Formatting.Indented : Formatting.None);
+                    writer.Write (jsonString);
+                }
             } catch (Exception e) {
                 ChatLogger.Log ("Error: Failed to save file: " + e.Message);
             }

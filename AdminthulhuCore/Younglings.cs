@@ -17,10 +17,13 @@ namespace Adminthulhu
         public static string onAcceptedDM;
         public static string onAcceptedPublicAnnouncement;
 
+        private SocketRole younglingRole;
+        private SocketRole presentRole;
+
         public void LoadConfiguration() {
             younglingRoleID = BotConfiguration.GetSetting<ulong> ("Roles.YounglingID", "YounglingRoleID", 0);
             onKickedDM = BotConfiguration.GetSetting ("Activity.Younglings.OnKickedDM", "", "Sorry, but you've been kicked from my server due to early inactivity. If you feel this was a mistake, feel free to use this invite link: {INVITELINK}");
-            onKickedDM = BotConfiguration.GetSetting ("Activity.Younglings.OnAcceptedDM", "", "Congratulations, you now have full membership of my server!");
+            onAcceptedDM = BotConfiguration.GetSetting ("Activity.Younglings.OnAcceptedDM", "", "Congratulations, you now have full membership of my server!");
             onAcceptedPublicAnnouncement = BotConfiguration.GetSetting ("Activity.Younglings.OnAcceptedPublicAnnouncement", "", "Congratulations to {USERNAME} as they've today been granted permanemt membership of this server!");
             daysActiveRequired = BotConfiguration.GetSetting ("Activity.Younglings.DaysActiveRequired", "", daysActiveRequired);
         }
@@ -58,39 +61,55 @@ namespace Adminthulhu
             joinDate = SerializationIO.LoadObjectFromFile <Dictionary<ulong, DateTime>> (Program.dataPath + "younglings" + Program.gitHubIgnoreType);
         }
 
-        public async Task OnDayPassed(DateTime time) {
-            SocketRole younglingRole = Utility.GetServer ().GetRole (younglingRoleID);
-            SocketRole presentRole = Utility.GetServer ().GetRole (UserActivityMonitor.presentUserRole);
-            foreach (SocketGuildUser user in Utility.GetServer ().Users) {
-                if (user.Roles.Contains (younglingRole) && user.Roles.Contains (presentRole)) {
-                    try {
-                        RestInviteMetadata metadata = await Utility.GetMainChannel ().CreateInviteAsync (null, 1, false, true);
-                        await Program.messageControl.SendMessage (user, onKickedDM.Replace ("{INVITELINK}", metadata.Url));
-                        await user.KickAsync ();
-                    }catch (Exception e) {
-                        ChatLogger.DebugLog (e.Message);
-                    }
-                }
+        public async Task OnMinutePassed(DateTime time) {
+            if (presentRole == null)
+                presentRole = Utility.GetServer ().GetRole (UserActivityMonitor.presentUserRole);
+            if (younglingRole == null)
+                younglingRole = Utility.GetServer ().GetRole (younglingRoleID);
+            List<ulong> toRemove = new List<ulong> ();
 
-                if (user.Roles.Contains (younglingRole)) {
-                    if (joinDate.ContainsKey (user.Id)) {
-                        if (time > joinDate[user.Id].AddDays (daysActiveRequired) && UserActivityMonitor.GetLastActivity (user.Id) > joinDate[user.Id].AddDays (daysActiveRequired - UserActivityMonitor.activeThresholdDays)) {
+            foreach (var pair in joinDate) { // A bit of optimization, so it doesn't test any unneccesary users.
+                SocketGuildUser user = Utility.GetServer ().GetUser (pair.Key);
+
+                if (user != null) {
+                    if (user.Roles.Contains (younglingRole) && user.Roles.Contains (presentRole)) {
+                        try {
+                            RestInviteMetadata metadata = await Utility.GetMainChannel ().CreateInviteAsync (null, 1, false, true);
+                            await Program.messageControl.SendMessage (user, onKickedDM.Replace ("{INVITELINK}", metadata.Url));
+                            await user.KickAsync ();
+                        } catch (Exception e) {
+                            ChatLogger.DebugLog (e.Message);
+                        }
+                    }
+
+                    if (user.Roles.Contains (younglingRole)) {
+                        if (time > joinDate [ user.Id ].AddDays (daysActiveRequired) || UserActivityMonitor.GetLastActivity (user.Id) > joinDate [ user.Id ].AddDays (daysActiveRequired - UserActivityMonitor.activeThresholdDays)) {
                             await Utility.SecureRemoveRole (user, younglingRole);
                             await Program.messageControl.SendMessage (user, onAcceptedDM);
                             Program.messageControl.SendMessage (Utility.GetMainChannel () as SocketTextChannel, onAcceptedPublicAnnouncement.Replace ("{USERNAME}", Utility.GetUserName (user)), true);
-                            joinDate.Remove (user.Id);
-                            SaveData ();
+                            toRemove.Add (user.Id);
                         }
+                    } else {
+                        toRemove.Add (user.Id);
+                        ChatLogger.Log ("Purged manually removed user from younglings joinDate dictionary.");
                     }
+                } else {
+                    toRemove.Add (pair.Key);
+                    ChatLogger.Log ("Purge user who has left the server from joinDate dictionary.");
                 }
             }
+
+            foreach (ulong id in toRemove) {
+                joinDate.Remove (id);
+            }
+            SaveData ();
         }
 
         public Task OnHourPassed(DateTime time) {
             return Task.CompletedTask;
         }
 
-        public Task OnMinutePassed(DateTime time) {
+        public Task OnDayPassed(DateTime time) {
             return Task.CompletedTask;
         }
 
@@ -100,6 +119,8 @@ namespace Adminthulhu
 
         public static async void ForceAcceptYoungling(SocketGuildUser user) {
             await Utility.SecureRemoveRole (user, Utility.GetServer ().GetRole (younglingRoleID));
+            Program.messageControl.SendMessage (user, onAcceptedDM);
+            Program.messageControl.SendMessage (Utility.GetMainChannel () as SocketTextChannel, onAcceptedPublicAnnouncement.Replace ("{USERNAME}", Utility.GetUserName (user)), true);
             joinDate.Remove (user.Id);
         }
     }
@@ -125,7 +146,6 @@ namespace Adminthulhu
                         SocketRole younglingRole = Utility.GetServer ().GetRole (Younglings.younglingRoleID);
                         if (user.Roles.Contains (younglingRole)) {
                             Younglings.ForceAcceptYoungling (user);
-                            Program.messageControl.SendMessage (user, "Congratulations! You've manually been given permanemt membership on " + Program.serverName + "!");
                         } else {
                             Program.messageControl.SendMessage (e, "Failed to accept youngling - user not a youngling.", false);
                         }

@@ -13,19 +13,12 @@ namespace Adminthulhu {
         public DateTime lastMesauredTime;
         public int checkDelay = 1000; // The time between each check in milliseconds.
 
-        public ulong [ ] chosenOnes = {
-            94089489227448320,
-            93744415301971968,
-            93732620998819840,
-            169870846507220992,
-            174835518901583872
-        };
 
         public SocketGuildUser [ ] lastTest = new SocketGuildUser [ 5 ];
 
         public IClockable [ ] clockables = new IClockable [ ] {
             new DiscordEvents (), new AutomatedTextChannels (), new UserActivityMonitor (), new Birthdays (), new AutomatedWeeklyEvent (),
-            new Strikes (), new AprilFools (), new Younglings (),
+            new Strikes (), new AprilFools (), new Younglings (), new ServerStatusChecking ()
         };
         private bool [ ] clockablesEnabled;
 
@@ -88,26 +81,6 @@ namespace Adminthulhu {
                 Thread.Sleep (checkDelay);
                 lastMesauredTime = now;
             }
-        }
-
-        public static TimeSpan GetTimespan(string input) {
-            int count;
-            if (int.TryParse (input.Substring (0, input.Length - 1), out count)) {
-                switch (input [ input.Length - 1 ]) {
-                    case 'm':
-                        return new TimeSpan (0, count, 0);
-
-                    case 'h':
-                        return new TimeSpan (count, 0, 0);
-
-                    case 'd':
-                        return new TimeSpan (count, 0, 0, 0);
-
-                    case 'w':
-                        return new TimeSpan (count * 7, 0, 0, 0, 0);
-                }
-            }
-            throw new ArgumentException ("Input didn't work, dummy.");
         }
 
         public void LoadConfiguration() {
