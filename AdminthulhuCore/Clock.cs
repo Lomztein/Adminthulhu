@@ -18,7 +18,7 @@ namespace Adminthulhu {
 
         public IClockable [ ] clockables = new IClockable [ ] {
             new DiscordEvents (), new AutomatedTextChannels (), new UserActivityMonitor (), new Birthdays (), new AutomatedWeeklyEvent (),
-            new Strikes (), new AprilFools (), new Younglings (), new ServerStatusChecking ()
+            new Strikes (), new AprilFools (), new Younglings (), new ServerStatusChecking.ServerStatusChecking (), new AutomatedVoiceChannels.TemporaryChannelsChecker (),
         };
         private bool [ ] clockablesEnabled;
 

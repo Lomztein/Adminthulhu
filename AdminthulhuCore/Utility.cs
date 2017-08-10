@@ -6,6 +6,8 @@ using Discord.WebSocket;
 using Discord;
 using System.Globalization;
 using Newtonsoft.Json;
+using System.Net;
+using System.IO;
 
 namespace Adminthulhu {
     public static class Utility {
@@ -230,6 +232,22 @@ namespace Adminthulhu {
                 }
             }
             return result != null;
+        }
+
+        public static async Task<TextReader> DoJSONRequestAsync(WebRequest req) {
+            var task = Task.Factory.FromAsync ((cb, o) => ((HttpWebRequest)o).BeginGetResponse (cb, o), res => ((HttpWebRequest)res.AsyncState).EndGetResponse (res), req);
+            var result = await task;
+            var resp = result;
+            var stream = resp.GetResponseStream ();
+            var sr = new StreamReader (stream);
+            return sr;
+        }
+
+        public static async Task<TextReader> DoJSONRequestAsync(string url) {
+            HttpWebRequest req = WebRequest.CreateHttp (url);
+            req.AllowReadStreamBuffering = true;
+            var tr = await DoJSONRequestAsync (req);
+            return tr;
         }
     }
 }

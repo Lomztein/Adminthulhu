@@ -8,8 +8,10 @@ using System.Net.Sockets;
 using Discord.Rest;
 using Discord.WebSocket;
 using Discord;
+using System.IO;
+using Newtonsoft.Json.Linq;
 
-namespace Adminthulhu {
+namespace Adminthulhu.ServerStatusChecking {
     public class ServerStatusChecking : IClockable, IConfigurable {
 
         public static uint testEveryMinutes = 10;
@@ -28,13 +30,27 @@ namespace Adminthulhu {
         }
 
         public void LoadConfiguration() {
-            addresses.Add (new Address ("Address 1 Name", "Address 1 IP", 0));
-            addresses.Add (new Address ("Address 2 Name", "Address 2 IP", 0));
+            addresses.Add (new Address ("Address 1 Name", "Address 1 IP", 0, ""));
+            addresses.Add (new Address ("Address 2 Name", "Address 2 IP", 0, ""));
             testEveryMinutes = BotConfiguration.GetSetting ("Misc.ServerStatusChecker.TestEveryXMinutes", "", testEveryMinutes);
             addresses = BotConfiguration.GetSetting ("Misc.ServerStatusChecker.Addresses", "", addresses);
             statusMessageChannel = BotConfiguration.GetSetting ("Misc.ServerStatusChecker.MessageChannel", "", statusMessageChannel);
             statusMessageHeader = BotConfiguration.GetSetting ("Misc.ServerStatusChecker.MessageHeader", "", statusMessageHeader);
             statusMessageID = BotConfiguration.GetSetting ("Misc.ServerStatusChecker.MessageID", "", statusMessageID);
+
+            for (int i = 0; i < addresses.Count; i++) {
+                if (addresses [ i ].typeName != null && addresses [ i ].typeName.Length > 0) {
+                    addresses [ i ] = ChangeType (addresses [ i ]);
+                }
+            }
+        }
+
+        public Address ChangeType(Address original) {
+            switch (original.typeName) {
+                case "MinecraftJava": // There must be a generic way of doing this..
+                    return new Address.MinecraftJava (original.name, original.ip, original.port, original.typeName);
+            }
+            return original;
         }
 
         public Task OnDayPassed(DateTime time) {
@@ -59,30 +75,34 @@ namespace Adminthulhu {
         }
 
         public async void UpdateAddresses() {
-            string result = statusMessageHeader + "\n```";
-            foreach (Address add in addresses) {
-                result += await add.GetResult () + "\n";
+            try { // Did I ever mention that I don't like web development?
+                string result = statusMessageHeader + "\n```";
+                foreach (Address add in addresses) {
+                    result += add.GetNameWithAddress () + " - Status: " + await add.GetResult () + "\n";
+                }
+                await UpdateMessage (result + "```");
+            } catch (Exception e) {
+                ChatLogger.Log (e.Message);
             }
-            await UpdateMessage (result + "```");
         }
 
         public async Task UpdateMessage(string contents) {
             if (statusMessageChannel != 0) {
                 SocketGuildChannel channel = Utility.GetServer ().GetChannel (statusMessageChannel);
-                RestUserMessage message = null;
+                IMessage message = null;
 
                 if (statusMessageID != 0) {
-                    message = await (channel as SocketTextChannel).GetMessageAsync (statusMessageID) as RestUserMessage;
-
-                    await message.ModifyAsync (delegate (MessageProperties properties) {
-                        properties.Content = contents;
-                    });
+                    message = await (channel as SocketTextChannel).GetMessageAsync (statusMessageID);
+                    if (message != null && message.Content != contents) {
+                        await (message as RestUserMessage).ModifyAsync (delegate (MessageProperties properties) {
+                            properties.Content = contents;
+                        });
+                    }
                 } else {
                     message = await Program.messageControl.AsyncSend (channel as ISocketMessageChannel, contents, true);
                     BotConfiguration.SetSetting ("Misc.ServerStatusChecker.MessageID", message.Id);
                     statusMessageID = message.Id;
                 }
-
             }
         }
 
@@ -90,11 +110,13 @@ namespace Adminthulhu {
             public string name;
             public string ip;
             public int port;
+            public string typeName;
 
-            public Address(string _name, string _ip, int _port) {
+            public Address(string _name, string _ip, int _port, string _typeName) {
                 name = _name;
                 ip = _ip;
                 port = _port;
+                typeName = _typeName;
             }
 
             public string GetNameWithAddress() {
@@ -106,12 +128,37 @@ namespace Adminthulhu {
                 try {
                     Task task = client.ConnectAsync (ip, port);
                     if (await Task.WhenAny (task, Task.Delay (1000)) == task) {
-                        return Utility.UniformStrings (GetNameWithAddress (), "Online", " - ");
+                        return "ONLINE";
                     } else {
-                        return Utility.UniformStrings (GetNameWithAddress (), "Offline", " - ");
+                        return  "OFFLINE";
                     }
                 } catch (Exception e) {
-                    return Utility.UniformStrings (GetNameWithAddress (), "Offline", " - ");
+                    return "ERROR";
+                }
+            }
+
+            // Put specialized below here.
+            public class MinecraftJava : Address {
+
+                public override async Task<string> GetResult() {
+                    using (TextReader reader = await Utility.DoJSONRequestAsync ("https://mcapi.us/server/status?ip=" + ip + "&port=" + port.ToString ())) {
+                        string json = reader.ReadToEnd ();
+
+                        // https://www.youtube.com/watch?v=PKg2ZzPKl2M
+                        JObject obj = JObject.Parse (json);
+                        JToken players = obj [ "players" ];
+                        int max = players.ElementAt (0).ToObject<int> ();
+                        int min = players.ElementAt (1).ToObject<int> ();
+                        string online = obj [ "status" ].ToObject<string>() == "success" ? "ONLINE - " + min + "/" + max + " Players" : "OFFLINE";
+                        return online;
+                    }
+                }
+
+                public MinecraftJava(string _name, string _ip, int _port, string _typeName) : base (_name, _ip, _port, _typeName) {
+                    name = _name;
+                    ip = _ip;
+                    port = _port;
+                    typeName = _typeName;
                 }
             }
         }

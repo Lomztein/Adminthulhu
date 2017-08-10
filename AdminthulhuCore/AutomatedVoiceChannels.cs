@@ -24,6 +24,7 @@ namespace Adminthulhu {
         public static ulong musicBotID = 0;
         public static ulong internationalRoleID = 0;
         public static ulong younglingRoleID = 0;
+        public static string postRebootChannelName = "ERROR - REBOOT CHANNEL;RBC";
 
         public static string [ ] extraChannelNames = new string [ ] {
             "Gorgeous Green",
@@ -44,7 +45,7 @@ namespace Adminthulhu {
             "Mangled Magenta"
         };
 
-        public static Queue<string> nameQueue = new Queue<string> ();
+        public static List<string> nameQueue = new List<string> ();
         public static List<IVoiceChannel> temporaryChannels = new List<IVoiceChannel> ();
         public static VoiceChannel afkChannel = null;
 
@@ -80,6 +81,7 @@ namespace Adminthulhu {
             younglingRoleID = BotConfiguration.GetSetting ("Roles.YounglingID", "YounglingRoleID", younglingRoleID);
             internationalRoleID = BotConfiguration.GetSetting ("Roles.InternationalID", "", internationalRoleID);
             musicBotID = BotConfiguration.GetSetting ("Misc.MusicBotID", "MusicBotID", musicBotID);
+            postRebootChannelName = BotConfiguration.GetSetting ("Voice.PostRebootChannelName", "", postRebootChannelName);
 
             foreach (VoiceChannelTag tag in voiceChannelTags) {
                 tag.enabled = BotConfiguration.GetSetting ("Voice.Tags." + tag.name + ".Enabled", "", tag.enabled);
@@ -93,7 +95,30 @@ namespace Adminthulhu {
             AddDefaultChannel (afkChannel);
 
             for (int i = 0; i < extraChannelNames.Length; i++) {
-                nameQueue.Enqueue (extraChannelNames [ i ]);
+                nameQueue.Add (extraChannelNames [ i ]);
+            }
+        }
+
+        public class TemporaryChannelsChecker : IClockable {
+            public Task Initialize(DateTime time) {
+                return Task.CompletedTask;
+            }
+
+            public Task OnDayPassed(DateTime time) {
+                return Task.CompletedTask;
+            }
+
+            public Task OnHourPassed(DateTime time) {
+                return Task.CompletedTask;
+            }
+
+            public Task OnMinutePassed(DateTime time) {
+                TestAndRemoveTemporaryChannels ();
+                return Task.CompletedTask;
+            }
+
+            public Task OnSecondPassed(DateTime time) {
+                return Task.CompletedTask;
             }
         }
 
@@ -148,15 +173,6 @@ namespace Adminthulhu {
 
                 VoiceChannel voiceChannel = allVoiceChannels [ voice.Id ];
                 List<SocketGuildUser> users = Utility.ForceGetUsers (voice.Id);
-
-                if (voiceChannel.lifeTime.Ticks > 0) {
-                    if (voiceChannel.creationTime.Add (voiceChannel.lifeTime) < DateTime.Now && voice.Users.Count > 0) {
-                        defaultChannels.Remove (voiceChannel.id);
-                        allVoiceChannels.Remove (voiceChannel.id);
-                        voiceChannel.GetChannel ().DeleteAsync ();
-                        return;
-                    }
-                }
 
                 if (voiceChannel.ignore)
                     return;
@@ -235,6 +251,21 @@ namespace Adminthulhu {
             }
         }
 
+        public static void TestAndRemoveTemporaryChannels() {
+            foreach (var pair in allVoiceChannels) {
+                VoiceChannel voiceChannel = pair.Value;
+
+                if (voiceChannel.lifeTime.Ticks > 0) {
+                    if (voiceChannel.creationTime.Add (voiceChannel.lifeTime) < DateTime.Now && voiceChannel.GetChannel ().Users.Count == 0) {
+                        defaultChannels.Remove (voiceChannel.id);
+                        allVoiceChannels.Remove (voiceChannel.id);
+                        voiceChannel.GetChannel ().DeleteAsync ();
+                        return;
+                    }
+                }
+            }
+        }
+
         private static bool hasChecked = false;
         public static void AddMissingChannels(SocketGuild server) {
             if (hasChecked)
@@ -242,7 +273,7 @@ namespace Adminthulhu {
 
             foreach (SocketVoiceChannel channel in server.VoiceChannels) {
                 if (!allVoiceChannels.ContainsKey (channel.Id)) {
-                    allVoiceChannels.Add (channel.Id, new VoiceChannel (channel.Id, "ERROR - REBOOT CHANNEL;RBC", allVoiceChannels.Count));
+                    allVoiceChannels.Add (channel.Id, new VoiceChannel (channel.Id, postRebootChannelName, allVoiceChannels.Count));
                 }
                 if (channel.Users.Count () == 0) {
                     allVoiceChannels [ channel.Id ].Unlock (true);
@@ -263,7 +294,9 @@ namespace Adminthulhu {
 
             for (int i = IsDefaultFull () ? 1 : 0; i < toDelete.Count; i++) {
                 SocketVoiceChannel channel = toDelete [ i ];
-                nameQueue.Enqueue (allVoiceChannels [ channel.Id ].name);
+                if (allVoiceChannels [ channel.Id ].name != postRebootChannelName) {
+                    nameQueue.Insert (0, allVoiceChannels [ channel.Id ].name);
+                }
 
                 temporaryChannels.Remove (channel);
                 allVoiceChannels.Remove (channel.Id);
@@ -312,12 +345,11 @@ namespace Adminthulhu {
         }
 
         public static async Task CheckFullAndAddIf(SocketGuild server) {
-            IEnumerable<VoiceChannel> channels = allVoiceChannels.Values.ToList ();
+            List<VoiceChannel> channels = allVoiceChannels.Values.ToList ();
             int count = channels.Where(x => !x.ignore).Count ();
 
             fullChannels = 0;
-            for (int i = 0; i < count; i++) {
-                VoiceChannel cur = channels.ElementAt (i);
+            foreach (VoiceChannel cur in channels) {
                 if (cur.ignore)
                     continue;
 
@@ -332,7 +364,8 @@ namespace Adminthulhu {
             // If the amount of full channels are more than or equal to the amount of channels, add a new one.
             if (fullChannels == count) {
                 if (nameQueue.Count > 0 && awaitingChannels.Count == 0) {
-                    string channelName = nameQueue.Dequeue ();
+                    string channelName = nameQueue [ 0 ];
+                    nameQueue.RemoveAt (0);
 
                     RestVoiceChannel channel;
                     try {
@@ -394,8 +427,17 @@ namespace Adminthulhu {
             RestVoiceChannel channel = await Utility.GetServer ().CreateVoiceChannelAsync (channelName);
             VoiceChannel newVoice = new VoiceChannel (channel.Id, channelName, allVoiceChannels.Count);
             newVoice.lifeTime = lifeTime;
-            defaultChannels.Add (channel.Id, newVoice);
-            allVoiceChannels.Add (channel.Id, newVoice);
+            AddTemporaryChannel (channel.Id, newVoice);
+        }
+
+        public static void AddTemporaryChannel(ulong id, VoiceChannel newVoice) {
+            defaultChannels.Add (id, newVoice);
+            allVoiceChannels.Add (id, newVoice);
+        }
+
+        public static void RemoveTemporaryChannel(ulong id) {
+            defaultChannels.Remove (id);
+            allVoiceChannels.Remove (id);
         }
 
         public class VoiceChannelTag {
