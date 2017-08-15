@@ -63,12 +63,13 @@ namespace Adminthulhu {
                 return;
 
             Question question = FindByMessageID (reaction.UserId, message.Id);
-            ChatLogger.Log (reaction.User.Value.Username + " responded to a question with " + reaction.Emote.Name);
             if (question != null) {
+            Logging.Log (reaction.User.Value.Username + " responded to a question with " + reaction.Emote.Name);
                 if (reaction.Emote.Name == "thumbsup") {
-                    question.ifYes ();
+                    question.ifYes?.Invoke ();
                     askedUsers [ reaction.UserId ].Remove (question);
                 } else if (reaction.Emote.Name == "thumbsdown") {
+                    question.ifNo?.Invoke ();
                     askedUsers [ reaction.UserId ].Remove (question);
                 }
             }
@@ -133,7 +134,7 @@ namespace Adminthulhu {
                     ConstructBookMessage (finalMessage as RestUserMessage, split);
 
             } catch (Exception exception) {
-                ChatLogger.Log ("Failed to send message: " + exception.Message + " - " + exception.StackTrace);
+                Logging.Log ("Failed to send message: " + exception.Message + " - " + exception.StackTrace);
             }
             return finalMessage;
         }
@@ -143,7 +144,7 @@ namespace Adminthulhu {
         }
 
         public async Task<RestUserMessage> AsyncSend(ISocketMessageChannel e, string message, bool allowInMain) {
-            ChatLogger.Log ("Sending a message.");
+            Logging.Log ("Sending a message.");
             try {
 
                 if (!allowInMain && e.Name == Program.mainTextChannelName) {
@@ -154,13 +155,13 @@ namespace Adminthulhu {
                     return messageTask.Result;
                 }
             } catch (Exception exception) {
-                ChatLogger.Log ("Failed to send message: " + exception.Message + " - " + exception.StackTrace);
+                Logging.Log ("Failed to send message: " + exception.Message + " - " + exception.StackTrace);
             }
             return null;
         }
 
         public async Task SendImage(SocketTextChannel e, string message, string imagePath, bool allowInMain) {
-            ChatLogger.Log ("Sending an image!");
+            Logging.Log ("Sending an image!");
             if (!allowInMain && e.Name == Program.mainTextChannelName) {
                 return;
             } else {
@@ -174,7 +175,7 @@ namespace Adminthulhu {
 
         private Dictionary<ulong, List<Question>> askedUsers = new Dictionary<ulong, List<Question>>();
 
-        public async Task AskQuestion (SocketGuildUser user, string question, Action ifYes) {
+        public async Task AskQuestion (SocketGuildUser user, string question, Action ifYes, Action ifNo = null) {
             IUserMessage message = await SendMessage (user, question);
 
             await (message as RestUserMessage).AddReactionAsync (new Emoji ("👍"));
@@ -184,7 +185,7 @@ namespace Adminthulhu {
                 askedUsers.Add (user.Id, new List<Question> ());
             }
 
-            Question newQuestion = new Question (message.Id, ifYes);
+            Question newQuestion = new Question (message.Id, ifYes, ifNo);
             askedUsers [user.Id].Add (newQuestion);
 
             await Task.Delay (24 * 60 * 60 * 1000);
@@ -252,10 +253,12 @@ namespace Adminthulhu {
 
             public ulong messageID;
             public Action ifYes;
+            public Action ifNo;
 
-            public Question(ulong messageID, Action ifYes) {
+            public Question(ulong messageID, Action ifYes, Action ifNo) {
                 this.messageID = messageID;
                 this.ifYes = ifYes;
+                this.ifNo = ifNo;
             }
 
         }

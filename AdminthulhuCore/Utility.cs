@@ -30,7 +30,7 @@ namespace Adminthulhu {
                     break;
                 }
                 tries++;
-                ChatLogger.Log ("Adding role to " + user.Username + " - " + role.Name);
+                Logging.Log ("Adding role to " + user.Username + " - " + role.Name);
                 await (user.AddRoleAsync (role));
                 await Task.Delay (5000);
             }
@@ -43,7 +43,7 @@ namespace Adminthulhu {
                     Program.messageControl.SendMessage (SearchChannel (GetServer (), Program.dumpTextChannelName) as SocketTextChannel, "Error - tried to remove role too many times.", false);
                     break;
                 }
-                ChatLogger.Log ("Removing role from " + user.Username + " - " + role.Name);
+                Logging.Log ("Removing role from " + user.Username + " - " + role.Name);
                 tries++;
                 await (user.RemoveRoleAsync (role));
                 await Task.Delay (5000);
@@ -235,12 +235,16 @@ namespace Adminthulhu {
         }
 
         public static async Task<TextReader> DoJSONRequestAsync(WebRequest req) {
-            var task = Task.Factory.FromAsync ((cb, o) => ((HttpWebRequest)o).BeginGetResponse (cb, o), res => ((HttpWebRequest)res.AsyncState).EndGetResponse (res), req);
-            var result = await task;
-            var resp = result;
-            var stream = resp.GetResponseStream ();
-            var sr = new StreamReader (stream);
-            return sr;
+            try {
+                var task = Task.Factory.FromAsync ((cb, o) => ((HttpWebRequest)o).BeginGetResponse (cb, o), res => ((HttpWebRequest)res.AsyncState).EndGetResponse (res), req);
+                var result = await task;
+                var resp = result;
+                var stream = resp.GetResponseStream ();
+                var sr = new StreamReader (stream);
+                return sr;
+            } catch {
+                return null;
+            }
         }
 
         public static async Task<TextReader> DoJSONRequestAsync(string url) {

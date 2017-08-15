@@ -34,7 +34,7 @@ namespace Adminthulhu {
                         string gameName = after.Game.HasValue ? after.Game.Value.Name.ToString ().ToUpper () : null;
                         AddGame (after, gameName);
                     } catch (Exception e) {
-                        ChatLogger.Log (e.Message + " - " + e.StackTrace);
+                        Logging.Log (e.Message + " - " + e.StackTrace);
                     }
                     return Task.CompletedTask;
                 };
@@ -51,7 +51,7 @@ namespace Adminthulhu {
                 if (userGames.ContainsKey (user.Id)) {
                     if (!userGames[user.Id].Contains (gameName)) {
                         userGames[user.Id].Add (gameName);
-                        ChatLogger.Log ("Added game " + gameName + " to gamelist of " + user.Username);
+                        Logging.Log ("Added game " + gameName + " to gamelist of " + user.Username);
                         result = "Succesfully added game **" + gameName + "** to your gamelist.";
                         doSave = true;
                     }else {
@@ -60,7 +60,7 @@ namespace Adminthulhu {
                 } else {
                     userGames.Add (user.Id, new List<string> ());
                     userGames[user.Id].Add (gameName);
-                    ChatLogger.Log ("Constructed a new gamelist for " + user.Username);
+                    Logging.Log ("Constructed a new gamelist for " + user.Username);
                     result = "Succesfully added game **" + gameName + "** to your gamelist.";
                     doSave = true;
                 }
@@ -96,7 +96,7 @@ namespace Adminthulhu {
                         Utility.SecureRemoveRole (user as SocketGuildUser, role);
                     }
                 } else {
-                    ChatLogger.Log ("WARNING - Failed to find game role for " + gameName + " despite the data being present, please make sure the ID's match up as well.");
+                    Logging.Log ("WARNING - Failed to find game role for " + gameName + " despite the data being present, please make sure the ID's match up as well.");
                 }
             }
         }

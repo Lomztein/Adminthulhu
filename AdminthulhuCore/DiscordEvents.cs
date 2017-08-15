@@ -80,21 +80,23 @@ namespace Adminthulhu {
         }
 
         public static void StartEvent ( Event startingEvent ) {
-            ChatLogger.Log ("Starting event: " + startingEvent.eventName + "!");
+            Logging.Log ("Starting event: " + startingEvent.eventName + "!");
             startingEvent.eventState = Event.EventState.InProgress;
 
             if (startingEvent.eventMemberIDs.Count != 0) {
                 string mentions = "";
                 foreach (ulong id in startingEvent.eventMemberIDs) {
                     SocketGuildUser user = Utility.GetServer ().GetUser (id);
-                    mentions += ", " + user.Mention;
+                    if (user != null) {
+                       mentions += ", " + user.Mention;
+                    }
                 }
 
                 if (startingEvent.eventMemberIDs.Count > 0) {
                     string members;
                     Embed eventEmbed = ConstructEmbed (startingEvent, out members);
                     Program.messageControl.SendEmbed (Utility.GetMainChannel () as ITextChannel, eventEmbed,  members);
-                    AutomatedVoiceChannels.CreateTemporaryChannel (startingEvent.eventName, startingEvent.duration);
+                    Voice.CreateTemporaryChannel (startingEvent.eventName, startingEvent.duration);
                     ongoingEvents.Add (startingEvent);
                 } else {
                     Program.messageControl.SendMessage (

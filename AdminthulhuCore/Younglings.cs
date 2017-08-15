@@ -49,7 +49,7 @@ namespace Adminthulhu
                 joinDate.Add (user.Id, DateTime.Now);
                 SaveData ();
             } catch (Exception e) {
-                ChatLogger.DebugLog (e.Message);
+                Logging.DebugLog (e.Message);
             }
         }
 
@@ -78,7 +78,7 @@ namespace Adminthulhu
                             await Program.messageControl.SendMessage (user, onKickedDM.Replace ("{INVITELINK}", metadata.Url));
                             await user.KickAsync ();
                         } catch (Exception e) {
-                            ChatLogger.DebugLog (e.Message);
+                            Logging.DebugLog (e.Message);
                         }
                     }
 
@@ -91,11 +91,11 @@ namespace Adminthulhu
                         }
                     } else {
                         toRemove.Add (user.Id);
-                        ChatLogger.Log ("Purged manually removed user from younglings joinDate dictionary.");
+                        Logging.Log ("Purged manually removed user from younglings joinDate dictionary.");
                     }
                 } else {
                     toRemove.Add (pair.Key);
-                    ChatLogger.Log ("Purge user who has left the server from joinDate dictionary.");
+                    Logging.Log ("Purge user who has left the server from joinDate dictionary.");
                 }
             }
 

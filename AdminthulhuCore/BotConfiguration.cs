@@ -18,7 +18,7 @@ namespace Adminthulhu {
             if (settings == null)
                 settings = new Dictionary<string, object>();
             else
-                SerializationIO.SaveObjectToFile (Program.dataPath + settingsFileName + "_BACKUP" + Program.gitHubIgnoreType, settings, true);
+                SerializationIO.SaveObjectToFile (Program.dataPath + settingsFileName + "_BACKUP" + Program.gitHubIgnoreType, settings, true, false);
         }
 
         public static void PostInit() {
@@ -34,7 +34,7 @@ namespace Adminthulhu {
         }
 
         public static void SaveSettings() {
-            SerializationIO.SaveObjectToFile (Program.dataPath + settingsFileName + Program.gitHubIgnoreType, settings, true);
+            SerializationIO.SaveObjectToFile (Program.dataPath + settingsFileName + Program.gitHubIgnoreType, settings, true, false);
         }
 
         public static void ReloadConfiguration() {
@@ -52,6 +52,7 @@ namespace Adminthulhu {
 
         // This feels very wrong..
         public static T GetSetting<T>(string key, string oldKey, T fallback) {
+            Logging.Log ("Loading configuration key: " + key);
             T obj;
             string [ ] path = key.Split ('.');
             // Search for uncatagorised value, in order to maintain backwards compatability.
@@ -78,7 +79,7 @@ namespace Adminthulhu {
 
 
                 if (result == null) {
-                    if (fallback != null) ChatLogger.Log ("WARNING: Failed to load setting " + key + ", returning fallback \"" + fallback.ToString () + "\"..");
+                    if (fallback != null) Logging.Log ("WARNING: Failed to load setting " + key + ", returning fallback \"" + fallback.ToString () + "\"..");
                     SetSetting (key, fallback);
                     return fallback;
                 } else {
@@ -111,7 +112,7 @@ namespace Adminthulhu {
                     }
                 }
             } catch (Exception e) {
-                ChatLogger.Log (e.Message + " - " + e.StackTrace);
+                Logging.Log (e.Message + " - " + e.StackTrace);
             }
         }
 
@@ -119,7 +120,7 @@ namespace Adminthulhu {
             if (settings.ContainsKey (key)) {
                 settings.Remove (key);
             }
-            ChatLogger.Log ("Purged old config key: " + key);
+            Logging.Log ("Purged old config key: " + key);
         }
     }
 

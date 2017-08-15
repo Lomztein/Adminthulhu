@@ -9,7 +9,7 @@ using Discord.Rest;
 
 namespace Adminthulhu {
 
-    public class AutomatedWeeklyEvent : IClockable, IConfigurable {
+    public class WeeklyEvents : IClockable, IConfigurable {
 
         private static string [ ] unicodeEmojis = new string [ ] { "1⃣", "2⃣", "3⃣", "4⃣", "5⃣", "6⃣", "7⃣", "8⃣", "9⃣", "🔟" };
 
@@ -246,7 +246,7 @@ namespace Adminthulhu {
                 await UpdateVoteMessage (false);
                 SaveData ();
             } catch (Exception e) {
-                ChatLogger.DebugLog (e.Message + " - " + e.StackTrace);
+                Logging.DebugLog (e.Message + " - " + e.StackTrace);
             }
         }
 
@@ -279,7 +279,7 @@ namespace Adminthulhu {
                     }
                 }
             } catch (Exception e) {
-                ChatLogger.DebugLog (e.StackTrace);
+                Logging.DebugLog (e.StackTrace);
             }
             // Shuffle dat shite.
             for (int i = 0; i < gamesPerWeek; i++) {
@@ -441,7 +441,7 @@ namespace Adminthulhu {
                     }
                 }
             } catch (Exception e) {
-                ChatLogger.DebugLog (e.Message + " - " + e.StackTrace);
+                Logging.DebugLog (e.Message + " - " + e.StackTrace);
             }
         }
 
@@ -505,12 +505,12 @@ namespace Adminthulhu {
             if (AllowExecution (e, arguments)) {
                 int parse;
                 if (int.TryParse (arguments [ 0 ], out parse)) {
-                    bool withinRange = parse > 0 && parse <= AutomatedWeeklyEvent.games.Length;
+                    bool withinRange = parse > 0 && parse <= WeeklyEvents.games.Length;
 
                     if (withinRange) {
-                        AutomatedWeeklyEvent.RemoveGame (parse);
+                        WeeklyEvents.RemoveGame (parse);
                     } else {
-                        Program.messageControl.SendMessage (e, "Failed to remove - outside range ( 0-" + (AutomatedWeeklyEvent.allGames.Count - 1) + " ).", false);
+                        Program.messageControl.SendMessage (e, "Failed to remove - outside range ( 0-" + (WeeklyEvents.allGames.Count - 1) + " ).", false);
                     }
                 } else {
                     Program.messageControl.SendMessage (e, "Failed to remove, could not parse number.", false);
@@ -536,7 +536,7 @@ namespace Adminthulhu {
             if (AllowExecution (e, arguments)) {
                 bool parse;
                 if (bool.TryParse (arguments [ 1 ], out parse)) {
-                    if (AutomatedWeeklyEvent.AddGame (arguments [ 0 ], parse)) {
+                    if (WeeklyEvents.AddGame (arguments [ 0 ], parse)) {
                         Program.messageControl.SendMessage (e, "Succesfully added game to automated events.", false);
                     } else {
                         Program.messageControl.SendMessage (e, "Failed to add game, it might already be on the list.", false);
@@ -563,7 +563,7 @@ namespace Adminthulhu {
         public override Task ExecuteCommand(SocketUserMessage e, List<string> arguments) {
             base.ExecuteCommand (e, arguments);
             if (AllowExecution (e, arguments)) {
-                if (AutomatedWeeklyEvent.HighlightGame (arguments [ 0 ])) {
+                if (WeeklyEvents.HighlightGame (arguments [ 0 ])) {
                     Program.messageControl.SendMessage (e, "Succesfully toggled game highlight automated events.", false);
                 } else {
                     Program.messageControl.SendMessage (e, "Failed to toggle game highlight.", false);
@@ -586,8 +586,8 @@ namespace Adminthulhu {
             base.ExecuteCommand (e, arguments);
             if (AllowExecution (e, arguments)) {
                 string result = "```";
-                for (int i = 0; i < AutomatedWeeklyEvent.allGames.Count; i++) {
-                    result += "\n" + AutomatedWeeklyEvent.allGames [ i ].name + (AutomatedWeeklyEvent.allGames[i].highlight ? " *" : "");
+                for (int i = 0; i < WeeklyEvents.allGames.Count; i++) {
+                    result += "\n" + i + " - " + WeeklyEvents.allGames [ i ].name + (WeeklyEvents.allGames[i].highlight ? " *" : "");
                 }
                 result += "```";
                 Program.messageControl.SendMessage (e, result, false);

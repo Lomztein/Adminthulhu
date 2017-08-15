@@ -33,7 +33,7 @@ namespace Adminthulhu {
 
                 SocketGuildChannel channel = (e.Author as SocketGuildUser).VoiceChannel;
                 if (channel != null) {
-                    AutomatedVoiceChannels.VoiceChannel vc = AutomatedVoiceChannels.allVoiceChannels[channel.Id];
+                    Voice.VoiceChannel vc = Voice.allVoiceChannels[channel.Id];
                     if (!vc.IsLocked ()) {
 
                         if (!vc.lockable) {
@@ -72,7 +72,7 @@ namespace Adminthulhu {
 
                 SocketGuildChannel channel = (e.Author as SocketGuildUser).VoiceChannel;
                 if (channel != null) {
-                    AutomatedVoiceChannels.VoiceChannel vc = AutomatedVoiceChannels.allVoiceChannels[channel.Id];
+                    Voice.VoiceChannel vc = Voice.allVoiceChannels[channel.Id];
                     if (vc.IsLocked ()) {
 
                         if (vc.lockerID == e.Author.Id) {
@@ -112,7 +112,7 @@ namespace Adminthulhu {
             if (AllowExecution (e, arguments)) {
                 TimeSpan timeSpan;
                 if (Utility.TryParseSimpleTimespan (arguments [ 1 ], out timeSpan)) {
-                    AutomatedVoiceChannels.CreateTemporaryChannel (arguments [ 0 ], timeSpan);
+                    Voice.CreateTemporaryChannel (arguments [ 0 ], timeSpan);
                     Program.messageControl.SendMessage (e, "Succesfully created voice channel by name **" + arguments[0] + "**!", false);
                 } else {
                     Program.messageControl.SendMessage (e, "Failed to create voice channel - TimeSpan could not be parsed.", false);
@@ -145,7 +145,7 @@ namespace Adminthulhu {
                 }
 
                 if (channel != null) {
-                    AutomatedVoiceChannels.VoiceChannel vc = AutomatedVoiceChannels.allVoiceChannels[channel.Id];
+                    Voice.VoiceChannel vc = Voice.allVoiceChannels[channel.Id];
                     if (vc.IsLocked ()) {
                         vc.InviteUser (e.Author as SocketGuildUser, user);
                         Program.messageControl.SendMessage (e.Channel, "User **" + Utility.GetUserName (user) + "** succesfully invited.", false);
@@ -180,7 +180,7 @@ namespace Adminthulhu {
                 SocketGuildChannel channel = (e.Author as SocketGuildUser).VoiceChannel;
 
                 if (channel != null) {
-                    AutomatedVoiceChannels.VoiceChannel vc = AutomatedVoiceChannels.allVoiceChannels[channel.Id];
+                    Voice.VoiceChannel vc = Voice.allVoiceChannels[channel.Id];
                     if (vc.IsLocked ()) {
                         string reply = "```\n";
                         foreach (ulong user in vc.allowedUsers) {
@@ -225,7 +225,7 @@ namespace Adminthulhu {
                 }
 
                 if (channel != null) {
-                    AutomatedVoiceChannels.VoiceChannel vc = AutomatedVoiceChannels.allVoiceChannels[channel.Id];
+                    Voice.VoiceChannel vc = Voice.allVoiceChannels[channel.Id];
                     if (vc.IsLocked ()) {
 
                         if (vc.lockerID == e.Author.Id) {
@@ -269,7 +269,7 @@ namespace Adminthulhu {
             base.ExecuteCommand (e, arguments);
             if (AllowExecution (e, arguments)) {
                 if ((e.Author as SocketGuildUser).VoiceChannel != null) {
-                    AutomatedVoiceChannels.allVoiceChannels [ (e.Author as SocketGuildUser).VoiceChannel.Id ].ToggleStatus (AutomatedVoiceChannels.VoiceChannel.VoiceChannelStatus.Looking);
+                    Voice.allVoiceChannels [ (e.Author as SocketGuildUser).VoiceChannel.Id ].ToggleStatus (Voice.VoiceChannel.VoiceChannelStatus.Looking);
                     Program.messageControl.SendMessage (e, "Succesfully toggled \"Looking for players\" tag.", false);
                 } else {
                     Program.messageControl.SendMessage (e, "Error - You have to be in a channel.", false);
@@ -292,7 +292,7 @@ namespace Adminthulhu {
             base.ExecuteCommand (e, arguments);
             if (AllowExecution (e, arguments)) {
                 if ((e.Author as SocketGuildUser).VoiceChannel != null) {
-                AutomatedVoiceChannels.allVoiceChannels [ (e.Author as SocketGuildUser).VoiceChannel.Id ].ToggleStatus (AutomatedVoiceChannels.VoiceChannel.VoiceChannelStatus.Full);
+                Voice.allVoiceChannels [ (e.Author as SocketGuildUser).VoiceChannel.Id ].ToggleStatus (Voice.VoiceChannel.VoiceChannelStatus.Full);
                     Program.messageControl.SendMessage (e, "Succesfully toggled \"Full of players\" tag.", false);
                 }
             } else {
@@ -315,10 +315,10 @@ namespace Adminthulhu {
             if (AllowExecution (e, arguments)) {
                 if ((e.Author as SocketGuildUser).VoiceChannel != null) {
                     if (arguments [ 0 ].ToLower () == "reset") {
-                        AutomatedVoiceChannels.allVoiceChannels [ (e.Author as SocketGuildUser).VoiceChannel.Id ].SetCustomName ("", true);
+                        Voice.allVoiceChannels [ (e.Author as SocketGuildUser).VoiceChannel.Id ].SetCustomName ("", true);
                         Program.messageControl.SendMessage (e, "Succesfully reset channel name.", false);
                     } else {
-                        AutomatedVoiceChannels.allVoiceChannels [ (e.Author as SocketGuildUser).VoiceChannel.Id ].SetCustomName (arguments[0], true);
+                        Voice.allVoiceChannels [ (e.Author as SocketGuildUser).VoiceChannel.Id ].SetCustomName (arguments[0], true);
                         Program.messageControl.SendMessage (e, "Succesfully set custom name to **" + arguments[0] + "**.", false);
                     }
                 }
@@ -343,7 +343,7 @@ namespace Adminthulhu {
                 if ((e.Author as SocketGuildUser).VoiceChannel != null) {
                     uint parse;
                     if (uint.TryParse (arguments [ 0 ], out parse)) {
-                        AutomatedVoiceChannels.allVoiceChannels [ (e.Author as SocketGuildUser).VoiceChannel.Id ].SetDesiredMembers (parse);
+                        Voice.allVoiceChannels [ (e.Author as SocketGuildUser).VoiceChannel.Id ].SetDesiredMembers (parse);
                         Program.messageControl.SendMessage (e, "Succesfully set desired amount of players to " + parse + ".", false);
                     } else {
                         Program.messageControl.SendMessage (e, "Failed to set desired amount of players to " + arguments [ 0 ] + " - could not parse.", false);

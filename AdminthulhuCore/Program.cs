@@ -66,7 +66,7 @@ namespace Adminthulhu
             try {
                 await new Program ().Start (args);
             } catch (Exception e) {
-                ChatLogger.DebugLog (e.Message + "\n" + e.StackTrace);
+                Logging.DebugLog (e.Message + "\n" + e.StackTrace);
             }
         }
 
@@ -99,8 +99,10 @@ namespace Adminthulhu
 
             dataPath = dataPath.Replace ('\\', '/');
             InitializeDirectories ();
-            ChatLogger.Log ("Initializing bot.. Datapath: " + dataPath);
+            Logging.Log ("Initializing bot.. Datapath: " + dataPath);
             BotConfiguration.Initialize ();
+            Encryption.Initialize ();
+
             BotConfiguration.AddConfigurable (this);
             LoadConfiguration ();
 
@@ -108,7 +110,8 @@ namespace Adminthulhu
             messageControl = new MessageControl ();
             karma = new Karma ();
 
-            ChatLogger.Log ("Loading data..");
+            LegalJunk.Initialize ();
+            Logging.Log ("Loading data..");
             InitializeCommands ();
             UserConfiguration.Initialize ();
             clock = new Clock ();
@@ -118,10 +121,10 @@ namespace Adminthulhu
 
             bootedTime = DateTime.Now.AddSeconds (BOOT_WAIT_TIME);
 
-            ChatLogger.Log ("Setting up events..");
+            Logging.Log ("Setting up events..");
             discordClient.MessageReceived += (e) => {
 
-                ChatLogger.Log (Utility.GetChannelName (e) + " says: " + e.Content);
+                Logging.Log (Utility.GetChannelName (e) + " says: " + e.Content);
                 bool hideTrigger = false;
                 bool foundCommand = false;
                 if (e.Author.Id != discordClient.CurrentUser.Id && e.Content.Length > 0 && ContainsCommandTrigger (e.Content, out hideTrigger)) {
@@ -166,13 +169,13 @@ namespace Adminthulhu
             };
 
             discordClient.UserVoiceStateUpdated += async (user, before, after) => {
-                ChatLogger.Log ("User voice updated: " + user.Username);
+                Logging.Log ("User voice updated: " + user.Username);
                 SocketGuild guild = (user as SocketGuildUser).Guild;
 
                 if (after.VoiceChannel != null)
-                    AutomatedVoiceChannels.allVoiceChannels [ after.VoiceChannel.Id ].OnUserJoined (user as SocketGuildUser);
+                    Voice.allVoiceChannels [ after.VoiceChannel.Id ].OnUserJoined (user as SocketGuildUser);
 
-                await AutomatedVoiceChannels.OnUserUpdated (guild, before.VoiceChannel, after.VoiceChannel);
+                await Voice.OnUserUpdated (guild, before.VoiceChannel, after.VoiceChannel);
 
                 return;
             };
@@ -181,7 +184,7 @@ namespace Adminthulhu
                 SocketGuild guild = (before as SocketGuildUser).Guild;
 
                 SocketGuildChannel channel = Utility.GetMainChannel ();
-                await AutomatedVoiceChannels.OnUserUpdated (guild, before.VoiceChannel, after.VoiceChannel);
+                await Voice.OnUserUpdated (guild, before.VoiceChannel, after.VoiceChannel);
 
                 if ((before as SocketGuildUser).Nickname != (after as SocketGuildUser).Nickname) {
                     MentionNameChange (before, after);
@@ -189,7 +192,7 @@ namespace Adminthulhu
             };
 
             discordClient.UserUpdated += (before, after) => {
-                ChatLogger.Log ("User " + before.Username + " updated.");
+                Logging.Log ("User " + before.Username + " updated.");
 
                 if (before.Username != after.Username && (after as SocketGuildUser).Nickname == "") {
                     MentionNameChange (before as SocketGuildUser, after as SocketGuildUser);
@@ -219,13 +222,13 @@ namespace Adminthulhu
             };
 
             discordClient.Ready += () => {
-                ChatLogger.Log ("Bot is ready and running!");
+                Logging.Log ("Bot is ready and running!");
                 return Task.CompletedTask;
             };
 
             string token = SerializationIO.LoadTextFile (dataPath + "bottoken" + gitHubIgnoreType)[0];
 
-            ChatLogger.Log ("Connecting to Discord..");
+            Logging.Log ("Connecting to Discord..");
             await discordClient.LoginAsync (TokenType.Bot, token);
             await discordClient.StartAsync ();
 
@@ -258,13 +261,13 @@ namespace Adminthulhu
 
             if (Utility.GetServer () != null) {
                 hasBooted = true;
-                ChatLogger.Log ("Bot has fully booted.");
+                Logging.Log ("Bot has fully booted.");
             }
             return hasBooted;
         }
 
         private void InitializeData () {
-            AutomatedVoiceChannels.InitializeData ();
+            Voice.InitializeData ();
         }
 
         public static void InitializeDirectories () {

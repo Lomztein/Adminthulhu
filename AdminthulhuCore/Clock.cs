@@ -17,8 +17,9 @@ namespace Adminthulhu {
         public SocketGuildUser [ ] lastTest = new SocketGuildUser [ 5 ];
 
         public IClockable [ ] clockables = new IClockable [ ] {
-            new DiscordEvents (), new AutomatedTextChannels (), new UserActivityMonitor (), new Birthdays (), new AutomatedWeeklyEvent (),
-            new Strikes (), new AprilFools (), new Younglings (), new ServerStatusChecking.ServerStatusChecking (), new AutomatedVoiceChannels.TemporaryChannelsChecker (),
+            new DiscordEvents (), new AutomatedTextChannels (), new UserActivityMonitor (), new Birthdays (), new WeeklyEvents (),
+            new Strikes (), new AprilFools (), new Younglings (), new ServerStatusChecking.ServerStatusChecking (), new Voice.TemporaryChannelsChecker (),
+            new Logging (),
         };
         private bool [ ] clockablesEnabled;
 
@@ -29,7 +30,7 @@ namespace Adminthulhu {
             timeThread = new Thread (new ThreadStart (Initialize));
             timeThread.Start ();
             while (!timeThread.IsAlive) {
-                ChatLogger.Log ("Initializing clock thread..");
+                Logging.Log ("Initializing clock thread..");
             }
             Thread.Sleep (1);
         }

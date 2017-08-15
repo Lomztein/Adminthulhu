@@ -82,7 +82,7 @@ namespace Adminthulhu.ServerStatusChecking {
                 }
                 await UpdateMessage (result + "```");
             } catch (Exception e) {
-                ChatLogger.Log (e.Message);
+                Logging.Log (e.Message);
             }
         }
 

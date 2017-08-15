@@ -9,7 +9,7 @@ using Discord.Rest;
 using Newtonsoft.Json;
 
 namespace Adminthulhu {
-    public class AutomatedVoiceChannels : IConfigurable {
+    public class Voice : IConfigurable {
 
         public static Dictionary<ulong, VoiceChannel> defaultChannels = new Dictionary<ulong, VoiceChannel> ();
         public static Dictionary<ulong, VoiceChannel> allVoiceChannels = new Dictionary<ulong, VoiceChannel> ();
@@ -131,7 +131,7 @@ namespace Adminthulhu {
 
         public static VoiceChannel [ ] loadedChannels;
         public static void InitializeData() {
-            AutomatedVoiceChannels configurable = new AutomatedVoiceChannels ();
+            Voice configurable = new Voice ();
             configurable.LoadConfiguration ();
             BotConfiguration.AddConfigurable (configurable);
         }
@@ -149,7 +149,7 @@ namespace Adminthulhu {
                     await UpdateVoiceChannel (before);
                     await UpdateVoiceChannel (after);
                 } catch (Exception e) {
-                    ChatLogger.Log (e.Message + " - " + e.StackTrace);
+                    Logging.Log (e.Message + " - " + e.StackTrace);
                 }
             }
         }
@@ -242,7 +242,7 @@ namespace Adminthulhu {
 
                 // Trying to optimize API calls here, just to spare those poor souls at the Discord API HQ stuff
                 if (voice.Name != newName) {
-                    ChatLogger.Log ("Channel name updated: " + newName);
+                    Logging.Log ("Channel name updated: " + newName);
                     await voice.ModifyAsync ((delegate (VoiceChannelProperties properties) {
                         properties.Name = newName;
                     }));
@@ -256,7 +256,7 @@ namespace Adminthulhu {
                 VoiceChannel voiceChannel = pair.Value;
 
                 if (voiceChannel.lifeTime.Ticks > 0) {
-                    if (voiceChannel.creationTime.Add (voiceChannel.lifeTime) < DateTime.Now && voiceChannel.GetChannel ().Users.Count == 0) {
+                    if (voiceChannel.creationTime.Add (voiceChannel.lifeTime) < DateTime.Now && Utility.ForceGetUsers (voiceChannel.id).Count == 0) {
                         defaultChannels.Remove (voiceChannel.id);
                         allVoiceChannels.Remove (voiceChannel.id);
                         voiceChannel.GetChannel ().DeleteAsync ();
@@ -369,6 +369,7 @@ namespace Adminthulhu {
 
                     RestVoiceChannel channel;
                     try {
+                        Logging.Log ("Creating new voice channel: " + channelName);
                         Task<RestVoiceChannel> createTask = server.CreateVoiceChannelAsync (channelName.Split(';')[0]);
                         channel = await createTask;
                     } catch (Exception e) {
@@ -410,7 +411,7 @@ namespace Adminthulhu {
                     if (curTag.enabled)
                         curTag.run (data);
                 }catch (Exception e) {
-                    ChatLogger.DebugLog (e.StackTrace);
+                    Logging.DebugLog (e.StackTrace);
                 }
 
                 if (data.hasTag) {
