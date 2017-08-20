@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Net;
 using Lomz.ProgramPatcher;
 
 namespace Adminthulhu
 {
     public class AutoPatcher : IClockable {
 
-        public static string url = "https://github.com/Lomztein/Adminthulhu/Compiled/";
+        public static string url = "https://github.com/Lomztein/Adminthulhu/blob/master/Compiled/changelog.txt";
 
         public Task Initialize(DateTime time) {
             return Task.CompletedTask;
@@ -23,7 +24,7 @@ namespace Adminthulhu
         }
 
         public async Task OnMinutePassed(DateTime time) {
-            string changelog = await Patcher.DownloadChangelog (url + "changelog.txt");
+            string changelog = await Patcher.DownloadChangelog (url);
             Logging.DebugLog (Logging.LogType.BOT, changelog);
         }
 

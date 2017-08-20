@@ -59,7 +59,7 @@ namespace Adminthulhu {
                     if (now.Minute != lastMesauredTime.Minute) {
                         for (int i = 0; i < clockables.Length; i++) {
                             if (clockablesEnabled [ i ])
-                                clockables [ i ].OnMinutePassed (now);
+                               clockables [ i ].OnMinutePassed (now);
                         }
                     }
 

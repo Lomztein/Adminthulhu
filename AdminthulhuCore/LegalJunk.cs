@@ -30,10 +30,12 @@ namespace Adminthulhu
                 await Task.Delay (1000); // This method should really be replaced by something like AwaitFullBoot or something.
             }
 
-            Logging.Log (Logging.LogType.WARNING, acceptedLegalJunk.Count + " accepting users found, sending messages to all remaining in 5 seconds..");
-            await Task.Delay (5000);
-
             IEnumerable<SocketGuildUser> allUsers = Utility.GetServer ().Users;
+            if (allUsers.Count () != acceptedLegalJunk.Count ()) {
+                Logging.Log (Logging.LogType.WARNING, acceptedLegalJunk.Count + " accepting users found, sending messages to all remaining " + allUsers.Count () + " users in 5 seconds..");
+                await Task.Delay (5000);
+            }
+
             foreach (SocketGuildUser u in allUsers) {
                 await AttemptSendLegalBabble (u);
             }
