@@ -35,7 +35,7 @@ namespace Adminthulhu {
                         if (date != null)
                             birthdays.Add (date);
                     } catch (Exception fuck) {
-                        Logging.Log (fuck.Message);
+                        Logging.Log (Logging.LogType.EXCEPTION, fuck.Message);
                     }
                 }
         }
@@ -79,7 +79,7 @@ namespace Adminthulhu {
             try {
                 age = DateTime.MinValue.Add (DateTime.Now - new DateTime (date.day.Year, date.day.Month, date.day.Day)).Year - DateTime.MinValue.Year;
             } catch (IndexOutOfRangeException) {
-                Logging.Log (user.Username + " has somehow set their birthday to be before now. wat.");
+                Logging.Log (Logging.LogType.EXCEPTION, user.Username + " has somehow set their birthday to be before now. wat.");
             }
 
             string ageSuffix = "'th";

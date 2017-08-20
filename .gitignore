@@ -52,7 +52,6 @@ Temporary Items
 
 # Files that should totally be ignored.
 .botproperty
-/Compiled/*
 /packages/*
 
 /AdminthulhuCore/bin

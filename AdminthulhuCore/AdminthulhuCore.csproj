@@ -11,10 +11,17 @@
     <Folder Include="wwwroot\" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Discord.Net" Version="1.0.2-build-00800" />
+    <PackageReference Include="Discord.Net" Version="1.0.2-build-00808" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.0.0" />
     <PackageReference Include="Microsoft.AspNetCore" Version="1.1.1" />
+    <PackageReference Include="Microsoft.NETCore.Portable.Compatibility" Version="1.0.2" />
     <PackageReference Include="Newtonsoft.Json" Version="10.0.1-beta1" />
+    <PackageReference Include="System.Threading.Tasks" Version="4.3.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="ProgramPatcher">
+      <HintPath>C:\Users\Lomztein\Documents\Visual Studio 2017\Projects\ProgramPatcher\ProgramPatcher\bin\Debug\ProgramPatcher.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

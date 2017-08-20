@@ -12,10 +12,11 @@ namespace Adminthulhu {
     public class MessageControl {
 
         public static int maxCharacters = 2000;
-        public Dictionary<ulong, BookMessage> bookMessages = new Dictionary<ulong, BookMessage>();
+        public Dictionary<ulong, BookMessage> bookMessages = new Dictionary<ulong, BookMessage> ();
+        private static string [ ] defaultPollUnicodeEmojis = new string [ ] { "1⃣", "2⃣", "3⃣", "4⃣", "5⃣", "6⃣", "7⃣", "8⃣", "9⃣", "🔟" };
 
         // Honestly I have no clue if this works properly, as it is kind of difficult to test out. Sorrounder is placed on the start and end of the message.
-        private string[] SplitMessage (string message, string sorrounder) {
+        private string [ ] SplitMessage(string message, string sorrounder) {
             List<string> splitted = new List<string> ();
 
             int counted = 0;
@@ -25,7 +26,7 @@ namespace Adminthulhu {
                 if (counted > maxCharacters - (10 + sorrounder.Length * 2)) {
 
                     int spaceSearch = counted;
-                    while (message[spaceSearch] != '\n') {
+                    while (message [ spaceSearch ] != '\n') {
                         spaceSearch--;
                     }
 
@@ -46,16 +47,27 @@ namespace Adminthulhu {
             return splitted.ToArray ();
         }
 
-        public MessageControl () {
+        public MessageControl() {
             Program.discordClient.ReactionAdded += OnReactionAdded;
+            Program.discordClient.ReactionRemoved += OnReactionRemoved;
             Program.discordClient.MessageReceived += OnMessageRecieved;
         }
 
-        public async void ConstructBookMessage(RestUserMessage message, string[] pages) {
+        private Task OnReactionRemoved(Cacheable<IUserMessage, ulong> message, ISocketMessageChannel channel, SocketReaction reaction) {
+            OnPollReactionChanged (message, reaction, false);
+            return Task.CompletedTask;
+        }
+
+        public async void ConstructBookMessage(RestUserMessage message, string [ ] pages) {
             bookMessages.Add (message.Id, new BookMessage (message.Channel.Id, message.Id, pages));
             await message.AddReactionAsync (new Emoji ("⬅"));
             await message.AddReactionAsync (new Emoji ("➡"));
             bookMessages [ message.Id ].TurnPage (0);
+        }
+
+        public async void SendBookMessage(ISocketMessageChannel channel, string [ ] contents, bool allowInMain) {
+            RestUserMessage message = await AsyncSend (channel, "Placeholder Text", false);
+            ConstructBookMessage (message, contents);
         }
 
         private async Task OnReactionAdded(Cacheable<IUserMessage, ulong> message, ISocketMessageChannel channel, SocketReaction reaction) {
@@ -64,7 +76,6 @@ namespace Adminthulhu {
 
             Question question = FindByMessageID (reaction.UserId, message.Id);
             if (question != null) {
-            Logging.Log (reaction.User.Value.Username + " responded to a question with " + reaction.Emote.Name);
                 if (reaction.Emote.Name == "thumbsup") {
                     question.ifYes?.Invoke ();
                     askedUsers [ reaction.UserId ].Remove (question);
@@ -83,9 +94,38 @@ namespace Adminthulhu {
                     bookMessages [ message.Id ].TurnPage (1);
                     await (iMessage as RestUserMessage).RemoveReactionAsync (new Emoji ("➡"), reaction.User.Value);
                 }
-
             }
-            return;
+
+            OnPollReactionChanged (message, reaction, true);
+        }
+
+        public async void OnPollReactionChanged (Cacheable<IUserMessage, ulong> message, SocketReaction reaction, bool add) {
+            Poll reactedPoll = currentPolls.Find (x => x.messageID == message.Id);
+            if (reactedPoll != null) {
+                int reactionID = -1;
+                for (int i = 0; i < reactedPoll.options.Count; i++) {
+                    if (GetUnicodeEmoji (i) == reaction.Emote.Name) {
+                        reactionID = i;
+                        break;
+                    }
+                }
+
+                if (reactionID != -1) {
+                    if (add) {
+                        if (!reactedPoll.DoVote (reaction.User.Value.Id, reactionID)) {
+                            if (message.HasValue) {
+                                await message.Value.RemoveReactionAsync (reaction.Emote, reaction.User.Value);
+                            }
+                        }
+                    } else {
+                        reactedPoll.RemoveVote (reaction.UserId, reactionID);
+                    }
+                } else {
+                    if (message.HasValue) {
+                        await message.Value.RemoveReactionAsync (reaction.Emote, reaction.User.Value);
+                    }
+                }
+            }
         }
 
         public async Task OnMessageRecieved(SocketMessage e) {
@@ -109,7 +149,7 @@ namespace Adminthulhu {
         }
 
         public async void SendMessage ( ISocketMessageChannel e, string message, bool allowInMain, string splitSorrounder = "") {
-            if (message.Length == 0)
+            if (message == null || message.Length == 0)
                 return;
 
             string[] messages = SplitMessage (message, splitSorrounder);
@@ -134,7 +174,7 @@ namespace Adminthulhu {
                     ConstructBookMessage (finalMessage as RestUserMessage, split);
 
             } catch (Exception exception) {
-                Logging.Log ("Failed to send message: " + exception.Message + " - " + exception.StackTrace);
+                Logging.Log (Logging.LogType.EXCEPTION, "Failed to send message: " + exception.Message + " - " + exception.StackTrace);
             }
             return finalMessage;
         }
@@ -144,24 +184,24 @@ namespace Adminthulhu {
         }
 
         public async Task<RestUserMessage> AsyncSend(ISocketMessageChannel e, string message, bool allowInMain) {
-            Logging.Log ("Sending a message.");
+            Logging.Log (Logging.LogType.BOT, "Sending a message.");
             try {
 
                 if (!allowInMain && e.Name == Program.mainTextChannelName) {
                     return null;
-                } else if (message.Length > 0) {
+                } else if (message != null && message.Length > 0) {
                     Task<RestUserMessage> messageTask = e.SendMessageAsync (message);
                     await messageTask;
                     return messageTask.Result;
                 }
             } catch (Exception exception) {
-                Logging.Log ("Failed to send message: " + exception.Message + " - " + exception.StackTrace);
+                Logging.Log (Logging.LogType.EXCEPTION, "Failed to send message: " + exception.Message + " - " + exception.StackTrace);
             }
             return null;
         }
 
         public async Task SendImage(SocketTextChannel e, string message, string imagePath, bool allowInMain) {
-            Logging.Log ("Sending an image!");
+            Logging.Log (Logging.LogType.BOT, "Sending an image!");
             if (!allowInMain && e.Name == Program.mainTextChannelName) {
                 return;
             } else {
@@ -226,27 +266,236 @@ namespace Adminthulhu {
             List<object> result = new List<object> ();
             foreach (QE e in elements) {
                 while (true) {
-                    Program.messageControl.SendMessage (channel, e.name, false);
-                    while (questionnarireMessageQueue [ userID ].Count == 0) {
-                        await Task.Delay (100);
-                    }
-                    string input = questionnarireMessageQueue [ userID ].Dequeue ();
-                    if (input == "cancel") {
-                        questionnarireMessageQueue.Remove (userID);
-                        throw new TimeoutException ("Questionnaire was cancelled.");
-                    }
+                    if (e.type.IsArray) {
+                        List<object> arrayResult = new List<object> ();
+                        while (true) {
+                            Program.messageControl.SendMessage (channel, e.name.Replace ("#", "#" + (arrayResult.Count + 1)), false);
+                            while (questionnarireMessageQueue [ userID ].Count == 0) {
+                                await Task.Delay (100);
+                            }
 
-                    try {
-                        result.Add (Convert.ChangeType (input, e.type));
+                            string input = questionnarireMessageQueue [ userID ].Dequeue ();
+                            if (input == "end") {
+                                break;
+                            }
+                            try {
+                                arrayResult.Add (Convert.ChangeType (input, e.type.GetElementType ()));
+                            } catch (Exception exception) {
+                                Program.messageControl.SendMessage (channel, exception.Message, false);
+                            }
+                        }
+                        result.Add (arrayResult.ToArray ());
                         break;
-                    } catch (Exception exception) {
-                        Program.messageControl.SendMessage (channel, exception.Message, false);
+                    } else {
+                        Program.messageControl.SendMessage (channel, e.name, false);
+                        while (questionnarireMessageQueue [ userID ].Count == 0) {
+                            await Task.Delay (100);
+                        }
+                        string input = questionnarireMessageQueue [ userID ].Dequeue ();
+                        if (input == "cancel") {
+                            questionnarireMessageQueue.Remove (userID);
+                            throw new TimeoutException ("Questionnaire was cancelled.");
+                        }
+
+                        try {
+                            result.Add (Convert.ChangeType (input, e.type));
+                            break;
+                        } catch (Exception exception) {
+                            Program.messageControl.SendMessage (channel, exception.Message, false);
+                        }
                     }
                 }
             }
 
             questionnarireMessageQueue.Remove (userID);
             return result;
+        }
+
+        public static async Task<IMessage> GetMessage(ulong channelID, ulong messageID) {
+            SocketTextChannel channel = Utility.GetServer ().GetChannel (channelID) as SocketTextChannel;
+            if (channel != null) {
+                return await channel.GetMessageAsync (messageID);
+            }
+            SocketUser user = Utility.GetServer ().GetUser (messageID);
+            if (user != null) {
+                IDMChannel userChannel = await user.GetOrCreateDMChannelAsync ();
+                return await userChannel.GetMessageAsync (messageID);
+            }
+
+            return null;
+        }
+
+    private static string GetUnicodeEmoji(int index) {
+        return defaultPollUnicodeEmojis [ index ];
+    }
+
+    public static async Task<IMessage> CreatePoll(Poll poll) {
+            currentPolls.Add (poll);
+            await poll.UpdateMessage ();
+            return await poll.GetMessage ();
+        }
+
+        public class PollClock : IClockable {
+            public Task Initialize(DateTime time) {
+                return Task.CompletedTask;
+            }
+
+            public Task OnDayPassed(DateTime time) {
+                return Task.CompletedTask;
+            }
+
+            public Task OnHourPassed(DateTime time) {
+                return Task.CompletedTask;
+            }
+
+            public Task OnMinutePassed(DateTime time) {
+                List<Poll> toRemove = new List<Poll> ();
+                foreach (Poll poll in currentPolls) {
+                    if (poll.endDate < time) {
+                        poll.DeclareWinner ();
+                        toRemove.Add (poll);
+                    }
+                }
+                foreach (Poll r in toRemove) {
+                    currentPolls.Remove (r);
+                }
+                return Task.CompletedTask;
+            }
+
+            public Task OnSecondPassed(DateTime time) {
+                return Task.CompletedTask;
+            }
+        }
+
+        public static List<Poll> currentPolls = new List<Poll> ();
+        public class Poll {
+            public string header;
+            public ulong channelID;
+            public ulong messageID;
+
+            public DateTime endDate;
+            public int votesPerPerson = 1;
+
+            public List<PollOption> options = new List<PollOption>();
+            public List<Vote> votes = new List<Vote>();
+
+            public Action<Poll> onEnded;
+            public PollOption winner;
+
+            public Poll(string _header, ulong _channelID, ulong _messageID, DateTime _endDate, int _votesPerPerson, Action<Poll> _onEnded, params string [ ] pollOptions) {
+                header = _header;
+                channelID = _channelID;
+                messageID = _messageID;
+                endDate = _endDate;
+                votesPerPerson = _votesPerPerson;
+                onEnded = _onEnded;
+
+                foreach (string str in pollOptions) {
+                    options.Add (new PollOption (str, this));
+                }
+            }
+
+            public async Task UpdateMessage() {
+                string contents = header + "\n```";
+                int index = 0;
+                foreach (PollOption option in options) {
+                    contents += Utility.UniformStrings ((index + 1) + " - " + option.name, option.CountVotes ().ToString () + " votes.\n", " - ");
+                    index++;
+                }
+
+                contents += "```\n";
+                if (endDate < DateTime.Now) {
+                    contents += "**VOTING HAS ENDED, " + winner.name.ToUpper () + " HAS WON THE VOTE.**";
+                } else {
+                    contents += "**Vote using the reactions below. You can vote " + votesPerPerson + " times!**";
+                }
+
+                if (messageID == 0) {
+                    SocketTextChannel channel = Utility.GetServer ().GetChannel (channelID) as SocketTextChannel;
+                    RestUserMessage message = await Program.messageControl.AsyncSend (channel, contents, false);
+                    messageID = message.Id;
+                    for (int i = 0; i < options.Count; i++) {
+                        await message.AddReactionAsync (new Emoji (GetUnicodeEmoji (i)));
+                    }
+                } else {
+                    IMessage message = await GetMessage ();
+                    await (message as RestUserMessage).ModifyAsync (delegate (MessageProperties properties) {
+                        properties.Content = contents;
+                    });
+                }
+            }
+
+            public void DeclareWinner() {
+                PollOption curHighest;
+                int highestNumber = 0;
+                foreach (PollOption option in options) {
+                    int locCount = option.CountVotes ();
+                    if (locCount > highestNumber) {
+                        highestNumber = locCount;
+                        curHighest = option;
+                    }
+                }
+                onEnded?.Invoke (this);
+            }
+
+            public async Task<IMessage> GetMessage() {
+                return await MessageControl.GetMessage (channelID, messageID);
+            }
+
+            public class PollOption {
+                public string name;
+                private Poll parent;
+
+                public PollOption(string _name, Poll _parent) {
+                    name = _name;
+                    parent = _parent;
+                }
+
+                public int CountVotes() {
+                    int result = 0;
+                    foreach (Vote v in parent.votes) {
+                        if (v.optionIndex == parent.options.IndexOf (this)) {
+                            result++;
+                        }
+                    }
+                    return result;
+                }
+            }
+
+            public int GetUserVotes (ulong userID) {
+                return votes.Where (x => x.voterID == userID).Count ();
+            }
+
+            public class Vote {
+                public ulong voterID;
+                public int optionIndex;
+
+                public Vote(ulong _voterID, int _index) {
+                    voterID = _voterID;
+                    optionIndex = _index;
+                }
+            }
+
+            public bool DoVote (ulong userID, int optionIndex) {
+                if (GetUserVotes (userID) <= votesPerPerson) {
+                    votes.Add (new Vote (userID, optionIndex));
+                    UpdateMessage ();
+                    return true;
+                }
+                return false;
+            }
+
+            public bool RemoveVote(ulong userID, int optionIndex) {
+                if (GetUserVotes (userID) != 0) {
+                    Vote vote = votes.Find (x => x.voterID == userID && x.optionIndex == optionIndex);
+                    if (vote != null) {
+                        votes.Remove (vote);
+                        UpdateMessage ();
+                        return true;
+                    }
+                }
+                return false;
+            }
         }
 
         public class Question {
@@ -287,17 +536,7 @@ namespace Adminthulhu {
             }
 
             public async Task<IMessage> GetMessage() {
-                SocketTextChannel channel = Utility.GetServer ().GetChannel (channelID) as SocketTextChannel;
-                if (channel != null) {
-                    return await channel.GetMessageAsync (messageID);
-                }
-                SocketUser user = Utility.GetServer ().GetUser (messageID);
-                if (user != null) {
-                    IDMChannel userChannel = await user.GetOrCreateDMChannelAsync ();
-                    return await userChannel.GetMessageAsync (messageID);
-                }
-
-                return null;
+                return await MessageControl.GetMessage (channelID, messageID);
             }
         }
     }

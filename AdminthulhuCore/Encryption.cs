@@ -24,14 +24,13 @@ namespace Adminthulhu
         }
 
         public static bool DoEncryptionCheck() {
-            Logging.Log ("Running encryption check..");
+            Logging.Log (Logging.LogType.BOT, "Running encryption check..");
             string testString = "the quick brown fox jumps over the lazy dog. THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG. 0123456789 ,+-*/!\"#¤%&/()=?`^*>\\<@£$€{[]}|";
             string encryption = Encrypt (testString);
-            Logging.Log ("Encryption input: " + testString);
-            //ChatLogger.Log ("Encryption result: " + encryption);
+            Logging.Log (Logging.LogType.BOT, "Encryption input: " + testString);
             string decryption = Decrypt (encryption);
-            Logging.Log ("Decryption ouput: " + decryption);
-            Logging.Log ("Yes that is spelled wrong, it lines up the outputs.");
+            Logging.Log (Logging.LogType.BOT, "Decryption ouput: " + decryption);
+            Logging.Log (Logging.LogType.BOT, "Yes that is spelled wrong, but it lines up the outputs.");
 
             return decryption == testString;
         }
@@ -45,26 +44,23 @@ namespace Adminthulhu
         public static string Encrypt(string input) {
             string result = "";
             Random random = new Random (encryptionSeed);
-            for (int i = 0; i < input.Length; i++) {
+            for (int i = 0; i < input.Length; i++)
                 result += (char)(input [ i ] + encryptionKey + (byte)random.Next (0, 255));
-            }
             return result;
         }
 
         public static string Decrypt(string input) {
             string result = "";
             Random random = new Random (encryptionSeed);
-            for (int i = 0; i < input.Length; i++) {
+            for (int i = 0; i < input.Length; i++)
                 result += (char)(input [ i ] - (encryptionKey + (byte)random.Next (0, 255)));
-            }
             return result;
         }
 
         public static string OldDecrypt(string input) {
             string result = "";
-            for (int i = 0; i < input.Length; i++) {
+            for (int i = 0; i < input.Length; i++)
                 result += (char)((ulong)input [ i ] - encryptionKey);
-            }
             return result;
         }
     }

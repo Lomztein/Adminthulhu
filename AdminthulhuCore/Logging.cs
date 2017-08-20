@@ -9,18 +9,31 @@ using Discord.WebSocket;
 namespace Adminthulhu {
     class Logging : IClockable {
 
-        public static Queue<string> loggingQueue = new Queue<string> ();
-
-        public static void Log (string message) {
-            if (message == null || message.Length == 0)
-                return;
-
-            Console.WriteLine (message);
-            loggingQueue.Enqueue (message);
+        public enum LogType {
+            CHAT, SYSTEM, WARNING, CRITICAL, CONFIG, EXCEPTION, BOT
         }
 
-        public static void DebugLog (string message) {
-            Log (message);
+        public static Queue<string> loggingQueue = new Queue<string> ();
+
+        public static void Log (LogType logType, string message) {
+            if (message == null || message.Length == 0)
+                return;
+            string combine = "[" + logType.ToString () + "] - " + message;
+
+            Console.WriteLine (combine);
+            loggingQueue.Enqueue (combine);
+
+            if (logType == LogType.CRITICAL) {
+                while (true) {
+                    Console.WriteLine ("SYSTEM HALTED DUE TO CRITICAL ERROR, WRITE 'cont' TO CONTINUE AT OWN RISK.");
+                    if (Console.ReadLine () == "cont")
+                        break;
+                }
+            }
+        }
+
+        public static void DebugLog (LogType logType, string message) {
+            Log (logType, message);
             if (Utility.GetServer () != null)
                 Program.messageControl.SendMessage (Utility.SearchChannel (Utility.GetServer (), Program.dumpTextChannelName) as SocketTextChannel, message, false);
         }

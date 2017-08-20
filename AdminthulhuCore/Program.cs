@@ -19,7 +19,7 @@ namespace Adminthulhu
             new CAddHeader (), new CShowHeaders (), new CKarma (), new CReport (),
             new VoiceCommands (), new EventCommands (), new UserSettingsCommands (), new DebugCommands (), new HangmanCommands (),
             new GameCommands (), new StrikeCommandSet (), new CAddEventGame (), new CRemoveEventGame (), new CHighlightEventGame (),
-            new CAcceptYoungling (), new CReloadConfiguration (),
+            new CAcceptYoungling (), new CReloadConfiguration (), new CCreateBook (), new CSetYoungling (), new CCreatePoll (), 
         };
 
         public static string dataPath = "";
@@ -66,7 +66,7 @@ namespace Adminthulhu
             try {
                 await new Program ().Start (args);
             } catch (Exception e) {
-                Logging.DebugLog (e.Message + "\n" + e.StackTrace);
+                Logging.DebugLog (Logging.LogType.EXCEPTION, e.Message + "\n" + e.StackTrace);
             }
         }
 
@@ -99,7 +99,7 @@ namespace Adminthulhu
 
             dataPath = dataPath.Replace ('\\', '/');
             InitializeDirectories ();
-            Logging.Log ("Initializing bot.. Datapath: " + dataPath);
+            Logging.Log (Logging.LogType.BOT, "Initializing bot.. Datapath: " + dataPath);
             BotConfiguration.Initialize ();
             Encryption.Initialize ();
 
@@ -111,7 +111,7 @@ namespace Adminthulhu
             karma = new Karma ();
 
             LegalJunk.Initialize ();
-            Logging.Log ("Loading data..");
+            Logging.Log (Logging.LogType.BOT, "Loading data..");
             InitializeCommands ();
             UserConfiguration.Initialize ();
             clock = new Clock ();
@@ -121,10 +121,10 @@ namespace Adminthulhu
 
             bootedTime = DateTime.Now.AddSeconds (BOOT_WAIT_TIME);
 
-            Logging.Log ("Setting up events..");
+            Logging.Log (Logging.LogType.BOT, "Setting up events..");
             discordClient.MessageReceived += (e) => {
 
-                Logging.Log (Utility.GetChannelName (e) + " says: " + e.Content);
+                Logging.Log (Logging.LogType.CHAT, Utility.GetChannelName (e) + " says: " + e.Content);
                 bool hideTrigger = false;
                 bool foundCommand = false;
                 if (e.Author.Id != discordClient.CurrentUser.Id && e.Content.Length > 0 && ContainsCommandTrigger (e.Content, out hideTrigger)) {
@@ -169,7 +169,7 @@ namespace Adminthulhu
             };
 
             discordClient.UserVoiceStateUpdated += async (user, before, after) => {
-                Logging.Log ("User voice updated: " + user.Username);
+                Logging.Log (Logging.LogType.BOT, "User voice updated: " + user.Username);
                 SocketGuild guild = (user as SocketGuildUser).Guild;
 
                 if (after.VoiceChannel != null)
@@ -192,7 +192,7 @@ namespace Adminthulhu
             };
 
             discordClient.UserUpdated += (before, after) => {
-                Logging.Log ("User " + before.Username + " updated.");
+                Logging.Log (Logging.LogType.BOT, "User " + before.Username + " updated.");
 
                 if (before.Username != after.Username && (after as SocketGuildUser).Nickname == "") {
                     MentionNameChange (before as SocketGuildUser, after as SocketGuildUser);
@@ -222,13 +222,13 @@ namespace Adminthulhu
             };
 
             discordClient.Ready += () => {
-                Logging.Log ("Bot is ready and running!");
+                Logging.Log (Logging.LogType.BOT, "Bot is ready and running!");
                 return Task.CompletedTask;
             };
 
             string token = SerializationIO.LoadTextFile (dataPath + "bottoken" + gitHubIgnoreType)[0];
 
-            Logging.Log ("Connecting to Discord..");
+            Logging.Log (Logging.LogType.BOT, "Connecting to Discord..");
             await discordClient.LoginAsync (TokenType.Bot, token);
             await discordClient.StartAsync ();
 
@@ -261,7 +261,7 @@ namespace Adminthulhu
 
             if (Utility.GetServer () != null) {
                 hasBooted = true;
-                Logging.Log ("Bot has fully booted.");
+                Logging.Log (Logging.LogType.BOT, "Bot has fully booted.");
             }
             return hasBooted;
         }

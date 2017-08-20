@@ -9,8 +9,8 @@ using Newtonsoft.Json;
 namespace Adminthulhu {
     class SerializationIO {
 
-        public static T LoadObjectFromFile<T> ( string path, bool critical = false) {
-            Logging.Log ("Loading file from path: " + path);
+        public static T LoadObjectFromFile<T>(string path) {
+            Logging.Log (Logging.LogType.SYSTEM, "Loading file from path: " + path);
             try {
                 if (File.Exists (path)) {
                     using (StreamReader reader = File.OpenText (path)) {
@@ -21,25 +21,30 @@ namespace Adminthulhu {
                             string decrypt;
                             try {
                                 decrypt = Encryption.OldDecrypt (contents);
-                            }catch {
+                                data = JsonConvert.DeserializeObject<T> (decrypt);
+                                return (T)data;
+                            } catch {
                                 decrypt = Encryption.Decrypt (contents);
+                                data = JsonConvert.DeserializeObject<T> (decrypt);
+                                return (T)data;
                             }
-                            data = JsonConvert.DeserializeObject<T> (decrypt);
                         } catch {
-                            data = JsonConvert.DeserializeObject<T> (contents);
+                            try {
+                                data = JsonConvert.DeserializeObject<T> (contents);
+                                return (T)data;
+                            } catch {
+                                Logging.Log (Logging.LogType.CRITICAL, "File " + path + " was found, but could not be loaded. Continuing now can erase the previous file.");
+                            }
                         }
-                        return (T)data;
                     }
+                } else {
+                    Logging.Log (Logging.LogType.WARNING, "File " + path + " not found, this means there is most likely going to be created one at said path.");
                 }
-                Logging.Log ("Failed to load file at " + path);
-                return default (T);
             } catch (Exception e) {
-                Logging.Log ("Error: " + e.Message);
-                if (critical)
-                    throw e;
-                else
-                    return default (T);
+                Logging.Log (Logging.LogType.CRITICAL, e.Message);
             }
+
+            return default (T);
         }
 
         public static void SaveObjectToFile (string fileName, object obj, bool format = false, bool encrypt = true) {
@@ -50,7 +55,7 @@ namespace Adminthulhu {
                     writer.Write (postEncrypt);
                 }
             } catch (Exception e) {
-                Logging.Log ("Error: Failed to save file: " + e.Message);
+                Logging.Log (Logging.LogType.EXCEPTION, "Error: Failed to save file: " + e.Message);
             }
         }
 

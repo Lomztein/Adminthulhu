@@ -27,10 +27,6 @@ namespace Adminthulhu {
 
         public static void LoadSettings() {
             settings = SerializationIO.LoadObjectFromFile<Dictionary<string, object>> (Program.dataPath + settingsFileName + Program.gitHubIgnoreType);
-            if (settings == null) {
-                Console.WriteLine ("!CRITICAL! - Settings file was not loaded, continuing now can whipe the current file! Write \"continue\" to continue.");
-                while (Console.ReadLine ().ToLower () != "continue") { } // Halt program untill button pressed.
-            }
         }
 
         public static void SaveSettings() {
@@ -52,7 +48,7 @@ namespace Adminthulhu {
 
         // This feels very wrong..
         public static T GetSetting<T>(string key, string oldKey, T fallback) {
-            Logging.Log ("Loading configuration key: " + key);
+            Logging.Log (Logging.LogType.CONFIG, "Loading configuration key: " + key);
             T obj;
             string [ ] path = key.Split ('.');
             // Search for uncatagorised value, in order to maintain backwards compatability.
@@ -77,9 +73,8 @@ namespace Adminthulhu {
                     }
                 }
 
-
                 if (result == null) {
-                    if (fallback != null) Logging.Log ("WARNING: Failed to load setting " + key + ", returning fallback \"" + fallback.ToString () + "\"..");
+                    if (fallback != null) Logging.Log (Logging.LogType.WARNING ,"Failed to load setting " + key + ", returning fallback \"" + fallback.ToString () + "\"..");
                     SetSetting (key, fallback);
                     return fallback;
                 } else {
@@ -112,7 +107,7 @@ namespace Adminthulhu {
                     }
                 }
             } catch (Exception e) {
-                Logging.Log (e.Message + " - " + e.StackTrace);
+                Logging.Log (Logging.LogType.EXCEPTION, e.Message + " - " + e.StackTrace);
             }
         }
 
@@ -120,7 +115,7 @@ namespace Adminthulhu {
             if (settings.ContainsKey (key)) {
                 settings.Remove (key);
             }
-            Logging.Log ("Purged old config key: " + key);
+            Logging.Log (Logging.LogType.CONFIG, "Purged old config key: " + key);
         }
     }
 

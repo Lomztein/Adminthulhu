@@ -149,7 +149,7 @@ namespace Adminthulhu {
                     await UpdateVoiceChannel (before);
                     await UpdateVoiceChannel (after);
                 } catch (Exception e) {
-                    Logging.Log (e.Message + " - " + e.StackTrace);
+                    Logging.Log (Logging.LogType.EXCEPTION, e.Message + " - " + e.StackTrace);
                 }
             }
         }
@@ -242,7 +242,7 @@ namespace Adminthulhu {
 
                 // Trying to optimize API calls here, just to spare those poor souls at the Discord API HQ stuff
                 if (voice.Name != newName) {
-                    Logging.Log ("Channel name updated: " + newName);
+                    Logging.Log (Logging.LogType.BOT, "Channel name updated: " + newName);
                     await voice.ModifyAsync ((delegate (VoiceChannelProperties properties) {
                         properties.Name = newName;
                     }));
@@ -369,7 +369,7 @@ namespace Adminthulhu {
 
                     RestVoiceChannel channel;
                     try {
-                        Logging.Log ("Creating new voice channel: " + channelName);
+                        Logging.Log (Logging.LogType.BOT, "Creating new voice channel: " + channelName);
                         Task<RestVoiceChannel> createTask = server.CreateVoiceChannelAsync (channelName.Split(';')[0]);
                         channel = await createTask;
                     } catch (Exception e) {
@@ -411,7 +411,7 @@ namespace Adminthulhu {
                     if (curTag.enabled)
                         curTag.run (data);
                 }catch (Exception e) {
-                    Logging.DebugLog (e.StackTrace);
+                    Logging.DebugLog (Logging.LogType.EXCEPTION, e.StackTrace);
                 }
 
                 if (data.hasTag) {

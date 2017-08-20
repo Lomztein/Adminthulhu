@@ -246,7 +246,7 @@ namespace Adminthulhu {
                 await UpdateVoteMessage (false);
                 SaveData ();
             } catch (Exception e) {
-                Logging.DebugLog (e.Message + " - " + e.StackTrace);
+                Logging.DebugLog (Logging.LogType.EXCEPTION, e.Message + " - " + e.StackTrace);
             }
         }
 
@@ -279,7 +279,7 @@ namespace Adminthulhu {
                     }
                 }
             } catch (Exception e) {
-                Logging.DebugLog (e.StackTrace);
+                Logging.DebugLog (Logging.LogType.EXCEPTION, e.StackTrace);
             }
             // Shuffle dat shite.
             for (int i = 0; i < gamesPerWeek; i++) {
@@ -441,7 +441,7 @@ namespace Adminthulhu {
                     }
                 }
             } catch (Exception e) {
-                Logging.DebugLog (e.Message + " - " + e.StackTrace);
+                Logging.DebugLog (Logging.LogType.EXCEPTION, e.Message + " - " + e.StackTrace);
             }
         }
 

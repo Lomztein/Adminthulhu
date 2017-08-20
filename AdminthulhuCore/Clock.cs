@@ -30,7 +30,7 @@ namespace Adminthulhu {
             timeThread = new Thread (new ThreadStart (Initialize));
             timeThread.Start ();
             while (!timeThread.IsAlive) {
-                Logging.Log ("Initializing clock thread..");
+                Logging.Log (Logging.LogType.BOT, "Initializing clock thread..");
             }
             Thread.Sleep (1);
         }

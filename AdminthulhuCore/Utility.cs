@@ -30,7 +30,7 @@ namespace Adminthulhu {
                     break;
                 }
                 tries++;
-                Logging.Log ("Adding role to " + user.Username + " - " + role.Name);
+                Logging.Log (Logging.LogType.BOT, "Adding role to " + user.Username + " - " + role.Name);
                 await (user.AddRoleAsync (role));
                 await Task.Delay (5000);
             }
@@ -43,7 +43,7 @@ namespace Adminthulhu {
                     Program.messageControl.SendMessage (SearchChannel (GetServer (), Program.dumpTextChannelName) as SocketTextChannel, "Error - tried to remove role too many times.", false);
                     break;
                 }
-                Logging.Log ("Removing role from " + user.Username + " - " + role.Name);
+                Logging.Log (Logging.LogType.BOT, "Removing role from " + user.Username + " - " + role.Name);
                 tries++;
                 await (user.RemoveRoleAsync (role));
                 await Task.Delay (5000);
@@ -185,17 +185,18 @@ namespace Adminthulhu {
             return result;
         }
 
-        public static T SecureConvertObject<T>(object obj) {
+        public static T SecureConvertObject<T>(object input) {
+            object obj;
             try {
-                string possibleJSON = obj.ToString ();
-                obj = JsonConvert.DeserializeObject<T> (possibleJSON);
-            } catch (Exception) {
                 try {
-                    Type curType = obj.GetType ();
-                    obj = (T)Convert.ChangeType (obj, typeof (T));
+                    Type curType = input.GetType ();
+                    obj = (T)Convert.ChangeType (input, typeof (T));
                 } catch (Exception) {
-                    obj = (T)obj;
+                    obj = (T)input;
                 }
+            } catch (Exception) {
+                string possibleJSON = input.ToString ();
+                obj = JsonConvert.DeserializeObject<T> (possibleJSON);
             }
 
             return (T)obj;

@@ -80,7 +80,7 @@ namespace Adminthulhu {
         }
 
         public static void StartEvent ( Event startingEvent ) {
-            Logging.Log ("Starting event: " + startingEvent.eventName + "!");
+            Logging.Log (Logging.LogType.BOT, "Starting event: " + startingEvent.eventName + "!");
             startingEvent.eventState = Event.EventState.InProgress;
 
             if (startingEvent.eventMemberIDs.Count != 0) {

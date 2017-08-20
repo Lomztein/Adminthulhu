@@ -41,16 +41,20 @@ namespace Adminthulhu
 
         public static void OnUserJoined(SocketGuildUser user) {
             try {
-                SocketRole role = Utility.GetServer ().GetRole (younglingRoleID);
-                Utility.SecureAddRole (user, role);
-
-                if (joinDate.ContainsKey (user.Id))
-                    joinDate.Remove (user.Id);
-                joinDate.Add (user.Id, DateTime.Now);
-                SaveData ();
+                AddYoungling (user);
             } catch (Exception e) {
-                Logging.DebugLog (e.Message);
+                Logging.DebugLog (Logging.LogType.EXCEPTION, e.Message);
             }
+        }
+
+        public static void AddYoungling(SocketGuildUser user) {
+            SocketRole role = Utility.GetServer ().GetRole (younglingRoleID);
+            Utility.SecureAddRole (user, role);
+
+            if (joinDate.ContainsKey (user.Id))
+                joinDate.Remove (user.Id);
+            joinDate.Add (user.Id, DateTime.Now);
+            SaveData ();
         }
 
         public static void SaveData() {
@@ -78,7 +82,7 @@ namespace Adminthulhu
                             await Program.messageControl.SendMessage (user, onKickedDM.Replace ("{INVITELINK}", metadata.Url));
                             await user.KickAsync ();
                         } catch (Exception e) {
-                            Logging.DebugLog (e.Message);
+                            Logging.DebugLog (Logging.LogType.EXCEPTION, e.Message);
                         }
                     }
 
@@ -91,11 +95,11 @@ namespace Adminthulhu
                         }
                     } else {
                         toRemove.Add (user.Id);
-                        Logging.Log ("Purged manually removed user from younglings joinDate dictionary.");
+                        Logging.Log (Logging.LogType.BOT, "Purged manually removed user from younglings joinDate dictionary.");
                     }
                 } else {
                     toRemove.Add (pair.Key);
-                    Logging.Log ("Purge user who has left the server from joinDate dictionary.");
+                    Logging.Log (Logging.LogType.BOT, "Purge user who has left the server from joinDate dictionary.");
                 }
             }
 
@@ -154,6 +158,37 @@ namespace Adminthulhu
                     }
                 } else {
                     Program.messageControl.SendMessage (e, "Failed to accept youngling - user failed to parse ID.", false);
+                }
+            }
+            return Task.CompletedTask;
+        }
+    }
+
+    public class CSetYoungling : Command {
+        public CSetYoungling() {
+            command = "setyoungling";
+            shortHelp = "Force a user to be youngling.";
+            longHelp = "Forces a user by <id> to become a yougling, as if they've joined at " + argHelp + ".";
+            argHelp = "<joindate>";
+            argumentNumber = 2;
+            isAdminOnly = true;
+            catagory = Catagory.Admin;
+        }
+
+        public override Task ExecuteCommand(SocketUserMessage e, List<string> arguments) {
+            base.ExecuteCommand (e, arguments);
+            if (AllowExecution (e, arguments)) {
+                ulong id;
+                if (ulong.TryParse (arguments [ 0 ], out id)) {
+                    SocketGuildUser user = Utility.GetServer ().GetUser (id);
+                    if (user != null) {
+                        SocketRole younglingRole = Utility.GetServer ().GetRole (Younglings.younglingRoleID);
+                        Younglings.AddYoungling (user);
+                    } else {
+                        Program.messageControl.SendMessage (e, "Failed to set youngling - user not found.", false);
+                    }
+                } else {
+                    Program.messageControl.SendMessage (e, "Failed to set youngling - user failed to parse ID.", false);
                 }
             }
             return Task.CompletedTask;

@@ -1,0 +1,5 @@
+Adminthulhu V20-08-17
+ - Added catagories to log messages, making it easier to see what is what.
+ - Critical error type messages now halt the process, after which it waits for input.
+ - Added an autopatcher.
+ - Fixed an issue where empty strings in config would return null.

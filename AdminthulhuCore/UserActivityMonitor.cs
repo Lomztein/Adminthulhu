@@ -148,14 +148,14 @@ namespace Adminthulhu {
 
             foreach (SocketRole r in toRemove) {
                 if (user.Roles.Contains (r)) {
-                    Logging.Log ("Removing role " + r.Name + " from user " + user.Username);
+                    Logging.Log (Logging.LogType.BOT, "Removing role " + r.Name + " from user " + user.Username);
                     await user.RemoveRoleAsync (r);
                 }
             }
 
             // This might be heavy on the server during midnights.
             if (!user.Roles.Contains (toAdd[0])) {
-                Logging.Log ("Adding role " + toAdd[0].Name + " to user " + user.Username);
+                Logging.Log (Logging.LogType.BOT,"Adding role " + toAdd[0].Name + " to user " + user.Username);
                 await user.AddRoleAsync (toAdd[0]);
             }
         }
