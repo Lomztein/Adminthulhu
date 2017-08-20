@@ -3,3 +3,4 @@ Adminthulhu V20-08-17
  - Critical error type messages now halt the process, after which it waits for input.
  - Added an autopatcher.
  - Fixed an issue where empty strings in config would return null.
+ - Legal junk now shows how many it's about to send to, but doesn't show anything if that is zero.

@@ -31,8 +31,9 @@ namespace Adminthulhu
             }
 
             IEnumerable<SocketGuildUser> allUsers = Utility.GetServer ().Users;
-            if (allUsers.Count () != acceptedLegalJunk.Count ()) {
-                Logging.Log (Logging.LogType.WARNING, acceptedLegalJunk.Count + " accepting users found, sending messages to all remaining " + allUsers.Count () + " users in 5 seconds..");
+            int missingPeople = allUsers.Count () - acceptedLegalJunk.Where (x => Utility.GetServer ().GetUser (x.Key) != null).Count ();
+            if (missingPeople != 0) {
+                Logging.Log (Logging.LogType.WARNING, acceptedLegalJunk.Count + " accepting users found, sending messages to all remaining " + missingPeople + " users in 5 seconds..");
                 await Task.Delay (5000);
             }
 
