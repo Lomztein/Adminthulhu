@@ -36,17 +36,22 @@ namespace Adminthulhu
                 string version = await client.GetStringAsync (url + "version.txt");
 
                 if (localVersion != version) {
-                    string changelog = await client.GetStringAsync (url + "changelog.txt");
+                    try {
+                        string changelog = await client.GetStringAsync (url + "changelog.txt");
 
-                    Process patcher = new Process ();
-                    patcher.StartInfo.FileName = AppContext.BaseDirectory + "/patcher/AdminthulhuPatcher.dll";
-                    patcher.StartInfo.CreateNoWindow = false;
-                    patcher.StartInfo.UseShellExecute = true;
+                        Process patcher = new Process ();
+                        patcher.StartInfo.FileName = AppContext.BaseDirectory + "/patcher/AdminthulhuPatcher.dll";
+                        patcher.StartInfo.CreateNoWindow = false;
+                        patcher.StartInfo.UseShellExecute = false;
 
-                    patcher.StartInfo.Arguments = url + "publish.zip, " + basePath;
-                    patcher.Start ();
+                        patcher.StartInfo.Arguments = url + ", " + basePath;
+                        patcher.Start ();
 
-                    Environment.Exit (0);
+                        Environment.Exit (0);
+                    } catch (Exception e) {
+                        Logging.Log (Logging.LogType.EXCEPTION, e + " - " + e.StackTrace);
+                        throw;
+                    }
                 }
             }
         }
