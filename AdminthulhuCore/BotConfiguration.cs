@@ -84,7 +84,8 @@ namespace Adminthulhu {
             }
         }
 
-        public static void SetSetting(string key, object value) {
+        public static bool SetSetting(string key, object value, bool allowNew = true) {
+            bool success = false;
             try {
                 string [ ] path = key.Split ('.');
 
@@ -92,23 +93,30 @@ namespace Adminthulhu {
                 for (int i = 0; i < path.Length; i++) {
                     if (i != path.Length - 1) {
                         if (dict.ContainsKey (path [ i ])) {
-                            dict[path[i]] = Utility.SecureConvertObject<Dictionary<string, object>> (dict [ path [ i ] ]) as Dictionary<string, object>;
+                            dict [ path [ i ] ] = Utility.SecureConvertObject<Dictionary<string, object>> (dict [ path [ i ] ]) as Dictionary<string, object>;
                             dict = dict [ path [ i ] ] as Dictionary<string, object>; // The memory abuse is real.
                         } else {
-                            dict.Add (path [ i ], new Dictionary<string, object> ());
-                            dict = dict [ path [ i ] ] as Dictionary<string, object>;
+                            if (allowNew) {
+                                dict.Add (path [ i ], new Dictionary<string, object> ());
+                                dict = dict [ path [ i ] ] as Dictionary<string, object>;
+                            }
                         }
                     } else {
                         if (dict.ContainsKey (path [ i ])) {
                             dict [ path [ i ] ] = value;
+                            success = true;
                         } else {
-                            dict.Add (path [ i ], value);
+                            if (allowNew) {
+                                dict.Add (path [ i ], value);
+                            }
                         }
                     }
                 }
+
             } catch (Exception e) {
                 Logging.Log (Logging.LogType.EXCEPTION, e.Message + " - " + e.StackTrace);
             }
+            return success;
         }
 
         public static void PurgeSetting(string key) {
@@ -137,4 +145,6 @@ namespace Adminthulhu {
             return Task.CompletedTask;
         }
     }
+
+    // TODO - Create a setconfig command, which allows you to set a config option from within Discord.
 }

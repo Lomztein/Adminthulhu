@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using Discord.WebSocket;
+using System.Threading;
 
 namespace Adminthulhu {
     class Logging : IClockable {
@@ -24,10 +25,11 @@ namespace Adminthulhu {
             loggingQueue.Enqueue (combine);
 
             if (logType == LogType.CRITICAL) {
+                Console.WriteLine ($"SYSTEM HALTED DUE TO CRITICAL ERROR: {message}");
+                if (Utility.GetServer () != null)
+                    Program.messageControl.SendMessage (Utility.SearchChannel (Utility.GetServer (), Program.dumpTextChannelName) as SocketTextChannel, combine, false);
                 while (true) {
-                    Console.WriteLine ("SYSTEM HALTED DUE TO CRITICAL ERROR, WRITE 'cont' TO CONTINUE AT OWN RISK.");
-                    if (Console.ReadLine () == "cont")
-                        break;
+                    Thread.Sleep (1000);
                 }
             }
         }
