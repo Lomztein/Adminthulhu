@@ -74,14 +74,26 @@ namespace Adminthulhu {
             if (reaction.User.Value.IsBot)
                 return;
 
-            Question question = FindByMessageID (reaction.UserId, message.Id);
+            Question question = FindByMessageID (channel.Id, message.Id);
+            if (question == null)
+                question = FindByMessageID (reaction.UserId, message.Id);
+
             if (question != null) {
-                if (reaction.Emote.Name == "thumbsup") {
+                bool doRemove = false;
+                if (reaction.Emote.Name == "👍") {
                     question.ifYes?.Invoke ();
-                    askedUsers [ reaction.UserId ].Remove (question);
-                } else if (reaction.Emote.Name == "thumbsdown") {
+                    doRemove = true;
+                } else if (reaction.Emote.Name == "👍") {
                     question.ifNo?.Invoke ();
-                    askedUsers [ reaction.UserId ].Remove (question);
+                    doRemove = true;
+                }
+
+                if (doRemove) {
+                    if (question.type == Question.Type.User) {
+                        currentQuestions [ message.Id ].Remove (question);
+                    } else if (question.type == Question.Type.Channel) {
+                        currentQuestions [ channel.Id ].Remove (question);
+                    }
                 }
             }
 
@@ -135,8 +147,8 @@ namespace Adminthulhu {
         }
 
         public Question FindByMessageID(ulong userID, ulong messageID) {
-            if (askedUsers.ContainsKey (userID)) {
-                foreach (Question question in askedUsers [ userID ]) {
+            if (currentQuestions.ContainsKey (userID)) {
+                foreach (Question question in currentQuestions [ userID ]) {
                     if (question.messageID == messageID)
                         return question;
                 }
@@ -213,30 +225,48 @@ namespace Adminthulhu {
             }
         }
 
-        private Dictionary<ulong, List<Question>> askedUsers = new Dictionary<ulong, List<Question>>();
+        private Dictionary<ulong, List<Question>> currentQuestions = new Dictionary<ulong, List<Question>>();
 
-        public async Task AskQuestion (SocketGuildUser user, string question, Action ifYes, Action ifNo = null) {
-            IUserMessage message = await SendMessage (user, question);
+        public async Task AskQuestion (ulong id, string question, Action ifYes, Action ifNo = null) {
+            SocketGuildUser possibleUser = Utility.GetServer ().GetUser (id);
+            SocketChannel possibleChannel = Utility.GetServer ().GetChannel (id);
+
+            IUserMessage message = null;
+
+            if (possibleUser != null)
+                message = await SendMessage (possibleUser, question);
+            if (possibleChannel != null)
+                message = await AsyncSend (possibleChannel as ISocketMessageChannel, question, true);
 
             await (message as RestUserMessage).AddReactionAsync (new Emoji ("👍"));
             await (message as RestUserMessage).AddReactionAsync (new Emoji ("👎"));
 
-            if (!askedUsers.ContainsKey (user.Id)) {
-                askedUsers.Add (user.Id, new List<Question> ());
+            if (!currentQuestions.ContainsKey (id)) {
+                currentQuestions.Add (id, new List<Question> ());
             }
 
             Question newQuestion = new Question (message.Id, ifYes, ifNo);
-            askedUsers [user.Id].Add (newQuestion);
+            if (possibleChannel != null)
+                newQuestion.type = Question.Type.Channel;
+            else
+                newQuestion.type = Question.Type.User;
+
+            currentQuestions [ id ].Add (newQuestion);
 
             await Task.Delay (24 * 60 * 60 * 1000);
 
-            if (askedUsers.ContainsKey (user.Id)) {
-                if (askedUsers [ user.Id ].Contains (newQuestion)) {
-                    askedUsers [ user.Id ].Remove (newQuestion);
-                    await SendMessage (user, "Question timed out after 24 hours.");
+            if (currentQuestions.ContainsKey (id)) {
+                if (currentQuestions [ id ].Contains (newQuestion)) {
+                    currentQuestions [ id ].Remove (newQuestion);
+
+                    if (possibleUser != null)
+                        await SendMessage (possibleUser, "Question timed out after 24 hours.");
+                    if (possibleChannel != null)
+                        await AsyncSend (possibleChannel as ISocketMessageChannel, "Question timed out after 24 hours.", true);
+
                 }
-                if (askedUsers[user.Id].Count == 0) {
-                    askedUsers.Remove (user.Id);
+                if (currentQuestions[ id ].Count == 0) {
+                    currentQuestions.Remove (id);
                 }
             }
         }
@@ -500,6 +530,10 @@ namespace Adminthulhu {
 
         public class Question {
 
+            public enum Type {
+                User, Channel,
+            }
+            public Type type;
             public ulong messageID;
             public Action ifYes;
             public Action ifNo;

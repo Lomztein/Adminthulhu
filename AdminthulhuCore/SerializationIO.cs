@@ -60,22 +60,23 @@ namespace Adminthulhu {
         }
 
         public static string[] LoadTextFile (string path) {
-            StreamReader reader = File.OpenText (path);
+            using (StreamReader reader = File.OpenText (path)) {
 
-            List<string> con = new List<string> ();
-            int maxTries = short.MaxValue;
+                List<string> con = new List<string> ();
+                int maxTries = short.MaxValue;
 
-            while (true && maxTries > 0) {
-                maxTries--;
-                string loc = reader.ReadLine ();
-                if (loc == null) {
-                    break;
-                } else {
-                    con.Add (loc);
+                while (true && maxTries > 0) {
+                    maxTries--;
+                    string loc = reader.ReadLine ();
+                    if (loc == null) {
+                        break;
+                    } else {
+                        con.Add (loc);
+                    }
                 }
-            }
 
-            return con.ToArray ();
+                return con.ToArray ();
+            }
         }
 
         public static void SaveTextFile (string path, params string[] text) {

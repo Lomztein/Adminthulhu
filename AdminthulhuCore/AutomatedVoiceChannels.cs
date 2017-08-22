@@ -547,7 +547,7 @@ namespace Adminthulhu {
 
             public void RequestInvite ( SocketGuildUser requester ) {
                 if (IsLocked ()) {
-                    Program.messageControl.AskQuestion (GetLocker (), "**" + Utility.GetUserName (requester) + "** on **" + Program.serverName + "** requests access to your locked voice channel.",
+                    Program.messageControl.AskQuestion (GetLocker ().Id, "**" + Utility.GetUserName (requester) + "** on **" + Program.serverName + "** requests access to your locked voice channel.",
                         delegate () {
                             allowedUsers.Add (requester.Id);
                             Program.messageControl.SendMessage (requester, "Your request to join **" + name + "** has been accepted.");
