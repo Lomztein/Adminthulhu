@@ -54,7 +54,7 @@ namespace Adminthulhu
         public static string onUserBannedMessage;
         public static string onUserUnbannedMessage;
         public static string onUserChangedNameMessage;
-
+        public static ulong onPatchedAnnounceChannel;
 
         public static Phrase [ ] phrases = new Phrase [ ] { };
         public static List<string> allowedDeletedMessages = new List<string>();
@@ -81,6 +81,7 @@ namespace Adminthulhu
             onUserBannedMessage = BotConfiguration.GetSetting ("Server.Messages.OnUserBanned", "", "{USERNAME} has been banned from this server.");
             onUserUnbannedMessage = BotConfiguration.GetSetting ("Server.Messages.OnUserUnbanned", "", "{USERNAME} has been unbanned from this server!");
             onUserChangedNameMessage = BotConfiguration.GetSetting ("Server.Messages.OnUserChangedName", "", "{OLDNAME} has changed their name to {NEWNAME}!");
+            onPatchedAnnounceChannel = BotConfiguration.GetSetting ("Server.Messages.OnPatchedAnnounceChannel", "", (ulong)0);
 
             commandTrigger = BotConfiguration.GetSetting ("Command.Trigger", "","!");
             commandTriggerHidden = BotConfiguration.GetSetting ("Command.HiddenTrigger", "", "/");
@@ -90,13 +91,7 @@ namespace Adminthulhu
 
         public async Task Start(string [ ] args) {
 
-            // Linux specific test
-            if (args.Length > 0) {
-                dataPath = args [ 0 ] + "/data/";
-            } else {
-                dataPath = AppContext.BaseDirectory + "/data/";
-            }
-
+            dataPath = AppContext.BaseDirectory + "/data/";
             dataPath = dataPath.Replace ('\\', '/');
             InitializeDirectories ();
             Logging.Log (Logging.LogType.BOT, "Initializing bot.. Datapath: " + dataPath);
@@ -226,13 +221,25 @@ namespace Adminthulhu
                 return Task.CompletedTask;
             };
 
-            string token = SerializationIO.LoadTextFile (dataPath + "bottoken" + gitHubIgnoreType)[0];
+            string token = "";
+            try {
+                token = SerializationIO.LoadTextFile (dataPath + "bottoken" + gitHubIgnoreType)[0];
+            }catch (Exception e) {
+                Logging.Log (Logging.LogType.CRITICAL, "Bottoken not found, please create a file at <botroot>/data/bottoken.botproperty and insert bottoken there.");
+            }
 
             Logging.Log (Logging.LogType.BOT, "Connecting to Discord..");
             await discordClient.LoginAsync (TokenType.Bot, token);
             await discordClient.StartAsync ();
 
             BotConfiguration.PostInit ();
+
+            if (args.Length > 0 && onPatchedAnnounceChannel != 0) {
+                SocketGuildChannel patchNotesChannel = Utility.GetServer ().GetChannel (onPatchedAnnounceChannel);
+                if (patchNotesChannel != null) {
+                    messageControl.SendMessage (patchNotesChannel as ISocketMessageChannel, args [ 0 ], true);
+                }
+            }
 
             await Task.Delay (-1);
         }

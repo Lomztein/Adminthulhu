@@ -16,9 +16,9 @@ namespace Adminthulhu {
 
         public static string url = "https://raw.githubusercontent.com/Lomztein/Adminthulhu/master/Compiled/";
 
-        public bool doAutoPatch = false;
-        public ulong announcePatchAvailabilityChannelID = 0;
-        public ulong askToPatchChannelID = 0;
+        public static bool doAutoPatch = false;
+        public static ulong announcePatchAvailabilityChannelID = 0;
+        public static ulong askToPatchChannelID = 0;
 
         public Task Initialize(DateTime time) {
             LoadConfiguration ();
@@ -27,7 +27,7 @@ namespace Adminthulhu {
         }
 
         public Task OnDayPassed(DateTime time) {
-            CheckForPatch ();
+            CheckForPatch (false);
             return Task.CompletedTask;
         }
 
@@ -39,7 +39,7 @@ namespace Adminthulhu {
             return Task.CompletedTask;
         }
 
-        public async void CheckForPatch() {
+        public static async void CheckForPatch(bool ignoreAuto) {
             string basePath = AppContext.BaseDirectory + "/";
             if (!Directory.Exists (basePath + "/patcher/")) {
                 Logging.Log (Logging.LogType.WARNING, "Patcher application not located dispite autopatching being activated.");
@@ -59,16 +59,19 @@ namespace Adminthulhu {
                     // A new patch is available.
                     try {
                         string changelog = await client.GetStringAsync (url + "changelog.txt");
-                        SocketTextChannel channel = Utility.GetServer ().GetChannel (announcePatchAvailabilityChannelID) as SocketTextChannel;
-                        if (channel != null)
-                            Program.messageControl.SendMessage (channel as ISocketMessageChannel,"Adminthulhu Bot Version " + version + "\n```" + changelog + "```", true);
+                        changelog = $"Adminthulhu Bot Version {version} \n```{changelog}```";
+                        SocketTextChannel announceChannel = Utility.GetServer ().GetChannel (announcePatchAvailabilityChannelID) as SocketTextChannel;
 
-                        if (doAutoPatch) {
+                        if (announceChannel != null)
+                            Program.messageControl.SendMessage (announceChannel as ISocketMessageChannel,changelog, true);
+
+                        if (doAutoPatch && !ignoreAuto) {
                             Patch ();
                         } else {
                             try {
                                 SocketTextChannel askChannel = Utility.GetServer ().GetChannel (askToPatchChannelID) as SocketTextChannel;
                                 Program.messageControl.AskQuestion (askChannel.Id, "A new patch for me has become available, should I install?", delegate () {
+                                    Program.messageControl.SendMessage (askChannel, "Installing patch, please stand by..", true);
                                     Patch ();
                                 });
                             } catch (Exception e) {
@@ -134,7 +137,7 @@ namespace Adminthulhu {
         public override Task ExecuteCommand(SocketUserMessage e, List<string> arguments) {
             base.ExecuteCommand (e, arguments);
             if (AllowExecution (e, arguments)) {
-                AutoPatcher.Patch ();
+                AutoPatcher.CheckForPatch (true);
             }
             return Task.CompletedTask;
         }
