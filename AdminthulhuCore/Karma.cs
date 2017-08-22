@@ -27,9 +27,9 @@ namespace Adminthulhu {
                 IMessage iMessage = await channel.GetMessageAsync (message.Id);
 
                 if (reaction.Emote.Name == upvote) {
-                    ChangeKarma (iMessage.Author.Id, 1);
+                    ChangeKarma (iMessage.Author.Id, reaction.UserId, 1);
                 } else if (reaction.Emote.Name == downvote) {
-                    ChangeKarma (iMessage.Author.Id, -1);
+                    ChangeKarma (iMessage.Author.Id, reaction.UserId, -1);
                 }
             };
 
@@ -38,14 +38,17 @@ namespace Adminthulhu {
                 IMessage iMessage = await channel.GetMessageAsync (message.Id);
 
                 if (reaction.Emote.Name == upvote) {
-                    ChangeKarma (iMessage.Author.Id, -1);
+                    ChangeKarma (iMessage.Author.Id, reaction.UserId, -1);
                 } else if (reaction.Emote.Name == downvote) {
-                    ChangeKarma (iMessage.Author.Id, 1);
+                    ChangeKarma (iMessage.Author.Id, reaction.UserId, 1);
                 }
             };
         }
 
-        public static void ChangeKarma (ulong userID, int change) {
+        public static void ChangeKarma (ulong userID, ulong giver, int change) {
+            if (giver == userID)
+                return;
+
             if (!karmaCollection.ContainsKey (userID))
                 karmaCollection.Add (userID, 0);
             karmaCollection[userID] += change;

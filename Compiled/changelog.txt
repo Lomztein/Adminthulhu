@@ -1,2 +1,3 @@
- - Autopatcher might actually be working!
-	Said autopatcher is very much experimental, use at own risk.
+ - Mostly just to test if this works multiple times.
+ - Added timestamps to logs.
+ - People can no longer give themself karma.

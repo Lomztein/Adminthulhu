@@ -18,7 +18,7 @@ namespace Adminthulhu {
         public static void Log (LogType logType, string message) {
             if (message == null || message.Length == 0)
                 return;
-            string combine = "[" + logType.ToString () + "] - " + message;
+            string combine = $"[{logType}][{DateTime.Now}] - {message}";
 
             Console.WriteLine (combine);
             loggingQueue.Enqueue (combine);
