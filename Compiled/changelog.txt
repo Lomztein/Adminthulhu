@@ -1,2 +1,4 @@
- - Patches now autocheck once per day.
- - Added a command to manually check and install.
+ - Added a Patch command, which can be used to manually check for patches.
+ - Refined the pre-patch checking rutine.
+ - Patches can now be publically announced once succesful.
+ - Removed ability to have a custom datapath.
