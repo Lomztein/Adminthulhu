@@ -1,3 +1,2 @@
- - Mostly just to test if this works multiple times.
- - Added timestamps to logs.
- - People can no longer give themself karma.
+ - Patches now autocheck once per day.
+ - Added a command to manually check and install.

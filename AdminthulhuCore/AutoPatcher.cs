@@ -27,6 +27,7 @@ namespace Adminthulhu {
         }
 
         public Task OnDayPassed(DateTime time) {
+            CheckForPatch ();
             return Task.CompletedTask;
         }
 
@@ -35,7 +36,6 @@ namespace Adminthulhu {
         }
 
         public Task OnMinutePassed(DateTime time) {
-            CheckForPatch ();
             return Task.CompletedTask;
         }
 
@@ -64,12 +64,12 @@ namespace Adminthulhu {
                             Program.messageControl.SendMessage (channel as ISocketMessageChannel,"Adminthulhu Bot Version " + version + "\n```" + changelog + "```", true);
 
                         if (doAutoPatch) {
-                            Patch (basePath);
+                            Patch ();
                         } else {
                             try {
                                 SocketTextChannel askChannel = Utility.GetServer ().GetChannel (askToPatchChannelID) as SocketTextChannel;
                                 Program.messageControl.AskQuestion (askChannel.Id, "A new patch for me has become available, should I install?", delegate () {
-                                    Patch (basePath);
+                                    Patch ();
                                 });
                             } catch (Exception e) {
                                 Logging.Log (Logging.LogType.EXCEPTION, e.Message + " - " + e.StackTrace);
@@ -82,7 +82,7 @@ namespace Adminthulhu {
             }
         }
 
-        public void Patch(string basePath) {
+        public static void Patch() {
             try {
                 string baseDirectory = AppContext.BaseDirectory;
                 string command = "dotnet " + baseDirectory + "/patcher/AdminthulhuPatcher.dll " + url + " " + baseDirectory + "/";
@@ -118,6 +118,25 @@ namespace Adminthulhu {
             doAutoPatch = BotConfiguration.GetSetting ("Patcher.DoAutoPatch", "", doAutoPatch);
             announcePatchAvailabilityChannelID = BotConfiguration.GetSetting ("Patcher.AnnouncePatchAvailabilityChannelID", "", announcePatchAvailabilityChannelID);
             askToPatchChannelID = BotConfiguration.GetSetting ("Patcher.AskToPatchChannelID", "", askToPatchChannelID);
+        }
+    }
+
+    public class CCheckPatch : Command {
+        public CCheckPatch() {
+            command = "patch";
+            shortHelp = "Try to patch bot.";
+            longHelp = "Check for a new patch, and install if available.";
+            argumentNumber = 0;
+            isAdminOnly = true;
+            catagory = Catagory.Admin;
+        }
+
+        public override Task ExecuteCommand(SocketUserMessage e, List<string> arguments) {
+            base.ExecuteCommand (e, arguments);
+            if (AllowExecution (e, arguments)) {
+                AutoPatcher.Patch ();
+            }
+            return Task.CompletedTask;
         }
     }
 }
