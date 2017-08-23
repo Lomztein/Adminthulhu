@@ -93,6 +93,7 @@ namespace Adminthulhu
 
             dataPath = AppContext.BaseDirectory + "/data/";
             dataPath = dataPath.Replace ('\\', '/');
+
             InitializeDirectories ();
             Logging.Log (Logging.LogType.BOT, "Initializing bot.. Datapath: " + dataPath);
             BotConfiguration.Initialize ();
@@ -225,7 +226,7 @@ namespace Adminthulhu
             try {
                 token = SerializationIO.LoadTextFile (dataPath + "bottoken" + gitHubIgnoreType)[0];
             }catch (Exception e) {
-                Logging.Log (Logging.LogType.CRITICAL, "Bottoken not found, please create a file at <botroot>/data/bottoken.botproperty and insert bottoken there.");
+                Logging.Log (Logging.LogType.CRITICAL, "Bottoken not found, please create a file at <botroot>/data/bottoken.botproperty and insert bottoken there. " + e.Message);
             }
 
             Logging.Log (Logging.LogType.BOT, "Connecting to Discord..");
@@ -233,6 +234,9 @@ namespace Adminthulhu
             await discordClient.StartAsync ();
 
             BotConfiguration.PostInit ();
+
+            while (FullyBooted () == false)
+                await Task.Delay (100);
 
             if (args.Length > 0 && onPatchedAnnounceChannel != 0) {
                 SocketGuildChannel patchNotesChannel = Utility.GetServer ().GetChannel (onPatchedAnnounceChannel);

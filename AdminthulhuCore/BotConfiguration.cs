@@ -48,8 +48,6 @@ namespace Adminthulhu {
 
         // This feels very wrong..
         public static T GetSetting<T>(string key, string oldKey, T fallback) {
-            Logging.Log (Logging.LogType.CONFIG, "Loading configuration key: " + key);
-            T obj;
             string [ ] path = key.Split ('.');
             // Search for uncatagorised value, in order to maintain backwards compatability.
             if (settings.ContainsKey (oldKey)) {
@@ -78,7 +76,7 @@ namespace Adminthulhu {
                     SetSetting (key, fallback);
                     return fallback;
                 } else {
-                    SetSetting (key, result); // Resave in case of format changes
+                    Logging.Log (Logging.LogType.CONFIG, $"Loading configuration key: {key} - {result}");
                     return Utility.SecureConvertObject<T> (result);
                 }
             }
