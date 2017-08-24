@@ -176,6 +176,13 @@ namespace Adminthulhu {
             return UniformStrings (command.GetCommand (), command.GetOnlyName (), " | ");
         }
 
+        public static async Task AwaitFullBoot() {
+            while (Program.FullyBooted () == false) {
+                await Task.Delay (100);
+            }
+            return;
+        }
+
         public static string UniformStrings (string firstString, string secondString, string connector, int minSpaces = 25) {
             string result = firstString;
             int remainingTaps = (int)Math.Floor ((minSpaces - result.Length) / 4d);

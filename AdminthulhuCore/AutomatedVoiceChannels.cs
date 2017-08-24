@@ -25,6 +25,7 @@ namespace Adminthulhu {
         public static ulong internationalRoleID = 0;
         public static ulong younglingRoleID = 0;
         public static string postRebootChannelName = "ERROR - REBOOT CHANNEL;RBC";
+        public static bool randomizeNameQueue = false;
 
         public static string [ ] extraChannelNames = new string [ ] {
             "Gorgeous Green",
@@ -45,7 +46,7 @@ namespace Adminthulhu {
             "Mangled Magenta"
         };
 
-        public static List<string> nameQueue = new List<string> ();
+        public static Dictionary<string, bool> nameQueue = new Dictionary<string, bool>();
         public static List<IVoiceChannel> temporaryChannels = new List<IVoiceChannel> ();
         public static VoiceChannel afkChannel = null;
 
@@ -54,10 +55,10 @@ namespace Adminthulhu {
             new VoiceChannelTag ("InternationalMemberPresent", "🌎", delegate (VoiceChannelTag.ActionData data) {
                 SocketRole internationalRole = Utility.GetServer ().GetRole (internationalRoleID);
                 data.hasTag = Utility.ForceGetUsers (data.channel.id).Find (x => x.Roles.Contains (internationalRole)) != null;  }),
-            new VoiceChannelTag ("ChannelLocked", "🔒", delegate (VoiceChannelTag.ActionData data) { data.hasTag = data.channel.IsLocked (); }),
+            new VoiceChannelTag ("ChannelLocked", "🔒", delegate (VoiceChannelTag.ActionData data) { data.hasTag = data.channel.IsLocked (); }, delegate (VoiceChannel channel) { channel.Lock (0, false); channel.CheckLocker (); } ),
             //new VoiceChannelTag ("🍞", delegate (VoiceChannelTag.ActionData data) { data.hasTag = Utility.ForceGetUsers (data.channel.id).Where (x => x.Id == 110406708299329536).Count () != 0; } ),
-            new VoiceChannelTag ("ChannelLooking", "🎮", delegate (VoiceChannelTag.ActionData data) { data.hasTag = data.channel.status == VoiceChannel.VoiceChannelStatus.Looking; }),
-            new VoiceChannelTag ("ChannelFull", "❌", delegate (VoiceChannelTag.ActionData data) { data.hasTag = data.channel.status == VoiceChannel.VoiceChannelStatus.Full; }),
+            new VoiceChannelTag ("ChannelLooking", "🎮", delegate (VoiceChannelTag.ActionData data) { data.hasTag = data.channel.status == VoiceChannel.VoiceChannelStatus.Looking; }, delegate (VoiceChannel channel) { channel.SetStatus (VoiceChannel.VoiceChannelStatus.Looking, false); }),
+            new VoiceChannelTag ("ChannelFull", "❌", delegate (VoiceChannelTag.ActionData data) { data.hasTag = data.channel.status == VoiceChannel.VoiceChannelStatus.Full; }, delegate (VoiceChannel channel) { channel.SetStatus (VoiceChannel.VoiceChannelStatus.Full, false); }),
             new VoiceChannelTag ("ContainsEventMembers", "📆", delegate (VoiceChannelTag.ActionData data) {
                 DiscordEvents.Event evt = null;
                 data.hasTag = DiscordEvents.ContainsEventMembers ( out evt, Utility.ForceGetUsers (data.channel.id).ToArray ()); }),
@@ -82,6 +83,7 @@ namespace Adminthulhu {
             internationalRoleID = BotConfiguration.GetSetting ("Roles.InternationalID", "", internationalRoleID);
             musicBotID = BotConfiguration.GetSetting ("Misc.MusicBotID", "MusicBotID", musicBotID);
             postRebootChannelName = BotConfiguration.GetSetting ("Voice.PostRebootChannelName", "", postRebootChannelName);
+            randomizeNameQueue = BotConfiguration.GetSetting ("Voice.RandomizeNameQueue", "", randomizeNameQueue);
 
             foreach (VoiceChannelTag tag in voiceChannelTags) {
                 tag.enabled = BotConfiguration.GetSetting ("Voice.Tags." + tag.name + ".Enabled", "", tag.enabled);
@@ -95,7 +97,7 @@ namespace Adminthulhu {
             AddDefaultChannel (afkChannel);
 
             for (int i = 0; i < extraChannelNames.Length; i++) {
-                nameQueue.Add (extraChannelNames [ i ]);
+                nameQueue.Add (extraChannelNames [ i ], false);
             }
         }
 
@@ -127,6 +129,8 @@ namespace Adminthulhu {
             defaultChannels = new Dictionary<ulong, VoiceChannel> ();
             awaitingChannels = new List<string> ();
             afkChannel = null;
+            hasChecked = false;
+            nameQueue = new Dictionary<string, bool> ();
         }
 
         public static VoiceChannel [ ] loadedChannels;
@@ -134,20 +138,28 @@ namespace Adminthulhu {
             Voice configurable = new Voice ();
             configurable.LoadConfiguration ();
             BotConfiguration.AddConfigurable (configurable);
+            PostConnectInit ();
+        }
+
+        public static async Task PostConnectInit() {
+            await Utility.AwaitFullBoot ();
+            AddMissingChannels (Utility.GetServer ());
         }
 
         public static async Task OnUserUpdated(SocketGuild guild, SocketVoiceChannel before, SocketVoiceChannel after) {
             // Maybe, just maybe put these into a single function. Oh shit I just did.
             if (Program.FullyBooted ()) {
                 try {
-                    if (autoAddChannels) {
-                        AddMissingChannels (guild);
-                        await CheckFullAndAddIf (guild);
-                        RemoveLeftoverChannels (guild);
-                    }
+                    if (before != null || after != null) { // Only do something if the updated user is in a voice channel.
+                        if (autoAddChannels) {
+                            AddMissingChannels (guild);
+                            await CheckFullAndAddIf (guild);
+                            RemoveLeftoverChannels (guild);
+                        }
 
-                    await UpdateVoiceChannel (before);
+                        await UpdateVoiceChannel (before);
                     await UpdateVoiceChannel (after);
+                    }
                 } catch (Exception e) {
                     Logging.Log (Logging.LogType.EXCEPTION, e.Message + " - " + e.StackTrace);
                 }
@@ -251,6 +263,29 @@ namespace Adminthulhu {
             }
         }
 
+        public static string GetAvailableExtraName(bool autoUse) {
+            string found = null;
+            if (randomizeNameQueue) {
+                List<string> possibilities = nameQueue.Where (x => x.Value == false).ToDictionary (x => x.Key).Keys.ToList ();
+                if (possibilities.Count > 0) {
+                    Random random = new Random ();
+                    found = possibilities [ random.Next (0, possibilities.Count) ];
+                }
+            } else {
+                foreach (var pair in nameQueue) {
+                    if (pair.Value == false) {
+                        found = pair.Key;
+                        break;
+                    }
+                }
+            }
+            
+            if (found != null)
+                nameQueue [ found ] = true;
+
+            return found;
+        }
+
         public static void TestAndRemoveTemporaryChannels() {
             foreach (var pair in allVoiceChannels) {
                 VoiceChannel voiceChannel = pair.Value;
@@ -273,10 +308,39 @@ namespace Adminthulhu {
 
             foreach (SocketVoiceChannel channel in server.VoiceChannels) {
                 if (!allVoiceChannels.ContainsKey (channel.Id)) {
-                    allVoiceChannels.Add (channel.Id, new VoiceChannel (channel.Id, postRebootChannelName, allVoiceChannels.Count));
+                    // Attempt to find a matching name from namelist.
+
+                    List<string> toTest = new List<string> ();
+                    toTest.Add (channel.Name.Substring (channel.Name.IndexOf (' ') + 1));
+                    toTest.Add (channel.Name);
+
+                    string withoutTags = channel.Name;
+                    string found = postRebootChannelName;
+                    foreach (string x in extraChannelNames) {
+                        string [ ] possibilities = x.Split (';');
+                        SoftStringComparer comparer = new SoftStringComparer ();
+
+                        foreach (string name in toTest) {
+                            if (possibilities.Length > 0 ? comparer.Equals (possibilities [ 1], name) || possibilities[0] == name : possibilities [ 0 ] == name) {
+                                found = x;
+                                break;
+                            }
+                        }
+
+                    }
+
+                    nameQueue [ found ] = true;
+                    allVoiceChannels.Add (channel.Id, new VoiceChannel (channel.Id, found, allVoiceChannels.Count));
                 }
-                if (channel.Users.Count () == 0) {
-                    allVoiceChannels [ channel.Id ].Unlock (true);
+
+                foreach (VoiceChannelTag tag in voiceChannelTags) {
+                    if (channel.Name.Contains (tag.tagEmoji))
+                        try {
+                            tag.setTrue?.Invoke (allVoiceChannels [ channel.Id ]);
+                        } catch (Exception e) {
+                            Logging.Log (Logging.LogType.EXCEPTION, e.Message);
+                            throw;
+                        }
                 }
             }
 
@@ -294,8 +358,9 @@ namespace Adminthulhu {
 
             for (int i = IsDefaultFull () ? 1 : 0; i < toDelete.Count; i++) {
                 SocketVoiceChannel channel = toDelete [ i ];
-                if (allVoiceChannels [ channel.Id ].name != postRebootChannelName) {
-                    nameQueue.Insert (0, allVoiceChannels [ channel.Id ].name);
+                string channelName = allVoiceChannels [ channel.Id ].name;
+                if (channelName != postRebootChannelName && nameQueue.ContainsKey (channelName)) {
+                    nameQueue [ channelName ] = false;
                 }
 
                 temporaryChannels.Remove (channel);
@@ -337,7 +402,7 @@ namespace Adminthulhu {
         public static bool IsDefaultFull() {
             IEnumerable<VoiceChannel> defaultChannelsList = defaultChannels.Values.ToList ();
             foreach (VoiceChannel channel in defaultChannelsList) {
-                if (channel != afkChannel && Utility.ForceGetUsers (channel.id).Count () == 0)
+                if (!channel.ignore && Utility.ForceGetUsers (channel.id).Count () == 0)
                     return false;
             }
 
@@ -364,8 +429,7 @@ namespace Adminthulhu {
             // If the amount of full channels are more than or equal to the amount of channels, add a new one.
             if (fullChannels == count) {
                 if (nameQueue.Count > 0 && awaitingChannels.Count == 0) {
-                    string channelName = nameQueue [ 0 ];
-                    nameQueue.RemoveAt (0);
+                    string channelName = GetAvailableExtraName (true);
 
                     RestVoiceChannel channel;
                     try {
@@ -444,13 +508,15 @@ namespace Adminthulhu {
         public class VoiceChannelTag {
             public string tagEmoji = "🍞";
             [JsonIgnore] public Action<ActionData> run;
+            [JsonIgnore] public Action<VoiceChannel> setTrue;
             [JsonIgnore] public string name = "";
             public bool enabled = false;
 
-            public VoiceChannelTag(string _name, string emoji, Action<ActionData> command) {
+            public VoiceChannelTag(string _name, string emoji, Action<ActionData> command, Action<VoiceChannel> _setTrue = null) {
                 name = _name;
                 tagEmoji = emoji;
                 run = command;
+                setTrue = _setTrue;
             }
 
             public class ActionData {
@@ -507,9 +573,9 @@ namespace Adminthulhu {
                 return allowedUsers.Count != 0;
             }
 
-            public void Lock (SocketGuildUser lockingUser, bool update) {
+            public void Lock (ulong lockingUser, bool update) {
                 if (lockable) {
-                    lockerID = lockingUser.Id;
+                    lockerID = lockingUser;
 
                     List<ulong> alreadyIn = new List<ulong> ();
                     foreach (SocketGuildUser user in GetChannel ().Users) {
@@ -531,7 +597,7 @@ namespace Adminthulhu {
 
             public void Reset() {
                 Unlock (false);
-                status = VoiceChannel.VoiceChannelStatus.None;
+                status = VoiceChannelStatus.None;
                 desiredMembers = 0;
                 SetCustomName ("", false);
             }
@@ -539,7 +605,7 @@ namespace Adminthulhu {
             public bool InviteUser (SocketGuildUser sender, SocketGuildUser user ) {
                 if (!allowedUsers.Contains (user.Id) && IsLocked ()) {
                     allowedUsers.Add (user.Id);
-                    Program.messageControl.SendMessage (user, "**" + Utility.GetUserName (sender) + "** has invited you to join the locked channel **" + name + "** on **" + Program.serverName + "**.");
+                    Program.messageControl.SendMessage (user, "**" + Utility.GetUserName (sender) + "** has invited you to join the locked channel **" + GetName () + "** on **" + Program.serverName + "**.");
                     return true;
                 }
                 return false;
@@ -550,7 +616,7 @@ namespace Adminthulhu {
                     Program.messageControl.AskQuestion (GetLocker ().Id, "**" + Utility.GetUserName (requester) + "** on **" + Program.serverName + "** requests access to your locked voice channel.",
                         delegate () {
                             allowedUsers.Add (requester.Id);
-                            Program.messageControl.SendMessage (requester, "Your request to join **" + name + "** has been accepted.");
+                            Program.messageControl.SendMessage (requester, "Your request to join **" + GetName () + "** has been accepted.");
                             Program.messageControl.SendMessage (GetLocker (), "Succesfully accepted request.");
                         } );
                 }
@@ -562,7 +628,7 @@ namespace Adminthulhu {
                         user.ModifyAsync (delegate (GuildUserProperties properties) {
                             properties.Channel = afkChannel.GetChannel ();
                         });
-                        Program.messageControl.SendMessage (user, "You've automatically been moved to the AFK channel, since channel **" + name + "** is locked by " + Utility.GetUserName (GetLocker ()));
+                        Program.messageControl.SendMessage (user, "You've automatically been moved to the AFK channel, since channel **" + GetName () + "** is locked by " + Utility.GetUserName (GetLocker ()));
                     }
                 }
             }
@@ -626,8 +692,12 @@ namespace Adminthulhu {
                 }
 
                 if (IsLocked () && !containsLocker) {
+                    if (lockerID == 0) {
+                        Program.messageControl.SendMessage (GetLocker (), "Due to this bot rebooting, and therefore resetting locking data, you have been given locking authority over voice channel **" + GetName () + "**.");
+                    } else {
+                        Program.messageControl.SendMessage (GetLocker (), "Since the previous locker left, or the , you are now the new locker of voice channel **" + GetName () + "**.");
+                    }
                     lockerID = GetChannel ().Users.ElementAt (0).Id;
-                    Program.messageControl.SendMessage (GetLocker (), "Since the previous locker left, you are now the new locker of voice channel **" + name + "**.");
                 }
             }
         }

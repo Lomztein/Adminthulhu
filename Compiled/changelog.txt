@@ -1,7 +1,7 @@
- - Changed formatting of message logs.
- - Added admin command "displayfile", which can display any file as text from the data folder.
- - Changes to how book messages are formed, now more versitile and stable.
- - Now internally supports commands procedurally added during runtime.
-	This is used to procedurally generate and add event edit commands for each editable variable in them.
- - Added admin command "setconfig" which allows admins to change simple bot settings from Discord.
- - Removed dank memes.
+ - Added the config option Voice.RandomizeNameQueue, which decides if the namequeue is randomized, duh.
+ - Changed how temp voice channel names are found and assigned, now works similar to object pooling, and is therefore much more robust.
+ - Fixed voice channel updates occuring when a user not in a voice channel updated.
+ - Fixed auto voice channel systems soft-locking if !reloadconfig was used while a temp channel was active.
+ - Changed post-reboot non-default channel handling, so that it now attempts to correctly assign temporary channels correctly after reboot. This includes tags. However, `!voice desired` must be reset since it isn't technically a tag, but an automation of two other tags.
+ - Fixed voice related commands showing the full internal voice channel name, when replying.
+ - Fixed voice related commands sometimes crashing the bot shortly after reboot.

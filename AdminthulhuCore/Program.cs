@@ -236,9 +236,7 @@ namespace Adminthulhu
 
             BotConfiguration.PostInit ();
 
-            while (FullyBooted () == false)
-                await Task.Delay (100);
-
+            await Utility.AwaitFullBoot ();
             if (args.Length > 0 && onPatchedAnnounceChannel != 0) {
                 SocketGuildChannel patchNotesChannel = Utility.GetServer ().GetChannel (onPatchedAnnounceChannel);
                 if (patchNotesChannel != null) {
@@ -272,8 +270,10 @@ namespace Adminthulhu
                 return hasBooted;
 
             if (Utility.GetServer () != null) {
-                hasBooted = true;
-                Logging.Log (Logging.LogType.BOT, "Bot has fully booted.");
+                if (Utility.GetServer ().Channels.Count != 0) { // Why this is neccesary is beyond me, but I'll take it.
+                    hasBooted = true;
+                    Logging.Log (Logging.LogType.BOT, "Bot has fully booted.");
+                }
             }
             return hasBooted;
         }

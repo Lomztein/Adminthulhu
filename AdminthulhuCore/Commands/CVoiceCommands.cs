@@ -41,13 +41,13 @@ namespace Adminthulhu {
                             return Task.CompletedTask;
                         }
 
-                        vc.Lock (e.Author as SocketGuildUser, true);
+                        vc.Lock (e.Author.Id, true);
 
-                        Program.messageControl.SendMessage (e.Channel, "Succesfully locked voice channel **" + vc.name + "**.", false);
+                        Program.messageControl.SendMessage (e.Channel, "Succesfully locked voice channel **" + vc.GetName () + "**.", false);
                         return Task.CompletedTask;
                     }
 
-                    Program.messageControl.SendMessage (e.Channel, "Error - voice channel **" + vc.name + "** already locked.", false);
+                    Program.messageControl.SendMessage (e.Channel, "Error - voice channel **" + vc.GetName () + "** already locked.", false);
                     return Task.CompletedTask;
                 }
 
@@ -77,7 +77,7 @@ namespace Adminthulhu {
 
                         if (vc.lockerID == e.Author.Id) {
                             vc.Unlock (true);
-                            Program.messageControl.SendMessage (e.Channel, "Succesfully unlocked voice channel **" + vc.name + "**.", false);
+                            Program.messageControl.SendMessage (e.Channel, "Succesfully unlocked voice channel **" + vc.GetName () + "**.", false);
                             return Task.CompletedTask;
 
                         }
@@ -87,7 +87,7 @@ namespace Adminthulhu {
 
                     }
 
-                    Program.messageControl.SendMessage (e.Channel, "Failed to unlock voice channel **" + vc.name + "** - It is not unlocked.", false);
+                    Program.messageControl.SendMessage (e.Channel, "Failed to unlock voice channel **" + vc.GetName () + "** - It is not unlocked.", false);
                     return Task.CompletedTask;
 
                 }
@@ -236,7 +236,7 @@ namespace Adminthulhu {
                             }
                             vc.Kick (user);
                             Program.messageControl.SendMessage (e.Channel, "User **" + Utility.GetUserName (user) + "** succesfully kicked.", false);
-                            Program.messageControl.SendMessage (user, "Sorry man, but you have been kicked from voice channel **" + vc.name + "**.");
+                            Program.messageControl.SendMessage (user, "Sorry man, but you have been kicked from voice channel **" + vc.GetName () + "**.");
                             return Task.CompletedTask;
 
                         }
