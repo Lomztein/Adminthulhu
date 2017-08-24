@@ -31,10 +31,10 @@ namespace Adminthulhu
     }
 
     public static class StringExtension {
-        public static string Singlify(this string [ ] input) {
+        public static string Singlify(this string [ ] input, string seperator = "\n") {
             string result = "";
             foreach (string str in input) {
-                result += str + "\n";
+                result += str + seperator;
             }
             return result;
         }

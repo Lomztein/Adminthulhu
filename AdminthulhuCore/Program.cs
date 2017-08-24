@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
+using System.Net.Http;
 
 namespace Adminthulhu
 {
@@ -237,10 +238,16 @@ namespace Adminthulhu
             BotConfiguration.PostInit ();
 
             await Utility.AwaitFullBoot ();
-            if (args.Length > 0 && onPatchedAnnounceChannel != 0) {
-                SocketGuildChannel patchNotesChannel = Utility.GetServer ().GetChannel (onPatchedAnnounceChannel);
-                if (patchNotesChannel != null) {
-                    messageControl.SendMessage (patchNotesChannel as ISocketMessageChannel, args [ 0 ], true);
+            if (args.Length > 0 && args [ 0 ] == "true" && onPatchedAnnounceChannel != 0) {
+                using (HttpClient client = new HttpClient ()) {
+                    string changelog = await client.GetStringAsync (AutoPatcher.url + "changelog.txt");
+                    string version = await client.GetStringAsync (AutoPatcher.url + "version.txt");
+                    string total = $"Succesfully installed new patch, changelog for {version}:\n```{changelog}```";
+
+                    SocketGuildChannel patchNotesChannel = Utility.GetServer ().GetChannel (onPatchedAnnounceChannel);
+                    if (patchNotesChannel != null) {
+                        messageControl.SendMessage (patchNotesChannel as ISocketMessageChannel, total, true);
+                    }
                 }
             }
 

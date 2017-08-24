@@ -5,3 +5,4 @@
  - Changed post-reboot non-default channel handling, so that it now attempts to correctly assign temporary channels correctly after reboot. This includes tags. However, "!voice desired" must be reset since it isn't technically a tag, but an automation of two other tags.
  - Fixed voice related commands showing the full internal voice channel name, when replying.
  - Fixed voice related commands sometimes crashing the bot shortly after reboot.
+ - HOTFIX - Fixed an issue with sending changelog post-update.
