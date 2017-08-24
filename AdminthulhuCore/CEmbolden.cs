@@ -34,15 +34,6 @@ namespace Adminthulhu {
                 string inText = arguments[0];
                 string outText = "";
 
-                // TEMPORARY CODE, REMOVE AT ONCE.
-                if (arguments[0] == "the entire bee movie script" && e.Author.Username == "Lomztein") {
-                    inText = "";
-                    string[] deathItself = SerializationIO.LoadTextFile (Program.dataPath + "theentirebeemoviescript.txt");
-                    for (int i = 0; i < deathItself.Length; i++) {
-                        inText += deathItself[i];
-                    }
-                }
-
                 if (inText == "?")
                     return Task.CompletedTask;
 

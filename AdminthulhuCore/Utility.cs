@@ -10,6 +10,8 @@ using System.Net;
 using System.IO;
 
 namespace Adminthulhu {
+
+    // A lot of these functions in here could be easily converted to extension methods. Would it be a good idea though?
     public static class Utility {
 
         public static List<SocketGuildUser> ForceGetUsers(ulong channelID) {
@@ -153,9 +155,10 @@ namespace Adminthulhu {
 
         public static string GetChannelName(SocketMessage e) {
             if (e.Channel as SocketDMChannel != null) {
-                return "Private message: " + e.Author.Username;
+                SocketDMChannel dmChannel = (e.Channel) as SocketDMChannel;
+                return $"[DM / {dmChannel.Recipient}] {e.Author.Username}";
             } else {
-                return (e.Channel as SocketGuildChannel).Guild.Name + "/" + e.Channel.Name + "/" + e.Author.Username;
+                return $"[{e.Channel.Name} / {e.Author.Username}]";
             }
         }
 

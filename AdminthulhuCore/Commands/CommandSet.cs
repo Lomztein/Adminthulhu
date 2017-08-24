@@ -19,8 +19,11 @@ namespace Adminthulhu {
         }
 
         public override void Initialize() {
-
             base.Initialize ();
+            InitCommands ();
+        }
+
+        public void InitCommands() {
             foreach (Command c in commandsInSet) {
                 c.helpPrefix = helpPrefix + command + " ";
                 c.Initialize ();
@@ -64,6 +67,19 @@ namespace Adminthulhu {
             }
             result += "```";
             return result;
+        }
+
+        // Just don't look it directly in the eye.
+        public void AddProceduralCommands(params Command [ ] procCommands) {
+            List<Command> curCommands = commandsInSet.ToList ();
+            curCommands.AddRange (procCommands.ToList ());
+            commandsInSet = curCommands.ToArray ();
+
+            foreach (Command c in procCommands) {
+                c.helpPrefix = helpPrefix + command + " ";
+                c.Initialize ();
+                c.isAdminOnly = isAdminOnly;
+            }
         }
     }
 }

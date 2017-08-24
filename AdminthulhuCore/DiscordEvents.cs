@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using Discord;
 using Discord.WebSocket;
+using System.Reflection;
 
 namespace Adminthulhu {
     // Not to be confused with C# events, this class handles planned day events for Discord servers.
@@ -50,14 +51,14 @@ namespace Adminthulhu {
             toAdd = new List<Event> ();
             foreach (Event e in upcomingEvents) {
                 if (e.eventState == Event.EventState.Awaiting) {
-                    if (now > e.eventTime) {
+                    if (now > e.time) {
                         StartEvent (e);
                     }
                 }
             }
 
             foreach (Event e in ongoingEvents) {
-                if (e.eventTime.Add (e.duration) < DateTime.Now) {
+                if (e.time.Add (e.duration) < DateTime.Now) {
                     e.eventState = Event.EventState.Ended;
                 }
             }
@@ -80,7 +81,7 @@ namespace Adminthulhu {
         }
 
         public static void StartEvent ( Event startingEvent ) {
-            Logging.Log (Logging.LogType.BOT, "Starting event: " + startingEvent.eventName + "!");
+            Logging.Log (Logging.LogType.BOT, "Starting event: " + startingEvent.name + "!");
             startingEvent.eventState = Event.EventState.InProgress;
 
             if (startingEvent.eventMemberIDs.Count != 0) {
@@ -96,17 +97,17 @@ namespace Adminthulhu {
                     string members;
                     Embed eventEmbed = ConstructEmbed (startingEvent, out members);
                     Program.messageControl.SendEmbed (Utility.GetMainChannel () as ITextChannel, eventEmbed,  members);
-                    Voice.CreateTemporaryChannel (startingEvent.eventName, startingEvent.duration);
+                    Voice.CreateTemporaryChannel (startingEvent.name, startingEvent.duration);
                     ongoingEvents.Add (startingEvent);
                 } else {
                     Program.messageControl.SendMessage (
                         Utility.GetMainChannel () as SocketTextChannel,
-                        "Event **" + startingEvent.eventName + "** cancelled, since no one showed up. :(", true);
+                        "Event **" + startingEvent.name + "** cancelled, since no one showed up. :(", true);
                     startingEvent.eventState = Event.EventState.Ended;
                 }
 
                 if (startingEvent.repeatTime.Ticks != 0) {
-                    toAdd.Add (CreateAndReturnEvent (startingEvent.eventName, startingEvent.eventTime.Add (startingEvent.repeatTime), startingEvent.duration, startingEvent.hostID, startingEvent.iconUrl, startingEvent.eventDescription, startingEvent.repeatTime));
+                    toAdd.Add (CreateAndReturnEvent (startingEvent.name, startingEvent.time.Add (startingEvent.repeatTime), startingEvent.duration, startingEvent.hostID, startingEvent.iconUrl, startingEvent.description, startingEvent.repeatTime));
                 }
             }
         }
@@ -136,10 +137,10 @@ namespace Adminthulhu {
             memberString += "!";
 
             EmbedBuilder builder = new EmbedBuilder ()
-            .WithTitle ("Event announcement for " + evt.eventName + "!")
-            .WithDescription (evt.eventDescription)
+            .WithTitle ("Event announcement for " + evt.name + "!")
+            .WithDescription (evt.description)
             .WithColor (CSetColor.GetUserColor (evt.hostID).Color)
-            .WithTimestamp (evt.eventTime)
+            .WithTimestamp (evt.time)
             .WithThumbnailUrl (Uri.IsWellFormedUriString (evt.iconUrl, UriKind.Absolute) ? evt.iconUrl : "")
             .AddField ("Duration", evt.duration.ToString ())
             .WithAuthor (author => {
@@ -154,7 +155,7 @@ namespace Adminthulhu {
 
         public static Event FindEvent (string eventName) {
             foreach (Event e in upcomingEvents) {
-                if (e.eventName.ToLower () == eventName.ToLower ())
+                if (e.name.ToLower () == eventName.ToLower ())
                     return e;
             }
             return null;
@@ -204,33 +205,38 @@ namespace Adminthulhu {
 
         public class Event {
 
-            public string eventName;
-            public string eventDescription;
-            public DateTime eventTime;
-            public ulong hostID;
-            public string iconUrl;
-            public TimeSpan duration;
-            public TimeSpan repeatTime;
+            [Editable] public string name;
+            [Editable] public string description;
+            [Editable] public DateTime time;
+            [Editable] public ulong hostID;
+            [Editable] public string iconUrl;
+            [Editable] public TimeSpan duration;
+            [Editable] public TimeSpan repeatTime;
 
             public enum EventState { Awaiting, InProgress, Ended }
             public EventState eventState = EventState.Awaiting;
 
             public Dictionary<ulong, DateTime> lastRemind;
 
-            public List<ulong> eventMemberIDs = new List<ulong>();
+            public List<ulong> eventMemberIDs = new List<ulong> ();
 
-            public Event (string name, DateTime time, TimeSpan _duration, ulong _hostID, string _iconUrl, string description, TimeSpan _repeatTime) {
-                eventName = name;
-                eventTime = time;
+            public Event() { }
+
+            public Event(string name, DateTime time, TimeSpan _duration, ulong _hostID, string _iconUrl, string description, TimeSpan _repeatTime) {
+                this.name = name;
+                this.time = time;
                 duration = _duration;
                 hostID = _hostID;
                 iconUrl = _iconUrl;
                 repeatTime = _repeatTime;
 
-                eventDescription = description;
+                this.description = description;
 
                 eventState = EventState.Awaiting;
             }
+
+            [AttributeUsage (AttributeTargets.Field, AllowMultiple = false, Inherited = false)]
+            public class EditableAttribute : Attribute { }
 
         }
     }
@@ -240,8 +246,76 @@ namespace Adminthulhu {
             command = "event";
             shortHelp = "Event command set.";
             longHelp = "A set of commands about events.";
-            commandsInSet = new Command[] { new CCreateEvent (), new CCancelEvent (), new CEditEvent (), new CJoinEvent (), new CLeaveEvent (), new CEventList (), new CEventMembers (), new CListEventGames () };
+            commandsInSet = new Command[] { new CCreateEvent (), new CCancelEvent (), new CJoinEvent (), new CLeaveEvent (), new CEventList (), new CEventMembers (), new CListEventGames () };
             catagory = Catagory.Utility;
+        }
+
+        public override void Initialize() {
+            base.Initialize ();
+
+            EditCommandSet editCommandSet = new EditCommandSet ();
+            AddProceduralCommands (editCommandSet);
+
+            Type type = typeof (DiscordEvents.Event);
+            FieldInfo [ ] info = type.GetFields ();
+            List<FieldInfo> editables = info.Where (x => x.GetCustomAttribute (typeof (DiscordEvents.Event.EditableAttribute)) != null).ToList ();
+
+            List<Command> newCommands = new List<Command> ();
+            Command baseCommand = new CEditEventBase ();
+
+            foreach (FieldInfo editable in editables) {
+
+                Command newCommand = baseCommand.CloneCommand ();
+                (newCommand as CEditEventBase).editInfo = editable;
+                newCommand.command = editable.Name;
+
+                newCommands.Add (newCommand);
+            }
+
+            editCommandSet.AddProceduralCommands (newCommands.ToArray ());
+            // Lets see if this shit works.. It does! A bit funky, but it works!
+        }
+
+        public class EditCommandSet : CommandSet {
+            public EditCommandSet() {
+                command = "edit";
+                shortHelp = "Event edit command set.";
+                longHelp = "A set of commands about editing events.";
+                commandsInSet = new Command [ 0 ];
+                catagory = Catagory.Utility;
+            }
+        }
+    }
+
+
+    public class CEditEventBase : Command {
+        public FieldInfo editInfo;
+
+        public CEditEventBase() {
+            command = "";
+            shortHelp = "<eventname>;<newvalue>";
+            longHelp = $"Edit variable {command} for <event> to <newvalue>.";
+            argumentNumber = 2;
+        }
+
+        public override async Task ExecuteCommand(SocketUserMessage e, List<string> arguments) {
+            base.ExecuteCommand (e, arguments);
+            if (AllowExecution (e, arguments)) {
+                DiscordEvents.Event eve = DiscordEvents.FindEvent (arguments [ 0 ]);
+                if (eve != null) {
+                    try {
+                        object newValue = Convert.ChangeType (arguments [ 1 ], editInfo.FieldType);
+                        editInfo.SetValue (eve, newValue);
+                        Program.messageControl.SendMessage (e, $"Succesfully edited event {eve.name}'s variable {command} to {newValue}.", false);
+                        DiscordEvents.SaveEvents ();
+
+                    } catch (Exception exception) {
+                        Program.messageControl.SendMessage (e, "Error - " + exception.Message, false);
+                    }
+                } else {
+                    Program.messageControl.SendMessage (e, "Error - Events " + arguments [ 0 ] + " not found.", false);
+                }
+            }
         }
     }
 
@@ -307,9 +381,9 @@ namespace Adminthulhu {
                 if (eve == null) {
                     Program.messageControl.SendMessage (e, "Unable to cancel event - event by name **" + arguments [ 0 ] + "** not found.", false);
                 } else if (eve.hostID != e.Author.Id) {
-                    Program.messageControl.SendMessage (e, "Unable to cancel event **" + eve.eventName + "**, you are not the host.", false);
+                    Program.messageControl.SendMessage (e, "Unable to cancel event **" + eve.name + "**, you are not the host.", false);
                 } else {
-                    Program.messageControl.SendMessage (e, "Event **" + eve.eventName + "** has been cancelled.",false);
+                    Program.messageControl.SendMessage (e, "Event **" + eve.name + "** has been cancelled.",false);
                     DiscordEvents.upcomingEvents.Remove (eve);
                     DiscordEvents.SaveEvents ();
                 }
@@ -338,11 +412,11 @@ namespace Adminthulhu {
                 }else{
                     DateTime parse;
                     if (Utility.TryParseDatetime (arguments[2], e.Author.Id, out parse)) {
-                        eve.eventName = arguments[0];
-                        eve.eventDescription = arguments[1];
-                        eve.eventTime = parse;
+                        eve.name = arguments[0];
+                        eve.description = arguments[1];
+                        eve.time = parse;
 
-                        Program.messageControl.SendMessage (e, "Event **" + eve.eventName + "** has been edited.", false);
+                        Program.messageControl.SendMessage (e, "Event **" + eve.name + "** has been edited.", false);
                         DiscordEvents.SaveEvents ();
                     } else {
                         Program.messageControl.SendMessage (e, "Failed to edit event, could not parse time.", false);
@@ -370,7 +444,7 @@ namespace Adminthulhu {
                 if (eve != null) {
                     eve.eventMemberIDs.Add (e.Author.Id);
                     DiscordEvents.SaveEvents ();
-                    Program.messageControl.SendMessage (e,"Succesfully joined event **" + eve.eventName + "**. You will be mentioned when it begins.", false);
+                    Program.messageControl.SendMessage (e,"Succesfully joined event **" + eve.name + "**. You will be mentioned when it begins.", false);
                 } else {
                     Program.messageControl.SendMessage (e, "Failed to join event - event by name **" + arguments[0] + "** could not be found.", false);
                 }
@@ -396,7 +470,7 @@ namespace Adminthulhu {
                 if (eve != null) {
                     eve.eventMemberIDs.Remove (e.Author.Id);
                     DiscordEvents.SaveEvents ();
-                    Program.messageControl.SendMessage (e, "Succesfully left event **" + eve.eventName + "**. You will most certainly not be missed.", false);
+                    Program.messageControl.SendMessage (e, "Succesfully left event **" + eve.name + "**. You will most certainly not be missed.", false);
                 } else {
                     Program.messageControl.SendMessage (e, "Failed to leave event - event by name **" + arguments[0] + "** could not be found.", false);
                 }
@@ -419,7 +493,7 @@ namespace Adminthulhu {
                 string combinedEvents = "Upcoming events are: ```";
                 if (DiscordEvents.upcomingEvents.Count != 0) {
                     foreach (DiscordEvents.Event eve in DiscordEvents.upcomingEvents) {
-                        combinedEvents += "\n" + eve.eventName + " - " + eve.eventTime + " - " + eve.eventDescription;
+                        combinedEvents += "\n" + eve.name + " - " + eve.time + " - " + eve.description;
                     }
                 }else {
                     combinedEvents += "Nothing, add something! :D";

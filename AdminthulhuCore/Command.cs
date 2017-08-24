@@ -101,7 +101,11 @@ namespace Adminthulhu {
                 if (part.Length > 0)
                     path += part.Substring (0, 1).ToUpper () + part.Substring (1) + ".";
             }
-            commandEnabled = BotConfiguration.GetSetting<bool> ("Command." + path + command.Substring (0, 1).ToUpper () + command.Substring (1) + "Enabled", "Command" + command.Substring (0, 1).ToUpper () + command.Substring (1) + "Enabled", false);
+            commandEnabled = BotConfiguration.GetSetting("Command." + path + command.Substring (0, 1).ToUpper () + command.Substring (1) + "Enabled", "Command" + command.Substring (0, 1).ToUpper () + command.Substring (1) + "Enabled", false);
+        }
+
+        public Command CloneCommand() {
+            return this.MemberwiseClone () as Command;
         }
     }
 }

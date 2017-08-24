@@ -117,6 +117,32 @@ namespace Adminthulhu {
             return success;
         }
 
+        public static bool HasSetting(string key) {
+            string [ ] path = key.Split ('.');
+
+            Dictionary<string, object> dict = settings;
+            for (int i = 0; i < path.Length; i++) {
+                if (dict.ContainsKey (path [ i ])) {
+                    if (i != path.Length - 1) {
+                        if (dict.ContainsKey (path [ i ])) {
+                            dict [ path [ i ] ] = Utility.SecureConvertObject<Dictionary<string, object>> (dict [ path [ i ] ]) as Dictionary<string, object>;
+                            dict = dict [ path [ i ] ] as Dictionary<string, object>; // The memory abuse is real.
+                        } else {
+                            return false;
+                        }
+                    } else {
+                        if (dict.ContainsKey (path [ i ])) {
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    }
+                }
+            }
+
+            return false;
+        }
+
         public static void PurgeSetting(string key) {
             if (settings.ContainsKey (key)) {
                 settings.Remove (key);
@@ -132,6 +158,7 @@ namespace Adminthulhu {
             longHelp = "Reloads the configuration file and enables all changed settings.";
             argumentNumber = 0;
             catagory = Catagory.Admin;
+            isAdminOnly = true;
         }
 
         public override Task ExecuteCommand(SocketUserMessage e, List<string> arguments) {
@@ -143,6 +170,55 @@ namespace Adminthulhu {
             return Task.CompletedTask;
         }
     }
+
+    public class CSetSetting : Command {
+        public CSetSetting() {
+            command = "setconfig";
+            shortHelp = "Set a config value.";
+            longHelp = "Set a simple bot configuration value <key> to <value>. Using !reloadconfig after changes is recommended. More advanced data structures must be set in files.";
+            argumentNumber = 2;
+            catagory = Catagory.Admin;
+            isAdminOnly = true;
+        }
+
+        public override Task ExecuteCommand(SocketUserMessage e, List<string> arguments) {
+            base.ExecuteCommand (e, arguments);
+            if (AllowExecution (e, arguments)) {
+
+                string key = arguments [ 0 ];
+                string input = arguments [ 1 ];
+
+                bool success = BotConfiguration.HasSetting (key);
+                if (success) {
+
+                    object current = BotConfiguration.GetSetting (key, "", default (object));
+                    object possibleJSON = null;
+                    try {
+                        possibleJSON = JsonConvert.DeserializeObject (current.ToString ());
+                    } catch { }
+
+                    if (possibleJSON != null) {
+                        Program.messageControl.SendMessage (e, $"Failed to set config option **{key}** - data structure of **{possibleJSON.GetType ().FullName}** is too complicated. Edit files directly instead.", false);
+                    } else {
+                        object newObject = null;
+                        try {
+                            newObject = Convert.ChangeType (input, current.GetType ());
+                            BotConfiguration.SetSetting (key, newObject, false);
+                            Program.messageControl.SendMessage (e, $"Succesfully set config option **{key}** to **{newObject}**", false);
+                            BotConfiguration.SaveSettings ();
+                        } catch (Exception exception) {
+                            Program.messageControl.SendMessage (e, $"Failed to set config option **{key}** - " + exception.Message, false);
+                        }
+                    }
+                } else {
+                    Program.messageControl.SendMessage (e, $"Failed to set config option **{key}** - Config key not found.", false);
+                }
+            }
+            return Task.CompletedTask;
+        }
+    }
+
+
 
     // TODO - Create a setconfig command, which allows you to set a config option from within Discord.
 }

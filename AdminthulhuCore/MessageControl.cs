@@ -23,12 +23,23 @@ namespace Adminthulhu {
             while (message.Length > 0) {
 
                 // Give some wiggle room, to avoid any shenanagens.
-                if (counted > maxCharacters - (10 + sorrounder.Length * 2)) {
+                int margin = 10 + sorrounder.Length * 2;
+                if (counted > maxCharacters - margin) {
 
-                    int spaceSearch = counted;
-                    while (message [ spaceSearch ] != '\n') {
+                    int spaceSearch = counted; // First, try newlines.
+                    while (message [ spaceSearch ] != '\n' && spaceSearch > 0) {
                         spaceSearch--;
                     }
+
+                    if (spaceSearch == 0) { // No newlines were found, try spaces instead.
+                        spaceSearch = counted;
+                        while (message [ spaceSearch ] != ' ' && spaceSearch > 0) {
+                            spaceSearch--;
+                        }
+                    }
+
+                    if (spaceSearch == 0) // No spaces found? Jeez, just cut of as late as possible then.
+                        spaceSearch = counted;
 
                     string substring = message.Substring (0, spaceSearch);
                     splitted.Add (sorrounder + substring + sorrounder);
@@ -564,9 +575,13 @@ namespace Adminthulhu {
                 if (currentPage < 0)
                     currentPage = content.Length - 1;
                 IMessage message = await GetMessage ();
-                await (message as RestUserMessage).ModifyAsync (delegate (MessageProperties properties) {
-                    properties.Content = "Page " + (currentPage + 1) + "/" + content.Length + "\n" + content [ currentPage ];
-                });
+                try {
+                    await (message as RestUserMessage).ModifyAsync (delegate (MessageProperties properties) {
+                        properties.Content = "Page " + (currentPage + 1) + "/" + content.Length + "\n" + content [ currentPage ];
+                    });
+                }catch (Exception e) {
+                    Logging.Log (Logging.LogType.EXCEPTION, e.Message);
+                }
             }
 
             public async Task<IMessage> GetMessage() {

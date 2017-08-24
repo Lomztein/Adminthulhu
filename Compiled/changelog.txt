@@ -1,3 +1,7 @@
- - Updated codebase to .NET Core 2.0
- - Fixed changelogs not showing post-update.
- - Small change to config loading logs.
+ - Changed formatting of message logs.
+ - Added admin command "displayfile", which can display any file as text from the data folder.
+ - Changes to how book messages are formed, now more versitile and stable.
+ - Now internally supports commands procedurally added during runtime.
+	This is used to procedurally generate and add event edit commands for each editable variable in them.
+ - Added admin command "setconfig" which allows admins to change simple bot settings from Discord.
+ - Removed dank memes.
