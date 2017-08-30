@@ -185,9 +185,11 @@ namespace Adminthulhu {
             return new Event (eventName, date, duration, hostID, iconUrl, description, repeatTime); // Basicly just a constructor wrapper at this point
         }
 
-        public static void CreateEvent (string eventName, DateTime date, TimeSpan duration, ulong hostID, string iconUrl, string description, TimeSpan repeatTime) {
-            upcomingEvents.Add (CreateAndReturnEvent (eventName, date, duration, hostID, iconUrl, description, repeatTime));
+        public static Event CreateEvent (string eventName, DateTime date, TimeSpan duration, ulong hostID, string iconUrl, string description, TimeSpan repeatTime) {
+            Event eve = CreateAndReturnEvent (eventName, date, duration, hostID, iconUrl, description, repeatTime);
+            upcomingEvents.Add (eve);
             SaveEvents ();
+            return eve;
         }
 
         public Task OnMinutePassed ( DateTime time ) {
@@ -245,9 +247,8 @@ namespace Adminthulhu {
         public EventCommands () {
             command = "event";
             shortHelp = "Event command set.";
-            longHelp = "A set of commands about events.";
             commandsInSet = new Command[] { new CCreateEvent (), new CCancelEvent (), new CJoinEvent (), new CLeaveEvent (), new CEventList (), new CEventMembers (), new CListEventGames () };
-            catagory = Catagory.Utility;
+            catagory = Category.Utility;
         }
 
         public override void Initialize() {
@@ -280,9 +281,8 @@ namespace Adminthulhu {
             public EditCommandSet() {
                 command = "edit";
                 shortHelp = "Event edit command set.";
-                longHelp = "A set of commands about editing events.";
                 commandsInSet = new Command [ 0 ];
-                catagory = Catagory.Utility;
+                catagory = Category.Utility;
             }
         }
     }
@@ -294,71 +294,63 @@ namespace Adminthulhu {
         public CEditEventBase() {
             command = "";
             shortHelp = "<eventname>;<newvalue>";
-            longHelp = $"Edit variable {command} for <event> to <newvalue>.";
-            argumentNumber = 2;
+            overloads.Add (new Overload (typeof (DiscordEvents.Event), $"Edit variable {command} for <event> to <newvalue>"));
         }
 
-        public override async Task ExecuteCommand(SocketUserMessage e, List<string> arguments) {
-            base.ExecuteCommand (e, arguments);
-            if (AllowExecution (e, arguments)) {
-                DiscordEvents.Event eve = DiscordEvents.FindEvent (arguments [ 0 ]);
-                if (eve != null) {
-                    try {
-                        object newValue = Convert.ChangeType (arguments [ 1 ], editInfo.FieldType);
-                        editInfo.SetValue (eve, newValue);
-                        Program.messageControl.SendMessage (e, $"Succesfully edited event {eve.name}'s variable {command} to {newValue}.", false);
-                        DiscordEvents.SaveEvents ();
+        public async Task<Result> Execute(SocketUserMessage e, List<string> arguments) {
+            DiscordEvents.Event eve = DiscordEvents.FindEvent (arguments [ 0 ]);
+            if (eve != null) {
+                try {
+                    object newValue = Convert.ChangeType (arguments [ 1 ], editInfo.FieldType);
+                    editInfo.SetValue (eve, newValue);
+                    DiscordEvents.SaveEvents ();
+                    return new Result (newValue, $"Succesfully edited event {eve.name}'s variable {command} to {newValue}.");
 
-                    } catch (Exception exception) {
-                        Program.messageControl.SendMessage (e, "Error - " + exception.Message, false);
-                    }
-                } else {
-                    Program.messageControl.SendMessage (e, "Error - Events " + arguments [ 0 ] + " not found.", false);
+                } catch (Exception exception) {
+                    return new Result (null, "Error - " + exception.Message);
                 }
+            } else {
+                return new Result (null, "Error - Events " + arguments [ 0 ] + " not found.");
             }
         }
     }
 
     // Move this command to a seperate file later, this is just for ease of writing.
     public class CCreateEvent : Command {
-        public CCreateEvent () {
+        public CCreateEvent() {
             command = "create";
             shortHelp = "Create a new event.";
-            longHelp = "Creates a new event on this server. Uses a questionnaire for input.";
-            argumentNumber = 0;
+            overloads.Add (new Overload (typeof (DiscordEvents.Event), "Creates a new event on this server. Uses a questionnaire for input."));
         }
 
-        public override async Task ExecuteCommand ( SocketUserMessage e, List<string> arguments ) {
-            base.ExecuteCommand (e, arguments);
-            if (AllowExecution (e, arguments)) {
+        public async Task<Result> Execute (SocketUserMessage e) {
 
-                TimeSpan repeat = new TimeSpan (0);
-                TimeSpan duration = new TimeSpan (0);
-                List<object> results = null;
+            TimeSpan repeat = new TimeSpan (0);
+            TimeSpan duration = new TimeSpan (0);
+            List<object> results = null;
 
-                try {
-                     results = await MessageControl.CreateQuestionnaire (e.Author.Id, e.Channel,
-                        new MessageControl.QE ("Input event name.", typeof (string)),
-                        new MessageControl.QE ("Input event date.", typeof (DateTime)),
-                        new MessageControl.QE ("Input event duration.", typeof (string)),
-                        new MessageControl.QE ("Input event URL.", typeof (string)),
-                        new MessageControl.QE ("Input event description.", typeof (string)),
-                        new MessageControl.QE ("Input event repeat time.", typeof (string)));
-                } catch (Exception exception) {
-                    Program.messageControl.SendMessage (e, exception.Message, false);
-                }
+            try {
+                results = await MessageControl.CreateQuestionnaire (e.Author.Id, e.Channel,
+                   new MessageControl.QE ("Input event name.", typeof (string)),
+                   new MessageControl.QE ("Input event date.", typeof (DateTime)),
+                   new MessageControl.QE ("Input event duration.", typeof (string)),
+                   new MessageControl.QE ("Input event URL.", typeof (string)),
+                   new MessageControl.QE ("Input event description.", typeof (string)),
+                   new MessageControl.QE ("Input event repeat time.", typeof (string)));
+            } catch (Exception exception) {
+                Program.messageControl.SendMessage (e, exception.Message, false);
+            }
 
-                if (results != null) {
-                    DateTime parse = DateTime.Parse (results [ 1 ].ToString ());
-                    Utility.TryParseSimpleTimespan (results [ 5 ] as string, out repeat);
-                    Utility.TryParseSimpleTimespan (results [ 2 ] as string, out duration);
+            if (results != null) {
+                DateTime parse = DateTime.Parse (results [ 1 ].ToString ());
+                Utility.TryParseSimpleTimespan (results [ 5 ] as string, out repeat);
+                Utility.TryParseSimpleTimespan (results [ 2 ] as string, out duration);
 
-                    DiscordEvents.CreateEvent (results [ 0 ] as string, parse, duration, e.Author.Id, results [ 3 ] as string, results [ 4 ] as string, repeat);
-                    DiscordEvents.JoinEvent (e.Author.Id, results [ 0 ] as string);
-                    Program.messageControl.SendMessage (e, "Succesfully created event **" + results[0] + "** at " + parse.ToString (), false);
-                } else {
-                    Program.messageControl.SendMessage (e, "Failed to create event, could not parse time.", false);
-                }
+                DiscordEvents.Event eve = DiscordEvents.CreateEvent (results [ 0 ] as string, parse, duration, e.Author.Id, results [ 3 ] as string, results [ 4 ] as string, repeat);
+                DiscordEvents.JoinEvent (e.Author.Id, results [ 0 ] as string);
+                return new Result (eve, "Succesfully created event **" + results [ 0 ] + "** at " + parse.ToString ());
+            } else {
+                return new Result (null, "Failed to create event, could not parse time.");
             }
         }
     }
@@ -367,63 +359,24 @@ namespace Adminthulhu {
         public CCancelEvent () {
             command = "cancel";
             shortHelp = "Cancel event.";
-            argHelp = "<name>";
-            longHelp = "Cancels event " + argHelp;
             isAdminOnly = true;
-            argumentNumber = 1;
+
+            overloads.Add (new Overload (typeof (DiscordEvents.Event), "Cancels event by name."));
         }
 
-        public override Task ExecuteCommand ( SocketUserMessage e, List<string> arguments ) {
-            base.ExecuteCommand (e, arguments);
-            if (AllowExecution (e, arguments)) {
-                DiscordEvents.Event eve = DiscordEvents.FindEvent (arguments[0]);
+        public Task<Result> Execute(SocketUserMessage message, string eventname) {
+            DiscordEvents.Event eve = DiscordEvents.FindEvent (eventname);
 
-                if (eve == null) {
-                    Program.messageControl.SendMessage (e, "Unable to cancel event - event by name **" + arguments [ 0 ] + "** not found.", false);
-                } else if (eve.hostID != e.Author.Id) {
-                    Program.messageControl.SendMessage (e, "Unable to cancel event **" + eve.name + "**, you are not the host.", false);
-                } else {
-                    Program.messageControl.SendMessage (e, "Event **" + eve.name + "** has been cancelled.",false);
-                    DiscordEvents.upcomingEvents.Remove (eve);
-                    DiscordEvents.SaveEvents ();
-                }
+            if (eve == null) {
+                return TaskResult (null, "Unable to cancel event - event by name **" + eventname + "** not found.");
+            } else if (eve.hostID != message.Author.Id) {
+                return TaskResult (null, "Unable to cancel event **" + eve.name + "**, you are not the host.");
+            } else {
+                DiscordEvents.upcomingEvents.Remove (eve);
+                DiscordEvents.SaveEvents ();
+
+                return TaskResult (eve, "Event **" + eve.name + "** has been cancelled.");
             }
-            return Task.CompletedTask;
-        }
-    }
-
-    public class CEditEvent : Command {
-        public CEditEvent () {
-            command = "edit";
-            shortHelp = "Edit event.";
-            argHelp = "<name>;<newname>;<newdesc>;<newtime (d-m-y h:m:s)>";
-            longHelp = "Edits event event <name>";
-            isAdminOnly = true;
-            argumentNumber = 4;
-        }
-
-        public override Task ExecuteCommand ( SocketUserMessage e, List<string> arguments ) {
-            base.ExecuteCommand (e, arguments);
-            if (AllowExecution (e, arguments)) {
-                DiscordEvents.Event eve = DiscordEvents.FindEvent (arguments[0]);
-
-                if (eve == null) {
-                    Program.messageControl.SendMessage (e, "Unable to edit event - event by name **" + arguments[0] + "** not found.", false);
-                }else{
-                    DateTime parse;
-                    if (Utility.TryParseDatetime (arguments[2], e.Author.Id, out parse)) {
-                        eve.name = arguments[0];
-                        eve.description = arguments[1];
-                        eve.time = parse;
-
-                        Program.messageControl.SendMessage (e, "Event **" + eve.name + "** has been edited.", false);
-                        DiscordEvents.SaveEvents ();
-                    } else {
-                        Program.messageControl.SendMessage (e, "Failed to edit event, could not parse time.", false);
-                    }
-                }
-            }
-            return Task.CompletedTask;
         }
     }
 
@@ -431,25 +384,19 @@ namespace Adminthulhu {
         public CJoinEvent () {
             command = "join";
             shortHelp = "Join event.";
-            argHelp = "<name>";
-            longHelp = "Joins upcoming event " + argHelp;
-            argumentNumber = 1;
+            overloads.Add (new Overload (typeof (DiscordEvents.Event), "Joins event by name."));
         }
 
-        public override Task ExecuteCommand ( SocketUserMessage e, List<string> arguments ) {
-            base.ExecuteCommand (e, arguments);
-            if (AllowExecution (e, arguments)) {
-                DiscordEvents.Event eve = DiscordEvents.FindEvent (arguments[0]);
+        public Task<Result> Execute(SocketUserMessage e, string eventname) {
+            DiscordEvents.Event eve = DiscordEvents.FindEvent (eventname);
 
-                if (eve != null) {
-                    eve.eventMemberIDs.Add (e.Author.Id);
-                    DiscordEvents.SaveEvents ();
-                    Program.messageControl.SendMessage (e,"Succesfully joined event **" + eve.name + "**. You will be mentioned when it begins.", false);
-                } else {
-                    Program.messageControl.SendMessage (e, "Failed to join event - event by name **" + arguments[0] + "** could not be found.", false);
-                }
+            if (eve != null) {
+                eve.eventMemberIDs.Add (e.Author.Id);
+                DiscordEvents.SaveEvents ();
+                return TaskResult (eve, "Succesfully joined event **" + eve.name + "**. You will be mentioned when it begins.");
+            } else {
+                return TaskResult (null, "Failed to join event - event by name **" + eventname+ "** could not be found.");
             }
-            return Task.CompletedTask;
         }
     }
 
@@ -457,25 +404,19 @@ namespace Adminthulhu {
         public CLeaveEvent () {
             command = "leave";
             shortHelp = "Leave event.";
-            argHelp = "<name>";
-            longHelp = "Leaves upcoming event " + argHelp;
-            argumentNumber = 1;
+            overloads.Add (new Overload (typeof (bool), "Leaves upcoming event by name."));
         }
 
-        public override Task ExecuteCommand ( SocketUserMessage e, List<string> arguments ) {
-            base.ExecuteCommand (e, arguments);
-            if (AllowExecution (e, arguments)) {
-                DiscordEvents.Event eve = DiscordEvents.FindEvent (arguments[0]);
+        public Task<Result> Execute(SocketUserMessage e, string eventname) {
+            DiscordEvents.Event eve = DiscordEvents.FindEvent (eventname);
 
-                if (eve != null) {
-                    eve.eventMemberIDs.Remove (e.Author.Id);
-                    DiscordEvents.SaveEvents ();
-                    Program.messageControl.SendMessage (e, "Succesfully left event **" + eve.name + "**. You will most certainly not be missed.", false);
-                } else {
-                    Program.messageControl.SendMessage (e, "Failed to leave event - event by name **" + arguments[0] + "** could not be found.", false);
-                }
+            if (eve != null) {
+                eve.eventMemberIDs.Remove (e.Author.Id);
+                DiscordEvents.SaveEvents ();
+                return TaskResult (true, "Succesfully left event **" + eve.name + "**. You will most certainly not be missed.");
+            } else {
+                return TaskResult (false, "Failed to leave event - event by name **" + eve.name + "** could not be found.");
             }
-            return Task.CompletedTask;
         }
     }
 
@@ -483,26 +424,21 @@ namespace Adminthulhu {
         public CEventList () {
             command = "list";
             shortHelp = "List events.";
-            longHelp = "List all upcoming events.";
-            argumentNumber = 0;
+            overloads.Add (new Overload (typeof (object), "List all upcoming events."));
         }
 
-        public override Task ExecuteCommand ( SocketUserMessage e, List<string> arguments ) {
-            base.ExecuteCommand (e, arguments);
-            if (AllowExecution (e, arguments)) {
-                string combinedEvents = "Upcoming events are: ```";
-                if (DiscordEvents.upcomingEvents.Count != 0) {
-                    foreach (DiscordEvents.Event eve in DiscordEvents.upcomingEvents) {
-                        combinedEvents += "\n" + eve.name + " - " + eve.time + " - " + eve.description;
-                    }
-                }else {
-                    combinedEvents += "Nothing, add something! :D";
+        public Task<Result> Execute(SocketUserMessage e) {
+            string combinedEvents = "Upcoming events are: ```";
+            if (DiscordEvents.upcomingEvents.Count != 0) {
+                foreach (DiscordEvents.Event eve in DiscordEvents.upcomingEvents) {
+                    combinedEvents += "\n" + eve.name + " - " + eve.time + " - " + eve.description;
                 }
-                
-                combinedEvents += "```";
-                Program.messageControl.SendMessage (e, combinedEvents, false);
+            } else {
+                combinedEvents += "Nothing, add something! :D";
             }
-            return Task.CompletedTask;
+
+            combinedEvents += "```";
+            return TaskResult ("", combinedEvents);
         }
     }
 
@@ -510,33 +446,31 @@ namespace Adminthulhu {
         public CEventMembers () {
             command = "members";
             shortHelp = "List members.";
-            argHelp = "<name>";
-            longHelp = "List all members in event <name>.";
-            argumentNumber = 1;
+            overloads.Add (new Overload (typeof (SocketGuildUser[]), "List all members in event an event by name."));
         }
 
-        public override Task ExecuteCommand ( SocketUserMessage e, List<string> arguments ) {
-            base.ExecuteCommand (e, arguments);
-            if (AllowExecution (e, arguments)) {
-                DiscordEvents.Event locEvent = DiscordEvents.FindEvent (arguments[0]);
-                if (locEvent != null) {
+        public Task<Result> Execute(SocketUserMessage e, string eventname) {
+            DiscordEvents.Event locEvent = DiscordEvents.FindEvent (eventname);
 
-                    string combinedMembers = "Event members are: ```";
-                    if (DiscordEvents.upcomingEvents.Count != 0) {
-                        foreach (ulong user in locEvent.eventMemberIDs) {
-                            combinedMembers += "\n" + Utility.GetUserName (Utility.GetServer ().GetUser (user));
-                        }
-                    } else {
-                        combinedMembers += "Nobody, why don't you join? :D";
+            if (locEvent != null) {
+                List<SocketGuildUser> users = new List<SocketGuildUser> ();
+
+                string combinedMembers = "Event members are: ```";
+                if (DiscordEvents.upcomingEvents.Count != 0) {
+                    foreach (ulong user in locEvent.eventMemberIDs) {
+                        SocketGuildUser found = Utility.GetServer ().GetUser (user);
+                        users.Add (found);
+                        combinedMembers += "\n" + Utility.GetUserName (found);
                     }
-
-                    combinedMembers += "```";
-                    Program.messageControl.SendMessage (e, combinedMembers, false);
-                }else {
-                    Program.messageControl.SendMessage (e, "Failed to show event member list - event **" + arguments[0] + "** not found.", false);
+                } else {
+                    combinedMembers += "Nobody, why don't you join? :D";
                 }
+
+                combinedMembers += "```";
+                return TaskResult (locEvent, combinedMembers);
+            } else {
+                return TaskResult (null, "Failed to show event member list - event **" + eventname + "** not found.");
             }
-            return Task.CompletedTask;
         }
     }
 }

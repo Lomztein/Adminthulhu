@@ -493,30 +493,21 @@ namespace Adminthulhu {
         public CRemoveEventGame() {
             command = "removeeventgame";
             shortHelp = "Remove a game.";
-            argHelp = "<id>";
-            longHelp = "Remove a game from automated weekly events.";
-            argumentNumber = 1;
             isAdminOnly = true;
-            catagory = Catagory.Admin;
+            catagory = Category.Admin;
+
+            overloads.Add (new Overload (typeof (int), "Removes given games from automated weekly events."));
         }
 
-        public override Task ExecuteCommand(SocketUserMessage e, List<string> arguments) {
-            base.ExecuteCommand (e, arguments);
-            if (AllowExecution (e, arguments)) {
-                int parse;
-                if (int.TryParse (arguments [ 0 ], out parse)) {
-                    bool withinRange = parse > 0 && parse <= WeeklyEvents.games.Length;
-
-                    if (withinRange) {
-                        WeeklyEvents.RemoveGame (parse);
-                    } else {
-                        Program.messageControl.SendMessage (e, "Failed to remove - outside range ( 0-" + (WeeklyEvents.allGames.Count - 1) + " ).", false);
-                    }
-                } else {
-                    Program.messageControl.SendMessage (e, "Failed to remove, could not parse number.", false);
-                }
+        public Task<Result> Execute(SocketUserMessage e, string gamename) {
+            WeeklyEvents.Game game = WeeklyEvents.allGames.Find (x => x.name.ToUpper () == gamename.ToUpper ());
+            if (game != null) {
+                int index = WeeklyEvents.allGames.IndexOf (game);
+                WeeklyEvents.RemoveGame (index);
+                return TaskResult (index, "Succesfully removed " + gamename + " from game list");
+            } else {
+                return TaskResult (-1, "Failed to remove game " + gamename + " from game list, since it could not be found.");
             }
-            return Task.CompletedTask;
         }
     }
 
@@ -524,28 +515,16 @@ namespace Adminthulhu {
         public CAddEventGame() {
             command = "addeventgame";
             shortHelp = "Add a game.";
-            argHelp = "<name>;<highlight(true,false)>";
-            longHelp = "Remove a game from automated weekly events.";
-            argumentNumber = 2;
             isAdminOnly = true;
-            catagory = Catagory.Admin;
+            catagory = Category.Admin;
         }
 
-        public override Task ExecuteCommand(SocketUserMessage e, List<string> arguments) {
-            base.ExecuteCommand (e, arguments);
-            if (AllowExecution (e, arguments)) {
-                bool parse;
-                if (bool.TryParse (arguments [ 1 ], out parse)) {
-                    if (WeeklyEvents.AddGame (arguments [ 0 ], parse)) {
-                        Program.messageControl.SendMessage (e, "Succesfully added game to automated events.", false);
-                    } else {
-                        Program.messageControl.SendMessage (e, "Failed to add game, it might already be on the list.", false);
-                    }
-                } else {
-                    Program.messageControl.SendMessage (e, "Failed to add, could not parse highlight bool.", false);
-                }
+        public Task Execute(SocketUserMessage e, string gameName, bool highlight) {
+            if (WeeklyEvents.AddGame (gameName, highlight)) {
+                return TaskResult (WeeklyEvents.allGames.Find (x => x.name == gameName), "Succesfully added game to list of possible event games!");
+            } else {
+                return TaskResult (null, "Failed to add game - It might already be on the list.");
             }
-            return Task.CompletedTask;
         }
     }
 
@@ -553,23 +532,18 @@ namespace Adminthulhu {
         public CHighlightEventGame() {
             command = "highlighteventgame";
             shortHelp = "Highlight a game.";
-            argHelp = "<name>";
-            longHelp = "Toggles whether or not a game is highlighted.";
-            argumentNumber = 1;
             isAdminOnly = true;
-            catagory = Catagory.Admin;
+            catagory = Category.Admin;
+
+            overloads.Add (new Overload (typeof (WeeklyEvents.Game), "Toggles whether given game is highligted."));
         }
 
-        public override Task ExecuteCommand(SocketUserMessage e, List<string> arguments) {
-            base.ExecuteCommand (e, arguments);
-            if (AllowExecution (e, arguments)) {
-                if (WeeklyEvents.HighlightGame (arguments [ 0 ])) {
-                    Program.messageControl.SendMessage (e, "Succesfully toggled game highlight automated events.", false);
-                } else {
-                    Program.messageControl.SendMessage (e, "Failed to toggle game highlight.", false);
-                }
+        public Task<Result> Execute(SocketUserMessage e, string gameName) {
+            if (WeeklyEvents.HighlightGame (gameName)) {
+                return TaskResult (WeeklyEvents.allGames.Find (x => x.name == gameName), $"Succesfully toggled game highlighting on {gameName}!");
+            } else {
+                return TaskResult (null, "Failed to toggle highlight - Game might not be present.");
             }
-            return Task.CompletedTask;
         }
     }
 
@@ -577,22 +551,18 @@ namespace Adminthulhu {
         public CListEventGames() {
             command = "listeventgames";
             shortHelp = "List event games.";
-            longHelp = "Lists all possible event games.";
-            argumentNumber = 0;
-            catagory = Catagory.Utility;
+            catagory = Category.Utility;
+
+            overloads.Add (new Overload (typeof (WeeklyEvents.Game[]), "Lists all possible event games."));
         }
 
-        public override Task ExecuteCommand(SocketUserMessage e, List<string> arguments) {
-            base.ExecuteCommand (e, arguments);
-            if (AllowExecution (e, arguments)) {
-                string result = "```";
-                for (int i = 0; i < WeeklyEvents.allGames.Count; i++) {
-                    result += "\n" + i + " - " + WeeklyEvents.allGames [ i ].name + (WeeklyEvents.allGames[i].highlight ? " *" : "");
-                }
-                result += "```";
-                Program.messageControl.SendMessage (e, result, false);
+        public Task<Result> Execute(SocketUserMessage e) {
+            string result = "```";
+            for (int i = 0; i < WeeklyEvents.allGames.Count; i++) {
+                result += "\n" + i + " - " + WeeklyEvents.allGames [ i ].name + (WeeklyEvents.allGames [ i ].highlight ? " *" : "");
             }
-            return Task.CompletedTask;
+            result += "```";
+            return TaskResult (WeeklyEvents.allGames, result);
         }
     }
 }

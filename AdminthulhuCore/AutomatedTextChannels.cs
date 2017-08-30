@@ -65,24 +65,18 @@ namespace Adminthulhu {
         public CAddHeader () {
             command = "addheader";
             shortHelp = "Add new header.";
-            argHelp = "<header>";
-            longHelp = "Adds a new header " + argHelp + " to main channel";
-            argumentNumber = 1;
             isAdminOnly = true;
-            catagory = Catagory.Admin;
+            catagory = Category.Admin;
+
+            AddOverload (typeof (bool), "Adds a new header <header> to main channel");
         }
 
-        public override Task ExecuteCommand ( SocketUserMessage e, List<string> arguments ) {
-            base.ExecuteCommand (e, arguments);
-            if (AllowExecution (e, arguments)) {
-                string filePath = Program.dataPath + AutomatedTextChannels.additionalHeaderPath;
-                AutomatedTextChannels.AddHeaders (arguments[0]);
-                SerializationIO.SaveTextFile (filePath, arguments[0]);
+        public Task<Result> Execute(string header) {
+            string filePath = Program.dataPath + AutomatedTextChannels.additionalHeaderPath;
+            AutomatedTextChannels.AddHeaders (header);
+            SerializationIO.SaveTextFile (filePath, header);
 
-                Program.messageControl.SendMessage (e, "Succesfully added header to list of additional headers!", false);
-            }
-
-            return Task.CompletedTask;
+            return TaskResult (header, "Succesfully added header to list of additional headers!");
         }
     }
 
@@ -91,22 +85,17 @@ namespace Adminthulhu {
         public CShowHeaders () {
             command = "showheaders";
             shortHelp = "Show header.";
-            longHelp = "Shows all current possible headers of the main channel.";
-            argumentNumber = 0;
-            catagory = Catagory.Utility;
+            catagory = Category.Utility;
+            AddOverload (typeof (string), "Shows all current possible headers of the main channel.");
         }
 
-        public override Task ExecuteCommand ( SocketUserMessage e, List<string> arguments ) {
-            base.ExecuteCommand (e, arguments);
-            if (AllowExecution (e, arguments)) {
-                string complete = "```";
-                foreach (string h in AutomatedTextChannels.headers) {
-                    complete += "\n" + h;
-                }
-                complete += "```";
-                Program.messageControl.SendMessage (e, "All current possible headers are: " + complete, false);
+        public Task<Result> Execute(SocketUserMessage e, List<string> arguments) {
+            string complete = "```";
+            foreach (string h in AutomatedTextChannels.headers) {
+                complete += "\n" + h;
             }
-            return Task.CompletedTask;
+            complete += "```";
+            return TaskResult (complete, "All current possible headers are: " + complete);
         }
     }
 }

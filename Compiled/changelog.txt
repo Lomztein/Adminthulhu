@@ -1,8 +1,23 @@
- - Added the config option Voice.RandomizeNameQueue, which decides if the namequeue is randomized, duh.
- - Changed how temp voice channel names are found and assigned, now works similar to object pooling, and is therefore much more robust.
- - Fixed voice channel updates occuring when a user not in a voice channel updated.
- - Fixed auto voice channel systems soft-locking if !reloadconfig was used while a temp channel was active.
- - Changed post-reboot non-default channel handling, so that it now attempts to correctly assign temporary channels correctly after reboot. This includes tags. However, "!voice desired" must be reset since it isn't technically a tag, but an automation of two other tags.
- - Fixed voice related commands showing the full internal voice channel name, when replying.
- - Fixed voice related commands sometimes crashing the bot shortly after reboot.
- - HOTFIX - Fixed an issue with sending changelog post-update.
+It's a big one, boys!
+
+ - Largely revamped how commands work internally.
+	* Commands now support overloading, as in multiple commands under the same name.
+	* Commands now return values, and can be chained together to long "Pipes".
+	* Custom commands can be created and saved from such chained commands.
+	* Way less tedious to write new commands.
+	* <Command> ? shows return values as well as input types.
+
+ - New command catagory: Advanced
+ - New commands.
+	* A command set revolving Discord data, such as members, channels and roles.
+	* A command set revolving simple Math operations, will be expanded.
+	* A command set revolving flow of commands, such af if, for and delay commands.
+	* A misc command set where uncatagorised advanced commands go.
+	* !define - Which graps the definition of its input from Urban Dictionary.
+	* !print - Prints out whatever is put into it.
+
+ - Added WHICKED GREAPHIX MAN to the Hangman game.
+ - On user joined messages can now show who's invite was used.
+
+THIS ENTIRE PATCH IS EXPERIMENTAL.
+ - It should be working well-ish, but not everything has been tested throuhoutly. Please report any bugs you find!

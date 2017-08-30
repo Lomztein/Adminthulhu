@@ -9,35 +9,41 @@ using Discord.WebSocket;
 namespace Adminthulhu {
     public class CCommandList : Command {
 
-        public CCommandList () {
+        public CCommandList() {
             command = "clist";
             shortHelp = "Show command list.";
-            longHelp = "Reveals a full list of all commands.";
-            argumentNumber = 0;
-            catagory = Catagory.Utility;
+            catagory = Category.Utility;
 
             availableInDM = true;
+
+            AddOverload (typeof (string), "Reveals a full list of all commands.");
+            AddOverload (typeof (string), "Reveals a list of commands in a given command array.");
+            AddOverload (typeof (string), "Reveals a list of commands in a given command set.");
         }
 
-        public override Task ExecuteCommand ( SocketUserMessage e, List<string> arguments ) {
-            base.ExecuteCommand (e, arguments);
-            if (AllowExecution (e, arguments)) {
+        public Task<Result> Execute(SocketUserMessage e) {
+            return Execute (e, Program.commands);
+        }
 
-                var catagories = Program.commands.Where (x => x.AllowExecution (e, new List<string>(), false)).GroupBy (x => x.catagory);
-                string result = "";
+        public Task<Result> Execute(SocketUserMessage e, Command [ ] commands) {
+            var catagories = commands.Where (x => x.AllowExecution (e, new List<string> ()) == "").GroupBy (x => x.catagory);
+            string result = "```";
 
-                foreach (var catagory in catagories) {
-                    result += catagory.ElementAt (0).catagory.ToString () + " Commands\n";
-                    foreach (var item in catagory) {
-                        result += Utility.FormatCommand (item) + "\n";
-                    }
-                    result += "\n";
+            foreach (var catagory in catagories) {
+                result += catagory.ElementAt (0).catagory.ToString () + " Commands\n";
+                foreach (var item in catagory) {
+                    result += Utility.FormatCommand (item) + "\n";
                 }
-
-                // I mean, it works, right?
-                Program.messageControl.SendMessage(e.Channel, result, false, "```");
+                result += "\n";
             }
-            return Task.CompletedTask;
+            result += "```";
+
+            // I mean, it works, right?
+            return TaskResult (result, result);
+        }
+
+        public Task<Result> Execute(SocketUserMessage e, CommandSet set) {
+            return TaskResult (set.GetHelp (e), set.GetHelp (e));
         }
     }
 }

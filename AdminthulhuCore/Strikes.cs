@@ -116,9 +116,8 @@ namespace Adminthulhu
         public StrikeCommandSet() {
             command = "strikes";
             shortHelp = "Strike commands.";
-            longHelp = "A set of commands specifically for strikes.";
             commandsInSet = new Command [ ] { new CAddStrike (), new CRemoveStrike () };
-            catagory = Catagory.Admin;
+            catagory = Category.Admin;
             isAdminOnly = true;
         }
 
@@ -127,25 +126,18 @@ namespace Adminthulhu
             public CAddStrike() {
                 command = "add";
                 shortHelp = "Strike someone unlawful.";
-                longHelp = "Strike a user who've broken a rule.";
-                argumentNumber = 3;
+                AddOverload (typeof (ulong), "Strike a user who've broken a rule.");
             }
 
-            public override Task ExecuteCommand(SocketUserMessage e, List<string> arguments) {
-                base.ExecuteCommand (e, arguments);
-                if (AllowExecution (e, arguments)) {
-                    ulong id;
-                    if (ulong.TryParse (arguments [ 0 ], out id)) {
-                        TimeSpan span;
+            public Task<Result> Execute(SocketUserMessage e, ulong id, string timespan, string reason) {
+                TimeSpan span;
 
-                        if (Utility.TryParseSimpleTimespan (arguments [ 1 ], out span)) {
-                            Strikes.AddStrike (id, e.CreatedAt.ToLocalTime ().DateTime, span, arguments [ 2 ]);
-                        } else {
-                            Program.messageControl.SendMessage (e, "Failed to add strike - Could not parse timespan.", false);
-                        }
-                    }
+                if (Utility.TryParseSimpleTimespan (timespan, out span)) {
+                    Strikes.AddStrike (id, e.CreatedAt.ToLocalTime ().DateTime, span, reason);
+                    return TaskResult (id, "Succesfully stroke user by ID.");
+                } else {
+                    return TaskResult (0, "Failed to add strike - Could not parse timespan.");
                 }
-                return Task.CompletedTask;
             }
         }
 
@@ -154,19 +146,12 @@ namespace Adminthulhu
             public CRemoveStrike() {
                 command = "remove";
                 shortHelp = "Raise strike.";
-                longHelp = "Raises a strike from someone who doesn't deserve it anymore.";
-                argumentNumber = 1;
+                AddOverload (typeof (ulong), "Raises a strike from someone who doesn't deserve it anymore.");
             }
 
-            public override Task ExecuteCommand(SocketUserMessage e, List<string> arguments) {
-                base.ExecuteCommand (e, arguments);
-                if (AllowExecution (e, arguments)) {
-                    ulong id;
-                    if (ulong.TryParse (arguments [ 0 ], out id)) {
-                        Strikes.RaiseStrike (id);
-                    }
-                }
-                return Task.CompletedTask;
+            public Task<Result>Execute(SocketUserMessage e, ulong id) {
+                    Strikes.RaiseStrike (id);
+                return TaskResult (id, "Succesfully gave " + id + " a strike.");
             }
         }
     }

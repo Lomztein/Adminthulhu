@@ -9,36 +9,30 @@ using Discord.WebSocket;
 namespace Adminthulhu {
     public class CCallVoiceChannel : Command {
 
-        public CCallVoiceChannel () {
+        public CCallVoiceChannel() {
             command = "call";
             shortHelp = "Mention voice channel.";
-            argHelp = "<voicechannel>";
-            longHelp = "Mentions all members in " + argHelp + ".";
-            argumentNumber = 2;
+
+            AddOverload (typeof (IUser[]), "Mentions all members in voice channel given by name.");
+            AddOverload (typeof (IUser[ ]), "Mentions all members in voice channel given by channel.");
         }
 
-        public override Task ExecuteCommand ( SocketUserMessage e, List<string> arguments ) {
-            base.ExecuteCommand (e, arguments);
-            if (AllowExecution (e, arguments)) {
+        public Task<Result> Execute(SocketUserMessage e, string channelName) {
+            SocketVoiceChannel channel = Utility.SearchChannel (Utility.GetServer (), channelName) as SocketVoiceChannel;
+            return Execute (e, channel);
+        }
 
-                List<SocketVoiceChannel> voiceChannels = (e.Channel as SocketGuildChannel).Guild.VoiceChannels.ToList ();
-
-                string text = "";
-                for (int i = 0; i < voiceChannels.Count; i++) {
-                    if (voiceChannels[i].Name.ToLower ().Substring (0, arguments[0].Length) == arguments[0].ToLower ()) {
-
-                        List<SocketGuildUser> users = voiceChannels[i].Users.ToList ();
-                        for (int j = 0; j < users.Count; j++) {
-                            text += users[j].Mention + " ";
-                        }
-
-                        break;
-                    }
+        public Task<Result> Execute(SocketUserMessage e, SocketVoiceChannel channel) {
+            string text = "";
+            List<SocketGuildUser> users = null;
+            if (channel != null) {
+                users = channel.Users.ToList ();
+                for (int j = 0; j < users.Count; j++) {
+                    text += users [ j ].Mention + " ";
                 }
-
-                Program.messageControl.SendMessage(e, e.Author.Username + ": " + text + ", " + arguments[1], false);
             }
-            return Task.CompletedTask;
+
+            return TaskResult ((IUser[])users.ToArray (), text);
         }
     }
 }

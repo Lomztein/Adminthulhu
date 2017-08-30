@@ -8,6 +8,7 @@ using System.Globalization;
 using Newtonsoft.Json;
 using System.Net;
 using System.IO;
+using System.Reflection;
 
 namespace Adminthulhu {
 
@@ -60,17 +61,54 @@ namespace Adminthulhu {
             if (fullCommand.LastIndexOf (' ') != -1) {
                 // FEEL THE SPAGHETTI.
                 command = fullCommand.Substring (0, fullCommand.Substring (1).IndexOf (' ') + 1);
-                string [ ] loc = toSplit.Split (';');
-                for (int i = 0; i < loc.Length; i++) {
+                arguments.AddRange (SplitArgs (toSplit));
 
-                    loc [ i ] = TrimSpaces (loc [ i ]);
-                    arguments.Add (loc [ i ]);
-                }
+
+
             } else {
                 command = fullCommand;
             }
 
             return arguments;
+        }
+
+        public static string[] SplitArgs(string toSplit) {
+            List<string> arguments = new List<string>();
+            string arg;
+            int balance = 0;
+            int lastCut = 0;
+
+            for (int i = 0; i < toSplit.Length; i++) {
+                char cur = toSplit [ i ];
+
+                switch (toSplit [ i ]) {
+                    case ';':
+                        if (balance == 0) {
+                            arg = toSplit.Substring (lastCut, i - lastCut);
+                            arguments.Add (arg);
+                            lastCut = i + 1;
+                        }
+                        break;
+
+                    case '(':
+                        balance++;
+                        break;
+
+                    case ')':
+                        balance--;
+                        break;
+                }
+            }
+
+            if (toSplit.Length > 0) {
+                arguments.Add (toSplit.Substring (lastCut));
+            }
+
+            for (int i = 0; i < arguments.Count; i++) {
+                arguments[i] = arguments [ i ].Trim (' ');
+            }
+
+            return arguments.ToArray ();
         }
 
         public static SocketGuild GetServer(SocketChannel channel) {
@@ -263,6 +301,35 @@ namespace Adminthulhu {
             req.AllowReadStreamBuffering = true;
             var tr = await DoJSONRequestAsync (req);
             return tr;
+        }
+
+        public static async Task<string> DoJSONRequestAsync(string url, string content, string json) {
+            HttpWebRequest request = WebRequest.Create (url) as HttpWebRequest;
+            request.ContentType = content;
+            request.Method = "POST";
+
+            using (StreamWriter writer = new StreamWriter (await request.GetRequestStreamAsync())) {
+                writer.Write (json);
+
+                await writer.FlushAsync ();
+                writer.Close ();
+            }
+
+            HttpWebResponse response = await request.GetResponseAsync () as HttpWebResponse;
+            string result = "";
+            using (StreamReader reader = new StreamReader (response.GetResponseStream ())) {
+                result = reader.ReadToEnd ();
+            }
+            return result;
+        }
+
+        public static object GetVariable(object input, string variableName) {
+            FieldInfo info = input.GetType ().GetField (variableName);
+            if (info != null) {
+                return info.GetValue (input);
+            } else {
+                throw new Exception ("Field " + variableName + " in type " + input.GetType ().FullName + " not found.");
+            }
         }
     }
 }

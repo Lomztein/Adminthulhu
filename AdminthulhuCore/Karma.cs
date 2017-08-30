@@ -67,33 +67,31 @@ namespace Adminthulhu {
     }
 
     public class CKarma : Command {
-        public CKarma () {
+        public CKarma() {
             command = "karma";
             shortHelp = "Show karma.";
-            longHelp = "Shows karma of <me/user>.";
-            argumentNumber = 1;
-            catagory = Catagory.Fun;
+            catagory = Category.Fun;
+
+            AddOverload (typeof (long), "Shows your own karma.");
+            AddOverload (typeof (long), "Shows karma of user given by name.");
         }
 
-        public override Task ExecuteCommand ( SocketUserMessage e, List<string> arguments ) {
-            base.ExecuteCommand (e, arguments);
-            if (AllowExecution (e, arguments)) {
-                long karmaCount = 0;
+        public Task<Result> Execute(SocketUserMessage e) {
+            return Execute (e, Utility.GetUserName (e.Author as SocketGuildUser));
+        }
 
-                SocketGuildUser user = e.Author as SocketGuildUser;
+        public Task<Result> Execute(SocketUserMessage e, string name) {
+            long karmaCount = 0;
 
-                if (arguments[0] != "me") {
-                    user = Utility.FindUserByName ((e.Channel as SocketGuildChannel).Guild, arguments[0]);
-                    if (user == null) {
-                        Program.messageControl.SendMessage (e.Channel, "User " + arguments[0] + " not found.", false);
-                        return Task.CompletedTask;
-                    }
-                }
+            SocketGuildUser user = e.Author as SocketGuildUser;
 
-                karmaCount = Karma.GetKarma (user.Id);
-                Program.messageControl.SendMessage (e.Channel, "User " + Utility.GetUserName (user) + " currently has " + karmaCount + " karma.", false);
+            user = Utility.FindUserByName ((e.Channel as SocketGuildChannel).Guild, name);
+            if (user == null) {
+                return TaskResult (0, "User " + name + " not found.");
             }
-            return Task.CompletedTask;
+
+            karmaCount = Karma.GetKarma (user.Id);
+            return TaskResult (karmaCount, "User " + Utility.GetUserName (user) + " currently has " + karmaCount + " karma.");
         }
     }
 }

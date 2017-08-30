@@ -11,12 +11,12 @@ namespace Adminthulhu {
         public CReport () {
             command = "report";
             shortHelp = "Report something.";
-            longHelp = "Reports something you don't like to the admins. Your name is recorded.";
-            argumentNumber = 1;
 
             availableInDM = true;
             availableOnServer = false;
-            catagory = Catagory.Utility;
+            catagory = Category.Utility;
+
+            AddOverload (typeof (object), "Reports something you don't like to the admins. Your name is recorded.");
         }
 
         public override void Initialize() {
@@ -25,16 +25,11 @@ namespace Adminthulhu {
             BotConfiguration.AddConfigurable (this);
         }
 
-        public override Task ExecuteCommand (SocketUserMessage e, List<string> arguments) {
-            base.ExecuteCommand (e, arguments);
-            if (AllowExecution (e, arguments)) {
-
-                SocketGuild guild = Utility.GetServer ();
-                ISocketMessageChannel channel = Utility.GetServer ().GetChannel (reportTextChannel) as ISocketMessageChannel;
-                Program.messageControl.SendMessage (channel, "**Report from " + e.Author.Username + "**: " + arguments[0], false);
-                Program.messageControl.SendMessage (e, "Report has been reported.", false);
-            }
-            return Task.CompletedTask;
+        public Task<Result> Execute(SocketUserMessage e, string report) {
+            SocketGuild guild = Utility.GetServer ();
+            ISocketMessageChannel channel = Utility.GetServer ().GetChannel (reportTextChannel) as ISocketMessageChannel;
+            Program.messageControl.SendMessage (channel, "**Report from " + e.Author.Username + "**: " + report, false);
+            return TaskResult ("", "Report has been reported.");
         }
 
         public override void LoadConfiguration() {

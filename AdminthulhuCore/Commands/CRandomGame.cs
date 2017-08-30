@@ -12,22 +12,19 @@ namespace Adminthulhu {
         public CRandomGame () {
             command = "whattoplay";
             shortHelp = "What to play?";
-            longHelp = "Select a random game out from a list, that could be played.";
-            argumentNumber = 0;
-            catagory = Catagory.Utility;
+            catagory = Category.Utility;
+
+            AddOverload (typeof (WeeklyEvents.Game), "Select a random game out from a list, that could be played.");
         }
 
         public override void Initialize() {
             base.Initialize ();
         }
 
-        public override Task ExecuteCommand ( SocketUserMessage e, List<string> arguments ) {
-            base.ExecuteCommand (e, arguments);
-            if (AllowExecution (e, arguments)) {
-                Random random = new Random ();
-                Program.messageControl.SendMessage (e, "I gloriously suggest " + WeeklyEvents.allGames[random.Next (WeeklyEvents.allGames.Count)], false);
-            }
-            return Task.CompletedTask;
+        public Task<Result> Execute(SocketUserMessage e) {
+            Random random = new Random ();
+            string gameName = WeeklyEvents.allGames [ random.Next (WeeklyEvents.allGames.Count) ].name;
+            return TaskResult (gameName, "I gloriously suggest " + gameName);
         }
     }
 }
