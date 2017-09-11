@@ -9,27 +9,31 @@ using Discord;
 namespace Adminthulhu {
     public class Karma : IConfigurable {
 
-        public static Dictionary<ulong, long> karmaCollection;
-        public static string karmaFileName = "karmaCollection";
+        public static string karmaFileName = "karma";
 
         public static string upvote = "upvote";
         public static string downvote = "downvote";
 
+        public static int upvotesToQuote = 5;
+        public static int downvotesToDelete = -5;
+
+        public static Data data;
+
         public Karma() {
             LoadConfiguration ();
             BotConfiguration.AddConfigurable (this);
-            karmaCollection = SerializationIO.LoadObjectFromFile<Dictionary<ulong, long>> (Program.dataPath + karmaFileName + Program.gitHubIgnoreType);
-            if (karmaCollection == null)
-                karmaCollection = new Dictionary<ulong, long> ();
+            data = SerializationIO.LoadObjectFromFile<Data> (Program.dataPath + karmaFileName + Program.gitHubIgnoreType);
+            if (data == null)
+                data = new Data();
 
             Program.discordClient.ReactionAdded += async (message, channel, reaction) => {
 
                 IMessage iMessage = await channel.GetMessageAsync (message.Id);
 
                 if (reaction.Emote.Name == upvote) {
-                    ChangeKarma (iMessage.Author.Id, reaction.UserId, 1);
+                    ChangeKarma (iMessage, reaction.UserId, 1);
                 } else if (reaction.Emote.Name == downvote) {
-                    ChangeKarma (iMessage.Author.Id, reaction.UserId, -1);
+                    ChangeKarma (iMessage, reaction.UserId, -1);
                 }
             };
 
@@ -38,31 +42,68 @@ namespace Adminthulhu {
                 IMessage iMessage = await channel.GetMessageAsync (message.Id);
 
                 if (reaction.Emote.Name == upvote) {
-                    ChangeKarma (iMessage.Author.Id, reaction.UserId, -1);
+                    ChangeKarma (iMessage, reaction.UserId, -1);
                 } else if (reaction.Emote.Name == downvote) {
-                    ChangeKarma (iMessage.Author.Id, reaction.UserId, 1);
+                    ChangeKarma (iMessage, reaction.UserId, 1);
                 }
             };
         }
 
-        public static void ChangeKarma (ulong userID, ulong giver, int change) {
-            if (giver == userID)
+        public static void ChangeKarma(IMessage message, ulong giver, int change) {
+            if (giver == message.Author.Id)
                 return;
 
-            if (!karmaCollection.ContainsKey (userID))
-                karmaCollection.Add (userID, 0);
-            karmaCollection[userID] += change;
+            if (!data.karmaCollection.ContainsKey (message.Author.Id))
+                data.karmaCollection.Add (message.Author.Id, 0);
+            data.karmaCollection [ message.Author.Id ] += change;
 
-            SerializationIO.SaveObjectToFile (Program.dataPath + karmaFileName + Program.gitHubIgnoreType, karmaCollection);
+            if (!data.trackedMessages.ContainsKey (message.Id))
+                data.trackedMessages.Add (message.Id, 0);
+            data.trackedMessages [ message.Id ] += change;
+
+            if (data.trackedMessages [ message.Id ] >= upvotesToQuote && upvotesToQuote > 0) {
+                CQuote.AddQuoteFromMessage (message);
+            }
+            if (data.trackedMessages [ message.Id ] <= downvotesToDelete && downvotesToDelete < 0) { // Could be in an else-if, but it felt wrong for some reason.
+                DeleteMessage (message);
+            }
+
+            SerializationIO.SaveObjectToFile (Program.dataPath + karmaFileName + Program.gitHubIgnoreType, data);
+        }
+
+        public static async void DeleteMessage(IMessage message) {
+            await message.DeleteAsync ();
+            data.trackedMessages.Remove (message.Id);
+            data.quotedMessages.Remove (message.Id);
         }
 
         public static long GetKarma (ulong userID) {
-            return karmaCollection.ContainsKey (userID) ? karmaCollection[userID] : 0;
+            return data.karmaCollection.ContainsKey (userID) ? data.karmaCollection [userID] : 0;
         }
 
         public void LoadConfiguration() {
             upvote = BotConfiguration.GetSetting("Karma.UpvoteEmojiName", "UpvoteEmojiName", "upvote");
             downvote = BotConfiguration.GetSetting("Karma.DownvoteEmojiName", "DownvoteEmojiName", "downvote");
+            upvotesToQuote = BotConfiguration.GetSetting("Karma.UpvotesToQuote", "DownvoteEmojiName", upvotesToQuote);
+            downvotesToDelete = BotConfiguration.GetSetting("Karma.DownvotesToDelete", "DownvoteEmojiName", downvotesToDelete);
+        }
+
+        public class Data {
+            public Dictionary<ulong, long> karmaCollection;
+            public Dictionary<ulong, long> trackedMessages;
+            public List<ulong> quotedMessages;
+
+            public Data() {
+                karmaCollection = new Dictionary<ulong, long> ();
+                trackedMessages = new Dictionary<ulong, long> ();
+                quotedMessages = new List<ulong> ();
+            }
+
+            public Data(Dictionary<ulong, long> _collection, Dictionary<ulong, long> _tracked, List<ulong> _quoted) {
+                karmaCollection = _collection;
+                trackedMessages = _tracked;
+                quotedMessages = _quoted;
+            }
         }
     }
 

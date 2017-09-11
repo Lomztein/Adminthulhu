@@ -10,6 +10,7 @@ namespace Adminthulhu
         public CPrint() {
             command = "print";
             shortHelp = "Prints stuff.";
+            catagory = Category.Utility;
 
             AddOverload (typeof (string), "Prints whatever is put into it, regardless of position in chain.");
         }

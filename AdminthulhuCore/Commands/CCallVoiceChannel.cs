@@ -32,7 +32,7 @@ namespace Adminthulhu {
                 }
             }
 
-            return TaskResult ((IUser[])users.ToArray (), text);
+            return TaskResult (users.ToArray (), text);
         }
     }
 }

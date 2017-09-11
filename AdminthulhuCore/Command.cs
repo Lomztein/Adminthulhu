@@ -39,7 +39,7 @@ namespace Adminthulhu {
         }
 
         // Don't look at this, it became a bit fucky after command chaining was implemented.
-        public async Task<FindMethodResult> FindMethod(SocketUserMessage e, params string [ ] arguments) {
+        public async Task<FindMethodResult> FindMethod(SocketUserMessage e, int depth, params string [ ] arguments) {
             MethodInfo [ ] infos = GetType ().GetMethods ().Where (x => x.Name == "Execute").ToArray ();
             List<object> parameterList = new List<object> ();
 
@@ -50,41 +50,48 @@ namespace Adminthulhu {
                     if (arguments [ 0 ] [ 0 ] == '(')
                         arguments = Utility.SplitArgs (GetParenthesesArgs (arguments [ 0 ])).ToArray ();
 
-                bool isMethod = paramInfo.Length - 1 == arguments.Length; // Have to off-by-one since all commands gets the SocketUserMessage parsed through.
+                bool containsParamArray = paramInfo.Any (x => x.IsDefined (typeof (ParamArrayAttribute), false));
+                bool isMethod = paramInfo.Length - 1 == arguments.Length || (arguments.Length >= paramInfo.Length && containsParamArray); // Have to off-by-one since all commands gets the SocketUserMessage parsed through.
 
                 if (isMethod == true) {
                     for (int i = 1; i < paramInfo.Length; i++) {
                         try {
-                            object arg = arguments [ i - 1 ];
 
-                            if (arg != null) {
-                                while (arg != null && arg.ToString () [ 0 ].IsTrigger ()) {
-                                    string newCmd = "";
-                                    List<string> newArgs = new List<string> ();
+                            object arg = null;
+                            List<object> paramArray = new List<object> ();
 
-                                    newArgs = Utility.ConstructArguments (arg.ToString ().Substring (1), out newCmd);
+                            if (paramInfo[i].IsDefined (typeof (ParamArrayAttribute), false)) {
+                                dynamic dyn = Activator.CreateInstance (Type.GetType ($"System.Collections.Generic.List`1[{paramInfo [ i ].ParameterType.GetElementType ().FullName}]"));
+                                
+                                if (!arguments [ i - 1 ].GetType ().IsArray) {
+                                    for (int j = i - 1; j < arguments.Length; j++) {
+                                        arg = arguments [ j ];
 
-                                    Program.FoundCommandResult fr = await Program.FindAndExecuteCommand (e, newCmd, newArgs, Program.commands);
-                                    Result res = fr.result;
-                                    arg = res.value;
-                                }
-                            }
+                                        try {
+                                            dynamic convert = TryConvert (paramInfo [ i ], arg, true);
+                                            dyn.Add (convert);
+                                        } catch { }
 
-                            try {
-                                if (arg != null) {
-                                    object obj = Convert.ChangeType (arg, paramInfo [ i ].ParameterType);
-                                    parameterList.Add (obj);
+                                        arg = await TryExecuteChainCommand (e, arg, depth);
+                                    }
+                                    List<double> doub = new List<double> ();
+                                    arg = dyn.ToArray ();
                                 } else {
-                                    throw new Exception ();
+                                    arg = arguments[i];
                                 }
-                            } catch {
-                                if (paramInfo [ i ].ParameterType.IsInstanceOfType (arg) || arg == null)
-                                    parameterList.Add (arg);
-                                else
-                                    throw new Exception ();
+
+                            } else {
+                                arg = arguments [ i - 1 ];
                             }
+
+                            arg = await TryExecuteChainCommand (e, arg, depth);
+
+                            if (arg != null)
+                                TryAddToParams (ref parameterList, paramInfo [ i ], arg, false);
+                            else
+                                parameterList.Add (null);
                         } catch (Exception exc) {
-                            Logging.Log (Logging.LogType.EXCEPTION, exc.Message + " - " + exc.StackTrace);
+                            Logging.Log (Logging.LogType.EXCEPTION, exc.Message);
                             isMethod = false;
                             parameterList.Clear ();
                             break;
@@ -100,11 +107,49 @@ namespace Adminthulhu {
             return null;
         }
 
-        public virtual async Task<Result> TryExecute(SocketUserMessage e, params string[] arguments) {
+        private async Task<object> TryExecuteChainCommand(SocketUserMessage e, object arg, int depth) {
+            if (arg != null) {
+                while (arg != null && arg.ToString () [ 0 ].IsTrigger ()) {
+                    string newCmd = "";
+                    List<string> newArgs = new List<string> ();
+
+                    newArgs = Utility.ConstructArguments (arg.ToString ().Substring (1), out newCmd);
+
+                    Program.FoundCommandResult fr = await Program.FindAndExecuteCommand (e, newCmd, newArgs, Program.commands, depth);
+                    Result res = fr.result;
+                    arg = res.value;
+                }
+            }
+            return arg;
+        }
+
+        private void TryAddToParams(ref List<object> paramList, ParameterInfo info, object arg, bool hasParamsAttribute) {
+            Type type = hasParamsAttribute ? info.ParameterType.GetElementType () : info.ParameterType;
+            paramList.Add (TryConvert (info, arg, hasParamsAttribute));
+        }
+
+        private object TryConvert(ParameterInfo info, object toConvet, bool hasParamsAttribute) {
+            Type type = hasParamsAttribute ? info.ParameterType.GetElementType () : info.ParameterType;
+            try {
+                if (toConvet != null) {
+                    object obj = Convert.ChangeType (toConvet, type);
+                    return obj;
+                } else {
+                    throw new Exception ();
+                }
+            } catch {
+                if (type.IsInstanceOfType (toConvet) || toConvet == null)
+                    return toConvet;
+                else
+                    throw new Exception ();
+            }
+        }
+
+        public virtual async Task<Result> TryExecute(SocketUserMessage e, int depth, params string[] arguments) {
             string executionError = AllowExecution (e, arguments.ToList ());
             string executionPrefix = "Failed to execute command " + command;
             if (executionError == "") {
-                FindMethodResult result = await FindMethod (e, arguments);
+                FindMethodResult result = await FindMethod (e, depth, arguments);
                 if (result != null) {
                     try {
                         result.parameters.Insert (0, e);

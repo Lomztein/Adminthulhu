@@ -30,7 +30,7 @@ namespace Adminthulhu {
             }
         }
 
-        public override async Task<Result> TryExecute (SocketUserMessage e, params string[] arguments) {
+        public override async Task<Result> TryExecute (SocketUserMessage e, int depth, params string[] arguments) {
             // Standard command format is !command arg1;arg2;arg3
             // Commandset format is !command secondaryCommand arg1;arg2;arg3
             // Would it be possible to have commandSets within commandSets?
@@ -60,7 +60,7 @@ namespace Adminthulhu {
                 string command = "";
 
                 List<string> newArguments = Utility.ConstructArguments (secondayCommand, out command);
-                return (await Program.FindAndExecuteCommand (e, command, newArguments, commandsInSet)).result;
+                return (await Program.FindAndExecuteCommand (e, command, newArguments, commandsInSet, depth)).result;
             } else {
                 return new Result (this, "");
             }

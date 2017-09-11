@@ -23,7 +23,7 @@ namespace Adminthulhu
             new GameCommands (), new StrikeCommandSet (), new CAddEventGame (), new CRemoveEventGame (), new CHighlightEventGame (),
             new CAcceptYoungling (), new CReloadConfiguration (), new CCreateBook (), new CSetYoungling (), new CCreatePoll (), new CCheckPatch (),
             new CSetSetting (), new CDisplayFile (), new CUrbanDictionary (), new CPrint (),
-            new DiscordCommandSet (), new MiscCommandSet (), new FlowCommandSet (), new MathCommandSet (), new CommandChain.CustomCommandSet (),
+            new DiscordCommandSet (), new MiscCommandSet (), new FlowCommandSet (), new MathCommandSet (), new VariableCommandSet (), new CommandChain.CustomCommandSet (),
         };
 
         public static string dataPath = "";
@@ -140,7 +140,7 @@ namespace Adminthulhu
                         string command = "";
                         List<string> arguments = Utility.ConstructArguments (message, out command);
 
-                        FindAndExecuteCommand (e, command, arguments, commands, true);
+                        FindAndExecuteCommand (e, command, arguments, commands, 0, true);
                     }
                 }
 
@@ -325,17 +325,20 @@ namespace Adminthulhu
             return null;
         }
 
-        public static async Task<FoundCommandResult> FindAndExecuteCommand(SocketMessage e, string commandName, List<string> arguements, Command [ ] commandList, bool printMessage = false) {
+        public static async Task<FoundCommandResult> FindAndExecuteCommand(SocketMessage e, string commandName, List<string> arguements, Command [ ] commandList, int depth, bool printMessage = false) {
             for (int i = 0; i < commandList.Length; i++) {
                 if (commandList [ i ].command == commandName) {
                     if (arguements.Count > 0 && arguements [ 0 ] == "?") {
                         Command command = commandList [ i ];
                         messageControl.SendMessage (e, command.GetHelp (e), false);
                     } else {
-                        FoundCommandResult result = new FoundCommandResult (await commandList [ i ].TryExecute (e as SocketUserMessage, arguements.ToArray ()), commandList [ i ]);
+                        FoundCommandResult result = new FoundCommandResult (await commandList [ i ].TryExecute (e as SocketUserMessage, depth, arguements.ToArray ()), commandList [ i ]);
                         if (printMessage && result != null) {
                             messageControl.SendMessage (e, result.result.message, result.command.allowInMain);
                         }
+
+                        if (depth == 0)
+                            CommandVariables.Clear (e.Id);
 
                         return result;
                     }

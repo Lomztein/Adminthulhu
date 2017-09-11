@@ -1,23 +1,23 @@
-It's a big one, boys!
+﻿I'm gonna have to leave command chaining as it is now, since I've made a bit a mess of it, and based on its usage isn't really a priority. It's a bit broken when it comes to arrays, and I'll rework the chaining functionaliity at some point in the fugure, but for now, I'll focus on other stuff.
 
- - Largely revamped how commands work internally.
-	* Commands now support overloading, as in multiple commands under the same name.
-	* Commands now return values, and can be chained together to long "Pipes".
-	* Custom commands can be created and saved from such chained commands.
-	* Way less tedious to write new commands.
-	* <Command> ? shows return values as well as input types.
+So here are the patchnotes for this one regardless.
+ - Kind of broke some command chaining ¯\_(ツ)_/¯
 
- - New command catagory: Advanced
- - New commands.
-	* A command set revolving Discord data, such as members, channels and roles.
-	* A command set revolving simple Math operations, will be expanded.
-	* A command set revolving flow of commands, such af if, for and delay commands.
-	* A misc command set where uncatagorised advanced commands go.
-	* !define - Which graps the definition of its input from Urban Dictionary.
-	* !print - Prints out whatever is put into it.
+ - Added saveable variables through commands. Don't quote me on this, but I think this makes the commands turing-complete.
+	* Works in three scopes, global, personal and local.
+	* Global is for the entire server, only editable by admins.
+	* Personal is per-user, and is completely private-ish.
+	* Local is per command chain, they are cleared automatically when a command chain ends execution.
 
- - Added WHICKED GREAPHIX MAN to the Hangman game.
- - On user joined messages can now show who's invite was used.
+ - Karma now does something.
+	* An upper bound set in config saves the message as a quote for the !qoute command. Disabled if zero.
+	* A lower bound set in config deletes the message. Disabled if zero.
+	* Quotes are also moved into their own file, and now ignores the quotes set in config. Data should be copy-pasteable.
 
-THIS ENTIRE PATCH IS EXPERIMENTAL.
- - It should be working well-ish, but not everything has been tested throuhoutly. Please report any bugs you find!
+ - Fixed the !wait command, now takes in commands properly.
+ - Added command !split, which half-assedly does nothing except except take in arguments.
+ - Added a litteral shitload of new math commands.
+ - Moved a large part of the !misc set into a new !var array set
+ - Inviter detector thingie now considers a previously unknown invite at one use the used one.
+ - May or may not have fixed questions.
+ - Fixed some commands having the wrong catagory.

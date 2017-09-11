@@ -7,15 +7,14 @@ using Discord.WebSocket;
 
 namespace Adminthulhu
 {
-    public class FlowCommandSet : CommandSet
-    {
+    public class FlowCommandSet : CommandSet {
         public FlowCommandSet() {
             command = "flow";
             shortHelp = "Commands controlling chain flow.";
             catagory = Category.Advanced;
 
             commandsInSet = new Command [ ] {
-                new IsNull (), new If (), new Not (), new And (), new Or (), new For (), new Wait (),
+                new IsNull (), new If (), new Not (), new And (), new Or (), new For (), new Wait (), new Split (),
             };
         }
 
@@ -61,9 +60,9 @@ namespace Adminthulhu
                 return TaskResult (!boolean, $"Not {boolean} = {!boolean}");
             }
 
-            public Task<Result> Execute(SocketUserMessage e, bool[] booleans) {
+            public Task<Result> Execute(SocketUserMessage e, bool [ ] booleans) {
                 for (int i = 0; i < booleans.Length; i++) {
-                    booleans[i] = !booleans[i];
+                    booleans [ i ] = !booleans [ i ];
                 }
                 return TaskResult (booleans, "");
             }
@@ -118,7 +117,8 @@ namespace Adminthulhu
                     string cmd;
                     List<string> args = Utility.ConstructArguments (GetParenthesesArgs (command), out cmd);
                     for (int i = 0; i < amount; i++) {
-                        await Program.FindAndExecuteCommand (e, cmd.Substring (1), args, Program.commands);
+                        CommandVariables.Set (e.Id, "for", i, true);
+                        await Program.FindAndExecuteCommand (e, cmd.Substring (1), args, Program.commands, 1);
                     }
                 }
                 return new Result (null, "");
@@ -130,20 +130,39 @@ namespace Adminthulhu
                 command = "wait";
                 shortHelp = "Halts command for a while.";
 
-                AddOverload(typeof (object), "Wait the given amount of seconds, then return the given command.");
+                AddOverload (typeof (object), "Wait the given amount of seconds, then return the given command.");
                 AddOverload (typeof (object), "Wait the given amount of seconds, then return the given object.");
             }
 
             public async Task<Result> Execute(SocketUserMessage e, double seconds, string command) {
+                await Task.Delay ((int)Math.Round (seconds * 1000));
+
+                string cmd;
                 if (command.Length > 1 && command [ 1 ].IsTrigger ()) {
-                    return new Result (command.Substring (1, command.Length - 2), "");
+                    List<string> args = Utility.ConstructArguments (GetParenthesesArgs (command), out cmd);
+
+                    Program.FoundCommandResult res = await Program.FindAndExecuteCommand (e, cmd.Substring (1), args, Program.commands, 1);
+                    return new Result (res.result, "");
                 }
-                return new Result (null, "");
+                return new Result (command, "");
             }
 
             public async Task<Result> Execute(SocketUserMessage e, double seconds, object obj) {
                 await Task.Delay ((int)Math.Round (seconds * 1000));
                 return new Result (obj, "");
+            }
+        }
+
+        public class Split : Command {
+            public Split() {
+                command = "split";
+                shortHelp = "Split command flow";
+
+                AddOverload (typeof (object), "Splits the command chain into two given branches though commands as arguments.");
+            }
+
+            public Task<Result> Execute(SocketUserMessage e, string path1, string path2) {
+                return TaskResult (null, "");
             }
         }
     }

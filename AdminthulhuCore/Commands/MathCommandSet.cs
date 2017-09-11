@@ -14,7 +14,8 @@ namespace Adminthulhu
             catagory = Category.Advanced;
 
             commandsInSet = new Command [ ] {
-                new Add (), new Subtract (), new Multiply (), new Divide (), new Pow (), new Log (), new Mod (), new Sin (), new Cos (), new Tan (),
+                new Add (), new Subtract (), new Multiply (), new Divide (), new Pow (), new Log (), new Mod (), new Sin (), new Cos (), new Tan (), new ASin (), new ACos (), new ATan (),
+                new Round (), new Ceiling (), new Floor (), new Squareroot (), new Min (), new Max (), new Abs (), new Sign (), new Equal (), new Random (),
             };
         }
 
@@ -31,8 +32,8 @@ namespace Adminthulhu
                 return TaskResult (num1 + num2, $"{num1} + {num2} = {num1 + num2}");
             }
 
-            public Task<Result> Execute(SocketUserMessage e, double[] numbers) {
-                return TaskResult (numbers.Sum (), "");
+            public Task<Result> Execute(SocketUserMessage e, params double[] numbers) {
+                return TaskResult (numbers.Sum (), $"Sum of given numbes: {numbers.Sum ()}");
             }
         }
 
@@ -164,6 +165,191 @@ namespace Adminthulhu
 
             public Task<Result> Execute(SocketUserMessage e, double num) {
                 return TaskResult (Math.Tan (num), $"TAN ({num}) = {Math.Tan (num)}");
+            }
+        }
+
+        public class ASin : Command {
+
+            public ASin() {
+                command = "asin";
+                shortHelp = "Make the gods.. happy?";
+
+                AddOverload (typeof (double), "Get the inverse sin of the given value in radians.");
+            }
+
+            public Task<Result> Execute(SocketUserMessage e, double num) {
+                return TaskResult (Math.Asin (num), $"ASIN ({num}) = {Math.Asin (num)}");
+            }
+        }
+
+        public class ACos : Command {
+
+            public ACos() {
+                command = "acos";
+                shortHelp = "Returns inverse cosine.";
+
+                AddOverload (typeof (double), "Get the inverse cos of the given value in radians.");
+            }
+
+            public Task<Result> Execute(SocketUserMessage e, double num) {
+                return TaskResult (Math.Acos (num), $"ACOS ({num}) = {Math.Acos (num)}");
+            }
+        }
+
+        public class ATan : Command {
+
+            public ATan() {
+                command = "atan";
+                shortHelp = "Get ready for winter.";
+
+                AddOverload (typeof (double), "Get the atan of the given value in radians.");
+            }
+
+            public Task<Result> Execute(SocketUserMessage e, double num) {
+                return TaskResult (Math.Atan (num), $"TAN ({num}) = {Math.Atan (num)}");
+            }
+        }
+
+        public class Round : Command {
+            public Round() {
+                command = "round";
+                shortHelp = "Round to nearest whole number.";
+
+                AddOverload (typeof (double), "Rounds given input to the nearest whole number.");
+            }
+
+            public Task<Result> Execute(SocketUserMessage e, double num) {
+                return TaskResult (Math.Round (num), $"ROUND ({num}) = {Math.Round (num)}");
+            }
+        }
+
+        public class Floor : Command {
+            public Floor() {
+                command = "floor";
+                shortHelp = "SuplexFlexDunk.";
+
+                AddOverload (typeof (double), "Floors given input to the nearest whole number below itself.");
+            }
+
+            public Task<Result> Execute(SocketUserMessage e, double num) {
+                return TaskResult (Math.Floor (num), $"FLOOR ({num}) = {Math.Floor (num)}");
+            }
+        }
+
+        public class Ceiling: Command {
+            public Ceiling() {
+                command = "ceiling";
+                shortHelp = "Shoryuken that sucker.";
+
+                AddOverload (typeof (double), "Ceils given input to the nearest whole number above itself.");
+            }
+
+            public Task<Result> Execute(SocketUserMessage e, double num) {
+                return TaskResult (Math.Ceiling(num), $"ROUND ({num}) = {Math.Ceiling(num)}");
+            }
+        }
+
+        public class Squareroot : Command {
+            public Squareroot() {
+                command = "sqrt";
+                shortHelp = "Get square root.";
+
+                AddOverload (typeof (double), "Returns the square root of the given number.");
+            }
+
+            public Task<Result> Execute(SocketUserMessage e, double num) {
+                return TaskResult (Math.Sqrt (num), $"SQRT ({num}) = {Math.Sqrt(num)}");
+            }
+        }
+
+        public class Min : Command {
+            public Min() {
+                command = "min";
+                shortHelp = "Gets lowest number.";
+
+                AddOverload (typeof (double), "Returns the lowest number of the given array.");
+            }
+
+            public Task<Result> Execute(SocketUserMessage e, params double[] nums) {
+                return TaskResult (nums.Min (), $"Min of given numbers: {nums.Min ()}");
+            }
+        }
+
+        public class Max : Command {
+            public Max() {
+                command = "max";
+                shortHelp = "Gets highest number.";
+
+                AddOverload (typeof (double), "Returns the highest number of the given array.");
+            }
+
+            public Task<Result> Execute(SocketUserMessage e, params double [ ] nums) {
+                return TaskResult (nums.Max (), $"Max of given numbers: {nums.Max ()}");
+            }
+        }
+
+        public class Abs : Command {
+            public Abs() {
+                command = "abs";
+                shortHelp = "Gets absolute number.";
+
+                AddOverload (typeof (double), "Returns the absolute number of the given array.");
+            }
+
+            public Task<Result> Execute(SocketUserMessage e, double num) {
+                return TaskResult (Math.Abs (num), $"ABS ({num}) = {Math.Abs (num)}");
+            }
+        }
+
+        public class Sign : Command {
+            public Sign() {
+                command = "sign";
+                shortHelp = "Gets sign of number.";
+
+                AddOverload (typeof (double), "Returns the sign of the given number.");
+            }
+
+            public Task<Result> Execute(SocketUserMessage e, double num) {
+                return TaskResult (Math.Sign (num), $"SIGN ({num}) = {Math.Sign(num)}");
+            }
+        }
+
+        public class Equal : Command {
+            public Equal() {
+                command = "equals";
+                shortHelp = "Checks equality.";
+
+                AddOverload (typeof (bool), "Returns true if given objects are the same.");
+            }
+
+            public Task<Result> Execute(SocketUserMessage e, object obj1, object obj2) {
+                return TaskResult (obj1 == obj2, $"{obj1} EQUALS {obj2} = {obj1 == obj2}");
+            }
+        }
+
+        public class Random : Command {
+            public Random() {
+                command = "random";
+                shortHelp = "Get random numbers.";
+
+                AddOverload (typeof (double), "Returns random number between 0 and 1.");
+                AddOverload (typeof (bool), "Returns random number between 0 and given number.");
+                AddOverload (typeof (bool), "Returns random number between the given numbers.");
+            }
+
+            public Task<Result> Execute(SocketUserMessage e) {
+                System.Random random = new System.Random ();
+                return TaskResult (random.NextDouble (), "");
+            }
+
+            public Task<Result> Execute(SocketUserMessage e, double max) {
+                System.Random random = new System.Random ();
+                return TaskResult (random.NextDouble () * max, "");
+            }
+
+            public Task<Result> Execute(SocketUserMessage e, double min, double max) {
+                System.Random random = new System.Random ();
+                return TaskResult (random.NextDouble () * (max + min) - min, "");
             }
         }
     }

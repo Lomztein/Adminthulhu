@@ -101,7 +101,7 @@ namespace Adminthulhu {
                 if (reaction.Emote.Name == "👍") {
                     question.ifYes?.Invoke ();
                     doRemove = true;
-                } else if (reaction.Emote.Name == "👍") {
+                } else if (reaction.Emote.Name == "👎") {
                     question.ifNo?.Invoke ();
                     doRemove = true;
                 }

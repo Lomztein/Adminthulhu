@@ -107,6 +107,8 @@ namespace Adminthulhu {
         public UserSettingsCommands() {
             command = "settings";
             shortHelp = "User settings command set.";
+            catagory = Category.Utility;
+
             commandsInSet = new Command [ ] { new CSetBirthday (), new CSetCulture (), new CToggleRole (), new CToggleInternational (), new CAutomaticLooking (),
             new CToggleSnooping (), new CAutoManageGameRoles () };
         }

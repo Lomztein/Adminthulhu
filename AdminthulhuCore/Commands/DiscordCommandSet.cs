@@ -174,8 +174,9 @@ namespace Adminthulhu
                     AddOverload (typeof (SocketChannel), "");
                 }
 
-                public Task<Result> Execute(SocketUserMessage e, string rolename) {
-                    return TaskResult (Utility.GetServer ().Channels.Where (x => x.Name == rolename).FirstOrDefault (), "");
+                public Task<Result> Execute(SocketUserMessage e, string name) {
+                    SoftStringComparer comparer = new SoftStringComparer ();
+                    return TaskResult (Utility.GetServer ().Channels.Where (x => comparer.Equals (x.Name, name)).FirstOrDefault (), "");
                 }
 
                 public Task<Result> Execute(SocketUserMessage e, ulong id) {
@@ -268,11 +269,7 @@ namespace Adminthulhu
                 AddOverload (typeof (string), "Mention all given objects.");
             }
 
-            public Task<Result> Execute(SocketUserMessage e, IMentionable mentionable) {
-                return TaskResult (mentionable.Mention, mentionable.Mention);
-            }
-
-            public Task<Result> Execute(SocketUserMessage e, IMentionable[] mentionables) {
+            public Task<Result> Execute(SocketUserMessage e, params IMentionable[] mentionables) {
                 string total = "";
                 foreach (IMentionable mention in mentionables) {
                     total += mention.Mention;

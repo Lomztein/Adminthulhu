@@ -34,6 +34,9 @@ namespace Adminthulhu
                     if (savedInvites [ key.Key ].Uses + 1 == key.Value.Uses) {
                         result = key.Value;
                     }
+                } else {
+                    if (key.Value.Uses == 1)
+                        result = key.Value;
                 }
             }
 

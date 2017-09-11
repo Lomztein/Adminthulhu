@@ -7,9 +7,9 @@ using Discord;
 using Discord.WebSocket;
 
 namespace Adminthulhu {
-    public class CQuote : Command, IConfigurable {
+    public class CQuote : Command {
 
-        string [ ] quotes;
+        public static List<string> quotes;
 
         public CQuote () {
             command = "quote";
@@ -21,19 +21,28 @@ namespace Adminthulhu {
 
         public override void Initialize() {
             base.Initialize ();
-            LoadConfiguration ();
-            BotConfiguration.AddConfigurable (this);
+            quotes = SerializationIO.LoadObjectFromFile<List<string>> (Program.dataPath + "quotes" + Program.gitHubIgnoreType);
+            if (quotes == null)
+                quotes = new List<string> ();
+        }
+
+        public static void SaveData() {
+            SerializationIO.SaveObjectToFile (Program.dataPath + "quotes" + Program.gitHubIgnoreType, quotes, true, false);
         }
 
         public Task<Result> Execute(SocketUserMessage e) {
             Random random = new Random ();
-            string quote = quotes [ random.Next (quotes.Length) ];
-            return TaskResult (quote, quote);
+            if (quotes.Count > 0) {
+               string quote = quotes [ random.Next (quotes.Count) ];
+               return TaskResult (quote, quote);
+            }
+            return TaskResult ("", "No quotes available.");
         }
 
-        public override void LoadConfiguration() {
-            base.LoadConfiguration ();
-            quotes = BotConfiguration.GetSetting ("Misc.QuoteableQuotes", "QuoteableQuotes", new string [ ] { "Quote #1", "Quote #2" });
+        public static void AddQuoteFromMessage(IMessage message) {
+            string newQuote = $"\"{message.Content}\" - {Utility.GetUserName (message.Author as SocketGuildUser)} {message.Timestamp.Year}";
+            quotes.Add (newQuote);
+            SaveData ();
         }
     }
 }
