@@ -12,23 +12,14 @@ namespace Adminthulhu {
         public CRollTheDice () {
             command = "rtd";
             shortHelp = "Roll the dice.";
-            argHelp = "<maxnumber>";
-            longHelp = "Rolls a dice that returns a number between one and " + argHelp + ".";
-            argumentNumber = 1;
-            catagory = Catagory.Utility;
+            catagory = Category.Utility;
+            AddOverload (typeof (int), "Rolls a dice that returns a number between one and the given max number.");
         }
 
-        public override Task ExecuteCommand ( SocketUserMessage e, List<string> arguments ) {
-            base.ExecuteCommand (e, arguments);
-            if (AllowExecution (e, arguments)) {
-                Random random = new Random ();
-                int number;
-
-                if (int.TryParse (arguments[0], out number)) {
-                    Program.messageControl.SendMessage(e, "You rolled " + (random.Next(number) + 1).ToString(), false);
-                }
-            }
-            return Task.CompletedTask;
+        public Task<Result> Execute (SocketUserMessage e, int maxnumber) {
+            Random random = new Random ();
+            int number = (random.Next (maxnumber) + 1);
+            return TaskResult (number, "You've rolled " + number + "!");
         }
     }
 }

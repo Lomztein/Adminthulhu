@@ -12,20 +12,16 @@ namespace Adminthulhu {
         public CShowCredits () {
             command = "credits";
             shortHelp = "Show butt credits.";
-            longHelp = "Shows the people behind the bot.";
-            argumentNumber = 0;
-            catagory = Catagory.Utility;
+            catagory = Category.Utility;
+
+            AddOverload (typeof (object), "Shows the people behind the bot.");
         }
 
-        public override Task ExecuteCommand ( SocketUserMessage e, List<string> arguments ) {
-            base.ExecuteCommand (e, arguments);
-            if (AllowExecution (e, arguments)) {
+        public Task<Result> Execute ( SocketUserMessage e) {
 
-                Program.messageControl.SendMessage (e, string.Join ("Main Programmer: Marcus \"Lomztein\" Jensen\n",
+                return TaskResult ("", string.Join ("Main Programmer: Marcus \"Lomztein\" Jensen\n",
                                                     "Additional Programming: Frederik \"Fred\" Rosenberg and Victor \"Nyx\" Koch\n",
-                                                    "This bot is created using the Discord.NET Discord Bot API for C#"), false);
-            }
-            return Task.CompletedTask;
+                                                    "This bot is created using the Discord.NET Discord Bot API for C#, and uses the Newtonsoft.JSON library for IO."));
         }
     }
 }

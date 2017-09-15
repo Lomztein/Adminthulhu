@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
 using System.Net.Http;
+using Discord.Rest;
 
 namespace Adminthulhu
 {
@@ -18,10 +19,11 @@ namespace Adminthulhu
             new CCommandList (), new CSetColor (), new CRollTheDice (),
             new CFlipCoin (), new CRandomGame (), new CQuote (), new CEmbolden (),
             new CAddHeader (), new CShowHeaders (), new CKarma (), new CReport (),
-            new VoiceCommands (), new EventCommands (), new UserSettingsCommands (), new DebugCommands (), new HangmanCommands (),
+            new VoiceCommands (), new EventCommands (), new UserSettingsCommands (), new HangmanCommands (),
             new GameCommands (), new StrikeCommandSet (), new CAddEventGame (), new CRemoveEventGame (), new CHighlightEventGame (),
             new CAcceptYoungling (), new CReloadConfiguration (), new CCreateBook (), new CSetYoungling (), new CCreatePoll (), new CCheckPatch (),
-            new CSetSetting (), new CDisplayFile (),
+            new CSetSetting (), new CDisplayFile (), new CUrbanDictionary (), new CPrint (),
+            new DiscordCommandSet (), new MiscCommandSet (), new FlowCommandSet (), new MathCommandSet (), new VariableCommandSet (), new CommandChain.CustomCommandSet (),
         };
 
         public static string dataPath = "";
@@ -52,6 +54,7 @@ namespace Adminthulhu
         public static ulong serverID = 0;
 
         public static string onUserJoinMessage;
+        public static string onUserJoinFromInviteMessage;
         public static string onUserLeaveMessage;
         public static string onUserBannedMessage;
         public static string onUserUnbannedMessage;
@@ -79,6 +82,7 @@ namespace Adminthulhu
             serverID = BotConfiguration.GetSetting<ulong> ("Server.ID", "ServerID", 0);
 
             onUserJoinMessage = BotConfiguration.GetSetting ("Server.Messages.OnUserJoin", "", "{USERNAME} has joined this server!");
+            onUserJoinFromInviteMessage = BotConfiguration.GetSetting ("Server.Messages.OnUserJoinFromInvite", "", "{USERNAME} has joined this server through {INVITERNAME}'s invite!");
             onUserLeaveMessage = BotConfiguration.GetSetting ("Server.Messages.OnUserLeave", "", "{USERNAME} has left this server.");
             onUserBannedMessage = BotConfiguration.GetSetting ("Server.Messages.OnUserBanned", "", "{USERNAME} has been banned from this server.");
             onUserUnbannedMessage = BotConfiguration.GetSetting ("Server.Messages.OnUserUnbanned", "", "{USERNAME} has been unbanned from this server!");
@@ -112,6 +116,8 @@ namespace Adminthulhu
             Logging.Log (Logging.LogType.BOT, "Loading data..");
             InitializeCommands ();
             UserConfiguration.Initialize ();
+            InviteHandler.Initialize ();
+            CommandChain.Initialize ();
             clock = new Clock ();
 
             InitializeData ();
@@ -120,11 +126,11 @@ namespace Adminthulhu
             bootedTime = DateTime.Now.AddSeconds (BOOT_WAIT_TIME);
 
             Logging.Log (Logging.LogType.BOT, "Setting up events..");
-            discordClient.MessageReceived += (e) => {
+            discordClient.MessageReceived += async (e) => {
 
                 Logging.Log (Logging.LogType.CHAT, Utility.GetChannelName (e) + " says: " + e.Content);
+
                 bool hideTrigger = false;
-                bool foundCommand = false;
                 if (e.Author.Id != discordClient.CurrentUser.Id && e.Content.Length > 0 && ContainsCommandTrigger (e.Content, out hideTrigger)) {
                     string message = e.Content;
 
@@ -134,28 +140,35 @@ namespace Adminthulhu
                         string command = "";
                         List<string> arguments = Utility.ConstructArguments (message, out command);
 
-                        foundCommand = FindAndExecuteCommand (e, command, arguments, commands);
+                        FindAndExecuteCommand (e, command, arguments, commands, 0, true);
                     }
                 }
 
                 FindPhraseAndRespond (e);
 
-                if (e.Content.Length > 0 && hideTrigger && foundCommand) {
+                if (e.Content.Length > 0 && hideTrigger) {
                     e.DeleteAsync ();
                     allowedDeletedMessages.Add (e.Content);
                 }
-
-                return Task.CompletedTask;
             };
 
             discordClient.UserJoined += async (e) => {
                 Younglings.OnUserJoined (e);
-                messageControl.SendMessage (Utility.GetMainChannel () as SocketTextChannel, onUserJoinMessage.Replace ("{USERNAME}", Utility.GetUserName (e)), true);
+                RestInviteMetadata possibleInvite = await InviteHandler.FindInviter ();
+                SocketGuildUser inviter;
 
-                string[] welcomeMessage = SerializationIO.LoadTextFile (dataPath + "welcomemessage" + gitHubIgnoreType);
+                if (possibleInvite != null) {
+                    inviter = Utility.GetServer ().GetUser (possibleInvite.Inviter.Id);
+                    messageControl.SendMessage (Utility.GetMainChannel () as SocketTextChannel, onUserJoinFromInviteMessage.Replace ("{USERNAME}", Utility.GetUserName (e)).Replace ("{INVITERNAME}", Utility.GetUserName (inviter)), true);
+                } else {
+                    messageControl.SendMessage (Utility.GetMainChannel () as SocketTextChannel, onUserJoinMessage.Replace ("{USERNAME}", Utility.GetUserName (e)), true);
+                }
+
+
+                string [ ] welcomeMessage = SerializationIO.LoadTextFile (dataPath + "welcomemessage" + gitHubIgnoreType);
                 string combined = "";
                 for (int i = 0; i < welcomeMessage.Length; i++) {
-                    combined += welcomeMessage[i] + "\n";
+                    combined += welcomeMessage [ i ] + "\n";
                 }
 
                 await messageControl.SendMessage (e, combined);
@@ -312,19 +325,37 @@ namespace Adminthulhu
             return null;
         }
 
-        public static bool FindAndExecuteCommand (SocketMessage e, string commandName, List<string> arguements, Command[] commandList) {
+        public static async Task<FoundCommandResult> FindAndExecuteCommand(SocketMessage e, string commandName, List<string> arguements, Command [ ] commandList, int depth, bool printMessage = false) {
             for (int i = 0; i < commandList.Length; i++) {
-                if (commandList[i].command == commandName) {
+                if (commandList [ i ].command == commandName) {
                     if (arguements.Count > 0 && arguements [ 0 ] == "?") {
                         Command command = commandList [ i ];
-                        messageControl.SendMessage (e as SocketUserMessage, command.GetHelp (e), false);
-                    } else
-                        commandList [ i ].ExecuteCommand (e as SocketUserMessage, arguements);
-                    return true;
+                        messageControl.SendMessage (e, command.GetHelp (e), false);
+                    } else {
+                        FoundCommandResult result = new FoundCommandResult (await commandList [ i ].TryExecute (e as SocketUserMessage, depth, arguements.ToArray ()), commandList [ i ]);
+                        if (printMessage && result != null) {
+                            messageControl.SendMessage (e, result.result.message, result.command.allowInMain);
+                        }
+
+                        if (depth == 0)
+                            CommandVariables.Clear (e.Id);
+
+                        return result;
+                    }
                 }
             }
 
-            return false;
+            return null;
+        }
+
+        public class FoundCommandResult {
+            public Command.Result result;
+            public Command command;
+
+            public FoundCommandResult(Command.Result _result, Command _command) {
+                result = _result;
+                command = _command;
+            }
         }
 
         public void FindPhraseAndRespond (SocketMessage e) {

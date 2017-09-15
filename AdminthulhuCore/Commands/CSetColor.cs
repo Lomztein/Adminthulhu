@@ -10,7 +10,7 @@ namespace Adminthulhu {
 
     public class CSetColor : Command, IConfigurable {
 
-        public static string[] allowed = new string[] {
+        public static string [ ] allowed = new string [ ] {
             "GREEN", "RED", "YELLOW", "BLUE",
             "ORANGE", "PINK", "PURPLE", "WHITE",
             "DARKBLUE", "TURQUOISE", "MAGENTA",
@@ -22,13 +22,12 @@ namespace Adminthulhu {
         public string succesText = "Your color has now been set.";
         public string failText = "Color not found, these are the supported colors:\n";
 
-        public CSetColor () {
+        public CSetColor() {
             command = "setcolor";
             shortHelp = "Set username color.";
-            argHelp = "<colorname>";
-            longHelp = "Sets your color to " + argHelp + ", if available.";
-            argumentNumber = 1;
-            catagory = Catagory.Utility;
+            catagory = Category.Utility;
+
+            AddOverload (typeof (SocketRole), "Sets your color to <color>, if available.");
         }
 
         public override void Initialize() {
@@ -37,30 +36,26 @@ namespace Adminthulhu {
             BotConfiguration.AddConfigurable (this);
         }
 
-        public override async Task ExecuteCommand ( SocketUserMessage e, List<string> arguments ) {
-            base.ExecuteCommand (e, arguments);
-            if (AllowExecution (e, arguments)) {
+        public async Task<Result> Execute(SocketUserMessage e, string color) {
+            if (allowed.Contains (color.ToUpper ())) {
+                SocketRole [ ] roles = (e.Channel as SocketGuildChannel).Guild.Roles.Where (x => allowed.Contains (x.Name)).ToArray ();
+                SocketRole toAdd = roles.Where (x => x.Name == color.ToUpper ()).ElementAt (0);
 
-                if (allowed.Contains (arguments[0].ToUpper ())) {
-                    SocketRole[] roles = (e.Channel as SocketGuildChannel).Guild.Roles.Where (x => allowed.Contains(x.Name)).ToArray ();
-                    SocketRole toAdd = roles.Where (x => x.Name == arguments[0].ToUpper ()).ElementAt(0);
-
-                    SocketGuildUser user = e.Author as SocketGuildUser;
-                    foreach (SocketRole role in roles) {
-                        if (user.Roles.Contains (role)) {
-                            await Utility.SecureRemoveRole (user, role);
-                        }
+                SocketGuildUser user = e.Author as SocketGuildUser;
+                foreach (SocketRole role in roles) {
+                    if (user.Roles.Contains (role)) {
+                        await Utility.SecureRemoveRole (user, role);
                     }
-
-                    await Utility.SecureAddRole (user, toAdd);
-                    
-                } else {
-                    string colors = "";
-                    for (int i = 0; i < allowed.Length; i++) {
-                        colors += allowed[i] + ", ";
-                    }
-                    Program.messageControl.SendMessage(e, failText + colors, false);
                 }
+
+                await Utility.SecureAddRole (user, toAdd);
+                return new Result (toAdd, $"Your color has been set to {toAdd.Name}.");
+            } else {
+                string colors = "";
+                for (int i = 0; i < allowed.Length; i++) {
+                    colors += allowed [ i ] + ", ";
+                }
+                return new Result (null, failText + colors);
             }
         }
 

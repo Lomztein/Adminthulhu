@@ -10,350 +10,281 @@ using Discord.WebSocket;
 namespace Adminthulhu {
 
     public class VoiceCommands : CommandSet {
-        public VoiceCommands () {
+        public VoiceCommands() {
             command = "voice";
             shortHelp = "Voice command set.";
-            longHelp = "A set of commands specifically for voice channels.";
-            commandsInSet = new Command[] { new CLock (), new CUnlock (), new CInvite (), new CMembers (), new CKick (), new CCallVoiceChannel (), new CLooking (), new CFull (), new CSetDesired (), new CCustomName (), new CCreate () };
-            catagory = Catagory.Utility;
-        }
-    }
-    class CLock : Command {
-
-        public CLock () {
-            command = "lock";
-            shortHelp = "Lock voice channel.";
-            longHelp = "locks your current voice channel.";
-            argumentNumber = 0;
+            commandsInSet = new Command [ ] { new Lock (), new Unlock (), new Invite (), new Members (), new Kick (), new CCallVoiceChannel (), new Looking (), new Full (), new SetDesired (), new CustomName (), new Create () };
+            catagory = Category.Utility;
         }
 
-        public override Task ExecuteCommand ( SocketUserMessage e, List<string> arguments ) {
-            base.ExecuteCommand (e, arguments);
-            if (AllowExecution (e, arguments)) {
+        class Lock : Command {
 
+            public Lock() {
+                command = "lock";
+                shortHelp = "Lock voice channel.";
+                overloads.Add (new Overload (typeof (Voice.VoiceChannel), "Locks your current voice channel."));
+            }
+
+            public Task<Result> Execute(SocketUserMessage e) {
                 SocketGuildChannel channel = (e.Author as SocketGuildUser).VoiceChannel;
                 if (channel != null) {
-                    Voice.VoiceChannel vc = Voice.allVoiceChannels[channel.Id];
+                    Voice.VoiceChannel vc = Voice.allVoiceChannels [ channel.Id ];
                     if (!vc.IsLocked ()) {
 
                         if (!vc.lockable) {
-                            Program.messageControl.SendMessage (e.Channel, "Error - cannot lock this channel due to *reasons*.", false);
-                            return Task.CompletedTask;
+                            return TaskResult (vc, "Error - cannot lock this channel due to *reasons*.");
                         }
 
                         vc.Lock (e.Author.Id, true);
 
-                        Program.messageControl.SendMessage (e.Channel, "Succesfully locked voice channel **" + vc.GetName () + "**.", false);
-                        return Task.CompletedTask;
+                        return TaskResult (vc, "Succesfully locked voice channel **" + vc.GetName () + "**.");
                     }
 
-                    Program.messageControl.SendMessage (e.Channel, "Error - voice channel **" + vc.GetName () + "** already locked.", false);
-                    return Task.CompletedTask;
+                    return TaskResult (vc, "Error - voice channel **" + vc.GetName () + "** already locked.");
                 }
 
-                Program.messageControl.SendMessage (e.Channel, "Failed to lock channel, are you even in one?", false);
+                return TaskResult (null, "Failed to lock channel, are you even in one?");
             }
-            return Task.CompletedTask;
-        }
-    }
-
-    class CUnlock : Command {
-
-        public CUnlock () {
-            command = "unlock";
-            shortHelp = "Unlock voice channel.";
-            longHelp = "unlocks your current voice channel if locked.";
-            argumentNumber = 0;
         }
 
-        public override Task ExecuteCommand ( SocketUserMessage e, List<string> arguments ) {
-            base.ExecuteCommand (e, arguments);
-            if (AllowExecution (e, arguments)) {
+        class Unlock : Command {
+
+            public Unlock() {
+                command = "unlock";
+                shortHelp = "Unlock voice channel.";
+                overloads.Add (new Overload (typeof (Voice.VoiceChannel), "Unlocks your current voice channel, if locked."));
+            }
+
+            public Task<Result> Execute(SocketUserMessage e) {
 
                 SocketGuildChannel channel = (e.Author as SocketGuildUser).VoiceChannel;
                 if (channel != null) {
-                    Voice.VoiceChannel vc = Voice.allVoiceChannels[channel.Id];
+                    Voice.VoiceChannel vc = Voice.allVoiceChannels [ channel.Id ];
                     if (vc.IsLocked ()) {
 
                         if (vc.lockerID == e.Author.Id) {
                             vc.Unlock (true);
-                            Program.messageControl.SendMessage (e.Channel, "Succesfully unlocked voice channel **" + vc.GetName () + "**.", false);
-                            return Task.CompletedTask;
+                            return TaskResult (vc, "Succesfully unlocked voice channel **" + vc.GetName () + "**.");
 
                         }
 
-                        Program.messageControl.SendMessage (e.Channel, "Only the person who locked this channel can do that, which is " + vc.GetLocker ().Mention, false);
-                        return Task.CompletedTask;
+                        return TaskResult (vc, "Only the person who locked this channel can do that, which is " + vc.GetLocker ().Mention);
 
                     }
 
-                    Program.messageControl.SendMessage (e.Channel, "Failed to unlock voice channel **" + vc.GetName () + "** - It is not unlocked.", false);
-                    return Task.CompletedTask;
-
+                    return TaskResult (vc, "Failed to unlock voice channel **" + vc.GetName () + "** - It is not unlocked.");
                 }
 
-                Program.messageControl.SendMessage (e.Channel, "Failed to unlock channel, are you even in one?", false);
+                return TaskResult (null, "Failed to unlock channel, are you even in one?");
             }
-            return Task.CompletedTask;
-        }
-    }
-
-    class CCreate : Command {
-
-        public CCreate() {
-            command = "create";
-            shortHelp = "Create temporary voice channel.";
-            longHelp = "Creates a temporary voice channel for whatever you need.";
-            argumentNumber = 2;
         }
 
-        public override Task ExecuteCommand(SocketUserMessage e, List<string> arguments) {
-            base.ExecuteCommand (e, arguments);
-            if (AllowExecution (e, arguments)) {
+        class Create : Command {
+
+            public Create() {
+                command = "create";
+                shortHelp = "Create temporary voice channel.";
+                overloads.Add (new Overload (typeof (Voice.VoiceChannel), "Creates a temporary channel by name for whatever you need."));
+            }
+
+            public async Task<Result> Execute(SocketUserMessage e, string name, string timespan) {
                 TimeSpan timeSpan;
-                if (Utility.TryParseSimpleTimespan (arguments [ 1 ], out timeSpan)) {
-                    Voice.CreateTemporaryChannel (arguments [ 0 ], timeSpan);
-                    Program.messageControl.SendMessage (e, "Succesfully created voice channel by name **" + arguments[0] + "**!", false);
+                if (Utility.TryParseSimpleTimespan (timespan, out timeSpan)) {
+                    Voice.VoiceChannel channel = await Voice.CreateTemporaryChannel (name, timeSpan);
+                    return new Result (channel, "Succesfully created voice channel by name **" + name + "**!");
                 } else {
-                    Program.messageControl.SendMessage (e, "Failed to create voice channel - TimeSpan could not be parsed.", false);
+                    return new Result (null, "Failed to create voice channel - TimeSpan could not be parsed.");
                 }
             }
-            return Task.CompletedTask;
-        }
-    }
-
-    class CInvite : Command {
-
-        public CInvite () {
-            command = "invite";
-            shortHelp = "Invite user.";
-            argHelp = "<username>";
-            longHelp = "Invites " + argHelp + " your current locked voice channel.";
-            argumentNumber = 1;
         }
 
-        public override Task ExecuteCommand ( SocketUserMessage e, List<string> arguments ) {
-            base.ExecuteCommand (e, arguments);
-            if (AllowExecution (e, arguments)) {
+        class Invite : Command {
 
-                SocketGuildChannel channel = (e.Author as SocketGuildUser).VoiceChannel;
-                SocketGuildUser user = Utility.FindUserByName ((e.Channel as SocketGuildChannel).Guild, arguments[0]);
-                if (user == null) {
-                    Program.messageControl.SendMessage (e.Channel, "Failed to invite - User **" + arguments[0] + "** couldn't be found on this server.", false);
-                    return Task.CompletedTask;
+            public Invite() {
+                command = "invite";
+                shortHelp = "Invite user.";
+                overloads.Add (new Overload (typeof (SocketGuildUser), "Invites a user by name into your current locked channel."));
+                overloads.Add (new Overload (typeof (SocketGuildUser), "Invites a user into your current locked channel."));
+                overloads.Add (new Overload (typeof (object), "Invites an array of users into your current locked channel."));
+            }
 
+            public Task<Result> Execute(SocketUserMessage e, string name) {
+                SocketGuildUser user = Utility.FindUserByName (Utility.GetServer (), name);
+                if (user != null) {
+                    return Execute (e, user);
+                } else {
+                    return TaskResult (null, $"Error - User **{name}** not found.");
                 }
+            }
+
+            public Task<Result> Execute(SocketUserMessage e, SocketGuildUser user) {
+                SocketGuildChannel channel = user.VoiceChannel;
 
                 if (channel != null) {
-                    Voice.VoiceChannel vc = Voice.allVoiceChannels[channel.Id];
+                    Voice.VoiceChannel vc = Voice.allVoiceChannels [ channel.Id ];
                     if (vc.IsLocked ()) {
                         vc.InviteUser (e.Author as SocketGuildUser, user);
-                        Program.messageControl.SendMessage (e.Channel, "User **" + Utility.GetUserName (user) + "** succesfully invited.", false);
-                        return Task.CompletedTask;
+                        return TaskResult (user, "User **" + Utility.GetUserName (user) + "** succesfully invited.");
 
                     }
 
-                    Program.messageControl.SendMessage (e.Channel, "The channel isn't locked, but I'm sure " + Utility.GetUserName (user) + " would love to join anyways.", false);
-                    return Task.CompletedTask;
-
+                    return TaskResult (user, "The channel isn't locked, but I'm sure " + Utility.GetUserName (user) + " would love to join anyways.");
                 }
 
-                Program.messageControl.SendMessage (e.Channel, "Failed to invite, are you even in a channel?", false);
+                return TaskResult (null, "Failed to invite, are you even in a channel?");
             }
-            return Task.CompletedTask;
-        }
-    }
 
-    class CMembers : Command {
-
-        public CMembers () {
-            command = "members";
-            shortHelp = "Member list.";
-            longHelp = "Display list of allowed members of your locked voice channel.";
-            argumentNumber = 0;
+            public Task<Result> Execute(SocketUserMessage e, SocketGuildUser [ ] users) {
+                foreach (SocketGuildUser user in users) {
+                    Execute (e, user);
+                }
+                return TaskResult (null, "");
+            }
         }
 
-        public override Task ExecuteCommand ( SocketUserMessage e, List<string> arguments ) {
-            base.ExecuteCommand (e, arguments);
-            if (AllowExecution (e, arguments)) {
+        class Members : Command {
 
+            public Members() {
+                command = "members";
+                shortHelp = "Member list.";
+                overloads.Add (new Overload (typeof (SocketGuildUser [ ]), "Display list of allowed members in your current locked voice channel."));
+            }
+
+            public Task Execute(SocketUserMessage e) {
                 SocketGuildChannel channel = (e.Author as SocketGuildUser).VoiceChannel;
 
                 if (channel != null) {
-                    Voice.VoiceChannel vc = Voice.allVoiceChannels[channel.Id];
+                    Voice.VoiceChannel vc = Voice.allVoiceChannels [ channel.Id ];
                     if (vc.IsLocked ()) {
+                        List<SocketGuildUser> foundUsers = new List<SocketGuildUser> ();
                         string reply = "```\n";
                         foreach (ulong user in vc.allowedUsers) {
-                            //reply += Utility.GetUserName (Utility.GetServer ().GetUser (user)) + "\n";
+                            SocketGuildUser u = Utility.GetServer ().GetUser (user);
+                            foundUsers.Add (u);
+                            reply += Utility.GetUserName (u) + "\n";
                         }
                         reply += "```";
-                        Program.messageControl.SendMessage (e.Channel, "Users allowed on your locked channel:\n" + reply, false);
-                        return Task.CompletedTask;
-
+                        return TaskResult (foundUsers.ToArray (), "Users allowed on your locked channel:\n" + reply);
                     }
 
-                    Program.messageControl.SendMessage (e.Channel, "Error - The channel isn't locked.", false);
-                    return Task.CompletedTask;
+                    return TaskResult (null, "Error - The channel isn't locked.");
 
                 }
-
-                Program.messageControl.SendMessage (e.Channel, "Error - Are you even in a channel?", false);
+                return TaskResult (null, "Error - Are you even in a channel?");
             }
-            return Task.CompletedTask;
-        }
-    }
-
-    class CKick : Command {
-
-        public CKick () {
-            command = "kick";
-            shortHelp = "Kick member.";
-            argHelp = "<username>";
-            longHelp = "Kicks member from your locked voice channel. You must be the one who locked.";
-            argumentNumber = 1;
         }
 
-        public override Task ExecuteCommand ( SocketUserMessage e, List<string> arguments ) {
-            base.ExecuteCommand (e, arguments);
-            if (AllowExecution (e, arguments)) {
+        class Kick : Command {
+
+            public Kick() {
+                command = "kick";
+                shortHelp = "Kick member.";
+                overloads.Add (new Overload (typeof (bool), "Kicks member by name, from your currently locked voice channel. You must be locker."));
+            }
+
+            public Task<Result> Execute(SocketUserMessage e, string username) {
 
                 SocketGuildChannel channel = (e.Author as SocketGuildUser).VoiceChannel;
-                SocketGuildUser user = Utility.FindUserByName ((e.Channel as SocketGuildChannel).Guild, arguments[0]);
+                SocketGuildUser user = Utility.FindUserByName ((e.Channel as SocketGuildChannel).Guild, username);
                 if (user == null) {
-                    Program.messageControl.SendMessage (e.Channel, "Error - User not found.", false);
-                    return Task.CompletedTask;
+                    return TaskResult (false, "Error - User not found.");
                 }
 
                 if (channel != null) {
-                    Voice.VoiceChannel vc = Voice.allVoiceChannels[channel.Id];
+                    Voice.VoiceChannel vc = Voice.allVoiceChannels [ channel.Id ];
                     if (vc.IsLocked ()) {
 
                         if (vc.lockerID == e.Author.Id) {
                             if (user.GuildPermissions.ManageChannels) {
-                                Program.messageControl.SendMessage (e.Channel, "Nice try, but you can't kick admins >:D.", false);
-                                return Task.CompletedTask;
+                                return TaskResult (false, "Nice try, but you can't kick admins >:D.");
 
                             }
                             vc.Kick (user);
-                            Program.messageControl.SendMessage (e.Channel, "User **" + Utility.GetUserName (user) + "** succesfully kicked.", false);
                             Program.messageControl.SendMessage (user, "Sorry man, but you have been kicked from voice channel **" + vc.GetName () + "**.");
-                            return Task.CompletedTask;
-
+                            return TaskResult (true, "User **" + Utility.GetUserName (user) + "** succesfully kicked.");
                         }
 
-                        Program.messageControl.SendMessage (e.Channel, "Only the person who locked this channel can do that, which is " + vc.GetLocker ().Mention, false);
-                        return Task.CompletedTask;
-
+                        return TaskResult (false, "Only the person who locked this channel can do that, which is " + vc.GetLocker ().Mention);
                     }
 
-                    Program.messageControl.SendMessage (e.Channel, "Error - The channel isn't locked.", false);
-                    return Task.CompletedTask;
-
+                    return TaskResult (false, "Error - The channel isn't locked.");
                 }
 
-                Program.messageControl.SendMessage (e.Channel, "Error - Are you even in a channel?", false);
+                return TaskResult (false, "Error - Are you even in a channel?");
             }
-            return Task.CompletedTask;
-        }
-    }
-
-    public class CLooking : Command {
-        public CLooking() {
-            command = "looking";
-            shortHelp = "Toogle looking.";
-            longHelp = "Toggles a tag which informs the world you're looking for players.";
-            argumentNumber = 0;
         }
 
-        public override Task ExecuteCommand(SocketUserMessage e, List<string> arguments) {
-            base.ExecuteCommand (e, arguments);
-            if (AllowExecution (e, arguments)) {
+        public class Looking : Command {
+            public Looking() {
+                command = "looking";
+                shortHelp = "Toogle looking.";
+                overloads.Add (new Overload (typeof (bool), "Toggles a tag which informs the world that you're looking for players."));
+            }
+
+            public Task<Result> Execute(SocketUserMessage e) {
                 if ((e.Author as SocketGuildUser).VoiceChannel != null) {
                     Voice.allVoiceChannels [ (e.Author as SocketGuildUser).VoiceChannel.Id ].ToggleStatus (Voice.VoiceChannel.VoiceChannelStatus.Looking);
-                    Program.messageControl.SendMessage (e, "Succesfully toggled \"Looking for players\" tag.", false);
+                    return TaskResult (Voice.allVoiceChannels [ (e.Author as SocketGuildUser).VoiceChannel.Id ].status == Voice.VoiceChannel.VoiceChannelStatus.Looking, "Succesfully toggled \"Looking for players\" tag.");
                 } else {
-                    Program.messageControl.SendMessage (e, "Error - You have to be in a channel.", false);
+                    return TaskResult (false, "Error - You have to be in a channel.");
                 }
             }
-
-            return Task.CompletedTask;
-        }
-    }
-
-    public class CFull : Command {
-        public CFull() {
-            command = "full";
-            shortHelp = "Toogle full.";
-            longHelp = "Toggles a tag which informs the world you're full of players.";
-            argumentNumber = 0;
         }
 
-        public override Task ExecuteCommand(SocketUserMessage e, List<string> arguments) {
-            base.ExecuteCommand (e, arguments);
-            if (AllowExecution (e, arguments)) {
-                if ((e.Author as SocketGuildUser).VoiceChannel != null) {
-                Voice.allVoiceChannels [ (e.Author as SocketGuildUser).VoiceChannel.Id ].ToggleStatus (Voice.VoiceChannel.VoiceChannelStatus.Full);
-                    Program.messageControl.SendMessage (e, "Succesfully toggled \"Full of players\" tag.", false);
-                }
-            } else {
-                Program.messageControl.SendMessage (e, "Error - You have to be in a channel.", false);
+        public class Full : Command {
+            public Full() {
+                command = "full";
+                shortHelp = "Toogle full.";
+                overloads.Add (new Overload (typeof (bool), "Toggles a tag which informs the world that you're full for players."));
             }
-            return Task.CompletedTask;
-        }
-    }
 
-    public class CCustomName : Command {
-        public CCustomName() {
-            command = "name";
-            shortHelp = "Set channel name.";
-            longHelp = "Sets a custom game name to this channel. Input \"reset\" to reset.";
-            argumentNumber = 1;
-        }
-
-        public override Task ExecuteCommand(SocketUserMessage e, List<string> arguments) {
-            base.ExecuteCommand (e, arguments);
-            if (AllowExecution (e, arguments)) {
+            public Task<Result> Execute(SocketUserMessage e) {
                 if ((e.Author as SocketGuildUser).VoiceChannel != null) {
-                    if (arguments [ 0 ].ToLower () == "reset") {
+                    Voice.allVoiceChannels [ (e.Author as SocketGuildUser).VoiceChannel.Id ].ToggleStatus (Voice.VoiceChannel.VoiceChannelStatus.Full);
+                    return TaskResult (Voice.allVoiceChannels [ (e.Author as SocketGuildUser).VoiceChannel.Id ].status == Voice.VoiceChannel.VoiceChannelStatus.Full, "Succesfully toggled \"Full of players\" tag.");
+                }
+                return TaskResult (false, "Error - You have to be in a channel.");
+            }
+        }
+
+        public class CustomName : Command {
+            public CustomName() {
+                command = "name";
+                shortHelp = "Set channel name.";
+                overloads.Add (new Overload (typeof (bool), "Sets a custom suffix name on this channel, input \"reset\" to reset name."));
+            }
+
+            public Task<Result> Execute(SocketUserMessage e, string name) {
+                if ((e.Author as SocketGuildUser).VoiceChannel != null) {
+                    if (name.ToLower () == "reset") {
                         Voice.allVoiceChannels [ (e.Author as SocketGuildUser).VoiceChannel.Id ].SetCustomName ("", true);
-                        Program.messageControl.SendMessage (e, "Succesfully reset channel name.", false);
+                        return TaskResult (true, "Succesfully reset channel name.");
                     } else {
-                        Voice.allVoiceChannels [ (e.Author as SocketGuildUser).VoiceChannel.Id ].SetCustomName (arguments[0], true);
-                        Program.messageControl.SendMessage (e, "Succesfully set custom name to **" + arguments[0] + "**.", false);
+                        Voice.allVoiceChannels [ (e.Author as SocketGuildUser).VoiceChannel.Id ].SetCustomName (name, true);
+                        return TaskResult (true, "Succesfully set custom name to **" + name + "**.");
                     }
+                } else {
+                    return TaskResult (false, "Error - You are not in a voice channel.");
                 }
-            } else {
-                Program.messageControl.SendMessage (e, "Error - You have to be in a channel.", false);
             }
-            return Task.CompletedTask;
-        }
-    }
-
-    public class CSetDesired : Command {
-        public CSetDesired() {
-            command = "desired";
-            shortHelp = "Set desired members.";
-            longHelp = "Sets a desired amount of people in this channel.";
-            argumentNumber = 1;
         }
 
-        public override Task ExecuteCommand(SocketUserMessage e, List<string> arguments) {
-            base.ExecuteCommand (e, arguments);
-            if (AllowExecution (e, arguments)) {
+        public class SetDesired : Command {
+            public SetDesired() {
+                command = "desired";
+                shortHelp = "Set desired members.";
+                overloads.Add (new Overload (typeof (ulong), "Sets a desired amount of people in your current channel."));
+            }
+
+            public Task<Result> Execute(SocketUserMessage e, uint amount) {
                 if ((e.Author as SocketGuildUser).VoiceChannel != null) {
-                    uint parse;
-                    if (uint.TryParse (arguments [ 0 ], out parse)) {
-                        Voice.allVoiceChannels [ (e.Author as SocketGuildUser).VoiceChannel.Id ].SetDesiredMembers (parse);
-                        Program.messageControl.SendMessage (e, "Succesfully set desired amount of players to " + parse + ".", false);
-                    } else {
-                        Program.messageControl.SendMessage (e, "Failed to set desired amount of players to " + arguments [ 0 ] + " - could not parse.", false);
-                    }
+                    Voice.allVoiceChannels [ (e.Author as SocketGuildUser).VoiceChannel.Id ].SetDesiredMembers (amount);
+                    return TaskResult (amount, "Succesfully set desired amount of players to " + amount + ".");
+                } else {
+                    return TaskResult (0, "Error - You have to be in a channel.");
                 }
-            } else {
-                Program.messageControl.SendMessage (e, "Error - You have to be in a channel.", false);
-            }
 
-            return Task.CompletedTask;
+            }
         }
     }
 }

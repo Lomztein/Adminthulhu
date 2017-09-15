@@ -437,7 +437,7 @@ namespace Adminthulhu {
                         Task<RestVoiceChannel> createTask = server.CreateVoiceChannelAsync (channelName.Split(';')[0]);
                         channel = await createTask;
                     } catch (Exception e) {
-                        throw;
+                        throw e;
                     }
 
                     int channelPos = temporaryChannels.Count + addChannelsIndex;
@@ -488,11 +488,12 @@ namespace Adminthulhu {
             }
         }
 
-        public static async void CreateTemporaryChannel(string channelName, TimeSpan lifeTime) {
+        public static async Task<VoiceChannel> CreateTemporaryChannel(string channelName, TimeSpan lifeTime) {
             RestVoiceChannel channel = await Utility.GetServer ().CreateVoiceChannelAsync (channelName);
             VoiceChannel newVoice = new VoiceChannel (channel.Id, channelName, allVoiceChannels.Count);
             newVoice.lifeTime = lifeTime;
             AddTemporaryChannel (channel.Id, newVoice);
+            return allVoiceChannels [ channel.Id ];
         }
 
         public static void AddTemporaryChannel(ulong id, VoiceChannel newVoice) {

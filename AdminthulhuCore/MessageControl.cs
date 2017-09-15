@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Discord.WebSocket;
 using Discord.Rest;
+using System.IO;
 
 namespace Adminthulhu {
 
@@ -69,16 +70,22 @@ namespace Adminthulhu {
             return Task.CompletedTask;
         }
 
-        public async void ConstructBookMessage(RestUserMessage message, string [ ] pages) {
-            bookMessages.Add (message.Id, new BookMessage (message.Channel.Id, message.Id, pages));
+        public async void ConstructBookMessage(RestUserMessage message, string header, string [ ] pages) {
+            bookMessages.Add (message.Id, new BookMessage (message.Channel.Id, message.Id, header, pages));
             await message.AddReactionAsync (new Emoji ("⬅"));
             await message.AddReactionAsync (new Emoji ("➡"));
             bookMessages [ message.Id ].TurnPage (0);
         }
 
-        public async void SendBookMessage(ISocketMessageChannel channel, string [ ] contents, bool allowInMain) {
-            RestUserMessage message = await AsyncSend (channel, "Placeholder Text", false);
-            ConstructBookMessage (message, contents);
+        public async Task<RestUserMessage> SendBookMessage(ISocketMessageChannel channel, string header, string content, bool allowInMain, string sorrounder = "```") {
+            return await SendBookMessage (channel, header, SplitMessage (content, sorrounder), allowInMain);
+        }
+
+        public async Task<RestUserMessage> SendBookMessage(ISocketMessageChannel channel, string header, string [ ] contents, bool allowInMain) {
+            RestUserMessage message = await AsyncSend (channel, contents[0], allowInMain);
+            if (message != null)
+                ConstructBookMessage (message, header, contents);
+            return message;
         }
 
         private async Task OnReactionAdded(Cacheable<IUserMessage, ulong> message, ISocketMessageChannel channel, SocketReaction reaction) {
@@ -94,7 +101,7 @@ namespace Adminthulhu {
                 if (reaction.Emote.Name == "👍") {
                     question.ifYes?.Invoke ();
                     doRemove = true;
-                } else if (reaction.Emote.Name == "👍") {
+                } else if (reaction.Emote.Name == "👎") {
                     question.ifNo?.Invoke ();
                     doRemove = true;
                 }
@@ -180,7 +187,7 @@ namespace Adminthulhu {
             await rMessage;
 
             if (messages.Length > 1) // Might just want to put this check into the function istead.
-                ConstructBookMessage (rMessage.Result, messages);
+                ConstructBookMessage (rMessage.Result, "", messages);
         }
 
         public async Task<IUserMessage> SendMessage (SocketGuildUser e, string message, string splitSorrounder = "") {
@@ -194,7 +201,7 @@ namespace Adminthulhu {
 
                 finalMessage = await result.SendMessageAsync (split[0]);
                 if (split.Length > 1)
-                    ConstructBookMessage (finalMessage as RestUserMessage, split);
+                    ConstructBookMessage (finalMessage as RestUserMessage, "", split);
 
             } catch (Exception exception) {
                 Logging.Log (Logging.LogType.EXCEPTION, "Failed to send message: " + exception.Message + " - " + exception.StackTrace);
@@ -223,16 +230,22 @@ namespace Adminthulhu {
             return null;
         }
 
-        public async Task SendImage(SocketTextChannel e, string message, string imagePath, bool allowInMain) {
+        public async Task SendImage(SocketTextChannel e, string message, Stream stream, string filename, bool allowInMain) {
             Logging.Log (Logging.LogType.BOT, "Sending an image!");
             if (!allowInMain && e.Name == Program.mainTextChannelName) {
                 return;
             } else {
                 try {
-                    await e.SendFileAsync (imagePath, message);
-                } catch (Discord.Net.HttpException exception) {
-                    await e.SendMessageAsync ("Access denied! - " + exception.Message);
+                    await e.SendFileAsync (stream, filename, message);
+                } catch (Exception exc) {
+                    await e.SendMessageAsync ("Error - " + exc.Message);
                 }
+            }
+        }
+
+        public async Task SendImage(SocketTextChannel e, string message, string filePath, bool allowInMain) {
+            using (StreamReader stream = new StreamReader (filePath)) {
+                SendImage (e, message, stream.BaseStream, Path.GetFileName (filePath), allowInMain);
             }
         }
 
@@ -562,12 +575,14 @@ namespace Adminthulhu {
             ulong messageID;
 
             int currentPage;
+            string header = "";
             string[] content;
 
-            public BookMessage(ulong _channelID, ulong _messageID, string[] newContent) {
+            public BookMessage(ulong _channelID, ulong _messageID, string _header, string[] _content) {
                 channelID = _channelID;
                 messageID = _messageID;
-                content = newContent;
+                header = _header;
+                content = _content;
             }
 
             public async void TurnPage(int pagesToTurn) {

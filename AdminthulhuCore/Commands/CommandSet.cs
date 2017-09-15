@@ -14,8 +14,7 @@ namespace Adminthulhu {
         public CommandSet() {
             command = "commandset";
             shortHelp = "DEFAULT_COMMAND_SET";
-            longHelp = "A placeholder, shouldn't be accessable in final version.";
-            catagory = Catagory.Set;
+            catagory = Category.Set;
         }
 
         public override void Initialize() {
@@ -31,15 +30,28 @@ namespace Adminthulhu {
             }
         }
 
-        public override Task ExecuteCommand(SocketUserMessage e, List<string> arguments) {
+        public override async Task<Result> TryExecute (SocketUserMessage e, int depth, params string[] arguments) {
             // Standard command format is !command arg1;arg2;arg3
             // Commandset format is !command secondaryCommand arg1;arg2;arg3
             // Would it be possible to have commandSets within commandSets?
-            if (arguments.Count != 0) {
+            if (arguments.Length != 0) {
+
+                if (arguments.Length == 1) {
+                    int spaceIndex = arguments [ 0 ].IndexOf (' ');
+                    if (spaceIndex != -1) {
+                        string beginning = arguments [ 0 ].Substring (0, spaceIndex);
+                        if (arguments [ 0 ] [ spaceIndex + 1 ] == '(') {
+                            arguments = Utility.SplitArgs (GetParenthesesArgs (arguments [ 0 ])).ToArray ();
+                            arguments [ 0 ] = beginning + " " + arguments [ 0 ];
+                        }
+                    }
+                }
+
+
                 string combinedArgs = "";
-                for (int i = 0; i < arguments.Count; i++) {
+                for (int i = 0; i < arguments.Length; i++) {
                     combinedArgs += arguments [ i ];
-                    if (i != arguments.Count - 1)
+                    if (i != arguments.Length - 1)
                         combinedArgs += ";";
                 }
 
@@ -48,9 +60,10 @@ namespace Adminthulhu {
                 string command = "";
 
                 List<string> newArguments = Utility.ConstructArguments (secondayCommand, out command);
-                Program.FindAndExecuteCommand (e, command, newArguments, commandsInSet);
+                return (await Program.FindAndExecuteCommand (e, command, newArguments, commandsInSet, depth)).result;
+            } else {
+                return new Result (this, "");
             }
-            return Task.CompletedTask;
         }
 
         public override string GetCommand() {
@@ -59,14 +72,14 @@ namespace Adminthulhu {
 
         public override string GetHelp(SocketMessage e) {
             // Display all commands within command.
-            string result = "Commands in the **" + command + "** command set:\n```";
+            string help = "";
+            help += ("Commands in the **" + command + "** command set:\n```");
             foreach (Command c in commandsInSet) {
-                if (c.AllowExecution (e, null, false)) {
-                    result += Utility.FormatCommand (c) + "\n";
+                if (c.AllowExecution (e, null) == "") {
+                    help += Utility.FormatCommand (c) + "\n";
                 }
             }
-            result += "```";
-            return result;
+            return help + "```";
         }
 
         // Just don't look it directly in the eye.
@@ -80,6 +93,12 @@ namespace Adminthulhu {
                 c.Initialize ();
                 c.isAdminOnly = isAdminOnly;
             }
+        }
+
+        public void RemoveCommand(Command cmd) {
+            List<Command> curCommands = commandsInSet.ToList ();
+            curCommands.Remove (cmd);
+            commandsInSet = curCommands.ToArray ();
         }
     }
 }

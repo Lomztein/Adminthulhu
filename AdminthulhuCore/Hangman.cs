@@ -10,6 +10,24 @@ using Discord;
 namespace Adminthulhu {
     public class Hangman {
 
+        public string hangmanGraphics =
+            "  |---\\ \n" +
+            "  |   | \n" +
+            "  |   O \n" +
+            "  |  /|\\\n" +
+            "  |   | \n" +
+            "  |  / \\\n" +
+            "/===\\   \n";
+
+        public string hangmanGraphicsIndex =
+            "00233330\n" +
+            "00200030\n" +
+            "00200040\n" +
+            "00200657\n" +
+            "00200050\n" +
+            "00200809\n" +
+            "11111000\n";
+
         public static Hangman currentGame;
 
         public string word;
@@ -18,7 +36,7 @@ namespace Adminthulhu {
         public List<char> guessedLetters;
 
         public int tries = 0;
-        public int maxTries = 9;
+        public int maxTries = 8;
 
         public static char[] letterWhitelist = new char[] { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'æ', 'ø', 'å', };
 
@@ -82,10 +100,10 @@ namespace Adminthulhu {
                     tries++;
 
                     if (tries > maxTries) {
-                        Program.messageControl.SendMessage (channel, "Bad news, you've lost the game. Also this game. Word was **" + word.ToUpper () + "**.", false);
+                        Program.messageControl.SendMessage (channel, "Bad news, you've lost the game. Also this game. Word was **" + word.ToUpper () + "**.\n" + DrawHangman (), false);
                         currentGame = null;
                     } else {
-                        Program.messageControl.SendMessage (channel, "Sorry, but that letter isn't in the word you're trying to guess. You are now one step closer to eternal doom. Try " + tries + " / " + maxTries + ".", false);
+                        Program.messageControl.SendMessage (channel, "Incorrect.\n" + DrawHangman (), false);
                     }
                     return false;
                 }
@@ -93,103 +111,93 @@ namespace Adminthulhu {
             Program.messageControl.SendMessage (channel, "Can't do that, that letter has already been guessed.", false);
             return false;
         }
+
+        public string DrawHangman() {
+            string graphic = "```";
+            for (int i = 0; i < hangmanGraphics.Length; i++) {
+                if (hangmanGraphics [ i ] == '\n') {
+                    graphic += '\n';
+                } else {
+                    graphic += int.Parse (hangmanGraphicsIndex [ i ].ToString ()) <= tries ? hangmanGraphics [ i ].ToString () : " "; // Speedy code? What's that! On the bright side this is one line.
+                }
+            }
+            graphic += "```";
+            return graphic;
+        }
     }
 
     public class HangmanCommands : CommandSet {
         public HangmanCommands () {
             shortHelp = "Hangman command set.";
             command = "hangman";
-            longHelp = "A set of Hangman related commands.";
             commandsInSet = new Command[] { new CStartHangman (), new CGuessHangman (), new CShowUsed (), new CShowProgress () };
-            catagory = Catagory.Fun;
+            catagory = Category.Fun;
         }
 
         public class CStartHangman : Command {
-            public CStartHangman () {
+            public CStartHangman() {
                 command = "start";
                 shortHelp = "Start new hangman.";
-                argHelp = "<word>";
-                longHelp = "Creates a new game of Hangman with the word " + argHelp + ".";
-                argumentNumber = 1;
+                overloads.Add (new Overload (typeof (Hangman), "Creates a new game of Hangman with the given word."));
             }
 
-            public override Task ExecuteCommand ( SocketUserMessage e, List<string> arguments ) {
-                base.ExecuteCommand (e, arguments);
-                if (AllowExecution (e, arguments)) {
-                    if (Hangman.currentGame == null) {
-                        // First of all, check if there are any hidden characters.
-                        bool anyHidden = false;
-                        foreach (char c in arguments[0]) {
-                            if (Hangman.letterWhitelist.Contains (c)) {
-                                anyHidden = true;
-                                break;
-                            }
+            public Task<Result> Execute(SocketUserMessage e, string word) {
+                if (Hangman.currentGame == null) {
+                    // First of all, check if there are any hidden characters.
+                    bool anyHidden = false;
+                    foreach (char c in word) {
+                        if (Hangman.letterWhitelist.Contains (c)) {
+                            anyHidden = true;
+                            break;
                         }
-
-                        if (anyHidden) {
-
-                        Hangman.currentGame = new Hangman (arguments[0]);
-                        Program.messageControl.SendMessage (e, "Succesfully started new game of Hangman! Care to take a guess? `" + Hangman.ToUnderscores (arguments[0]) + "`.", false);
-                        }else {
-                            Program.messageControl.SendMessage (e, "Failed to start a new game of Hangman - word must contain letters of the alfabet.", false);
-                        }
-                    } else {
-                        Program.messageControl.SendMessage (e, "Failed to start new game of Hangman - a game is already in progress!", false);
                     }
+
+                    if (anyHidden) {
+                        Hangman.currentGame = new Hangman (word);
+                        return TaskResult (Hangman.currentGame, "Succesfully started new game of Hangman! Care to take a guess? `" + Hangman.ToUnderscores (word) + "`.\n" + Hangman.currentGame.DrawHangman ());
+                    } else {
+                        return TaskResult (null, "Failed to start a new game of Hangman - word must contain letters of the alfabet.");
+                    }
+                } else {
+                    return TaskResult (Hangman.currentGame,"Failed to start new game of Hangman - a game is already in progress!");
                 }
-            return Task.CompletedTask;
             }
         }
 
         public class CGuessHangman : Command {
-            public CGuessHangman () {
+            public CGuessHangman() {
                 command = "guess";
                 shortHelp = "Start new hangman.";
-                argHelp = "<letter>";
-                longHelp = "Guesses the letter " + argHelp + " to the current game of Hangman.";
-                argumentNumber = 1;
+                overloads.Add (new Overload (typeof (bool), "Attempts to guess the given character in the main game of Hangman."));
             }
 
-            public override Task ExecuteCommand ( SocketUserMessage e, List<string> arguments ) {
-                base.ExecuteCommand (e, arguments);
-                if (AllowExecution (e, arguments)) {
-                    if (Hangman.currentGame == null) {
-                        Program.messageControl.SendMessage (e, "Sorry man, but no game of Hangman is in progress. Why not start one? :D", false);
-                    } else {
-                        if (arguments[0].Length == 1) {
-                            Hangman.currentGame.GuessLetter (e, arguments[0].ToLower ()[0]);
-                        }else {
-                            Program.messageControl.SendMessage (e, "Failed to guess - you can only guess one letter at a time.", false);
-                        }
-                    }
+            public Task<Result> Execute(SocketUserMessage e, char character) {
+                if (Hangman.currentGame == null) {
+                    return TaskResult (false, "Sorry man, but no game of Hangman is in progress. Why not start one? :D");
+                } else {
+                    return TaskResult (Hangman.currentGame.GuessLetter (e, character.ToString ().ToLower () [ 0 ]), "");
                 }
-            return Task.CompletedTask;
             }
         }
 
         public class CShowUsed : Command {
-            public CShowUsed () {
+            public CShowUsed() {
                 command = "used";
                 shortHelp = "Show used letters.";
-                longHelp = "Shows the currently used letters of hangman.";
-                argumentNumber = 0;
+                overloads.Add (new Overload (typeof (string), "Shows the currently used letters in the main game of Hangman."));
             }
 
-            public override Task ExecuteCommand ( SocketUserMessage e, List<string> arguments ) {
-                base.ExecuteCommand (e, arguments);
-                if (AllowExecution (e, arguments)) {
-                    if (Hangman.currentGame == null) {
-                        Program.messageControl.SendMessage (e, "No current Hangman game in progress.", false);
-                    } else {
-                        string combined = "Currently used letters: `";
-                        foreach (char c in Hangman.currentGame.guessedLetters) {
-                            combined += c.ToString ().ToUpper () + " ";
-                        }
-                        combined += "`";
-                        Program.messageControl.SendMessage (e, combined, false);
+            public Task<Result> Execute(SocketUserMessage e) {
+                if (Hangman.currentGame == null) {
+                    return TaskResult ("", "No current Hangman game in progress.");
+                } else {
+                    string combined = "Currently used letters: `";
+                    foreach (char c in Hangman.currentGame.guessedLetters) {
+                        combined += c.ToString ().ToUpper () + " ";
                     }
+                    combined += "`";
+                    return TaskResult (combined, combined);
                 }
-            return Task.CompletedTask;
             }
         }
 
@@ -197,20 +205,15 @@ namespace Adminthulhu {
             public CShowProgress () {
                 command = "progress";
                 shortHelp = "Show current progress.";
-                longHelp = "Shows the currently progress letters of Hangman.";
-                argumentNumber = 0;
+                overloads.Add (new Overload (typeof (string), "Shows the progress of the main game of Hangman."));
             }
 
-            public override Task ExecuteCommand ( SocketUserMessage e, List<string> arguments ) {
-                base.ExecuteCommand (e, arguments);
-                if (AllowExecution (e, arguments)) {
-                    if (Hangman.currentGame == null) {
-                        Program.messageControl.SendMessage (e, "No current Hangman game in progress.", false);
-                    } else {
-                        Program.messageControl.SendMessage (e, "Current progress: `" + Hangman.currentGame.progress + "`", false);
-                    }
+            public Task<Result> Execute (SocketUserMessage e) {
+                if (Hangman.currentGame == null) {
+                    return TaskResult (null, "No current Hangman game in progress.");
+                } else {
+                    return TaskResult (Hangman.currentGame.progress, "Current progress: `" + Hangman.currentGame.progress + "`");
                 }
-                return Task.CompletedTask;
             }
         }
     }

@@ -124,16 +124,20 @@ namespace Adminthulhu.ServerStatusChecking {
             }
 
             public virtual async Task<string> GetResult() {
-                TcpClient client = new TcpClient ();
-                try {
-                    Task task = client.ConnectAsync (ip, port);
-                    if (await Task.WhenAny (task, Task.Delay (1000)) == task) {
-                        return "ONLINE";
-                    } else {
-                        return  "OFFLINE";
+                using (TcpClient client = new TcpClient ()) {
+                    try {
+                        Task task = client.ConnectAsync (ip, port);
+                        if (await Task.WhenAny (task, Task.Delay (1000)) == task) {
+                            client.Close ();
+                            return "ONLINE";
+                        } else {
+                            client.Close ();
+                            return "OFFLINE";
+                        }
+                    } catch (Exception e) {
+                        client.Close ();
+                        return $"ERROR - {e.Message}";
                     }
-                } catch (Exception e) {
-                    return "ERROR";
                 }
             }
 

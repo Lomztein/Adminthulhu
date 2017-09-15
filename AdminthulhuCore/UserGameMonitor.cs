@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
+using Discord.Rest;
 
 namespace Adminthulhu {
     public class UserGameMonitor : IConfigurable {
@@ -148,39 +149,32 @@ namespace Adminthulhu {
         public GameCommands () {
             command = "games";
             shortHelp = "Game command set.";
-            longHelp = "A set of commands specifically for game related shinanegans.";
             commandsInSet = new Command[] { new CGameOwners (), new CAddGame (), new CRemoveGame (), new CAllGames () };
-            catagory = Catagory.Utility;
+            catagory = Category.Utility;
         }
 
         // Move this command to a seperate file later, this is just for ease of writing.
         public class CGameOwners : Command {
-            public CGameOwners () {
+            public CGameOwners() {
                 command = "players";
                 shortHelp = "Show game players.";
-                argHelp = "<gamename>";
-                longHelp = "Shows a list of everyone who've played " + argHelp;
-                argumentNumber = 1;
+                AddOverload (typeof (string), "Shows a list of everyone who've played <gamename>");
             }
 
-            public override Task ExecuteCommand ( SocketUserMessage e, List<string> arguments ) {
-                base.ExecuteCommand (e, arguments);
-                if (AllowExecution (e, arguments)) {
-                    UserGameMonitor.PurgeData ();
-                    string foundGame = arguments [ 0 ];
-                    List<SocketGuildUser> foundUsers = UserGameMonitor.FindUsersWithGame (ref foundGame);
-                    if (foundUsers.Count == 0) {
-                        Program.messageControl.SendMessage (e, "Sorry, no records of **" + foundGame + "** being played were found.", false);
-                    }else {
-                        string total = "Here is the list of everyone who've been seen playing **" + foundGame + "**:```\n";
-                        foreach (SocketGuildUser user in foundUsers) {
-                            total += Utility.GetUserName (user) + "\n";
-                        }
-                        total += "```";
-                        Program.messageControl.SendMessage (e, total, false);
+            public Task<Result> Execute(SocketUserMessage e, string gamename) {
+                UserGameMonitor.PurgeData ();
+                string foundGame = gamename;
+                List<SocketGuildUser> foundUsers = UserGameMonitor.FindUsersWithGame (ref foundGame);
+                if (foundUsers.Count == 0) {
+                    return TaskResult ("", "Sorry, no records of **" + foundGame + "** being played were found.");
+                } else {
+                    string total = "Here is the list of everyone who've been seen playing **" + foundGame + "**:```\n";
+                    foreach (SocketGuildUser user in foundUsers) {
+                        total += Utility.GetUserName (user) + "\n";
                     }
+                    total += "```";
+                    return TaskResult (total, total);
                 }
-            return Task.CompletedTask;
             }
         }
     }
@@ -189,18 +183,13 @@ namespace Adminthulhu {
         public CAddGame () {
             command = "add";
             shortHelp = "Manually add game.";
-            argHelp = "<gamename>";
-            longHelp = "Manually adds " + argHelp + " to your gamelist.";
-            argumentNumber = 1;
+
+            AddOverload (typeof (object), "Manually adds <gameName> to your gamelist.");
         }
 
-        public override Task ExecuteCommand ( SocketUserMessage e, List<string> arguments ) {
-            base.ExecuteCommand (e, arguments);
-            if (AllowExecution (e, arguments)) {
-                string result = UserGameMonitor.AddGame ((e.Author as SocketGuildUser), arguments[0]);
-                Program.messageControl.SendMessage (e, result, false);
-            }            
-            return Task.CompletedTask;
+        public Task<Result> Execute(SocketUserMessage e, string gameName) {
+            string result = UserGameMonitor.AddGame ((e.Author as SocketGuildUser), gameName);
+            return TaskResult(null, result);
         }
     }
 
@@ -208,18 +197,12 @@ namespace Adminthulhu {
         public CRemoveGame () {
             command = "remove";
             shortHelp = "Manually remove game.";
-            argHelp = "<gamename>";
-            longHelp = "Manually removes " + argHelp + " from your gamelist.";
-            argumentNumber = 1;
+            AddOverload (typeof (object), "Manually removes <gameName> from your gamelist.");
         }
 
-        public override Task ExecuteCommand ( SocketUserMessage e, List<string> arguments ) {
-            base.ExecuteCommand (e, arguments);
-            if (AllowExecution (e, arguments)) {
-                string result = UserGameMonitor.RemoveGame ((e.Author as SocketGuildUser), arguments[0]);
-                Program.messageControl.SendMessage (e, result, false);
-            }
-            return Task.CompletedTask;
+        public Task<Result> Execute(SocketUserMessage e, string gameName) {
+            string result = UserGameMonitor.RemoveGame ((e.Author as SocketGuildUser), gameName);
+            return TaskResult (result, result);
         }
     }
 
@@ -227,43 +210,38 @@ namespace Adminthulhu {
         public CAllGames () {
             command = "all";
             shortHelp = "Show all games.";
-            longHelp = "Shows all games ever recorded on this server.";
-            argumentNumber = 0;
+            AddOverload (typeof (RestUserMessage), "Shows all games ever recorded on this server.");
         }
 
-        public override Task ExecuteCommand ( SocketUserMessage e, List<string> arguments ) {
-            base.ExecuteCommand (e, arguments);
-            if (AllowExecution (e, arguments)) {
+        public async Task<Result>Execute(SocketUserMessage message) {
+            UserGameMonitor.PurgeData ();
+            Dictionary<string, int> passedGames = new Dictionary<string, int> ();
+            int count = UserGameMonitor.userGames.Count ();
 
-                UserGameMonitor.PurgeData ();
-                Dictionary<string, int> passedGames = new Dictionary<string, int> ();
-                int count = UserGameMonitor.userGames.Count ();
-
-                string all = "";
-                for (int i = 0; i < count; i++) {
-                    List<string> within = UserGameMonitor.userGames.ElementAt (i).Value;
-                    foreach (string game in within) {
-                        if (!passedGames.ContainsKey (game)) {
-                            passedGames.Add (game, 1);
-                        } else {
-                            passedGames[game]++;
-                        }
+            string all = "";
+            for (int i = 0; i < count; i++) {
+                List<string> within = UserGameMonitor.userGames.ElementAt (i).Value;
+                foreach (string game in within) {
+                    if (!passedGames.ContainsKey (game)) {
+                        passedGames.Add (game, 1);
+                    } else {
+                        passedGames [ game ]++;
                     }
                 }
-
-                // Linq is wierd shit yo. Also use var just because otherwise it's a really long type.
-                var items = from pair in passedGames
-                            orderby pair.Value descending
-                            select pair;
-
-                count = items.Count ();
-                for (int i = 0; i < count; i++) {
-                    all += Utility.UniformStrings (items.ElementAt (i).Key, "Players: " + items.ElementAt (i).Value + "\n", " - ");
-                }
-                Program.messageControl.SendMessage (e, "All games played on this server:", false);
-                Program.messageControl.SendMessage (e.Channel, all, false, "```");
             }
-            return Task.CompletedTask;
+
+            // Linq is wierd shit yo. Also use var just because otherwise it's a really long type.
+            var items = from pair in passedGames
+                        orderby pair.Value descending
+                        select pair;
+
+            count = items.Count ();
+            for (int i = 0; i < count; i++) {
+                all += Utility.UniformStrings (items.ElementAt (i).Key, "Players: " + items.ElementAt (i).Value + "\n", " - ");
+            }
+            RestUserMessage userMessage = await Program.messageControl.SendBookMessage (message.Channel, "All games seen played on this server:", all, allowInMain, "```");
+
+            return new Result (userMessage, "All games played on this server:");
         }
     }
 }

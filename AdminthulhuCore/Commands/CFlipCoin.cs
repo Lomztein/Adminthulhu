@@ -12,22 +12,18 @@ namespace Adminthulhu {
         public CFlipCoin () {
             command = "flipcoin";
             shortHelp = "Flip a coin.";
-            longHelp = "Flip a coin that has an equal chance of heads or tails.";
-            argumentNumber = 0;
-            catagory = Catagory.Utility;
+            catagory = Category.Utility;
+
+            AddOverload (typeof (int), "Flip a coin that has an equal chance of heads or tails.");
         }
 
-        public override Task ExecuteCommand ( SocketUserMessage e, List<string> arguments ) {
-            base.ExecuteCommand (e, arguments);
-            if (AllowExecution (e, arguments)) {
-                Random random = new Random ();
-                if (random.Next (2) == 0) {
-                    Program.messageControl.SendMessage (e, "Your coin flipped to show heads.", false);
-                } else {
-                    Program.messageControl.SendMessage (e, "Your coin flipped to show tails.", false);
-                }
+        public Task<Result> Execute(SocketUserMessage e) {
+            Random random = new Random ();
+            if (random.Next (2) == 0) {
+                return TaskResult (0, "Your coin flipped to show heads.");
+            } else {
+                return TaskResult (1, "Your coin flipped to show tails.");
             }
-            return Task.CompletedTask;
         }
     }
 }

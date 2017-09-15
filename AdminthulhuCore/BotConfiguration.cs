@@ -155,19 +155,15 @@ namespace Adminthulhu {
         public CReloadConfiguration() {
             command = "reloadconfig";
             shortHelp = "Reload bot configuration.";
-            longHelp = "Reloads the configuration file and enables all changed settings.";
-            argumentNumber = 0;
-            catagory = Catagory.Admin;
+            catagory = Category.Admin;
             isAdminOnly = true;
+
+            AddOverload (typeof (object), "Reloads the configuration file and enables all changed settings.");
         }
 
-        public override Task ExecuteCommand(SocketUserMessage e, List<string> arguments) {
-            base.ExecuteCommand (e, arguments);
-            if (AllowExecution (e, arguments)) {
+        public Task<Result> Execute (SocketUserMessage e) {
                 BotConfiguration.ReloadConfiguration ();
-                Program.messageControl.SendMessage (e, "Configuration succesfully reloaded!", false);
-            }
-            return Task.CompletedTask;
+                return TaskResult (null, "Configuration succesfully reloaded!");
         }
     }
 
@@ -175,50 +171,38 @@ namespace Adminthulhu {
         public CSetSetting() {
             command = "setconfig";
             shortHelp = "Set a config value.";
-            longHelp = "Set a simple bot configuration value <key> to <value>. Using !reloadconfig after changes is recommended. More advanced data structures must be set in files.";
-            argumentNumber = 2;
-            catagory = Catagory.Admin;
+            catagory = Category.Admin;
             isAdminOnly = true;
+
+            AddOverload (typeof (object), "Set a simple bot configuration value <key> to <value>. Using !reloadconfig after changes is recommended. More advanced data structures must be set in files.");
         }
 
-        public override Task ExecuteCommand(SocketUserMessage e, List<string> arguments) {
-            base.ExecuteCommand (e, arguments);
-            if (AllowExecution (e, arguments)) {
+        public Task<Result> Execute(SocketUserMessage e, string key, object input) {
+            bool success = BotConfiguration.HasSetting (key);
+            if (success) {
 
-                string key = arguments [ 0 ];
-                string input = arguments [ 1 ];
+                object current = BotConfiguration.GetSetting (key, "", default (object));
+                object possibleJSON = null;
+                try {
+                    possibleJSON = JsonConvert.DeserializeObject (current.ToString ());
+                } catch { }
 
-                bool success = BotConfiguration.HasSetting (key);
-                if (success) {
-
-                    object current = BotConfiguration.GetSetting (key, "", default (object));
-                    object possibleJSON = null;
-                    try {
-                        possibleJSON = JsonConvert.DeserializeObject (current.ToString ());
-                    } catch { }
-
-                    if (possibleJSON != null) {
-                        Program.messageControl.SendMessage (e, $"Failed to set config option **{key}** - data structure of **{possibleJSON.GetType ().FullName}** is too complicated. Edit files directly instead.", false);
-                    } else {
-                        object newObject = null;
-                        try {
-                            newObject = Convert.ChangeType (input, current.GetType ());
-                            BotConfiguration.SetSetting (key, newObject, false);
-                            Program.messageControl.SendMessage (e, $"Succesfully set config option **{key}** to **{newObject}**", false);
-                            BotConfiguration.SaveSettings ();
-                        } catch (Exception exception) {
-                            Program.messageControl.SendMessage (e, $"Failed to set config option **{key}** - " + exception.Message, false);
-                        }
-                    }
+                if (possibleJSON != null) {
+                    return TaskResult (possibleJSON, $"Failed to set config option **{key}** - data structure of **{possibleJSON.GetType ().FullName}** is too complicated. Edit files directly instead.");
                 } else {
-                    Program.messageControl.SendMessage (e, $"Failed to set config option **{key}** - Config key not found.", false);
+                    object newObject = null;
+                    try {
+                        newObject = Convert.ChangeType (input, current.GetType ());
+                        BotConfiguration.SetSetting (key, newObject, false);
+                        BotConfiguration.SaveSettings ();
+                        return TaskResult (newObject, $"Succesfully set config option **{key}** to **{newObject}**");
+                    } catch (Exception exception) {
+                        return TaskResult(null, $"Failed to set config option **{key}** - " + exception.Message);
+                    }
                 }
+            } else {
+                return TaskResult (null, $"Failed to set config option **{key}** - Config key not found.");
             }
-            return Task.CompletedTask;
         }
     }
-
-
-
-    // TODO - Create a setconfig command, which allows you to set a config option from within Discord.
 }

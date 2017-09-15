@@ -128,18 +128,14 @@ namespace Adminthulhu {
         public CCheckPatch() {
             command = "patch";
             shortHelp = "Try to patch bot.";
-            longHelp = "Check for a new patch, and install if available.";
-            argumentNumber = 0;
             isAdminOnly = true;
-            catagory = Catagory.Admin;
+            catagory = Category.Admin;
+            AddOverload (typeof (object), "Check for a new patch, and install if available.");
         }
 
-        public override Task ExecuteCommand(SocketUserMessage e, List<string> arguments) {
-            base.ExecuteCommand (e, arguments);
-            if (AllowExecution (e, arguments)) {
-                AutoPatcher.CheckForPatch (true);
-            }
-            return Task.CompletedTask;
+        public Task<Result> Execute (SocketUserMessage e, List<string> arguments) {
+            AutoPatcher.CheckForPatch (true);
+            return TaskResult (null, "");
         }
     }
 }

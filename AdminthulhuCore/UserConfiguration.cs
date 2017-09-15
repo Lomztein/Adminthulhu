@@ -43,7 +43,7 @@ namespace Adminthulhu {
                 }
             }
 
-          return (T)Convert.ChangeType (defaultValues[key], typeof (T));
+            return (T)Convert.ChangeType (defaultValues [ key ], typeof (T));
         }
 
         public static void SetSetting(ulong userID, string key, object value) {
@@ -107,36 +107,10 @@ namespace Adminthulhu {
         public UserSettingsCommands() {
             command = "settings";
             shortHelp = "User settings command set.";
-            longHelp = "A set of commands about user settings.";
-            commandsInSet = new Command [ ] { new CReminderTime (), new CSetBirthday (), new CSetCulture (), new CToggleRole (), new CToggleInternational (), new CAutomaticLooking (),
+            catagory = Category.Utility;
+
+            commandsInSet = new Command [ ] { new CSetBirthday (), new CSetCulture (), new CToggleRole (), new CToggleInternational (), new CAutomaticLooking (),
             new CToggleSnooping (), new CAutoManageGameRoles () };
-        }
-
-        public class CReminderTime : UserSettingsCommandBase {
-
-            public CReminderTime() {
-                command = "evt";
-                shortHelp = "Event reminder timespan.";
-                argHelp = "<time in hours>";
-                longHelp = "Change time reminds about events to" + argHelp + ". Works in hours.";
-                key = "EventRemindTime";
-                superDefaultValue = 2;
-                argumentNumber = 1;
-            }
-
-            public override Task ExecuteCommand(SocketUserMessage e, List<string> arguments) {
-                base.ExecuteCommand (e, arguments);
-                if (AllowExecution (e, arguments)) {
-                    int number;
-                    if (int.TryParse (arguments [ 0 ], out number)) {
-                        UserConfiguration.SetSetting (e.Author.Id, "EventRemindTime", number);
-                        Program.messageControl.SendMessage (e, "You have succesfully changed remind timespan to **" + number.ToString () + "**.", false);
-                    } else {
-                        Program.messageControl.SendMessage (e, "Failed to change event remind timespan", false);
-                    }
-                }
-                return Task.CompletedTask;
-            }
         }
 
         public class CSetBirthday : UserSettingsCommandBase {
@@ -144,26 +118,16 @@ namespace Adminthulhu {
             public CSetBirthday() {
                 command = "birthday";
                 shortHelp = "Set birthday.";
-                argHelp = "<date (d-m-y h:m:s)>";
-                longHelp = "Set your birthday date to " + argHelp + ", so we know when to congratulate you!";
-                argumentNumber = 1;
                 key = "Birthday";
                 superDefaultValue = null;
+
+                AddOverload (typeof (DateTime), "Set your birthday date to <date>, so we know when to congratulate you!");
             }
 
-            public override Task ExecuteCommand(SocketUserMessage e, List<string> arguments) {
-                base.ExecuteCommand (e, arguments);
-                if (AllowExecution (e, arguments)) {
-                    DateTime parse;
-                    if (Utility.TryParseDatetime (arguments [ 0 ], e.Author.Id, out parse)) {
-                        Birthdays.SetBirthday (e.Author.Id, parse);
-                        CultureInfo info = new CultureInfo (UserConfiguration.GetSetting<string> (e.Author.Id, "Culture"));
-                        Program.messageControl.SendMessage (e, "You have succesfully set your birthday to **" + parse.ToString (info) + "**.", false);
-                    } else {
-                        Program.messageControl.SendMessage (e, "Failed to set birthday - could not parse date.", false);
-                    }
-                }
-                return Task.CompletedTask;
+            public Task<Result> Execute(SocketUserMessage e, DateTime parse) {
+                Birthdays.SetBirthday (e.Author.Id, parse);
+                CultureInfo info = new CultureInfo (UserConfiguration.GetSetting<string> (e.Author.Id, "Culture"));
+                return TaskResult (parse, "You have succesfully set your birthday to **" + parse.ToString (info) + "**.");
             }
         }
 
@@ -171,24 +135,14 @@ namespace Adminthulhu {
             public CSetCulture() {
                 command = "culture";
                 shortHelp = "Set culture.";
-                argHelp = "<culture (language-COUNTRY)>";
-                longHelp = "Sets your preferred culture. Used for proper formatting of stuff such as datetime.";
                 key = "Culture";
                 superDefaultValue = "da-DK";
-                argumentNumber = 1;
+                AddOverload (typeof (CultureInfo), "Sets your preferred culture to <culture [language-COUNTRY]>. Used for proper formatting of stuff such as datetime.");
             }
 
-            public override Task ExecuteCommand(SocketUserMessage e, List<string> arguments) {
-                base.ExecuteCommand (e, arguments);
-                if (AllowExecution (e, arguments)) {
-                    try {
-                        CultureInfo info = new CultureInfo (arguments [ 0 ]);
-                        UserConfiguration.SetSetting (e.Author.Id, "Culture", arguments [ 0 ]);
-                    } catch (CultureNotFoundException) {
-                        Program.messageControl.SendMessage (e, "Failed to set culture - culture **" + arguments [ 0 ] + "** not found.", false);
-                    }
-                }
-                return Task.CompletedTask;
+            public Task<Result> Execute(SocketUserMessage e, CultureInfo info) {
+                UserConfiguration.SetSetting (e.Author.Id, "Culture", info);
+                return TaskResult (info, "Successfully sat culture to " + info.DisplayName);
             }
         }
 
@@ -196,19 +150,14 @@ namespace Adminthulhu {
             public CAutomaticLooking() {
                 command = "autolooking";
                 shortHelp = "Toggle automatic !looking command.";
-                longHelp = "Toggles automatically enabling the !looking command.";
-                argumentNumber = 1;
                 key = "AutoLooking";
                 superDefaultValue = false;
+                AddOverload (typeof (bool), "Toggles automatically enabling the !looking command.");
             }
 
-            public override Task ExecuteCommand(SocketUserMessage e, List<string> arguments) {
-                base.ExecuteCommand (e, arguments);
-                if (AllowExecution (e, arguments)) {
-                    bool result = UserConfiguration.ToggleBoolean (e.Author.Id, "AutoLooking");
-                    Program.messageControl.SendMessage (e, "Autolooking on voice channels enabled: " + result.ToString (), false);
-                }
-                return Task.CompletedTask;
+            public Task<Result> Execute(SocketUserMessage e) {
+                bool result = UserConfiguration.ToggleBoolean (e.Author.Id, "AutoLooking");
+                return TaskResult (result, "Autolooking on voice channels enabled: " + result.ToString ());
             }
         }
 
@@ -216,19 +165,15 @@ namespace Adminthulhu {
             public CToggleSnooping() {
                 command = "snooping";
                 shortHelp = "Toggle Adminthulhu snooping.";
-                longHelp = "Disables non-critical bot snooping on you, if toggled off.";
                 key = "AllowSnooping";
                 superDefaultValue = true;
-                argumentNumber = 0;
+
+                AddOverload (typeof (bool), "Toggles non-critical bot snooping on you.");
             }
 
-            public override Task ExecuteCommand(SocketUserMessage e, List<string> arguments) {
-                base.ExecuteCommand (e, arguments);
-                if (AllowExecution (e, arguments)) {
-                    bool result = UserConfiguration.ToggleBoolean (e.Author.Id, "AllowSnooping");
-                    Program.messageControl.SendMessage (e, "Bot snooping enabled: " + result.ToString (), false);
-                }
-                return Task.CompletedTask;
+            public Task<Result> Execute(SocketUserMessage e) {
+                bool result = UserConfiguration.ToggleBoolean (e.Author.Id, "AllowSnooping");
+                return TaskResult (result, "Bot snooping enabled: " + result.ToString ());
             }
         }
 
@@ -236,56 +181,57 @@ namespace Adminthulhu {
             public CAutoManageGameRoles() {
                 command = "autoroles";
                 shortHelp = "Toggle automanage game roles.";
-                longHelp = "Determines if game roles will be added to you automatically.";
-                argumentNumber = 0;
                 key = "AutoManageGameRoles";
                 superDefaultValue = false;
+                AddOverload (typeof (bool), "Determines of game roles will be added to you automatically.");
             }
 
-            public override Task ExecuteCommand(SocketUserMessage e, List<string> arguments) {
-                base.ExecuteCommand (e, arguments);
-                if (AllowExecution (e, arguments)) {
-                    bool result = UserConfiguration.ToggleBoolean (e.Author.Id, "AutoManageGameRoles");
-                    Program.messageControl.SendMessage (e, "Auto roles enabled: " + result.ToString (), false);
-                }
-                return Task.CompletedTask;
+            public Task<Result> Execute(SocketUserMessage e, List<string> arguments) {
+                bool result = UserConfiguration.ToggleBoolean (e.Author.Id, "AutoManageGameRoles");
+                return TaskResult (result, "Auto roles enabled: " + result.ToString ());
             }
         }
 
         /// <summary>
         /// A generic command, defaults to NSFW.
         /// </summary>
-        public class CToggleRole : Command {
-            public ulong roleID = 266882682930069504;
+        public class CToggleRole : Command, IConfigurable {
+            public ulong roleID = 0;
             public CToggleRole() {
                 command = "nsfw";
                 shortHelp = "Toggle NSFW access.";
-                longHelp = "Toggles access to NSFW channels, by removing or adding the NSFW role to you.";
-                argumentNumber = 0;
+                AddOverload (typeof (bool), "Toggles access to NSFW channels, by toggling the  role on you.");
             }
 
-            public override async Task ExecuteCommand(SocketUserMessage e, List<string> arguments) {
-                await base.ExecuteCommand (e, arguments);
-                if (AllowExecution (e, arguments)) {
-                    SocketRole role = Utility.GetServer ().GetRole (roleID);
-                    if ((e.Author as SocketGuildUser).Roles.Contains (role)) {
-                        await Utility.SecureRemoveRole (e.Author as SocketGuildUser, role);
-                        Program.messageControl.SendMessage (e, "Succesfully removed " + command + " role.", false);
-                    } else {
-                        await Utility.SecureAddRole (e.Author as SocketGuildUser, role);
-                        Program.messageControl.SendMessage (e, "Succesfully added " + command + " role.", false);
-                    }
+            public async Task<Result> Execute(SocketUserMessage e, List<string> arguments) {
+                SocketRole role = Utility.GetServer ().GetRole (roleID);
+                if ((e.Author as SocketGuildUser).Roles.Contains (role)) {
+                    await Utility.SecureRemoveRole (e.Author as SocketGuildUser, role);
+                    return new Result (false, $"Succesfully removed {command} role.");
+                } else {
+                    await Utility.SecureAddRole (e.Author as SocketGuildUser, role);
+                    return new Result(true, $"Succesfully added {command} role.");
                 }
+            }
+
+            public override void LoadConfiguration() {
+                base.LoadConfiguration ();
+                roleID = BotConfiguration.GetSetting ("Roles.NSFWID", "", (ulong)0);
             }
         }
 
-        public class CToggleInternational : CToggleRole {
+        public class CToggleInternational : CToggleRole, IConfigurable {
             public CToggleInternational() {
                 command = "international";
                 shortHelp = "Toggle international marker";
-                longHelp = "Toggles the international marker on you. The international marker lets people know you don't speak danish.";
-                argumentNumber = 0;
-                roleID = 182563086186577920;
+                roleID = 0;
+
+                AddOverload (typeof (bool), "Toggles the international marker on you. The international marker lets people know you don't speak this servers home language.");
+            }
+
+            public override void LoadConfiguration() {
+                base.LoadConfiguration ();
+                roleID = BotConfiguration.GetSetting ("Roles.InternationalID", "", (ulong)0);
             }
         }
     }

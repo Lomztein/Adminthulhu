@@ -19,45 +19,39 @@ namespace Adminthulhu {
         public CEmbolden () {
             command = "embolden";
             shortHelp = "Embolden.";
-            longHelp = "Makes your text much more bold, and kind of spammy.";
-            argumentNumber = 1;
-            catagory = Catagory.Fun;
+            catagory = Category.Fun;
             availableInDM = true;
 
+            AddOverload (typeof (string), "Makes your given text much more bold, and kind of spammy.");
             specifics.Add ('b', "🅱");
         }
 
-        public override Task ExecuteCommand ( SocketUserMessage e, List<string> arguments ) {
-            base.ExecuteCommand (e, arguments);
-            if (AllowExecution (e, arguments)) {
+        public Task<Result> Execute(SocketUserMessage e, List<string> arguments) {
 
-                string inText = arguments[0];
-                string outText = "";
+            string inText = arguments [ 0 ];
+            string outText = "";
 
-                if (inText == "?")
-                    return Task.CompletedTask;
+            if (inText == "?")
+                return TaskResult ("", "");
 
-                for (int i = 0; i < inText.Length; i++) {
-                    if (inText[i] == ' ') {
-                        outText += "  ";
-                    }else {
-                        char letter = inText.ToLower ()[i];
-                        if (available.Contains (letter)) {
-                            outText += ":regional_indicator_" + inText.ToLower () [ i ] + ": ";
-                        } else if (specifics.ContainsKey (letter)) {
-                            outText += specifics [ letter ];
-                        } else if (numbers.Contains (letter)) {
-                            outText += NumberToString (letter) + " ";
-                        } else if (!ignoreUnavailable) {
-                            Program.messageControl.SendMessage (e, "Unavailable character detected: " + letter, true);
-                            return Task.CompletedTask;
-                        }
+            for (int i = 0; i < inText.Length; i++) {
+                if (inText [ i ] == ' ') {
+                    outText += "  ";
+                } else {
+                    char letter = inText.ToLower () [ i ];
+                    if (available.Contains (letter)) {
+                        outText += ":regional_indicator_" + inText.ToLower () [ i ] + ": ";
+                    } else if (specifics.ContainsKey (letter)) {
+                        outText += specifics [ letter ];
+                    } else if (numbers.Contains (letter)) {
+                        outText += NumberToString (letter) + " ";
+                    } else if (!ignoreUnavailable) {
+                        return TaskResult ("", "Unavailable character detected: " + letter);
                     }
                 }
-
-                Program.messageControl.SendMessage (e, outText, true);
             }
-            return Task.CompletedTask;
+
+            return TaskResult (outText, outText);
         }
 
         // Considering this is now used in more than one class, it might be wise to move it to a core class in order to remain structured.

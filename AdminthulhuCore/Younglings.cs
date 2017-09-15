@@ -40,11 +40,8 @@ namespace Adminthulhu
         }
 
         public static void OnUserJoined(SocketGuildUser user) {
-            try {
+            if (joinDate != null)
                 AddYoungling (user);
-            } catch (Exception e) {
-                Logging.DebugLog (Logging.LogType.EXCEPTION, e.Message);
-            }
         }
 
         public static void AddYoungling(SocketGuildUser user) {
@@ -133,34 +130,25 @@ namespace Adminthulhu
         public CAcceptYoungling() {
             command = "acceptyoungling";
             shortHelp = "Instantly accept youngling.";
-            longHelp = "Instantly accepts a youngling, in case it's someone already known for a while.";
-            argHelp = "<younglingID>";
-            argumentNumber = 1;
             isAdminOnly = true;
-            catagory = Catagory.Admin;
+            catagory = Category.Admin;
+
+            AddOverload (typeof (SocketGuildUser), "Instantly accepts a youngling by ID.");
         }
 
-        public override Task ExecuteCommand(SocketUserMessage e, List<string> arguments) {
-            base.ExecuteCommand (e, arguments);
-            if (AllowExecution (e, arguments)) {
-                ulong id;
-                if (ulong.TryParse (arguments [ 0 ], out id)) {
-                    SocketGuildUser user = Utility.GetServer ().GetUser (id);
-                    if (user != null) {
-                        SocketRole younglingRole = Utility.GetServer ().GetRole (Younglings.younglingRoleID);
-                        if (user.Roles.Contains (younglingRole)) {
-                            Younglings.ForceAcceptYoungling (user);
-                        } else {
-                            Program.messageControl.SendMessage (e, "Failed to accept youngling - user not a youngling.", false);
-                        }
-                    } else {
-                        Program.messageControl.SendMessage (e, "Failed to accept youngling - user not found.", false);
-                    }
+        public Task<Result> Execute(SocketUserMessage e, ulong userID) {
+            SocketGuildUser user = Utility.GetServer ().GetUser (userID);
+            if (user != null) {
+                SocketRole younglingRole = Utility.GetServer ().GetRole (Younglings.younglingRoleID);
+                if (user.Roles.Contains (younglingRole)) {
+                    Younglings.ForceAcceptYoungling (user);
+                    return TaskResult (user, $"Succesfully accepted {Utility.GetUserName (user)} into full membership!");
                 } else {
-                    Program.messageControl.SendMessage (e, "Failed to accept youngling - user failed to parse ID.", false);
+                    return TaskResult (null, "Failed to accept youngling - user not a youngling.");
                 }
+            } else {
+                return TaskResult (null, "Failed to accept youngling - user not found");
             }
-            return Task.CompletedTask;
         }
     }
 
@@ -168,30 +156,20 @@ namespace Adminthulhu
         public CSetYoungling() {
             command = "setyoungling";
             shortHelp = "Force a user to be youngling.";
-            longHelp = "Forces a user by <id> to become a yougling, as if they've joined at " + argHelp + ".";
-            argHelp = "<joindate>";
-            argumentNumber = 2;
-            isAdminOnly = true;
-            catagory = Catagory.Admin;
+            catagory = Category.Admin;
+
+            AddOverload (typeof (SocketGuildUser), "Forces a user by ID to become a yougling, as if they've joined at the given date.");
         }
 
-        public override Task ExecuteCommand(SocketUserMessage e, List<string> arguments) {
-            base.ExecuteCommand (e, arguments);
-            if (AllowExecution (e, arguments)) {
-                ulong id;
-                if (ulong.TryParse (arguments [ 0 ], out id)) {
-                    SocketGuildUser user = Utility.GetServer ().GetUser (id);
-                    if (user != null) {
-                        SocketRole younglingRole = Utility.GetServer ().GetRole (Younglings.younglingRoleID);
-                        Younglings.AddYoungling (user);
-                    } else {
-                        Program.messageControl.SendMessage (e, "Failed to set youngling - user not found.", false);
-                    }
-                } else {
-                    Program.messageControl.SendMessage (e, "Failed to set youngling - user failed to parse ID.", false);
-                }
+        public Task<Result> Execute(SocketUserMessage e, ulong userID, DateTime time) {
+            SocketGuildUser user = Utility.GetServer ().GetUser (userID);
+            if (user != null) {
+                SocketRole younglingRole = Utility.GetServer ().GetRole (Younglings.younglingRoleID);
+                Younglings.AddYoungling (user);
+                return TaskResult (user, $"Succesfully set {Utility.GetUserName (user)} as youngling at set time.");
+            } else {
+                return TaskResult (null, "Failed to set youngling - User not found.");
             }
-            return Task.CompletedTask;
         }
     }
 }
