@@ -1,23 +1,3 @@
-﻿I'm gonna have to leave command chaining as it is now, since I've made a bit a mess of it, and based on its usage isn't really a priority. It's a bit broken when it comes to arrays, and I'll rework the chaining functionaliity at some point in the fugure, but for now, I'll focus on other stuff.
+﻿This should fix the bot insta-crashing on servers with channel catagories. Gonna be honest, this could have been done 8 days ego, but Factorio.
 
-So here are the patchnotes for this one regardless.
- - Kind of broke some command chaining ¯\_(ツ)_/¯
-
- - Added saveable variables through commands. Don't quote me on this, but I think this makes the commands turing-complete.
-	* Works in three scopes, global, personal and local.
-	* Global is for the entire server, only editable by admins.
-	* Personal is per-user, and is completely private-ish.
-	* Local is per command chain, they are cleared automatically when a command chain ends execution.
-
- - Karma now does something.
-	* An upper bound set in config saves the message as a quote for the !qoute command. Disabled if zero.
-	* A lower bound set in config deletes the message. Disabled if zero.
-	* Quotes are also moved into their own file, and now ignores the quotes set in config. Data should be copy-pasteable.
-
- - Fixed the !wait command, now takes in commands properly.
- - Added command !split, which half-assedly does nothing except except take in arguments.
- - Added a litteral shitload of new math commands.
- - Moved a large part of the !misc set into a new !var array set
- - Inviter detector thingie now considers a previously unknown invite at one use the used one.
- - May or may not have fixed questions.
- - Fixed some commands having the wrong catagory.
+I have no regrets.

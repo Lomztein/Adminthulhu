@@ -133,7 +133,7 @@ namespace Adminthulhu {
             AddOverload (typeof (object), "Check for a new patch, and install if available.");
         }
 
-        public Task<Result> Execute (SocketUserMessage e, List<string> arguments) {
+        public Task<Result> Execute (SocketUserMessage e) {
             AutoPatcher.CheckForPatch (true);
             return TaskResult (null, "");
         }

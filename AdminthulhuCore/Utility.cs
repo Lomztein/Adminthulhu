@@ -251,7 +251,7 @@ namespace Adminthulhu {
         }
 
         /// <summary>
-        /// Formattet for the danish format!
+        /// Formatted for the danish format!
         /// </summary>
         public static bool TryParseDatetime(string input, ulong userID, out DateTime result) {
             CultureInfo danishCulture = new CultureInfo (UserConfiguration.GetSetting<string>(userID, "Culture"));
@@ -278,6 +278,9 @@ namespace Adminthulhu {
                     case 'w':
                         result = new TimeSpan (count * 7, 0, 0, 0, 0);
                         break;
+
+                    default:
+                        throw new ArgumentException ("Unable to parse input, invalid identifying chararacter.");
                 }
             }
             return result != null;
