@@ -100,14 +100,21 @@ namespace Adminthulhu {
                     Voice.CreateTemporaryChannel (startingEvent.name, startingEvent.duration);
                     ongoingEvents.Add (startingEvent);
                 } else {
+                    try {
+
                     Program.messageControl.SendMessage (
                         Utility.GetMainChannel () as SocketTextChannel,
                         "Event **" + startingEvent.name + "** cancelled, since no one showed up. :(", true);
                     startingEvent.eventState = Event.EventState.Ended;
+                    }catch (Exception e) {
+                        Logging.Log (e);    
+                    }
                 }
 
                 if (startingEvent.repeatTime.Ticks != 0) {
-                    toAdd.Add (CreateAndReturnEvent (startingEvent.name, startingEvent.time.Add (startingEvent.repeatTime), startingEvent.duration, startingEvent.hostID, startingEvent.iconUrl, startingEvent.description, startingEvent.repeatTime));
+                    Event evt = CreateAndReturnEvent (startingEvent.name, startingEvent.time.Add (startingEvent.repeatTime), startingEvent.duration, startingEvent.hostID, startingEvent.iconUrl, startingEvent.description, startingEvent.repeatTime);
+                    evt.eventMemberIDs = startingEvent.eventMemberIDs;
+                    toAdd.Add (evt);
                 }
             }
         }

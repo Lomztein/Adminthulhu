@@ -334,5 +334,10 @@ namespace Adminthulhu {
                 throw new Exception ("Field " + variableName + " in type " + input.GetType ().FullName + " not found.");
             }
         }
+
+        public static T SelectRandom<T>(params T[] array) {
+            Random random = new Random ();
+            return array [ random.Next (0, array.Length) ];
+        }
     }
 }

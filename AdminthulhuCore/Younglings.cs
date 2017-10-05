@@ -42,6 +42,7 @@ namespace Adminthulhu
         public static void OnUserJoined(SocketGuildUser user) {
             if (joinDate != null)
                 AddYoungling (user);
+            SaveData ();
         }
 
         public static void AddYoungling(SocketGuildUser user) {

@@ -34,6 +34,10 @@ namespace Adminthulhu {
             }
         }
 
+        public static void Log(Exception exception) {
+            Log (LogType.EXCEPTION, $"{exception.Message} - {exception.StackTrace}");
+        }
+
         public static void DebugLog (LogType logType, string message) {
             Log (logType, message);
             if (Utility.GetServer () != null)
