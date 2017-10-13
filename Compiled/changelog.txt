@@ -3,3 +3,5 @@
  * Added alternative overload to !rtd
  * Added possibility to give users random colors on join.
  * Attempted to fix bot crashing on servers with channel catagories.
+
+HOTFIX - Fixed clockables being very broken, this is why you test your code, kids.
