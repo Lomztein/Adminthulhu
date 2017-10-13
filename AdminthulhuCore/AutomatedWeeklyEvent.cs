@@ -213,7 +213,7 @@ namespace Adminthulhu {
                 if (highestVotedGames.Count == 1) {
                     highestGame = highestVotedGames.FirstOrDefault ();
                 } else {
-                    SocketChannel announcementChannel = Utility.SearchChannel (Utility.GetServer (), announcementsChannelName);
+                    SocketChannel announcementChannel = Utility.SearchChannel (announcementsChannelName);
                     string pollWinner = string.Empty;
 
                     MessageControl.Poll poll = new MessageControl.Poll ("Tiebreaker Vote!", announcementChannel.Id, 0, DateTime.Now.AddDays (1), 1, delegate (MessageControl.Poll p) {
@@ -315,7 +315,7 @@ namespace Adminthulhu {
             SocketGuildChannel mainChannel = Utility.GetMainChannel ();
 
             Program.messageControl.SendMessage (mainChannel as SocketTextChannel, onNewVoteStartedMessage.Replace ("{EVERYONEMENTION}",
-                Utility.GetServer ().EveryoneRole.Mention).Replace ("{ANNOUNCEMENTCHANNEL}", "<#" + Utility.SearchChannel (Utility.GetServer (), announcementsChannelName).Id+">"), true);
+                Utility.GetServer ().EveryoneRole.Mention).Replace ("{ANNOUNCEMENTCHANNEL}", "<#" + Utility.SearchChannel (announcementsChannelName).Id+">"), true);
             SaveData ();
         }
 
@@ -420,7 +420,7 @@ namespace Adminthulhu {
                     text += "**Vote using the reactions below. You can vote " + votesPerPerson + " times!**";
                 }
 
-                SocketGuildChannel channel = Utility.SearchChannel (Utility.GetServer (), announcementsChannelName);
+                SocketGuildChannel channel = Utility.SearchChannel (announcementsChannelName);
                 IMessage message = null;
                 if (votingMessageID != 0) {
                     try {

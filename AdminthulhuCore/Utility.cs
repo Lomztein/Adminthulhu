@@ -29,7 +29,6 @@ namespace Adminthulhu {
             int tries = 0;
             while (!user.Roles.Contains (role)) {
                 if (tries > maxTries) {
-                    Program.messageControl.SendMessage (SearchChannel (GetServer (), Program.dumpTextChannelName) as SocketTextChannel, "Error - tried to add role too many times.", false);
                     break;
                 }
                 tries++;
@@ -43,7 +42,6 @@ namespace Adminthulhu {
             int tries = 0;
             while (user.Roles.Contains (role)) {
                 if (tries > maxTries) {
-                    Program.messageControl.SendMessage (SearchChannel (GetServer (), Program.dumpTextChannelName) as SocketTextChannel, "Error - tried to remove role too many times.", false);
                     break;
                 }
                 Logging.Log (Logging.LogType.BOT, "Removing role from " + user.Username + " - " + role.Name);
@@ -136,25 +134,20 @@ namespace Adminthulhu {
         }
 
         public static SocketGuildChannel GetMainChannel() {
-            return SearchChannel (GetServer (), Program.mainTextChannelName);
+            return SearchChannel (Program.mainTextChannelName);
         }
 
-        [Obsolete]
-        public static SocketGuildChannel GetChannelByName(SocketGuild server, string name) {
-            if (server == null)
-                return null;
-
-            SocketGuildChannel channel = SearchChannel (server, name);
-            return channel;
-        }
-
-        public static SocketGuildChannel SearchChannel(SocketGuild server, string name) {
-            IEnumerable<SocketGuildChannel> channels = server.Channels;
+        public static SocketGuildChannel SearchChannel(string name) {
+            IEnumerable<SocketGuildChannel> channels = GetServer ().Channels;
+            SoftStringComparer comparer = new SoftStringComparer ();
             foreach (SocketGuildChannel channel in channels) {
-                if (channel.Name.Length >= name.Length && channel.Name.Substring (0, name.Length) == name)
-                    return channel;
+                try {
+                    if (comparer.Equals (name, channel.Name))
+                        return channel;
+                } catch (Exception e) {
+                    Logging.Log (e);
+                }
             }
-
             return null;
         }
 

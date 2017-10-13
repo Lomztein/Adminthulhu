@@ -17,6 +17,7 @@ namespace Adminthulhu {
             "GOLD", "BLACK", "DARKRED", "BROWN"
         };
 
+        public static bool autoAddOnJoin = false;
         public bool removePrevious = true;
 
         public string succesText = "Your color has now been set.";
@@ -34,6 +35,19 @@ namespace Adminthulhu {
             base.Initialize ();
             LoadConfiguration ();
             BotConfiguration.AddConfigurable (this);
+
+            Program.discordClient.UserJoined += (user) => {
+                if (autoAddOnJoin) {
+                    try {
+                        Random random = new Random ();
+                        SocketRole color = Utility.GetServer ().Roles.Where (x => allowed.Contains (x.Name)).ElementAt (random.Next (0, allowed.Length));
+                        Utility.SecureAddRole (user, color);
+                    } catch (Exception e) {
+                        Logging.Log (e);
+                    }
+                }
+                return Task.CompletedTask;
+            };
         }
 
         public async Task<Result> Execute(SocketUserMessage e, string color) {
@@ -74,6 +88,7 @@ namespace Adminthulhu {
         public override void LoadConfiguration() {
             base.LoadConfiguration ();
             allowed = BotConfiguration.GetSetting("Misc.AvailableUsernameColors", "AvaiableUsernameColors", new string [ ] { "RED", "BLUE" });
+            autoAddOnJoin = BotConfiguration.GetSetting ("Misc.AutoSetColorsOnJoin", "", autoAddOnJoin);
         }
     }
 }

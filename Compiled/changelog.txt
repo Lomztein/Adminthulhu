@@ -1,7 +1,5 @@
-﻿ * Added tie-breaker vote to friday events. Only runs once though. Is experimental and honestly hasn't been tested, but I don't see any reasons why it *shouldn't* work.
- * Added a midnightOffsetHours setting to offset the day-change check for clockables. This is to avoid potential mentions at midnight.
- * Fixed repeating Discord events not repeating. Something else is wrong with time perhaps, not sure what.
- * All user-related server messages (join, join from event, left, banned, unbanned, namechange) now take from an array. This does however require the affected config settings be purged manually. This is all settings under Server.Messages except for the patch announcement channel ID one.
- * May have fixed younglings. Not sure what the problem was in the first place, but I couldn't reproduce it after a single line was added in code.
- 
- This patch hasn't been tested much, so there might be bugs. The fixes are simple however, so any major bugs means I'm a dofus.
+﻿Another untested patch, this has become an awful habit of mine.
+
+ * Added alternative overload to !rtd
+ * Added possibility to give users random colors on join.
+ * Attempted to fix bot crashing on servers with channel catagories.

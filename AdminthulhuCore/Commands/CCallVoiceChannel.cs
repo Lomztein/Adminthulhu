@@ -18,7 +18,7 @@ namespace Adminthulhu {
         }
 
         public Task<Result> Execute(SocketUserMessage e, string channelName) {
-            SocketVoiceChannel channel = Utility.SearchChannel (Utility.GetServer (), channelName) as SocketVoiceChannel;
+            SocketVoiceChannel channel = Utility.SearchChannel (channelName) as SocketVoiceChannel;
             return Execute (e, channel);
         }
 
