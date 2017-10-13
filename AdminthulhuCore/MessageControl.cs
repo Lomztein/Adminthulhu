@@ -449,6 +449,14 @@ namespace Adminthulhu {
                 }
             }
 
+            public async Task AwaitEnd() {
+                int testRepeatTime = 1000 * 60; // Once a minute. Can't think of other ways to do this at the moment.
+                while (DateTime.Now < endDate) {
+                    Task.Delay (testRepeatTime);
+                }
+                return;
+            }
+
             public async Task UpdateMessage() {
                 string contents = header + "\n```";
                 int index = 0;

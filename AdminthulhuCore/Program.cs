@@ -53,12 +53,12 @@ namespace Adminthulhu
         public static string serverName = "";
         public static ulong serverID = 0;
 
-        public static string onUserJoinMessage;
-        public static string onUserJoinFromInviteMessage;
-        public static string onUserLeaveMessage;
-        public static string onUserBannedMessage;
-        public static string onUserUnbannedMessage;
-        public static string onUserChangedNameMessage;
+        public static string[] onUserJoinMessage = new string [ ] { "**{USERNAME}** has joined this server!" };
+        public static string[] onUserJoinFromInviteMessage = new string [ ] { "**{USERNAME}** has joined this server by the help of {INVITERNAME}!" };
+        public static string [ ] onUserLeaveMessage = new string [ ] { "**{USERNAME}** has left this server :(" };
+        public static string [ ] onUserBannedMessage = new string [ ] { "**{USERNAME}** has been banned from this server." };
+        public static string [ ] onUserUnbannedMessage = new string [ ] { "**{USERNAME}** has been pardoned in this server!" };
+        public static string [ ] onUserChangedNameMessage = new string [ ] { "**{OLDNAME}** has changed their name to **{NEWNAME}**" };
         public static ulong onPatchedAnnounceChannel;
 
         public static Phrase [ ] phrases = new Phrase [ ] { };
@@ -81,12 +81,12 @@ namespace Adminthulhu
             serverName = BotConfiguration.GetSetting ("Server.Name", "ServerName", "Discord Server");
             serverID = BotConfiguration.GetSetting<ulong> ("Server.ID", "ServerID", 0);
 
-            onUserJoinMessage = BotConfiguration.GetSetting ("Server.Messages.OnUserJoin", "", "{USERNAME} has joined this server!");
-            onUserJoinFromInviteMessage = BotConfiguration.GetSetting ("Server.Messages.OnUserJoinFromInvite", "", "{USERNAME} has joined this server through {INVITERNAME}'s invite!");
-            onUserLeaveMessage = BotConfiguration.GetSetting ("Server.Messages.OnUserLeave", "", "{USERNAME} has left this server.");
-            onUserBannedMessage = BotConfiguration.GetSetting ("Server.Messages.OnUserBanned", "", "{USERNAME} has been banned from this server.");
-            onUserUnbannedMessage = BotConfiguration.GetSetting ("Server.Messages.OnUserUnbanned", "", "{USERNAME} has been unbanned from this server!");
-            onUserChangedNameMessage = BotConfiguration.GetSetting ("Server.Messages.OnUserChangedName", "", "{OLDNAME} has changed their name to {NEWNAME}!");
+            onUserJoinMessage = BotConfiguration.GetSetting ("Server.Messages.OnUserJoin", "", onUserJoinMessage);
+            onUserJoinFromInviteMessage = BotConfiguration.GetSetting ("Server.Messages.OnUserJoinFromInvite", "", onUserJoinFromInviteMessage);
+            onUserLeaveMessage = BotConfiguration.GetSetting ("Server.Messages.OnUserLeave", "", onUserLeaveMessage);
+            onUserBannedMessage = BotConfiguration.GetSetting ("Server.Messages.OnUserBanned", "", onUserBannedMessage);
+            onUserUnbannedMessage = BotConfiguration.GetSetting ("Server.Messages.OnUserUnbanned", "", onUserUnbannedMessage);
+            onUserChangedNameMessage = BotConfiguration.GetSetting ("Server.Messages.OnUserChangedName", "", onUserChangedNameMessage);
             onPatchedAnnounceChannel = BotConfiguration.GetSetting ("Server.Messages.OnPatchedAnnounceChannel", "", (ulong)0);
 
             commandTrigger = BotConfiguration.GetSetting ("Command.Trigger", "","!");
@@ -159,11 +159,12 @@ namespace Adminthulhu
 
                 if (possibleInvite != null) {
                     inviter = Utility.GetServer ().GetUser (possibleInvite.Inviter.Id);
-                    messageControl.SendMessage (Utility.GetMainChannel () as SocketTextChannel, onUserJoinFromInviteMessage.Replace ("{USERNAME}", Utility.GetUserName (e)).Replace ("{INVITERNAME}", Utility.GetUserName (inviter)), true);
+                    string joinMessage = Utility.SelectRandom (onUserJoinFromInviteMessage);
+                    messageControl.SendMessage (Utility.GetMainChannel () as SocketTextChannel, joinMessage.Replace ("{USERNAME}", Utility.GetUserName (e)).Replace ("{INVITERNAME}", Utility.GetUserName (inviter)), true);
                 } else {
-                    messageControl.SendMessage (Utility.GetMainChannel () as SocketTextChannel, onUserJoinMessage.Replace ("{USERNAME}", Utility.GetUserName (e)), true);
+                    string joinMessage = Utility.SelectRandom (onUserJoinMessage);
+                    messageControl.SendMessage (Utility.GetMainChannel () as SocketTextChannel, joinMessage.Replace ("{USERNAME}", Utility.GetUserName (e)), true);
                 }
-
 
                 string [ ] welcomeMessage = SerializationIO.LoadTextFile (dataPath + "welcomemessage" + gitHubIgnoreType);
                 string combined = "";
@@ -175,7 +176,8 @@ namespace Adminthulhu
             };
 
             discordClient.UserLeft += (e) => {
-                messageControl.SendMessage (Utility.GetMainChannel () as SocketTextChannel, onUserLeaveMessage.Replace ("{USERNAME}", Utility.GetUserName (e)), true);
+                string leftMessage = Utility.SelectRandom (onUserLeaveMessage);
+                messageControl.SendMessage (Utility.GetMainChannel () as SocketTextChannel, leftMessage.Replace ("{USERNAME}", Utility.GetUserName (e)), true);
                 return Task.CompletedTask;
             };
 
@@ -203,8 +205,6 @@ namespace Adminthulhu
             };
 
             discordClient.UserUpdated += (before, after) => {
-                Logging.Log (Logging.LogType.BOT, "User " + before.Username + " updated.");
-
                 if (before.Username != after.Username && (after as SocketGuildUser).Nickname == "") {
                     MentionNameChange (before as SocketGuildUser, after as SocketGuildUser);
                 }
@@ -217,7 +217,8 @@ namespace Adminthulhu
                 if (channel == null)
                     return Task.CompletedTask;
 
-                messageControl.SendMessage (channel as SocketTextChannel, onUserBannedMessage.Replace ("{USERNAME}", Utility.GetUserName (e as SocketGuildUser)), true);
+                string banMessage = Utility.SelectRandom (onUserBannedMessage);
+                messageControl.SendMessage (channel as SocketTextChannel, banMessage.Replace ("{USERNAME}", Utility.GetUserName (e as SocketGuildUser)), true);
 
                 return Task.CompletedTask;
             };
@@ -227,7 +228,8 @@ namespace Adminthulhu
                 if (channel == null)
                     return Task.CompletedTask;
 
-                messageControl.SendMessage (channel as SocketTextChannel, onUserUnbannedMessage.Replace ("{USERNAME}", Utility.GetUserName (e as SocketGuildUser)), true);
+                string unbannedMessage = Utility.SelectRandom (onUserUnbannedMessage);
+                messageControl.SendMessage (channel as SocketTextChannel, unbannedMessage.Replace ("{USERNAME}", Utility.GetUserName (e as SocketGuildUser)), true);
 
                 return Task.CompletedTask;
             };
@@ -281,7 +283,8 @@ namespace Adminthulhu
 
         private void MentionNameChange(SocketGuildUser before, SocketGuildUser after) {
             SocketTextChannel channel = Utility.GetMainChannel () as SocketTextChannel;
-            messageControl.SendMessage (channel, onUserChangedNameMessage.Replace ("{OLDNAME}", Utility.GetUserUpdateName (before, after, true)).Replace ("{NEWNAME}", Utility.GetUserUpdateName (before, after, false)), true);
+            string changedMessage = Utility.SelectRandom (onUserChangedNameMessage);
+            messageControl.SendMessage (channel, changedMessage.Replace ("{OLDNAME}", Utility.GetUserUpdateName (before, after, true)).Replace ("{NEWNAME}", Utility.GetUserUpdateName (before, after, false)), true);
         }
 
         private static bool hasBooted = false;

@@ -12,7 +12,7 @@ namespace Adminthulhu {
         public static Thread timeThread;
         public DateTime lastMesauredTime;
         public int checkDelay = 1000; // The time between each check in milliseconds.
-
+        public int midnightOffsetHours;
 
         public SocketGuildUser [ ] lastTest = new SocketGuildUser [ 5 ];
 
@@ -70,7 +70,7 @@ namespace Adminthulhu {
                         }
                     }
 
-                    if (now.Day != lastMesauredTime.Day) {
+                    if (now.AddHours (midnightOffsetHours).Day != lastMesauredTime.Day) {
                         for (int i = 0; i < clockables.Length; i++) {
                             if (clockablesEnabled [ i ])
                                 clockables [ i ].OnDayPassed (now);
@@ -86,6 +86,7 @@ namespace Adminthulhu {
 
         public void LoadConfiguration() {
             clockablesEnabled = new bool [ clockables.Length ];
+            midnightOffsetHours = BotConfiguration.GetSetting ("Clockables.MidnightOffsetHours", "", midnightOffsetHours);
             for (int i = 0; i < clockablesEnabled.Length; i++) {
                 clockablesEnabled [ i ] = BotConfiguration.GetSetting ("Clockables." + clockables[i].GetType ().Name + "Enabled", clockables [ i ].GetType ().Name + "Enabled", false);
             }

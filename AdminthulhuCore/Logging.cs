@@ -27,17 +27,21 @@ namespace Adminthulhu {
             if (logType == LogType.CRITICAL) {
                 Console.WriteLine ($"SYSTEM HALTED DUE TO CRITICAL ERROR: {message}");
                 if (Utility.GetServer () != null)
-                    Program.messageControl.SendMessage (Utility.SearchChannel (Utility.GetServer (), Program.dumpTextChannelName) as SocketTextChannel, combine, false);
+                    Program.messageControl.SendMessage (Utility.SearchChannel (Program.dumpTextChannelName) as SocketTextChannel, combine, false);
                 while (true) {
                     Thread.Sleep (1000);
                 }
             }
         }
 
+        public static void Log(Exception exception) {
+            Log (LogType.EXCEPTION, $"{exception.Message} - {exception.StackTrace}");
+        }
+
         public static void DebugLog (LogType logType, string message) {
             Log (logType, message);
             if (Utility.GetServer () != null)
-                Program.messageControl.SendMessage (Utility.SearchChannel (Utility.GetServer (), Program.dumpTextChannelName) as SocketTextChannel, message, false);
+                Program.messageControl.SendMessage (Utility.SearchChannel (Program.dumpTextChannelName) as SocketTextChannel, message, false);
         }
 
         public Task Initialize(DateTime time) {

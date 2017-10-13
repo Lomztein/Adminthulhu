@@ -1,3 +1,5 @@
-﻿This should fix the bot insta-crashing on servers with channel catagories. Gonna be honest, this could have been done 8 days ego, but Factorio.
+﻿Another untested patch, this has become an awful habit of mine.
 
-I have no regrets.
+ * Added alternative overload to !rtd
+ * Added possibility to give users random colors on join.
+ * Attempted to fix bot crashing on servers with channel catagories.
