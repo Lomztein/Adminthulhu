@@ -24,9 +24,7 @@ namespace Adminthulhu {
 
         public void InitCommands() {
             foreach (Command c in commandsInSet) {
-                c.helpPrefix = helpPrefix + command + " ";
-                c.Initialize ();
-                c.isAdminOnly = isAdminOnly;
+                FeedRecursiveData (c);
             }
         }
 
@@ -79,7 +77,11 @@ namespace Adminthulhu {
                     help += Utility.FormatCommand (c) + "\n";
                 }
             }
-            return help + "```";
+            if (help == "Commands in the **" + command + "** command set:\n```") { // Ew
+                return "This set contains no available commands.";
+            } else {
+                return help + "```";
+            }
         }
 
         // Just don't look it directly in the eye.
@@ -89,10 +91,15 @@ namespace Adminthulhu {
             commandsInSet = curCommands.ToArray ();
 
             foreach (Command c in procCommands) {
-                c.helpPrefix = helpPrefix + command + " ";
-                c.Initialize ();
-                c.isAdminOnly = isAdminOnly;
+                FeedRecursiveData (c);
             }
+        }
+
+        private void FeedRecursiveData (Command c) {
+            c.helpPrefix = helpPrefix + command + " ";
+            c.Initialize ();
+            c.isAdminOnly = isAdminOnly;
+            c.requiredPermission = requiredPermission;
         }
 
         public void RemoveCommand(Command cmd) {

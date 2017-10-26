@@ -336,6 +336,11 @@ namespace Adminthulhu {
                 return false;
             }
 
+            if (!Permissions.HasPermission (user, Permissions.Type.VoteForEvents)) {
+                Program.messageControl.SendMessage (user, "Failed to vote for event - You do not have permission to do so.");
+                return false;
+            }
+
             foreach (Vote v in userVotes) {
                 if (v.votedGameID == id) {
                     string locText = onVotedForGameTwiceDM;

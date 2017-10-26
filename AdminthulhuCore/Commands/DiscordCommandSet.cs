@@ -13,6 +13,7 @@ namespace Adminthulhu
             command = "discord";
             shortHelp = "Commands about Discord. These only return objects.";
             catagory = Category.Advanced;
+            requiredPermission = Permissions.Type.UseAdvancedCommands;
 
             commandsInSet = new Command [ ] {
                 new UserSet (), new ChannelSet (), new RoleSet (), new ServerSet (),
@@ -269,7 +270,11 @@ namespace Adminthulhu
                 AddOverload (typeof (string), "Mention all given objects.");
             }
 
-            public Task<Result> Execute(SocketUserMessage e, params IMentionable[] mentionables) {
+            public Task<Result> Execute(SocketUserMessage e, IMentionable mention) {
+                return TaskResult (mention.Mention, mention.Mention);
+            }
+
+            public Task<Result> Execute(SocketUserMessage e, IMentionable[] mentionables) {
                 string total = "";
                 foreach (IMentionable mention in mentionables) {
                     total += mention.Mention;

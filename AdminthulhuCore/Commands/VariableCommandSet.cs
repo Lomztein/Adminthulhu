@@ -11,6 +11,8 @@ namespace Adminthulhu
         public VariableCommandSet() {
             command = "var";
             shortHelp = "Set relating to variables";
+            catagory = Category.Advanced;
+            requiredPermission = Permissions.Type.UseAdvancedCommands;
 
             commandsInSet = new Command [ ] {
                 new SetL (), new SetP (), new SetG (),

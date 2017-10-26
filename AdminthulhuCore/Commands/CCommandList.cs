@@ -37,9 +37,11 @@ namespace Adminthulhu {
                 result += "\n";
             }
             result += "```";
+            bool anyFound = result != "``````";
 
             // I mean, it works, right?
-            return TaskResult (result, result);
+            Task<Result> r = anyFound ? TaskResult (result, result) : TaskResult ("", "This command set contains no available commands.");
+            return r;
         }
 
         public Task<Result> Execute(SocketUserMessage e, CommandSet set) {

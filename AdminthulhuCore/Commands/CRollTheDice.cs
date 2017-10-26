@@ -1,24 +1,25 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Discord;
 using Discord.WebSocket;
 
 namespace Adminthulhu {
     public class CRollTheDice : Command {
 
         string [ ] dices = new string [ ] {
-            "[ • ]", "[ : ]", "[•••]", "[: :]", "[:•:]", "[:::]"
+            "[ • ]", "[ : ]", "[•••]", "[: :]", "[:•:]", "[:::]",
+            "[: :•:]", "[:•:•:]", "[:•:::]", "[:::::]",
+            "[: :::•:]","[:•:::•:]", "[:•:::::]", "[:::::::]",
+            "[: :::::•:]", "[:•:::::•:]", "[:•:::::::]", "[:::::::::]",
+            "[: :::::::•:]", "[:•:::::::•:]", "[:•:::::::::]", "[:::::::::::]"
         };
 
         public CRollTheDice () {
             command = "rtd";
             shortHelp = "Roll the dice.";
             catagory = Category.Utility;
-            AddOverload (typeof (int), "Rolls a dice that returns a number between one and the given max number.");
-            AddOverload (typeof (int), "Rolls a an amount of n-sided dices.");
+            AddOverload (typeof (int), "Rolls a die that returns a number between one and the given max number.");
+            AddOverload (typeof (int), "Rolls a an amount of n-sided dice.");
         }
 
         public Task<Result> Execute(SocketUserMessage e, int maxnumber) {

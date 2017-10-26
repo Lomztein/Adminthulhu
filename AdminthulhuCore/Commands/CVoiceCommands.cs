@@ -22,6 +22,7 @@ namespace Adminthulhu {
             public Lock() {
                 command = "lock";
                 shortHelp = "Lock voice channel.";
+                requiredPermission = Permissions.Type.LockChannels;
                 overloads.Add (new Overload (typeof (Voice.VoiceChannel), "Locks your current voice channel."));
             }
 

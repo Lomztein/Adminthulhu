@@ -12,6 +12,7 @@ namespace Adminthulhu
             command = "flow";
             shortHelp = "Commands controlling chain flow.";
             catagory = Category.Advanced;
+            requiredPermission = Permissions.Type.UseAdvancedCommands;
 
             commandsInSet = new Command [ ] {
                 new IsNull (), new If (), new Not (), new And (), new Or (), new For (), new Wait (), new Split (),

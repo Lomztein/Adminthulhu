@@ -12,6 +12,7 @@ namespace Adminthulhu
             command = "misc";
             shortHelp = "Miscellaneous advanced commands.";
             catagory = Category.Advanced;
+            requiredPermission = Permissions.Type.UseAdvancedCommands;
 
             commandsInSet = new Command [ ] {
                 new GetVariable (),

@@ -17,31 +17,40 @@ namespace Adminthulhu
         }
 
         public static async void UpdateData(IReadOnlyCollection<RestInviteMetadata> readOnly) {
-            await Utility.AwaitFullBoot ();
-            if (readOnly == null)
-                readOnly = await Utility.GetServer ().GetInvitesAsync ();
+            try {
+                await Utility.AwaitFullBoot ();
+                if (readOnly == null)
+                    readOnly = await Utility.GetServer ().GetInvitesAsync ();
 
-            savedInvites = readOnly.ToDictionary (x => x.Code);
+                savedInvites = readOnly.ToDictionary (x => x.Code);
+            } catch (Exception e) {
+                Logging.Log (e);
+            }
         }
 
         public static async Task<RestInviteMetadata> FindInviter() {
-            IReadOnlyCollection<RestInviteMetadata> newInvites = await Utility.GetServer ().GetInvitesAsync ();
-            Dictionary<string, RestInviteMetadata> dict = newInvites.ToDictionary (x => x.Code);
-            RestInviteMetadata result = null;
+            try {
+                IReadOnlyCollection<RestInviteMetadata> newInvites = await Utility.GetServer ().GetInvitesAsync ();
+                Dictionary<string, RestInviteMetadata> dict = newInvites.ToDictionary (x => x.Code);
+                RestInviteMetadata result = null;
 
-            foreach (var key in dict) {
-                if (savedInvites.ContainsKey (key.Key)) {
-                    if (savedInvites [ key.Key ].Uses + 1 == key.Value.Uses) {
-                        result = key.Value;
+                foreach (var key in dict) {
+                    if (savedInvites.ContainsKey (key.Key)) {
+                        if (savedInvites [ key.Key ].Uses + 1 == key.Value.Uses) {
+                            result = key.Value;
+                        }
+                    } else {
+                        if (key.Value.Uses == 1)
+                            result = key.Value;
                     }
-                } else {
-                    if (key.Value.Uses == 1)
-                        result = key.Value;
                 }
-            }
 
-            UpdateData (newInvites);
-            return result;
+                UpdateData (newInvites);
+                return result;
+            } catch (Exception e) {
+                Logging.Log (e);
+                return null;
+            }
         }
     }
 }

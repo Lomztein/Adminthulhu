@@ -87,6 +87,7 @@ namespace Adminthulhu
                 shortHelp = "A collection of saved custom commands.";
                 catagory = Category.Advanced;
                 customSet = this;
+                requiredPermission = Permissions.Type.CreateCustomCommands;
 
                 commandsInSet = new Command [ ] {
                     new New (), new Delete (),

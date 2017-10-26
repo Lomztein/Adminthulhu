@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Discord.WebSocket;
+using System.Text.RegularExpressions;
 
 namespace Adminthulhu {
 
@@ -12,6 +13,7 @@ namespace Adminthulhu {
         public static Dictionary<string, object> settings = new Dictionary<string, object>();
         public static List<IConfigurable> allConfigurables = new List<IConfigurable> ();
         public static string settingsFileName = "configuration";
+        public static List<string> allEntries = new List<string> ();
 
         public static void Initialize() {
             LoadSettings ();
@@ -48,6 +50,9 @@ namespace Adminthulhu {
 
         // This feels very wrong..
         public static T GetSetting<T>(string key, string oldKey, T fallback) {
+            if (!allEntries.Contains (key)) // This seems borderline useless and very slow. Fits the rest I guess then lel.
+                allEntries.Add (key);
+
             string [ ] path = key.Split ('.');
             // Search for uncatagorised value, in order to maintain backwards compatability.
             if (settings.ContainsKey (oldKey)) {
@@ -117,6 +122,17 @@ namespace Adminthulhu {
             return success;
         }
 
+        public static List<string> RegexSearchEntries(string pattern) {
+            Regex regex = new Regex (pattern);
+            List<string> matches = new List<string> ();
+            foreach (string entry in allEntries) {
+                if (regex.IsMatch (entry)) {
+                    matches.Add (entry);
+                }
+            }
+            return matches;
+        }
+
         public static bool HasSetting(string key) {
             string [ ] path = key.Split ('.');
 
@@ -174,35 +190,38 @@ namespace Adminthulhu {
             catagory = Category.Admin;
             isAdminOnly = true;
 
-            AddOverload (typeof (object), "Set a simple bot configuration value <key> to <value>. Using !reloadconfig after changes is recommended. More advanced data structures must be set in files.");
+            AddOverload (typeof (object), "Edit bot config entries to <input> using a regex expression. Using !reloadconfig after changes is recommended. More advanced data structures must be set in files.");
         }
 
-        public Task<Result> Execute(SocketUserMessage e, string key, object input) {
-            bool success = BotConfiguration.HasSetting (key);
-            if (success) {
+        public Task<Result> Execute(SocketUserMessage e, string expression, object input) {
 
-                object current = BotConfiguration.GetSetting (key, "", default (object));
-                object possibleJSON = null;
-                try {
-                    possibleJSON = JsonConvert.DeserializeObject (current.ToString ());
-                } catch { }
+            List<string> toModify = BotConfiguration.RegexSearchEntries (expression);
+            Program.messageControl.SendMessage (e.Channel, toModify.ToArray ().Singlify (), false, "```");
+            int succesful = 0;
 
-                if (possibleJSON != null) {
-                    return TaskResult (possibleJSON, $"Failed to set config option **{key}** - data structure of **{possibleJSON.GetType ().FullName}** is too complicated. Edit files directly instead.");
-                } else {
+            Program.messageControl.AskQuestion (e.Channel.Id, "Confirm edit of these configuration entries?", delegate () {
+                foreach (string entry in toModify) {
+                    object current = BotConfiguration.GetSetting (entry, "", default (object));
+                    object possibleJSON = null;
+                    try {
+                        possibleJSON = JsonConvert.DeserializeObject (current.ToString ());
+                    } catch { }
+
                     object newObject = null;
                     try {
                         newObject = Convert.ChangeType (input, current.GetType ());
-                        BotConfiguration.SetSetting (key, newObject, false);
-                        BotConfiguration.SaveSettings ();
-                        return TaskResult (newObject, $"Succesfully set config option **{key}** to **{newObject}**");
+                        BotConfiguration.SetSetting (entry, newObject, false);
+                        succesful++;
                     } catch (Exception exception) {
-                        return TaskResult(null, $"Failed to set config option **{key}** - " + exception.Message);
+                        Logging.Log (exception);
                     }
                 }
-            } else {
-                return TaskResult (null, $"Failed to set config option **{key}** - Config key not found.");
-            }
+
+                BotConfiguration.SaveSettings ();
+                Program.messageControl.SendMessage (e, $"Succesfully edited {succesful} out of {toModify.Count} entries.", false);
+            });
+
+            return TaskResult (null, "");
         }
     }
 }

@@ -56,7 +56,7 @@ namespace Adminthulhu
         }
 
         public static void SaveData() {
-            SerializationIO.SaveObjectToFile (Program.dataPath + "younglings" + Program.gitHubIgnoreType, joinDate);
+            SerializationIO.SaveObjectToFile (Program.dataPath + "younglings" + Program.gitHubIgnoreType, joinDate, true, false);
         }
 
         public static void LoadData() {
@@ -76,6 +76,7 @@ namespace Adminthulhu
                 if (user != null) {
                     if (user.Roles.Contains (younglingRole) && user.Roles.Contains (presentRole)) {
                         try {
+                            Program.SetKickReason (user.Id, "Kicked due to youngling-stage inactivity.");
                             RestInviteMetadata metadata = await Utility.GetMainChannel ().CreateInviteAsync (null, 1, false, true);
                             await Program.messageControl.SendMessage (user, onKickedDM.Replace ("{INVITELINK}", metadata.Url));
                             await user.KickAsync ();
@@ -85,7 +86,8 @@ namespace Adminthulhu
                     }
 
                     if (user.Roles.Contains (younglingRole)) {
-                        if (time > joinDate [ user.Id ].AddDays (daysActiveRequired) || UserActivityMonitor.GetLastActivity (user.Id) > joinDate [ user.Id ].AddDays (daysActiveRequired - UserActivityMonitor.activeThresholdDays)) {
+                        bool pastYounglingStage = UserActivityMonitor.GetLastActivity (user.Id) > pair.Value.AddDays (daysActiveRequired);
+                        if (pastYounglingStage) {
                             await Utility.SecureRemoveRole (user, younglingRole);
                             await Program.messageControl.SendMessage (user, onAcceptedDM);
                             Program.messageControl.SendMessage (Utility.GetMainChannel () as SocketTextChannel, onAcceptedPublicAnnouncement.Replace ("{USERNAME}", Utility.GetUserName (user)), true);
@@ -104,7 +106,8 @@ namespace Adminthulhu
             foreach (ulong id in toRemove) {
                 joinDate.Remove (id);
             }
-            SaveData ();
+            if (toRemove.Count > 0)
+                SaveData ();
         }
 
         public Task OnHourPassed(DateTime time) {

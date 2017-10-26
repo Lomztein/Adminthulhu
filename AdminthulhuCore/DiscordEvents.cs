@@ -304,20 +304,20 @@ namespace Adminthulhu {
             overloads.Add (new Overload (typeof (DiscordEvents.Event), $"Edit variable {command} for <event> to <newvalue>"));
         }
 
-        public async Task<Result> Execute(SocketUserMessage e, List<string> arguments) {
-            DiscordEvents.Event eve = DiscordEvents.FindEvent (arguments [ 0 ]);
+        public async Task<Result> Execute(SocketUserMessage e, string eventName, string newValue) {
+            DiscordEvents.Event eve = DiscordEvents.FindEvent (eventName);
             if (eve != null) {
                 try {
-                    object newValue = Convert.ChangeType (arguments [ 1 ], editInfo.FieldType);
-                    editInfo.SetValue (eve, newValue);
+                    object nValue = Convert.ChangeType (newValue, editInfo.FieldType);
+                    editInfo.SetValue (eve, nValue);
                     DiscordEvents.SaveEvents ();
-                    return new Result (newValue, $"Succesfully edited event {eve.name}'s variable {command} to {newValue}.");
+                    return new Result (nValue, $"Succesfully edited event {eve.name}'s variable {command} to {nValue}.");
 
                 } catch (Exception exception) {
                     return new Result (null, "Error - " + exception.Message);
                 }
             } else {
-                return new Result (null, "Error - Events " + arguments [ 0 ] + " not found.");
+                return new Result (null, "Error - Events " + eventName + " not found.");
             }
         }
     }
@@ -327,6 +327,7 @@ namespace Adminthulhu {
         public CCreateEvent() {
             command = "create";
             shortHelp = "Create a new event.";
+            requiredPermission = Permissions.Type.CreateEvents;
             overloads.Add (new Overload (typeof (DiscordEvents.Event), "Creates a new event on this server. Uses a questionnaire for input."));
         }
 

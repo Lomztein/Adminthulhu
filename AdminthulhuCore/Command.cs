@@ -20,6 +20,7 @@ namespace Adminthulhu {
         public string shortHelp = null;
         public string helpPrefix = Program.commandTrigger;
         public Category catagory = Category.None;
+        public Permissions.Type requiredPermission = Permissions.Type.Null;
 
         public bool isAdminOnly = false;
         public bool availableInDM = false;
@@ -189,6 +190,10 @@ namespace Adminthulhu {
 
             if (!availableOnServer && e.Channel as SocketGuildChannel != null) {
                 errors += "\n\tNot avaiable on server.";
+            }
+
+            if (requiredPermission != Permissions.Type.Null && !Permissions.HasPermission (e.Author as SocketGuildUser, requiredPermission)) {
+                errors += "\n\tNot permitted to use this command.";
             }
 
             return errors;

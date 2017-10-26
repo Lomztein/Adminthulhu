@@ -12,6 +12,7 @@ namespace Adminthulhu
             command = "math";
             shortHelp = "Math related commands. Works with floating point numbers.";
             catagory = Category.Advanced;
+            requiredPermission = Permissions.Type.UseAdvancedCommands;
 
             commandsInSet = new Command [ ] {
                 new Add (), new Subtract (), new Multiply (), new Divide (), new Pow (), new Log (), new Mod (), new Sin (), new Cos (), new Tan (), new ASin (), new ACos (), new ATan (),
@@ -26,14 +27,19 @@ namespace Adminthulhu
 
                 AddOverload (typeof (double), "Add two numbers together.");
                 AddOverload (typeof (double), "Get the sum of an array of numbers.");
+                AddOverload (typeof (string), "Get the combination of two strings.");
             }
 
             public Task<Result> Execute(SocketUserMessage e, double num1, double num2) {
                 return TaskResult (num1 + num2, $"{num1} + {num2} = {num1 + num2}");
             }
 
-            public Task<Result> Execute(SocketUserMessage e, params double[] numbers) {
+            public Task<Result> Execute(SocketUserMessage e, double[] numbers) {
                 return TaskResult (numbers.Sum (), $"Sum of given numbes: {numbers.Sum ()}");
+            }
+
+            public Task<Result> Execute(SocketUserMessage e, string str1, string str2) {
+                return TaskResult (str1 + str2, str1 + str2);
             }
         }
 

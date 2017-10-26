@@ -22,7 +22,7 @@ namespace Adminthulhu
             new VoiceCommands (), new EventCommands (), new UserSettingsCommands (), new HangmanCommands (),
             new GameCommands (), new StrikeCommandSet (), new CAddEventGame (), new CRemoveEventGame (), new CHighlightEventGame (),
             new CAcceptYoungling (), new CReloadConfiguration (), new CCreateBook (), new CSetYoungling (), new CCreatePoll (), new CCheckPatch (),
-            new CSetSetting (), new CDisplayFile (), new CUrbanDictionary (), new CPrint (),
+            new CSetSetting (), new CDisplayFile (), new CUrbanDictionary (), new CPrint (), new PermissionCommands (),
             new DiscordCommandSet (), new MiscCommandSet (), new FlowCommandSet (), new MathCommandSet (), new VariableCommandSet (), new CommandChain.CustomCommandSet (),
         };
 
@@ -63,6 +63,7 @@ namespace Adminthulhu
 
         public static Phrase [ ] phrases = new Phrase [ ] { };
         public static List<string> allowedDeletedMessages = new List<string>();
+        public static Dictionary<ulong, string> automaticLeftReason = new Dictionary<ulong, string> ();
 
         // Feedback
         public static ulong authorID = 93744415301971968;
@@ -118,6 +119,7 @@ namespace Adminthulhu
             UserConfiguration.Initialize ();
             InviteHandler.Initialize ();
             CommandChain.Initialize ();
+            Permissions.Initialize ();
             clock = new Clock ();
 
             InitializeData ();
@@ -177,6 +179,10 @@ namespace Adminthulhu
 
             discordClient.UserLeft += (e) => {
                 string leftMessage = Utility.SelectRandom (onUserLeaveMessage);
+                if (automaticLeftReason.ContainsKey (e.Id)) {
+                    leftMessage = $"**{Utility.GetUserName (e)}** left - " + automaticLeftReason [ e.Id ];
+                    automaticLeftReason.Remove (e.Id);
+                }
                 messageControl.SendMessage (Utility.GetMainChannel () as SocketTextChannel, leftMessage.Replace ("{USERNAME}", Utility.GetUserName (e)), true);
                 return Task.CompletedTask;
             };
@@ -318,6 +324,10 @@ namespace Adminthulhu
             for (int i = 0; i < commands.Length; i++) {
                 commands[i].Initialize ();
             }
+        }
+
+        public static void SetKickReason(ulong id, string reason) {
+            automaticLeftReason.Add (id, reason);
         }
 
         public static Command FindCommand (string commandName) {
