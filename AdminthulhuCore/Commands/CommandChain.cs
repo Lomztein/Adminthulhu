@@ -70,8 +70,8 @@ namespace Adminthulhu
                 return result.result;
             }
 
-            public override string AllowExecution(SocketMessage e, List<string> args) {
-                string firstPart = base.AllowExecution (e, args);
+            public override string AllowExecution(SocketMessage e) {
+                string firstPart = base.AllowExecution (e);
                 if (owner != 0 && e.Author.Id != owner) {
                     firstPart += "Custom command not public.";
                 }

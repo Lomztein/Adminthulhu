@@ -73,7 +73,7 @@ namespace Adminthulhu {
             string help = "";
             help += ("Commands in the **" + command + "** command set:\n```");
             foreach (Command c in commandsInSet) {
-                if (c.AllowExecution (e, null) == "") {
+                if (c.AllowExecution (e) == "") {
                     help += Utility.FormatCommand (c) + "\n";
                 }
             }

@@ -264,7 +264,7 @@ namespace Adminthulhu
 
         public static Dictionary<ulong, Dictionary<string, object>> variables = new Dictionary<ulong, Dictionary<string, object>> (); // Nested dictionaries at compile time? That ain't confusing.
         public static string [ ] reservedNames = new string [ ] {
-            "arg", "for",
+            "arg", "for", "x",
         };
 
         public static object Get(ulong ID, string name) {

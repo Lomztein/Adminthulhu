@@ -30,6 +30,9 @@ namespace Adminthulhu {
 
         public List<Overload> overloads = new List<Overload> ();
 
+        public static List<Callstack> callstacks = new List<Callstack> ();
+        public static int maxCallstacks = 64;
+
         public class FindMethodResult {
             public MethodInfo method;
             public List<object> parameters;
@@ -147,7 +150,7 @@ namespace Adminthulhu {
         }
 
         public virtual async Task<Result> TryExecute(SocketUserMessage e, int depth, params string[] arguments) {
-            string executionError = AllowExecution (e, arguments.ToList ());
+            string executionError = AllowExecution (e);
             string executionPrefix = "Failed to execute command " + command;
             if (executionError == "") {
                 FindMethodResult result = await FindMethod (e, depth, arguments);
@@ -155,6 +158,7 @@ namespace Adminthulhu {
                     try {
                         result.parameters.Insert (0, e);
                         Result task = await (result.method.Invoke (this, result.parameters.ToArray ()) as Task<Result>);
+                        AddToCallstack (e.Id, new Callstack.Item (this, result.parameters.GetRange(1, result.parameters.Count - 1).Select (x => x.ToString ()).ToList (), task.message, task.value));
                         return task;
 
                     } catch (Exception exc) {
@@ -173,7 +177,7 @@ namespace Adminthulhu {
             return Task.FromResult (new Result (value, message));
         }
 
-        public virtual string AllowExecution (SocketMessage e, List<string> args) {
+        public virtual string AllowExecution (SocketMessage e) {
 
             string errors = string.Empty;
 
@@ -204,9 +208,21 @@ namespace Adminthulhu {
             BotConfiguration.AddConfigurable (this);
         }
 
+        public static void AddToCallstack(ulong chainID, Callstack.Item item) {
+            Callstack curStack = callstacks.Find (x => x.chainID == chainID);
+            if (curStack == null) {
+                curStack = new Callstack (chainID);
+                callstacks.Insert (0, curStack);
+            }
+
+            curStack.items.Add (item);
+            if (callstacks.Count > maxCallstacks)
+                callstacks.RemoveAt (maxCallstacks);
+        }
+
         public virtual string GetHelp (SocketMessage e) {
             string help = "";
-            string executionErrors = AllowExecution (e, null);
+            string executionErrors = AllowExecution (e);
             if (executionErrors == "") {
                 help += "**" + (helpPrefix + command + " - " + shortHelp) + "**```";
                 AddArgs (ref help);
@@ -310,6 +326,31 @@ namespace Adminthulhu {
             public Result(object _value, string _message) {
                 value = _value;
                 message = _message;
+            }
+        }
+
+        public class Callstack {
+
+            public ulong chainID;
+            public List<Item> items;
+
+            public Callstack(ulong _chainID) {
+                chainID = _chainID;
+                items = new List<Item> ();
+            }
+
+            public class Item {
+                public Command command;
+                public List<string> arguments;
+                public string message;
+                public object returnObj;
+
+                public Item(Command _command, List<string> _arguments, string _message, object _returnObj) {
+                    command = _command;
+                    arguments = _arguments;
+                    message = _message;
+                    returnObj = _returnObj;
+                }
             }
         }
     }

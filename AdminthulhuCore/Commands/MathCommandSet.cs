@@ -3,11 +3,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Drawing;
+using System.IO;
 
-namespace Adminthulhu
-{
-    public class MathCommandSet : CommandSet
-    {
+namespace Adminthulhu {
+    public class MathCommandSet : CommandSet {
         public MathCommandSet() {
             command = "math";
             shortHelp = "Math related commands. Works with floating point numbers.";
@@ -16,7 +16,7 @@ namespace Adminthulhu
 
             commandsInSet = new Command [ ] {
                 new Add (), new Subtract (), new Multiply (), new Divide (), new Pow (), new Log (), new Mod (), new Sin (), new Cos (), new Tan (), new ASin (), new ACos (), new ATan (),
-                new Round (), new Ceiling (), new Floor (), new Squareroot (), new Min (), new Max (), new Abs (), new Sign (), new Equal (), new Random (),
+                new Round (), new Ceiling (), new Floor (), new Squareroot (), new Min (), new Max (), new Abs (), new Sign (), new Equal (), new Random (), new Graph (),
             };
         }
 
@@ -34,7 +34,7 @@ namespace Adminthulhu
                 return TaskResult (num1 + num2, $"{num1} + {num2} = {num1 + num2}");
             }
 
-            public Task<Result> Execute(SocketUserMessage e, double[] numbers) {
+            public Task<Result> Execute(SocketUserMessage e, double [ ] numbers) {
                 return TaskResult (numbers.Sum (), $"Sum of given numbes: {numbers.Sum ()}");
             }
 
@@ -242,7 +242,7 @@ namespace Adminthulhu
             }
         }
 
-        public class Ceiling: Command {
+        public class Ceiling : Command {
             public Ceiling() {
                 command = "ceiling";
                 shortHelp = "Shoryuken that sucker.";
@@ -251,7 +251,7 @@ namespace Adminthulhu
             }
 
             public Task<Result> Execute(SocketUserMessage e, double num) {
-                return TaskResult (Math.Ceiling(num), $"ROUND ({num}) = {Math.Ceiling(num)}");
+                return TaskResult (Math.Ceiling (num), $"ROUND ({num}) = {Math.Ceiling (num)}");
             }
         }
 
@@ -264,7 +264,7 @@ namespace Adminthulhu
             }
 
             public Task<Result> Execute(SocketUserMessage e, double num) {
-                return TaskResult (Math.Sqrt (num), $"SQRT ({num}) = {Math.Sqrt(num)}");
+                return TaskResult (Math.Sqrt (num), $"SQRT ({num}) = {Math.Sqrt (num)}");
             }
         }
 
@@ -276,7 +276,7 @@ namespace Adminthulhu
                 AddOverload (typeof (double), "Returns the lowest number of the given array.");
             }
 
-            public Task<Result> Execute(SocketUserMessage e, params double[] nums) {
+            public Task<Result> Execute(SocketUserMessage e, params double [ ] nums) {
                 return TaskResult (nums.Min (), $"Min of given numbers: {nums.Min ()}");
             }
         }
@@ -316,7 +316,7 @@ namespace Adminthulhu
             }
 
             public Task<Result> Execute(SocketUserMessage e, double num) {
-                return TaskResult (Math.Sign (num), $"SIGN ({num}) = {Math.Sign(num)}");
+                return TaskResult (Math.Sign (num), $"SIGN ({num}) = {Math.Sign (num)}");
             }
         }
 
@@ -329,7 +329,7 @@ namespace Adminthulhu
             }
 
             public Task<Result> Execute(SocketUserMessage e, object obj1, object obj2) {
-                return TaskResult (obj1 == obj2, $"{obj1} EQUALS {obj2} = {obj1 == obj2}");
+                return TaskResult (obj1.Equals(obj2), $"{obj1} EQUALS {obj2} = {obj1.Equals (obj2)}");
             }
         }
 
@@ -356,6 +356,91 @@ namespace Adminthulhu
             public Task<Result> Execute(SocketUserMessage e, double min, double max) {
                 System.Random random = new System.Random ();
                 return TaskResult (random.NextDouble () * (max + min) - min, "");
+            }
+        }
+
+        public class Graph : Command {
+
+            public const int X_RES = 512, Y_RES = 512;
+
+            public Graph() {
+                command = "graph";
+                shortHelp = "Draw a graph of a function.";
+            }
+
+            public async Task<Result> Execute(SocketUserMessage e, double xrange, double yrange, string yequals) {
+                double xstart = -xrange / 2d;
+                double xend = xrange / 2d;
+
+                double ystart = yrange / 2d;
+                double yend = -yrange / 2d;
+
+                double xscale = (xend - xstart) / X_RES;
+                double yscale = (yend - ystart) / Y_RES;
+
+                if (yequals.Length > 1 && yequals [ 1 ].IsTrigger ()) {
+
+                    try {
+                        using (Bitmap bitmap = new Bitmap (X_RES, Y_RES)) {
+                            for (int y = 0; y < Y_RES; y++) {
+                                for (int x = 0; x < X_RES; x++) {
+
+                                    if ( 
+                                        x % (int)Math.Abs (X_RES / xrange) == 0 || 
+                                        y % (int)Math.Abs (Y_RES / yrange) == 0
+                                        )
+                                        bitmap.SetPixel (x, y, Color.LightGray);
+                                    else if (y == Y_RES / 2 || x == X_RES / 2) {
+                                        bitmap.SetPixel (x, y, Color.Gray);
+                                    } else {
+                                        bitmap.SetPixel (x, y, Color.White);
+                                    }
+                                }
+                            }
+
+                            try {
+                                using (Graphics graphics = Graphics.FromImage (bitmap)) {
+                                    using (Font font = new Font ("Areal", 16)) {
+                                        graphics.DrawString ($"({xstart},{ystart})", font, Brushes.Gray, 0, 0);
+
+                                        SizeF lowerSize = graphics.MeasureString ($"({xend},{yend})", font);
+                                        graphics.DrawString ($"({xend},{yend})", font, Brushes.Gray, 512 - lowerSize.Width, 512 - lowerSize.Height);
+                                    }
+                                }
+                            }catch { };
+
+                            for (double x = xstart; x < xend; x += xscale) {
+                                CommandVariables.Set (e.Id, "x", x, true);
+
+                                string cmd;
+                                List<string> args = Utility.ConstructArguments (GetParenthesesArgs (yequals), out cmd);
+                                Program.FoundCommandResult result = await Program.FindAndExecuteCommand (e, cmd.Substring (1), args, Program.commands, 1, false);
+                                double y = (double)Convert.ChangeType (result.result.value, typeof (double));
+
+                                int xpix = (int)Math.Round (x / xscale) + X_RES / 2;
+                                int ypix = (int)Math.Round (y / yscale) + Y_RES / 2;
+
+                                if (!(
+                                    xpix < 0 || xpix >= X_RES ||
+                                    ypix < 0 || ypix >= Y_RES
+                                    ))
+                                    bitmap.SetPixel (xpix, ypix, Color.Black);
+                            }
+
+                            using (MemoryStream stream = new MemoryStream ()) {
+                                bitmap.Save (stream, System.Drawing.Imaging.ImageFormat.Png);
+                                stream.Position = 0;
+                                await Program.messageControl.SendImage (e.Channel as SocketTextChannel, "", stream, "function.png", allowInMain);
+                            }
+
+                            return new Result (null, "");
+                        }
+                    } catch (Exception exception) {
+                        Logging.Log (exception);
+                    }
+                }
+
+                return new Result (null, "Function failed, function command might not be a mathematical one.");
             }
         }
     }

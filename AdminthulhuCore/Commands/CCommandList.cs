@@ -26,7 +26,7 @@ namespace Adminthulhu {
         }
 
         public Task<Result> Execute(SocketUserMessage e, Command [ ] commands) {
-            var catagories = commands.Where (x => x.AllowExecution (e, new List<string> ()) == "").GroupBy (x => x.catagory);
+            var catagories = commands.Where (x => x.AllowExecution (e) == "").GroupBy (x => x.catagory);
             string result = "```";
 
             foreach (var catagory in catagories) {
