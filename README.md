@@ -11,6 +11,7 @@ Adminthulhu is an automated Discord bot, originally created for use only in the 
 Getting this bot running on your own server requires, as previously mentioned, self-hosting. The bot is written in C# using the .NET Core multiplatform framework, and is therefore able to run on most platforms, however the automated patcher currently only works on Windows and Linux based systems.
 
 Guide to installing the bot without patcher: https://pastebin.com/xhLinqRD
+
 To download and use the automated patcher, as well as get support, visit the hub Discord server: https://discordapp.com/invite/ktm8DsD
 
  -- KEY FEATURES --
