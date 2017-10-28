@@ -4,7 +4,14 @@ Since this repository has recieved a bit of public attention over the years, it 
 
  -- INTRODUCTION --
  
-Adminthulhu is an automated Discord bot, created for use in the Monster Mash semi-public Discord server. Due to this, the complexity of the bot can be much higher, with a lot more API calls avaialble at any time. At the same time, it is also much easier to program, since there are no checks or data neccesary for different servers. However, because of this, a single bot instance cannot run on multiple servers. While a rewrite would be able to fix this, that would be a bit too much work for something that isn't a professional project in the first place. Perhaps someday, but even then multi-server support is unlikely. A rewrite in this case would function more to clean up the code, which contains a lot of originally unplanned features, leading to a bit of a mess at times.
+Adminthulhu is an automated Discord bot, originally created for use only in the Monster Mash semi-public Discord server. Due to this, the complexity of the bot could be much higher and functionality less specialized. However, due to popular demand, a configuration system was implemented which now allows anyone to host their own customized version of the bot. Additionally, the bot is fully open source, and at least 15% of the code is quite easy to expand upon, allowing users to expand it with their own advanced functionality.
+
+ -- GETTING IT RUNNING --
+ 
+Getting this bot running on your own server requires, as previously mentioned, self-hosting. The bot is written in C# using the .NET Core multiplatform framework, and is therefore able to run on most platforms, however the automated patcher currently only works on Windows and Linux based systems.
+
+Guide to installing the bot without patcher: https://pastebin.com/xhLinqRD
+To download and use the automated patcher, as well as get support, visit the hub Discord server: https://discordapp.com/invite/ktm8DsD
 
  -- KEY FEATURES --
  
@@ -29,8 +36,8 @@ Adminthulhu is an automated Discord bot, created for use in the Monster Mash sem
   
  Commands
   - A large selection of commands to use and abuse.
-  - A clean, easy to expand command framework.
-  - Refusal to send most command responses in main channel.
+  - Using commands as arguments for commands in "Command-chains".
+  - Commands to save and get variables from three different scopes.
   
  -- MINOR FEATURES --
  
