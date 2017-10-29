@@ -58,8 +58,9 @@ namespace Adminthulhu {
             }
 
             foreach (Event e in ongoingEvents) {
-                if (e.time.Add (e.duration) < DateTime.Now) {
+                if (e.time.Add (e.duration) < DateTime.Now && e.eventState != Event.EventState.Ended) {
                     e.eventState = Event.EventState.Ended;
+                    AutoCommands.RunEvent (AutoCommands.Event.EventEnded, e.name);
                 }
             }
 
@@ -83,6 +84,7 @@ namespace Adminthulhu {
         public static void StartEvent ( Event startingEvent ) {
             Logging.Log (Logging.LogType.BOT, "Starting event: " + startingEvent.name + "!");
             startingEvent.eventState = Event.EventState.InProgress;
+            AutoCommands.RunEvent (AutoCommands.Event.EventStarted, startingEvent.name);
 
             if (startingEvent.eventMemberIDs.Count != 0) {
                 string mentions = "";

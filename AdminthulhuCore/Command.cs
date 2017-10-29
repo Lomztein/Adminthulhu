@@ -309,6 +309,18 @@ namespace Adminthulhu {
             return input.Substring (startIndex + 1, endIndex - startIndex - 1);
         }
 
+        public static bool TryIsolateWrappedCommand(string input, out string cmd, out List<string> args) {
+            cmd = "";
+            args = new List<string> ();
+
+            if (input.Length > 1 && input [ 1 ].IsTrigger ()) {
+                args = Utility.ConstructArguments (GetParenthesesArgs (input), out cmd);
+                cmd = cmd.Substring (1);
+                return true;
+            }
+            return false;
+        }
+
         public class Overload {
             public Type returnType;
             public string description;

@@ -18,7 +18,7 @@ namespace Adminthulhu
                 new SetL (), new SetP (), new SetG (),
                 new GetL (), new GetP (), new GetG (),
                 new DelL (), new DelP (), new DelG (),
-                new ArraySet  (),
+                //new ArraySet  (),
             };
         }
 
@@ -255,7 +255,7 @@ namespace Adminthulhu
             }
 
             public Task<Result> Execute(SocketUserMessage e, string name) {
-                return TaskResult (CommandVariables.Delete (e.Author.Id, name), "");
+                return TaskResult (CommandVariables.Delete (0, name), "");
             }
         }
     }
@@ -272,6 +272,21 @@ namespace Adminthulhu
                 if (variables [ ID ].ContainsKey (name)) {
                     return variables [ ID ] [ name ];
                 }
+            }
+            return null;
+        }
+
+        public static async Task<object> AsyncGet(ulong ID, string name, int maxWaitSecs = 10) {
+            if (variables.ContainsKey (ID)) {
+                int index = 0;
+                while (!variables [ ID ].ContainsKey (name)) {
+                    await Task.Delay (1000);
+                    if (index > maxWaitSecs)
+                        break;
+                    index++;
+                }
+                if (variables[ID].ContainsKey (name))
+                   return variables [ ID ] [ name ];
             }
             return null;
         }
@@ -295,6 +310,10 @@ namespace Adminthulhu
         public static bool Delete(ulong ID, string name) {
             if (variables.ContainsKey (ID)) {
                 if (variables [ ID ].ContainsKey (name)) {
+                    // Make sure eventual disposeable variables are properly disposed.
+                    IDisposable disposable = variables [ ID ] [ name ] as IDisposable;
+                    if (disposable != null)
+                        disposable.Dispose ();
                     variables [ ID ].Remove (name);
                     return true;
                 }
@@ -304,7 +323,9 @@ namespace Adminthulhu
 
         public static bool Clear(ulong ID) {
             if (variables.ContainsKey (ID)) {
-                variables.Remove (ID);
+                foreach (var variable in variables [ ID ]) {
+                    Delete (ID, variable.Key);
+                }
                 return true;
             }
             return false;

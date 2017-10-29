@@ -73,6 +73,7 @@ namespace Adminthulhu {
         private void AnnounceBirthday (Date date) {
             SocketGuildUser user = Utility.GetServer ().GetUser (date.userID);
             SocketGuildChannel main = Utility.GetMainChannel ();
+            AutoCommands.RunEvent (AutoCommands.Event.UserBirthday, user.Id.ToString ());
             // I have no idea if this works, and it's possibly the worst possible way I could have done that.
 
             int age = 0;

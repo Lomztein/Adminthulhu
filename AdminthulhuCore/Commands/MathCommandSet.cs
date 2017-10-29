@@ -15,7 +15,7 @@ namespace Adminthulhu {
             requiredPermission = Permissions.Type.UseAdvancedCommands;
 
             commandsInSet = new Command [ ] {
-                new Add (), new Subtract (), new Multiply (), new Divide (), new Pow (), new Log (), new Mod (), new Sin (), new Cos (), new Tan (), new ASin (), new ACos (), new ATan (),
+                new Add (), new Subtract (), new Multiply (), new Divide (), new Pow (), new Log (), new Mod (), new Sin (), new Cos (), new Tan (), new ASin (), new ACos (), new ATan (), new Deg2Rad (), new Rad2Deg (), new PI (),
                 new Round (), new Ceiling (), new Floor (), new Squareroot (), new Min (), new Max (), new Abs (), new Sign (), new Equal (), new Random (), new Graph (),
             };
         }
@@ -216,6 +216,45 @@ namespace Adminthulhu {
             }
         }
 
+        public class Deg2Rad : Command {
+            public Deg2Rad() {
+                command = "deg2rad";
+                shortHelp = "Convert degrees to radians.";
+
+                AddOverload (typeof (double), "Convert the given degrees to radians.");
+            }
+
+            public Task<Result> Execute(SocketUserMessage e, double degs) {
+                return TaskResult (degs / (180d / Math.PI), $"DEG2RAD ({degs}) = {degs / (180d / Math.PI)}");
+            }
+        }
+
+        public class Rad2Deg : Command {
+            public Rad2Deg() {
+                command = "rad2deg";
+                shortHelp = "Convert radians to degrees.";
+
+                AddOverload (typeof (double), "Convert the given radians to degrees.");
+            }
+
+            public Task<Result> Execute(SocketUserMessage e, double rads) {
+                return TaskResult (rads * (180d / Math.PI), $"RAD2DEG ({rads}) = {rads * (180d / Math.PI)}");
+            }
+        }
+
+        public class PI : Command {
+            public PI() {
+                command = "pi";
+                shortHelp = "Don't have intercourse with it.";
+
+                AddOverload (typeof (double), "Returns pi.");
+            }
+
+            public Task<Result> Execute(SocketUserMessage e) {
+                return TaskResult (Math.PI, "PI = " + Math.PI);
+            }
+        }
+
         public class Round : Command {
             public Round() {
                 command = "round";
@@ -245,7 +284,7 @@ namespace Adminthulhu {
         public class Ceiling : Command {
             public Ceiling() {
                 command = "ceiling";
-                shortHelp = "Shoryuken that sucker.";
+                shortHelp = "Shoryuken that sucker.";   
 
                 AddOverload (typeof (double), "Ceils given input to the nearest whole number above itself.");
             }
@@ -375,13 +414,17 @@ namespace Adminthulhu {
                 double ystart = yrange / 2d;
                 double yend = -yrange / 2d;
 
+                // These are actually the inverse scale, and should be the other way around. Though at this point it doesn't really matter.
                 double xscale = (xend - xstart) / X_RES;
                 double yscale = (yend - ystart) / Y_RES;
 
-                if (yequals.Length > 1 && yequals [ 1 ].IsTrigger ()) {
+                string cmd;
+                List<string> args;
+                if (TryIsolateWrappedCommand (yequals, out cmd, out args)) {
 
                     try {
                         using (Bitmap bitmap = new Bitmap (X_RES, Y_RES)) {
+                            int yprev = 0;
                             for (int y = 0; y < Y_RES; y++) {
                                 for (int x = 0; x < X_RES; x++) {
 
@@ -410,27 +453,34 @@ namespace Adminthulhu {
                             }catch { };
 
                             for (double x = xstart; x < xend; x += xscale) {
-                                CommandVariables.Set (e.Id, "x", x, true);
-
-                                string cmd;
-                                List<string> args = Utility.ConstructArguments (GetParenthesesArgs (yequals), out cmd);
-                                Program.FoundCommandResult result = await Program.FindAndExecuteCommand (e, cmd.Substring (1), args, Program.commands, 1, false);
-                                double y = (double)Convert.ChangeType (result.result.value, typeof (double));
 
                                 int xpix = (int)Math.Round (x / xscale) + X_RES / 2;
-                                int ypix = (int)Math.Round (y / yscale) + Y_RES / 2;
+                                int ycur = await CalcY (e, cmd, args, x, xscale, yscale);
 
-                                if (!(
-                                    xpix < 0 || xpix >= X_RES ||
-                                    ypix < 0 || ypix >= Y_RES
-                                    ))
-                                    bitmap.SetPixel (xpix, ypix, Color.Black);
+                                int dist = ycur - yprev;
+                                int sign = Math.Sign (dist);
+                                dist = Math.Abs (dist);
+                                if (dist == 0)
+                                    dist = 1;
+
+                                for (int yy = 0; yy < dist; yy++) {
+                                    double fraction = yy / (double)dist * xscale;
+                                    int ypix = await CalcY (e, cmd, args, x + fraction, xscale, yscale);
+
+                                    if (!(
+                                        xpix < 0 || xpix >= X_RES ||
+                                        ypix < 0 || ypix >= Y_RES
+                                        ))
+                                        bitmap.SetPixel (xpix, ypix, Color.Black);
+                                }
+
+                                yprev = ycur;
                             }
 
                             using (MemoryStream stream = new MemoryStream ()) {
                                 bitmap.Save (stream, System.Drawing.Imaging.ImageFormat.Png);
                                 stream.Position = 0;
-                                await Program.messageControl.SendImage (e.Channel as SocketTextChannel, "", stream, "function.png", allowInMain);
+                                await Program.messageControl.SendImage (e.Channel as SocketTextChannel, "", stream, "graph.png", allowInMain);
                             }
 
                             return new Result (null, "");
@@ -441,6 +491,17 @@ namespace Adminthulhu {
                 }
 
                 return new Result (null, "Function failed, function command might not be a mathematical one.");
+            }
+
+            private async Task<int> CalcY(SocketUserMessage e, string cmd, List<string> args, double x, double xscale, double yscale) {
+                CommandVariables.Set (e.Id, "x", x, true);
+
+                Program.FoundCommandResult result = await Program.FindAndExecuteCommand (e, cmd, args, Program.commands, 1, false);
+                double y = (double)Convert.ChangeType (result.result.value, typeof (double));
+
+                int ycur = (int)Math.Round (y / yscale) + Y_RES / 2;
+
+                return ycur;
             }
         }
     }

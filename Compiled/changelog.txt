@@ -1,5 +1,8 @@
-﻿I felt inspired and did some stuff, and now you get to play with it.
- * Fixed !math equals being bigoted.
- * Added !callstack command, which shows which commands were executed in a chain.
- * Added !math graph command, which draws graphs of given math functions.
- * Cleaned a tiny bit of the flustercluck that is commands internals.
+﻿Experimental stuff incoming!
+ * Automated commands, autocs for short!
+	- Can run any command chain after certain events.
+	- Highly experimental, may crash bot and/or destroy universe.
+	- Generally awfully executed!
+ * Added math commands to convert between radians and degrees.
+ * Added !math pi, which unsurprisingly returns tau. Jk, it's pi.
+ * !math graph now attempts to draw full curve instead of just drawing dots for each x-point.

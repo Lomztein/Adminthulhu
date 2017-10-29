@@ -68,6 +68,7 @@ namespace Adminthulhu {
                             if (clockablesEnabled [ i ])
                                 clockables [ i ].OnHourPassed (now);
                         }
+                        AutoCommands.RunEvent (AutoCommands.Event.HourPassed, now.ToString ());
                     }
 
                     if (now.Day != lastMesauredTime.Day) {
@@ -75,6 +76,7 @@ namespace Adminthulhu {
                             if (clockablesEnabled [ i ])
                                 clockables [ i ].OnDayPassed (now);
                         }
+                        AutoCommands.RunEvent (AutoCommands.Event.DayPassed, now.ToString ());
                     }
                 }
 

@@ -23,7 +23,7 @@ namespace Adminthulhu
             new GameCommands (), new StrikeCommandSet (), new CAddEventGame (), new CRemoveEventGame (), new CHighlightEventGame (),
             new CAcceptYoungling (), new CReloadConfiguration (), new CCreateBook (), new CSetYoungling (), new CCreatePoll (), new CCheckPatch (),
             new CSetSetting (), new CDisplayFile (), new CUrbanDictionary (), new CPrint (), new PermissionCommands (),
-            new DiscordCommandSet (), new MiscCommandSet (), new FlowCommandSet (), new MathCommandSet (), new VariableCommandSet (), new CommandChain.CustomCommandSet (), new CCallStack (),
+            new DiscordCommandSet (), new MiscCommandSet (), new FlowCommandSet (), new MathCommandSet (), new VariableCommandSet (), new CommandChain.CustomCommandSet (), new AutocCommandSet (), new CCallStack (),
         };
 
         public static string dataPath = "";
@@ -120,6 +120,7 @@ namespace Adminthulhu
             InviteHandler.Initialize ();
             CommandChain.Initialize ();
             Permissions.Initialize ();
+            AutoCommands.Initialize ();
             clock = new Clock ();
 
             InitializeData ();
@@ -133,7 +134,7 @@ namespace Adminthulhu
                 Logging.Log (Logging.LogType.CHAT, Utility.GetChannelName (e) + " says: " + e.Content);
 
                 bool hideTrigger = false;
-                if (e.Author.Id != discordClient.CurrentUser.Id && e.Content.Length > 0 && ContainsCommandTrigger (e.Content, out hideTrigger)) {
+                if (e.Content.Length > 0 && ContainsCommandTrigger (e.Content, out hideTrigger)) {
                     string message = e.Content;
 
                     if (message.Length > 0) {
@@ -146,7 +147,10 @@ namespace Adminthulhu
                     }
                 }
 
-                FindPhraseAndRespond (e);
+                if (e.Author.Id != discordClient.CurrentUser.Id) {
+                    FindPhraseAndRespond (e);
+                    AutoCommands.RunEvent (AutoCommands.Event.MessageRecieved, e.Content);
+                }
 
                 if (e.Content.Length > 0 && hideTrigger) {
                     e.DeleteAsync ();
@@ -154,9 +158,22 @@ namespace Adminthulhu
                 }
             };
 
+            discordClient.MessageUpdated += async (cache, message, channel) => {
+                Logging.Log (Logging.LogType.CHAT, "Message edited: " + Utility.GetChannelName (message as SocketMessage) + " " + message.Content);
+                AutoCommands.RunEvent (AutoCommands.Event.MessageDeleted, message.Content);
+            };
+
+            discordClient.MessageDeleted += async (cache, channel) => {
+                IMessage message = await cache.GetOrDownloadAsync ();
+                Logging.Log (Logging.LogType.CHAT, "Message deleted: " + Utility.GetChannelName (channel as SocketGuildChannel));
+                AutoCommands.RunEvent (AutoCommands.Event.MessageDeleted);
+            };
+
             discordClient.UserJoined += async (e) => {
                 Younglings.OnUserJoined (e);
                 RestInviteMetadata possibleInvite = await InviteHandler.FindInviter ();
+                Logging.Log (Logging.LogType.BOT, "User " + e.Username + " joined.");
+                AutoCommands.RunEvent (AutoCommands.Event.UserJoined, e.Id.ToString ());
                 SocketGuildUser inviter;
 
                 if (possibleInvite != null) {
@@ -179,6 +196,8 @@ namespace Adminthulhu
 
             discordClient.UserLeft += (e) => {
                 string leftMessage = Utility.SelectRandom (onUserLeaveMessage);
+                Logging.Log (Logging.LogType.BOT, "User " + e.Username + " left.");
+                AutoCommands.RunEvent (AutoCommands.Event.UserLeft, e.Id.ToString ());
                 if (automaticLeftReason.ContainsKey (e.Id)) {
                     leftMessage = $"**{Utility.GetUserName (e)}** left - " + automaticLeftReason [ e.Id ];
                     automaticLeftReason.Remove (e.Id);
@@ -194,17 +213,16 @@ namespace Adminthulhu
                 if (after.VoiceChannel != null)
                     Voice.allVoiceChannels [ after.VoiceChannel.Id ].OnUserJoined (user as SocketGuildUser);
 
-                await Voice.OnUserUpdated (guild, before.VoiceChannel, after.VoiceChannel);
+                if (before.VoiceChannel == null && after.VoiceChannel != null)
+                    AutoCommands.RunEvent (AutoCommands.Event.JoinedVoice, user.Id.ToString (), after.VoiceChannel.Id.ToString ());
+                if (before.VoiceChannel != null && after.VoiceChannel == null)
+                    AutoCommands.RunEvent (AutoCommands.Event.LeftVoice, user.Id.ToString (), before.VoiceChannel.Id.ToString ());
 
+                await Voice.OnUserUpdated (guild, before.VoiceChannel, after.VoiceChannel);
                 return;
             };
 
             discordClient.GuildMemberUpdated += async (before, after) => {
-                SocketGuild guild = (before as SocketGuildUser).Guild;
-
-                SocketGuildChannel channel = Utility.GetMainChannel ();
-                await Voice.OnUserUpdated (guild, before.VoiceChannel, after.VoiceChannel);
-
                 if ((before as SocketGuildUser).Nickname != (after as SocketGuildUser).Nickname) {
                     MentionNameChange (before, after);
                 }
@@ -263,11 +281,11 @@ namespace Adminthulhu
                 using (HttpClient client = new HttpClient ()) {
                     string changelog = await client.GetStringAsync (AutoPatcher.url + "changelog.txt");
                     string version = await client.GetStringAsync (AutoPatcher.url + "version.txt");
-                    string total = $"Succesfully installed new patch, changelog for {version}:\n```{changelog}```";
+                    string total = $"Succesfully installed new patch, changelog for {version}:\n{changelog}";
 
                     SocketGuildChannel patchNotesChannel = Utility.GetServer ().GetChannel (onPatchedAnnounceChannel);
                     if (patchNotesChannel != null) {
-                        messageControl.SendMessage (patchNotesChannel as ISocketMessageChannel, total, true);
+                        messageControl.SendMessage (patchNotesChannel as ISocketMessageChannel, total, true, "```");
                     }
                 }
             }

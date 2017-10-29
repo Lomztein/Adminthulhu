@@ -193,6 +193,10 @@ namespace Adminthulhu {
             }
         }
 
+        public static string GetChannelName(SocketGuildChannel channel) {
+            return $"[{channel.Name}]";
+        }
+
         public static async Task SetGame(string gameName) { // Wrapper functions ftw
             await Program.discordClient.SetGameAsync (gameName);
         }
