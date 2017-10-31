@@ -42,56 +42,68 @@ namespace Adminthulhu {
             }
         }
 
+        public async Task<List<object>> ConvertChainCommandsToObjects(SocketUserMessage e, List<object> input, int depth) {
+            List<object> converted = new List<object> ();
+
+            foreach (object obj in input) {
+                object result = obj;
+                string stringObj = obj.ToString ();
+
+                if (stringObj.Length > 0) {
+                    if (stringObj [ 0 ].IsTrigger ()) {
+
+                        string cmd;
+                        List<string> args = Utility.ConstructArguments (stringObj.Substring (1), out cmd);
+
+                        Program.FoundCommandResult foundCommandResult = await Program.FindAndExecuteCommand (e, cmd, args, Program.commands, depth + 1, false, true);
+                        if (foundCommandResult.result != null) {
+                            result = foundCommandResult.result.value;
+                        }
+                    } else if (stringObj [ 0 ] == '{') {
+                        int endIndex = stringObj.IndexOf ('}');
+                        if (endIndex != -1) {
+                            string varName = stringObj.Substring (1, endIndex - 1);
+                            result = CommandVariables.Get (e.Id, varName);
+                        }
+                    }
+                }
+
+                converted.Add (result);
+            }
+
+            return converted;
+        }
+
         // Don't look at this, it became a bit fucky after command chaining was implemented.
-        public async Task<FindMethodResult> FindMethod(SocketUserMessage e, int depth, params string [ ] arguments) {
+        public async Task<FindMethodResult> FindMethod(SocketUserMessage e, int depth, params object [ ] arguments) {
             MethodInfo [ ] infos = GetType ().GetMethods ().Where (x => x.Name == "Execute").ToArray ();
-            List<object> parameterList = new List<object> ();
+            dynamic parameterList = new List<object> ();
 
             foreach (MethodInfo inf in infos) {
                 ParameterInfo [ ] paramInfo = inf.GetParameters ();
 
-                if (arguments.Length == 1)
-                    if (arguments [ 0 ] [ 0 ] == '(')
-                        arguments = Utility.SplitArgs (GetParenthesesArgs (arguments [ 0 ])).ToArray ();
-
-                bool containsParamArray = paramInfo.Any (x => x.IsDefined (typeof (ParamArrayAttribute), false));
-                bool isMethod = paramInfo.Length - 1 == arguments.Length || (arguments.Length >= paramInfo.Length && containsParamArray); // Have to off-by-one since all commands gets the SocketUserMessage parsed through.
+                bool anyParams = paramInfo.Any (x => x.IsDefined (typeof (ParamArrayAttribute)));
+                bool isMethod = paramInfo.Length - 1 == arguments.Length || (anyParams && arguments.Length >= paramInfo.Length); // Have to off-by-one since all commands gets the SocketUserMessage parsed through.
 
                 if (isMethod == true) {
                     for (int i = 1; i < paramInfo.Length; i++) {
                         try {
+                            int argIndex = i - 1;
+                            object arg = arguments [ argIndex ];
 
-                            object arg = null;
-                            List<object> paramArray = new List<object> ();
+                            if (paramInfo [ i ].IsDefined (typeof (ParamArrayAttribute)) && !arguments[argIndex].GetType ().IsArray) {
+                                Type elementType = paramInfo [ i ].ParameterType.GetElementType ();
 
-                            if (paramInfo[i].IsDefined (typeof (ParamArrayAttribute), false)) {
-                                dynamic dyn = Activator.CreateInstance (Type.GetType ($"System.Collections.Generic.List`1[{paramInfo [ i ].ParameterType.GetElementType ().FullName}]"));
-                                
-                                if (!arguments [ i - 1 ].GetType ().IsArray) {
-                                    for (int j = i - 1; j < arguments.Length; j++) {
-                                        arg = arguments [ j ];
-
-                                        try {
-                                            dynamic convert = TryConvert (paramInfo [ i ], arg, true);
-                                            dyn.Add (convert);
-                                        } catch { }
-
-                                        arg = await TryExecuteChainCommand (e, arg, depth);
-                                    }
-                                    List<double> doub = new List<double> ();
-                                    arg = dyn.ToArray ();
-                                } else {
-                                    arg = arguments[i];
+                                dynamic dyn = Activator.CreateInstance (typeof (List<>).MakeGenericType (elementType));
+                                for (int j = argIndex; j < arguments.Length; j++) {
+                                    TryAddToParams (ref dyn, arguments [ j ], elementType);
                                 }
 
-                            } else {
-                                arg = arguments [ i - 1 ];
+                                arg = dyn.ToArray ();
                             }
 
-                            arg = await TryExecuteChainCommand (e, arg, depth);
-
                             if (arg != null)
-                                TryAddToParams (ref parameterList, paramInfo [ i ], arg, false);
+                                TryAddToParams (ref parameterList, arg, paramInfo[i].ParameterType);
                             else
                                 parameterList.Add (null);
                         } catch (Exception exc) {
@@ -111,48 +123,39 @@ namespace Adminthulhu {
             return null;
         }
 
-        private async Task<object> TryExecuteChainCommand(SocketUserMessage e, object arg, int depth) {
-            if (arg != null) {
-                while (arg != null && arg.ToString () [ 0 ].IsTrigger ()) {
-                    string newCmd = "";
-                    List<string> newArgs = new List<string> ();
-
-                    newArgs = Utility.ConstructArguments (arg.ToString ().Substring (1), out newCmd);
-
-                    Program.FoundCommandResult fr = await Program.FindAndExecuteCommand (e, newCmd, newArgs, Program.commands, depth);
-                    Result res = fr.result;
-                    arg = res.value;
-                }
-            }
-            return arg;
+        private void TryAddToParams(ref dynamic paramList, object arg, Type type) {
+            dynamic result = TryConvert (arg, type);
+            paramList.Add (result);
         }
 
-        private void TryAddToParams(ref List<object> paramList, ParameterInfo info, object arg, bool hasParamsAttribute) {
-            Type type = hasParamsAttribute ? info.ParameterType.GetElementType () : info.ParameterType;
-            paramList.Add (TryConvert (info, arg, hasParamsAttribute));
-        }
-
-        private object TryConvert(ParameterInfo info, object toConvet, bool hasParamsAttribute) {
-            Type type = hasParamsAttribute ? info.ParameterType.GetElementType () : info.ParameterType;
+        private object TryConvert(object toConvert, Type type) {
             try {
-                if (toConvet != null) {
-                    object obj = Convert.ChangeType (toConvet, type);
+                if (toConvert != null) {
+                    dynamic obj = Convert.ChangeType (toConvert, type);
                     return obj;
                 } else {
                     throw new Exception ();
                 }
             } catch {
-                if (type.IsInstanceOfType (toConvet) || toConvet == null)
-                    return toConvet;
+                if (type.IsInstanceOfType (toConvert) || toConvert == null)
+                    return toConvert;
                 else
                     throw new Exception ();
             }
         }
 
-        public virtual async Task<Result> TryExecute(SocketUserMessage e, int depth, params string[] arguments) {
+        public virtual async Task<Result> TryExecute(SocketUserMessage e, int depth, params object[] arguments) {
             string executionError = AllowExecution (e);
             string executionPrefix = "Failed to execute command " + command;
             if (executionError == "") {
+
+                if (arguments.Length == 1) {
+                    string stringArg = arguments [ 0 ].ToString ();
+                    if (stringArg [ 0 ] == '(')
+                        arguments = Utility.SplitArgs (GetParenthesesArgs (stringArg)).ToArray ();
+                }
+
+                arguments = (await ConvertChainCommandsToObjects (e, arguments.ToList (), depth)).ToArray ();
                 FindMethodResult result = await FindMethod (e, depth, arguments);
                 if (result != null) {
                     try {
@@ -321,6 +324,19 @@ namespace Adminthulhu {
             return false;
         }
 
+        public static List<Command> RecursiveCacheCommands (List<Command> source) {
+            List<Command> result = new List<Command> ();
+            foreach (Command cmd in source) {
+                if (cmd is CommandSet) {
+                    CommandSet set = cmd as CommandSet;
+                    result.AddRange (RecursiveCacheCommands (set.commandsInSet.ToList ()));
+                } else {
+                    result.Add (cmd);
+                }
+            }
+            return result;
+        }
+
         public class Overload {
             public Type returnType;
             public string description;
@@ -365,5 +381,22 @@ namespace Adminthulhu {
                 }
             }
         }
+
+        /*public class Request {
+
+    public Command command;
+    public List<object> arguments;
+    public SocketUserMessage userMessage;
+
+    public Request(Command _command, List<object> _arguments, SocketUserMessage _userMessage) {
+        command = _command;
+        arguments = _arguments;
+        userMessage = _userMessage;
+    }
+
+    public async Task<Result> Execute(int depth) {
+        return await command.TryExecute (userMessage, depth, arguments.ToArray ());
+    }
+}*/
     }
 }

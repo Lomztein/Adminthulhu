@@ -186,7 +186,7 @@ namespace Adminthulhu {
                 AddOverload (typeof (bool), "Determines of game roles will be added to you automatically.");
             }
 
-            public Task<Result> Execute(SocketUserMessage e, List<string> arguments) {
+            public Task<Result> Execute(SocketUserMessage e) {
                 bool result = UserConfiguration.ToggleBoolean (e.Author.Id, "AutoManageGameRoles");
                 return TaskResult (result, "Auto roles enabled: " + result.ToString ());
             }
@@ -203,7 +203,7 @@ namespace Adminthulhu {
                 AddOverload (typeof (bool), "Toggles access to NSFW channels, by toggling the  role on you.");
             }
 
-            public async Task<Result> Execute(SocketUserMessage e, List<string> arguments) {
+            public async Task<Result> Execute(SocketUserMessage e) {
                 SocketRole role = Utility.GetServer ().GetRole (roleID);
                 if ((e.Author as SocketGuildUser).Roles.Contains (role)) {
                     await Utility.SecureRemoveRole (e.Author as SocketGuildUser, role);

@@ -28,23 +28,11 @@ namespace Adminthulhu {
             }
         }
 
-        public override async Task<Result> TryExecute (SocketUserMessage e, int depth, params string[] arguments) {
+        public override async Task<Result> TryExecute (SocketUserMessage e, int depth, params object[] arguments) {
             // Standard command format is !command arg1;arg2;arg3
             // Commandset format is !command secondaryCommand arg1;arg2;arg3
             // Would it be possible to have commandSets within commandSets?
             if (arguments.Length != 0) {
-
-                if (arguments.Length == 1) {
-                    int spaceIndex = arguments [ 0 ].IndexOf (' ');
-                    if (spaceIndex != -1) {
-                        string beginning = arguments [ 0 ].Substring (0, spaceIndex);
-                        if (arguments [ 0 ] [ spaceIndex + 1 ] == '(') {
-                            arguments = Utility.SplitArgs (GetParenthesesArgs (arguments [ 0 ])).ToArray ();
-                            arguments [ 0 ] = beginning + " " + arguments [ 0 ];
-                        }
-                    }
-                }
-
 
                 string combinedArgs = "";
                 for (int i = 0; i < arguments.Length; i++) {
@@ -53,12 +41,10 @@ namespace Adminthulhu {
                         combinedArgs += ";";
                 }
 
-                string message = this.command + " " + combinedArgs;
-                string secondayCommand = message.Substring (message.IndexOf (' ') + 1);
-                string command = "";
+                string cmd = "";
 
-                List<string> newArguments = Utility.ConstructArguments (secondayCommand, out command);
-                return (await Program.FindAndExecuteCommand (e, command, newArguments, commandsInSet, depth)).result;
+                List<string> newArguments = Utility.ConstructArguments (combinedArgs, out cmd);
+                return (await Program.FindAndExecuteCommand (e, cmd, newArguments, commandsInSet, depth, false, false)).result;
             } else {
                 return new Result (this, "");
             }

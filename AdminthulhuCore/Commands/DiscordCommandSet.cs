@@ -77,7 +77,7 @@ namespace Adminthulhu
                     return TaskResult (users.ElementAt (random.Next (0, users.Count ())), "");
                 }
 
-                public Task<Result> Execute(SocketUserMessage e, IUser [ ] users) {
+                public Task<Result> Execute(SocketUserMessage e, params IUser [ ] users) {
                     System.Random random = new System.Random ();
                     return TaskResult (users.ElementAt (random.Next (0, users.Count ())), "");
                 }
@@ -266,15 +266,10 @@ namespace Adminthulhu
                 shortHelp = "Mentions mentionable Discord objects.";
                 catagory = Category.Utility;
 
-                AddOverload (typeof (string), "Mention given object.");
                 AddOverload (typeof (string), "Mention all given objects.");
             }
 
-            public Task<Result> Execute(SocketUserMessage e, IMentionable mention) {
-                return TaskResult (mention.Mention, mention.Mention);
-            }
-
-            public Task<Result> Execute(SocketUserMessage e, IMentionable[] mentionables) {
+            public Task<Result> Execute(SocketUserMessage e, params IMentionable[] mentionables) {
                 string total = "";
                 foreach (IMentionable mention in mentionables) {
                     total += mention.Mention;

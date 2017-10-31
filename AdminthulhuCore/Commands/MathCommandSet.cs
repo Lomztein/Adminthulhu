@@ -455,26 +455,33 @@ namespace Adminthulhu {
                             for (double x = xstart; x < xend; x += xscale) {
 
                                 int xpix = (int)Math.Round (x / xscale) + X_RES / 2;
-                                int ycur = await CalcY (e, cmd, args, x, xscale, yscale);
+                                System.Tuple<int, bool> res = await CalcY (e, cmd, args, x, xscale, yscale);
+                                int ycur = res.Item1;
 
-                                int dist = ycur - yprev;
-                                int sign = Math.Sign (dist);
-                                dist = Math.Abs (dist);
-                                if (dist == 0)
-                                    dist = 1;
+                                if (res.Item2) { // Is the result defined?
+                                    int dist = ycur - yprev;
+                                    int sign = Math.Sign (dist);
+                                    dist = Math.Abs (dist);
+                                    if (dist == 0)
+                                        dist = 1;
 
-                                for (int yy = 0; yy < dist; yy++) {
-                                    double fraction = yy / (double)dist * xscale;
-                                    int ypix = await CalcY (e, cmd, args, x + fraction, xscale, yscale);
+                                    for (int yy = 0; yy < dist; yy++) {
+                                        double fraction = yy / (double)dist * xscale;
+                                        System.Tuple<int, bool> locRes = await CalcY (e, cmd, args, x + fraction, xscale, yscale);
+                                        if (!locRes.Item2)
+                                            break;
 
-                                    if (!(
-                                        xpix < 0 || xpix >= X_RES ||
-                                        ypix < 0 || ypix >= Y_RES
-                                        ))
-                                        bitmap.SetPixel (xpix, ypix, Color.Black);
+                                        int ypix = locRes.Item1;
+
+                                        if (!(
+                                            xpix < 0 || xpix >= X_RES ||
+                                            ypix < 0 || ypix >= Y_RES
+                                            ))
+                                            bitmap.SetPixel (xpix, ypix, Color.Black);
+                                    }
+
+                                    yprev = ycur;
                                 }
-
-                                yprev = ycur;
                             }
 
                             using (MemoryStream stream = new MemoryStream ()) {
@@ -493,15 +500,15 @@ namespace Adminthulhu {
                 return new Result (null, "Function failed, function command might not be a mathematical one.");
             }
 
-            private async Task<int> CalcY(SocketUserMessage e, string cmd, List<string> args, double x, double xscale, double yscale) {
+            private async Task<System.Tuple<int, bool>> CalcY(SocketUserMessage e, string cmd, List<string> args, double x, double xscale, double yscale) {
                 CommandVariables.Set (e.Id, "x", x, true);
 
-                Program.FoundCommandResult result = await Program.FindAndExecuteCommand (e, cmd, args, Program.commands, 1, false);
+                Program.FoundCommandResult result = await Program.FindAndExecuteCommand (e, cmd, args, Program.commands, 1, false, true);
                 double y = (double)Convert.ChangeType (result.result.value, typeof (double));
 
                 int ycur = (int)Math.Round (y / yscale) + Y_RES / 2;
 
-                return ycur;
+                return new System.Tuple<int, bool> (ycur, !double.IsNaN (y));
             }
         }
     }

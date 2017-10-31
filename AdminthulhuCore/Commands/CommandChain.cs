@@ -66,7 +66,7 @@ namespace Adminthulhu
                 for (int i = 0; i < parameters.Length; i++) {
                     CommandVariables.Set (e.Id, "arg" + i, parameters [ i ], true);
                 }
-                Program.FoundCommandResult result = await Program.FindAndExecuteCommand (e, cmd.Substring (1), args, Program.commands, 0, false);
+                Program.FoundCommandResult result = await Program.FindAndExecuteCommand (e, cmd.Substring (1), args, Program.commands, 0, false, true);
                 return result.result;
             }
 

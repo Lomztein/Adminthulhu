@@ -82,7 +82,7 @@ namespace Adminthulhu
                 return TaskResult (bool1 && bool2, $"{bool1} AND {bool2} = {bool1 && bool2}");
             }
 
-            public Task<Result> Execute(SocketUserMessage e, bool [ ] booleans) {
+            public Task<Result> Execute(SocketUserMessage e, params bool [ ] booleans) {
                 return TaskResult (booleans.All (x => x), "");
             }
         }
@@ -100,7 +100,7 @@ namespace Adminthulhu
                 return TaskResult (bool1 || bool2, $"{bool1} OR {bool2} = {bool1 || bool2}");
             }
 
-            public Task<Result> Execute(SocketUserMessage e, bool [ ] booleans) {
+            public Task<Result> Execute(SocketUserMessage e, params bool [ ] booleans) {
                 return TaskResult (booleans.Any (x => x), "");
             }
         }
@@ -119,7 +119,7 @@ namespace Adminthulhu
                     List<string> args = Utility.ConstructArguments (GetParenthesesArgs (command), out cmd);
                     for (int i = 0; i < amount; i++) {
                         CommandVariables.Set (e.Id, "for", i, true);
-                        await Program.FindAndExecuteCommand (e, cmd.Substring (1), args, Program.commands, 1);
+                        await Program.FindAndExecuteCommand (e, cmd.Substring (1), args, Program.commands, 1, false, true);
                     }
                 }
                 return new Result (null, "");
@@ -142,7 +142,7 @@ namespace Adminthulhu
                 if (command.Length > 1 && command [ 1 ].IsTrigger ()) {
                     List<string> args = Utility.ConstructArguments (GetParenthesesArgs (command), out cmd);
 
-                    Program.FoundCommandResult res = await Program.FindAndExecuteCommand (e, cmd.Substring (1), args, Program.commands, 1);
+                    Program.FoundCommandResult res = await Program.FindAndExecuteCommand (e, cmd.Substring (1), args, Program.commands, 1, true, true);
                     return new Result (res.result, "");
                 }
                 return new Result (command, "");
@@ -162,7 +162,7 @@ namespace Adminthulhu
                 AddOverload (typeof (object), "Splits the command chain into two given branches though commands as arguments.");
             }
 
-            public Task<Result> Execute(SocketUserMessage e, string path1, string path2) {
+            public Task<Result> Execute(SocketUserMessage e, params string[] paths) {
                 return TaskResult (null, "");
             }
         }

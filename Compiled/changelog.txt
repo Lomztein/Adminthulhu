@@ -1,8 +1,9 @@
-﻿Experimental stuff incoming!
- * Automated commands, autocs for short!
-	- Can run any command chain after certain events.
-	- Highly experimental, may crash bot and/or destroy universe.
-	- Generally awfully executed!
- * Added math commands to convert between radians and degrees.
- * Added !math pi, which unsurprisingly returns tau. Jk, it's pi.
- * !math graph now attempts to draw full curve instead of just drawing dots for each x-point.
+﻿Command code cleanup!
+ * Cleaned up and improved command execution code.
+	- Fixed commands which take in a params type parameter, effectively fixing a lot of broken commands, including all custom. 
+	- Code is much cleaner, now looks more like a house-of-cardbox than a house-of-cards.
+	- Wrapping curly brackets around text is now synonymous to using !var getl <name>, for instance "{arg0}" = "!var getl arg0"
+ * Fixed opt-in/out usersettings commands being broken. 
+ * Added experimental command caching feature, which will cache all ~200 commands. This allows you to type !sin instead of !math sin, however !math sin still works fine. It currently just executes the first one found in case of conflicts.
+ * Fixed birthdays not giving numbers the correct suffix under certain conditions.
+ * Fixed !math graph effectively crashing the bot when typing in limited-range functions.

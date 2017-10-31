@@ -42,6 +42,8 @@ namespace Adminthulhu {
 
         public static string dataFileName = "weeklyevent";
 
+        public static uint everyXWeek = 0;
+        public static uint weekIndex = 0;
         public static DayOfWeek voteStartDay = DayOfWeek.Monday;
         public static DayOfWeek voteEndDay = DayOfWeek.Thursday;
         public static string eventDayName = "friday";
@@ -76,6 +78,7 @@ namespace Adminthulhu {
             gamesPerWeek = BotConfiguration.GetSetting ("WeeklyEvent.GamesPerWeek", "EventGamesPerWeek", gamesPerWeek);
             announcementsChannelName = BotConfiguration.GetSetting ("Server.AnnouncementsChannelName", "AnnouncementsChannelName", "announcements");
 
+            everyXWeek = BotConfiguration.GetSetting ("Weekly>Event.EveryXWeek", "", everyXWeek);
             voteStartDay = BotConfiguration.GetSetting ("WeeklyEvent.VoteStartDay", "EventVoteStartDay", voteStartDay);
             voteEndDay = BotConfiguration.GetSetting ("WeeklyEvent.VoteEndDay", "EventVoteEndDay", voteEndDay);
             eventDayName = BotConfiguration.GetSetting ("WeeklyEvent.EventDayName", "EventDayName", eventDayName);
@@ -103,6 +106,7 @@ namespace Adminthulhu {
             joinMessageID = loadedData.joinMessageID;
             allGames = loadedData.allGames;
             status = loadedData.status;
+            weekIndex = loadedData.weekIndex;
 
             if (allGames == null)
                 allGames = new List<Game> ();
@@ -168,14 +172,18 @@ namespace Adminthulhu {
         }
 
         public static void SaveData() {
-            SerializationIO.SaveObjectToFile (Program.dataPath + dataFileName + Program.gitHubIgnoreType, new Data (games, votes, votingMessageID, joinMessageID, allGames, status));
+            SerializationIO.SaveObjectToFile (Program.dataPath + dataFileName + Program.gitHubIgnoreType, new Data (games, votes, votingMessageID, joinMessageID, allGames, status, weekIndex));
         }
 
         public Task OnDayPassed(DateTime time) {
-            if (time.DayOfWeek == voteStartDay)
-                BeginNewVote ();
-            if (time.DayOfWeek == voteEndDay)
-                CountVotes ();
+            if (weekIndex == 0) {
+                if (time.DayOfWeek == voteStartDay)
+                    BeginNewVote ();
+                if (time.DayOfWeek == voteEndDay)
+                    CountVotes ();
+            }
+            weekIndex++;
+            weekIndex %= everyXWeek;
             return Task.CompletedTask; // Lets try without the votes possibly standing in the way. We trust the timer now.
         }
 
@@ -473,14 +481,16 @@ namespace Adminthulhu {
             public ulong votingMessageID;
             public ulong joinMessageID;
             public WeeklyEventStatus status;
+            public uint weekIndex;
 
-            public Data(Game[] _games, List<Vote> _votes, ulong _votingMessageID, ulong _joinMessageID, List<Game> _allGames, WeeklyEventStatus _status) {
+            public Data(Game[] _games, List<Vote> _votes, ulong _votingMessageID, ulong _joinMessageID, List<Game> _allGames, WeeklyEventStatus _status, uint _weekIndex) {
                 games = _games;
                 allGames = _allGames;
                 votes = _votes;
                 votingMessageID = _votingMessageID;
                 joinMessageID = _joinMessageID;
                 status = _status;
+                weekIndex = _weekIndex;
             }
         }
 

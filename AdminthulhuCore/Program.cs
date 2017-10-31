@@ -25,6 +25,7 @@ namespace Adminthulhu
             new CSetSetting (), new CDisplayFile (), new CUrbanDictionary (), new CPrint (), new PermissionCommands (),
             new DiscordCommandSet (), new MiscCommandSet (), new FlowCommandSet (), new MathCommandSet (), new VariableCommandSet (), new CommandChain.CustomCommandSet (), new AutocCommandSet (), new CCallStack (),
         };
+        public static List<Command> quickCommands = new List<Command> ();
 
         public static string dataPath = "";
         public static MessageControl messageControl = null;
@@ -143,7 +144,7 @@ namespace Adminthulhu
                         string command = "";
                         List<string> arguments = Utility.ConstructArguments (message, out command);
 
-                        FindAndExecuteCommand (e, command, arguments, commands, 0, true);
+                        FindAndExecuteCommand (e, command, arguments, commands, 0, true, true);
                     }
                 }
 
@@ -274,9 +275,8 @@ namespace Adminthulhu
             await discordClient.LoginAsync (TokenType.Bot, token);
             await discordClient.StartAsync ();
 
-            BotConfiguration.PostInit ();
-
             await Utility.AwaitFullBoot ();
+
             if (args.Length > 0 && args [ 0 ] == "true" && onPatchedAnnounceChannel != 0) {
                 using (HttpClient client = new HttpClient ()) {
                     string changelog = await client.GetStringAsync (AutoPatcher.url + "changelog.txt");
@@ -290,7 +290,15 @@ namespace Adminthulhu
                 }
             }
 
+            BotConfiguration.PostInit ();
+            BakeQuickCommands ();
+
             await Task.Delay (-1);
+        }
+
+        private void BakeQuickCommands() {
+            List<Command> cmds = Command.RecursiveCacheCommands (commands.ToList ());
+            quickCommands = cmds;
         }
 
         public bool ContainsCommandTrigger(string message, out bool isHidden) {
@@ -356,7 +364,7 @@ namespace Adminthulhu
             return null;
         }
 
-        public static async Task<FoundCommandResult> FindAndExecuteCommand(SocketMessage e, string commandName, List<string> arguements, Command [ ] commandList, int depth, bool printMessage = false) {
+        public static async Task<FoundCommandResult> FindAndExecuteCommand(SocketMessage e, string commandName, List<string> arguements, Command [ ] commandList, int depth, bool printMessage, bool allowQuickCommands) {
             for (int i = 0; i < commandList.Length; i++) {
                 if (commandList [ i ].command == commandName) {
                     if (arguements.Count > 0 && arguements [ 0 ] == "?") {
@@ -364,16 +372,21 @@ namespace Adminthulhu
                         messageControl.SendMessage (e, command.GetHelp (e), false);
                     } else {
                         FoundCommandResult result = new FoundCommandResult (await commandList [ i ].TryExecute (e as SocketUserMessage, depth, arguements.ToArray ()), commandList [ i ]);
-                        if (printMessage && result != null) {
-                            messageControl.SendMessage (e, result.result.message, result.command.allowInMain);
+                        if (result != null) {
+                            if (printMessage)
+                                messageControl.SendMessage (e, result.result.message, result.command.allowInMain);
+
+                            if (depth == 0)
+                                CommandVariables.Clear (e.Id);
+
+                            return result;
                         }
-
-                        if (depth == 0)
-                            CommandVariables.Clear (e.Id);
-
-                        return result;
                     }
                 }
+            }
+
+            if (allowQuickCommands) {
+                return await FindAndExecuteCommand (e, commandName, arguements, quickCommands.ToArray (), depth, printMessage, false);
             }
 
             return null;

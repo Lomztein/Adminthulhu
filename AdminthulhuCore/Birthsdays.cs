@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Discord;
 using Discord.WebSocket;
-using Newtonsoft.Json;
 
 namespace Adminthulhu {
 
@@ -96,7 +93,7 @@ namespace Adminthulhu {
                     break;
             }
 
-            if (age > 10 && age < 14)
+            if (age % 10 > 0 && age % 10 < 4)
                 ageSuffix = "'th";
 
             Program.messageControl.SendMessage (main as SocketTextChannel, onBirthdayAnnouncementMessage.Replace ("{USERNAME}", Utility.GetUserName (user)).Replace ("{AGE}", age + ageSuffix), true);
