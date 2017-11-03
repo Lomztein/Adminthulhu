@@ -34,7 +34,7 @@ namespace Adminthulhu {
 
         public override void LoadConfiguration() {
             base.LoadConfiguration ();
-            reportTextChannel = BotConfiguration.GetSetting<ulong> ("Server.ReportChannelID", "ReportChannelID", 0);
+            reportTextChannel = BotConfiguration.GetSetting<ulong> ("Server.ReportChannelID", this, 0);
         }
     }
 }

@@ -75,7 +75,7 @@ namespace Adminthulhu {
         }
 
         // Don't look at this, it became a bit fucky after command chaining was implemented.
-        public async Task<FindMethodResult> FindMethod(SocketUserMessage e, int depth, params object [ ] arguments) {
+        public async Task<FindMethodResult> FindMethod(params object [ ] arguments) {
             MethodInfo [ ] infos = GetType ().GetMethods ().Where (x => x.Name == "Execute").ToArray ();
             dynamic parameterList = new List<object> ();
 
@@ -91,7 +91,7 @@ namespace Adminthulhu {
                             int argIndex = i - 1;
                             object arg = arguments [ argIndex ];
 
-                            if (paramInfo [ i ].IsDefined (typeof (ParamArrayAttribute)) && !arguments[argIndex].GetType ().IsArray) {
+                            if (paramInfo [ i ].IsDefined (typeof (ParamArrayAttribute)) && !arguments [ argIndex ].GetType ().IsArray) {
                                 Type elementType = paramInfo [ i ].ParameterType.GetElementType ();
 
                                 dynamic dyn = Activator.CreateInstance (typeof (List<>).MakeGenericType (elementType));
@@ -102,10 +102,7 @@ namespace Adminthulhu {
                                 arg = dyn.ToArray ();
                             }
 
-                            if (arg != null)
-                                TryAddToParams (ref parameterList, arg, paramInfo[i].ParameterType);
-                            else
-                                parameterList.Add (null);
+                            TryAddToParams (ref parameterList, arg, paramInfo [ i ].ParameterType);
                         } catch (Exception exc) {
                             Logging.Log (Logging.LogType.EXCEPTION, exc.Message);
                             isMethod = false;
@@ -156,7 +153,7 @@ namespace Adminthulhu {
                 }
 
                 arguments = (await ConvertChainCommandsToObjects (e, arguments.ToList (), depth)).ToArray ();
-                FindMethodResult result = await FindMethod (e, depth, arguments);
+                FindMethodResult result = await FindMethod (arguments);
                 if (result != null) {
                     try {
                         result.parameters.Insert (0, e);
@@ -165,7 +162,7 @@ namespace Adminthulhu {
                         return task;
 
                     } catch (Exception exc) {
-                        Logging.Log (Logging.LogType.EXCEPTION, exc.Message);
+                        Logging.Log (exc);
                     }
                 } else {
                     Program.messageControl.SendMessage (e, $"{executionPrefix}: \n\tNo suitable command overload found.", allowInMain);
@@ -282,7 +279,7 @@ namespace Adminthulhu {
             if (this as CommandChain.CustomCommand != null) {
                 commandEnabled = true; // Force enable custom commands.
             } else {
-                commandEnabled = BotConfiguration.GetSetting ("Command." + path + command.Substring (0, 1).ToUpper () + command.Substring (1) + "Enabled", "Command" + command.Substring (0, 1).ToUpper () + command.Substring (1) + "Enabled", false);
+                commandEnabled = BotConfiguration.GetSetting ("Command." + path + command.Capitalize () + "Enabled", this, false);
             }
         }
 

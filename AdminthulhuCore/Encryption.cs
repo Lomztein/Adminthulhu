@@ -37,8 +37,8 @@ namespace Adminthulhu
 
         public void LoadConfiguration() {
             Random random = new Random ();
-            encryptionKey = BotConfiguration.GetSetting ("Misc.EncryptionKey", "", (byte)random.Next (1, 255));
-            encryptionSeed = BotConfiguration.GetSetting ("Misc.EncryptionSeed", "", random.Next (int.MinValue, int.MaxValue));
+            encryptionKey = BotConfiguration.GetSetting ("Misc.EncryptionKey", this, (byte)random.Next (1, 255));
+            encryptionSeed = BotConfiguration.GetSetting ("Misc.EncryptionSeed", this, random.Next (int.MinValue, int.MaxValue));
         }
 
         public static string Encrypt(string input) {

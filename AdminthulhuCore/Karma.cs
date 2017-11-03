@@ -82,10 +82,10 @@ namespace Adminthulhu {
         }
 
         public void LoadConfiguration() {
-            upvote = BotConfiguration.GetSetting("Karma.UpvoteEmojiName", "UpvoteEmojiName", "upvote");
-            downvote = BotConfiguration.GetSetting("Karma.DownvoteEmojiName", "DownvoteEmojiName", "downvote");
-            upvotesToQuote = BotConfiguration.GetSetting("Karma.UpvotesToQuote", "DownvoteEmojiName", upvotesToQuote);
-            downvotesToDelete = BotConfiguration.GetSetting("Karma.DownvotesToDelete", "DownvoteEmojiName", downvotesToDelete);
+            upvote = BotConfiguration.GetSetting("Karma.UpvoteEmojiName", this, "upvote");
+            downvote = BotConfiguration.GetSetting("Karma.DownvoteEmojiName", this, "downvote");
+            upvotesToQuote = BotConfiguration.GetSetting("Karma.UpvotesToQuote", this, upvotesToQuote);
+            downvotesToDelete = BotConfiguration.GetSetting("Karma.DownvotesToDelete", this, downvotesToDelete);
         }
 
         public class Data {

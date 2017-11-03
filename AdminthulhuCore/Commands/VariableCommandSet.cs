@@ -291,7 +291,7 @@ namespace Adminthulhu
             return null;
         }
 
-        public static void Set(ulong ID, string name, object obj, bool allowReserved) {
+        public static void Set(ulong ID, string name, object obj, bool allowReserved = false) {
             SoftStringComparer softie = new SoftStringComparer ();
             if (!allowReserved && reservedNames.Any (x => softie.Equals (x, name))) {
                 throw new ArgumentException ($"Cannot use name {name}, as it is reserved.");
@@ -300,7 +300,8 @@ namespace Adminthulhu
             if (!variables.ContainsKey (ID)) {
                 variables.Add (ID, new Dictionary<string, object> ());
             }
-            if (variables [ ID ].ContainsKey (name)) {
+
+            if (variables [ ID ] .ContainsKey (name)) {
                 variables [ ID ] [ name ] = obj;
             } else {
                 variables [ ID ].Add (name, obj);
@@ -323,8 +324,9 @@ namespace Adminthulhu
 
         public static bool Clear(ulong ID) {
             if (variables.ContainsKey (ID)) {
-                foreach (var variable in variables [ ID ]) {
-                    Delete (ID, variable.Key);
+                for (int i = 0; i < variables[ID].Count; i++) {
+                    var element = variables [ ID ].ElementAt (0);
+                    Delete (ID, element.Key);
                 }
                 return true;
             }

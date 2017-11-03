@@ -118,9 +118,9 @@ namespace Adminthulhu {
         }
 
         public void LoadConfiguration() {
-            doAutoPatch = BotConfiguration.GetSetting ("Patcher.DoAutoPatch", "", doAutoPatch);
-            announcePatchAvailabilityChannelID = BotConfiguration.GetSetting ("Patcher.AnnouncePatchAvailabilityChannelID", "", announcePatchAvailabilityChannelID);
-            askToPatchChannelID = BotConfiguration.GetSetting ("Patcher.AskToPatchChannelID", "", askToPatchChannelID);
+            doAutoPatch = BotConfiguration.GetSetting ("Patcher.DoAutoPatch", this, doAutoPatch);
+            announcePatchAvailabilityChannelID = BotConfiguration.GetSetting ("Patcher.AnnouncePatchAvailabilityChannelID", this, announcePatchAvailabilityChannelID);
+            askToPatchChannelID = BotConfiguration.GetSetting ("Patcher.AskToPatchChannelID", this, askToPatchChannelID);
         }
     }
 

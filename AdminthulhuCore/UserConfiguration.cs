@@ -77,7 +77,7 @@ namespace Adminthulhu {
 
         public void LoadConfiguration() {
             foreach (UserSettingsCommandBase settingBase in commands) {
-                defaultValues.Add (settingBase.key, BotConfiguration.GetSetting ("UserSettings." + settingBase.key + "Default", "", settingBase.superDefaultValue));
+                defaultValues.Add (settingBase.key, BotConfiguration.GetSetting ("UserSettings." + settingBase.key + "Default", this, settingBase.superDefaultValue));
             }
         }
 
@@ -216,7 +216,7 @@ namespace Adminthulhu {
 
             public override void LoadConfiguration() {
                 base.LoadConfiguration ();
-                roleID = BotConfiguration.GetSetting ("Roles.NSFWID", "", (ulong)0);
+                roleID = BotConfiguration.GetSetting ("Roles.NSFWID", this, (ulong)0);
             }
         }
 
@@ -231,7 +231,7 @@ namespace Adminthulhu {
 
             public override void LoadConfiguration() {
                 base.LoadConfiguration ();
-                roleID = BotConfiguration.GetSetting ("Roles.InternationalID", "", (ulong)0);
+                roleID = BotConfiguration.GetSetting ("Roles.InternationalID", this, (ulong)0);
             }
         }
     }

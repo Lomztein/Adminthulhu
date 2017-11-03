@@ -136,12 +136,12 @@ namespace Adminthulhu {
         }
 
         public void LoadConfiguration() {
-            enabled = BotConfiguration.GetSetting("Games.Enabled", "Misc.UserGameMonitorEnabled", enabled);
+            enabled = BotConfiguration.GetSetting("Games.Enabled", this, enabled);
 
             gameRoles = new Dictionary<string, ulong> ();
             gameRoles.Add ("GAME NAME #1", 0);
             gameRoles.Add ("GAME NAME #2", 0); // Dictionaries are bitches to defaultize. Defaultize?
-            gameRoles = BotConfiguration.GetSetting("Games.GameRoles", "", gameRoles);
+            gameRoles = BotConfiguration.GetSetting("Games.GameRoles", this, gameRoles);
         }
     }
 

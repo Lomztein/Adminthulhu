@@ -87,8 +87,8 @@ namespace Adminthulhu {
 
         public override void LoadConfiguration() {
             base.LoadConfiguration ();
-            allowed = BotConfiguration.GetSetting("Misc.AvailableUsernameColors", "AvaiableUsernameColors", new string [ ] { "RED", "BLUE" });
-            autoAddOnJoin = BotConfiguration.GetSetting ("Misc.AutoSetColorsOnJoin", "", autoAddOnJoin);
+            allowed = BotConfiguration.GetSetting("Misc.AvailableUsernameColors", this, new string [ ] { "RED", "BLUE" });
+            autoAddOnJoin = BotConfiguration.GetSetting ("Misc.AutoSetColorsOnJoin", this, autoAddOnJoin);
         }
     }
 }

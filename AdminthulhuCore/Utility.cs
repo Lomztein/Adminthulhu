@@ -57,11 +57,8 @@ namespace Adminthulhu {
             command = "";
 
             if (fullCommand.LastIndexOf (' ') != -1) {
-                // FEEL THE SPAGHETTI.
                 command = fullCommand.Substring (0, fullCommand.Substring (1).IndexOf (' ') + 1);
                 arguments.AddRange (SplitArgs (toSplit));
-
-
 
             } else {
                 command = fullCommand;

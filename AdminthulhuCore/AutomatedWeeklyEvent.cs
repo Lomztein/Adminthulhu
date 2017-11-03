@@ -74,25 +74,25 @@ namespace Adminthulhu {
         public static string onVotedPostCount = "The voting has ended, and you are no longer able to vote untill next time.";
 
         public void LoadConfiguration() {
-            votesPerPerson = BotConfiguration.GetSetting ("WeeklyEvent.VotesPerPerson", "EventVotesPerPerson", votesPerPerson);
-            gamesPerWeek = BotConfiguration.GetSetting ("WeeklyEvent.GamesPerWeek", "EventGamesPerWeek", gamesPerWeek);
-            announcementsChannelName = BotConfiguration.GetSetting ("Server.AnnouncementsChannelName", "AnnouncementsChannelName", "announcements");
+            votesPerPerson = BotConfiguration.GetSetting ("WeeklyEvent.VotesPerPerson", this, votesPerPerson);
+            gamesPerWeek = BotConfiguration.GetSetting ("WeeklyEvent.GamesPerWeek", this, gamesPerWeek);
+            announcementsChannelName = BotConfiguration.GetSetting ("Server.AnnouncementsChannelName", this, "announcements");
 
-            everyXWeek = BotConfiguration.GetSetting ("Weekly>Event.EveryXWeek", "", everyXWeek);
-            voteStartDay = BotConfiguration.GetSetting ("WeeklyEvent.VoteStartDay", "EventVoteStartDay", voteStartDay);
-            voteEndDay = BotConfiguration.GetSetting ("WeeklyEvent.VoteEndDay", "EventVoteEndDay", voteEndDay);
-            eventDayName = BotConfiguration.GetSetting ("WeeklyEvent.EventDayName", "EventDayName", eventDayName);
-            daysBetween = BotConfiguration.GetSetting ("WeeklyEvent.DaysBetweenVoteAndEvent", "DaysBetweenVoteEndAndEvent", daysBetween);
-            eventHour = BotConfiguration.GetSetting ("WeeklyEvent.Hour", "EventHour", eventHour);
+            everyXWeek = BotConfiguration.GetSetting ("Weekly>Event.EveryXWeek", this, everyXWeek);
+            voteStartDay = BotConfiguration.GetSetting ("WeeklyEvent.VoteStartDay", this, voteStartDay);
+            voteEndDay = BotConfiguration.GetSetting ("WeeklyEvent.VoteEndDay", this, voteEndDay);
+            eventDayName = BotConfiguration.GetSetting ("WeeklyEvent.EventDayName", this, eventDayName);
+            daysBetween = BotConfiguration.GetSetting ("WeeklyEvent.DaysBetweenVoteAndEvent", this, daysBetween);
+            eventHour = BotConfiguration.GetSetting ("WeeklyEvent.Hour", this, eventHour);
 
-            onEventJoinedDM = BotConfiguration.GetSetting ("WeeklyEvent.Messages.OnEventJoinedDM", "", onEventJoinedDM);
-            onEventLeftDM = BotConfiguration.GetSetting ("WeeklyEvent.Messages.OnEventLeftDM", "", onEventLeftDM);
-            onEventChosenByVoteMessage = BotConfiguration.GetSetting ("WeeklyEvent.Messages.OnEventChosenByVoteMessage", "", onEventChosenByVoteMessage);
-            onVotedEventLostDM = BotConfiguration.GetSetting ("WeeklyEvent.Messages.OnVotedEventLostDM", "", onVotedEventLostDM);
-            onNewVoteStartedMessage = BotConfiguration.GetSetting ("WeeklyEvent.Messages.OnNewVoteStartedMessage", "", onNewVoteStartedMessage);
-            onMaxVotesReachedDM = BotConfiguration.GetSetting ("WeeklyEvent.Messages.OnMaxVotesReachedDM", "", onMaxVotesReachedDM);
-            onVotedForGameTwiceDM = BotConfiguration.GetSetting ("WeeklyEvent.Messages.OnVotedForGameTwiceDM", "", onVotedForGameTwiceDM);
-            onVotedPostCount = BotConfiguration.GetSetting ("WeeklyEvent.Messages.OnVotedPostCount", "", onVotedPostCount);
+            onEventJoinedDM = BotConfiguration.GetSetting ("WeeklyEvent.Messages.OnEventJoinedDM", this, onEventJoinedDM);
+            onEventLeftDM = BotConfiguration.GetSetting ("WeeklyEvent.Messages.OnEventLeftDM", this, onEventLeftDM);
+            onEventChosenByVoteMessage = BotConfiguration.GetSetting ("WeeklyEvent.Messages.OnEventChosenByVoteMessage", this, onEventChosenByVoteMessage);
+            onVotedEventLostDM = BotConfiguration.GetSetting ("WeeklyEvent.Messages.OnVotedEventLostDM", this, onVotedEventLostDM);
+            onNewVoteStartedMessage = BotConfiguration.GetSetting ("WeeklyEvent.Messages.OnNewVoteStartedMessage", this, onNewVoteStartedMessage);
+            onMaxVotesReachedDM = BotConfiguration.GetSetting ("WeeklyEvent.Messages.OnMaxVotesReachedDM", this, onMaxVotesReachedDM);
+            onVotedForGameTwiceDM = BotConfiguration.GetSetting ("WeeklyEvent.Messages.OnVotedForGameTwiceDM", this, onVotedForGameTwiceDM);
+            onVotedPostCount = BotConfiguration.GetSetting ("WeeklyEvent.Messages.OnVotedPostCount", this, onVotedPostCount);
         }
 
         public async Task Initialize(DateTime time) {

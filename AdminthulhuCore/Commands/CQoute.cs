@@ -41,7 +41,10 @@ namespace Adminthulhu {
 
         public static void AddQuoteFromMessage(IMessage message) {
             string newQuote = $"\"{message.Content}\" - {Utility.GetUserName (message.Author as SocketGuildUser)} {message.Timestamp.Year}";
-            quotes.Add (newQuote);
+            if (!quotes.Contains (newQuote)) {
+                quotes.Add (newQuote);
+            }
+
             SaveData ();
         }
     }

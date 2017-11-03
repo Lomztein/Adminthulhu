@@ -32,11 +32,11 @@ namespace Adminthulhu.ServerStatusChecking {
         public void LoadConfiguration() {
             addresses.Add (new Address ("Address 1 Name", "Address 1 IP", 0, ""));
             addresses.Add (new Address ("Address 2 Name", "Address 2 IP", 0, ""));
-            testEveryMinutes = BotConfiguration.GetSetting ("Misc.ServerStatusChecker.TestEveryXMinutes", "", testEveryMinutes);
-            addresses = BotConfiguration.GetSetting ("Misc.ServerStatusChecker.Addresses", "", addresses);
-            statusMessageChannel = BotConfiguration.GetSetting ("Misc.ServerStatusChecker.MessageChannel", "", statusMessageChannel);
-            statusMessageHeader = BotConfiguration.GetSetting ("Misc.ServerStatusChecker.MessageHeader", "", statusMessageHeader);
-            statusMessageID = BotConfiguration.GetSetting ("Misc.ServerStatusChecker.MessageID", "", statusMessageID);
+            testEveryMinutes = BotConfiguration.GetSetting ("Misc.ServerStatusChecker.TestEveryXMinutes", this, testEveryMinutes);
+            addresses = BotConfiguration.GetSetting ("Misc.ServerStatusChecker.Addresses", this, addresses);
+            statusMessageChannel = BotConfiguration.GetSetting ("Misc.ServerStatusChecker.MessageChannel", this, statusMessageChannel);
+            statusMessageHeader = BotConfiguration.GetSetting ("Misc.ServerStatusChecker.MessageHeader", this, statusMessageHeader);
+            statusMessageID = BotConfiguration.GetSetting ("Misc.ServerStatusChecker.MessageID", this, statusMessageID);
 
             for (int i = 0; i < addresses.Count; i++) {
                 if (addresses [ i ].typeName != null && addresses [ i ].typeName.Length > 0) {

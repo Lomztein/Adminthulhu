@@ -181,6 +181,7 @@ namespace Adminthulhu {
                 command = "kick";
                 shortHelp = "Kick member.";
                 overloads.Add (new Overload (typeof (bool), "Kicks member by name, from your currently locked voice channel. You must be locker."));
+                AddOverload (typeof (bool), "Kicks the given member from your currently locked void channel. You must be locker.");
             }
 
             public Task<Result> Execute(SocketUserMessage e, string username) {
@@ -212,6 +213,10 @@ namespace Adminthulhu {
                 }
 
                 return TaskResult (false, "Error - Are you even in a channel?");
+            }
+
+            public Task<Result> Execute(SocketUserMessage e, SocketGuildUser user) {
+                return Execute (e, Utility.GetUserName (user));
             }
         }
 
@@ -274,7 +279,15 @@ namespace Adminthulhu {
             public SetDesired() {
                 command = "desired";
                 shortHelp = "Set desired members.";
+                overloads.Add (new Overload (typeof (ulong), "Sets a desired amount of people in your current channel to the current number of members."));
                 overloads.Add (new Overload (typeof (ulong), "Sets a desired amount of people in your current channel."));
+            }
+
+            public Task<Result> Execute(SocketUserMessage e) {
+                Voice.VoiceChannel channel;
+                if (Voice.allVoiceChannels.TryGetValue ((e.Author as SocketGuildUser).VoiceChannel.Id, out channel))
+                    return Execute (e, (uint)channel.GetChannel ().Users.Count);
+                return TaskResult (0, "Error - You have to be in a channel.");
             }
 
             public Task<Result> Execute(SocketUserMessage e, uint amount) {

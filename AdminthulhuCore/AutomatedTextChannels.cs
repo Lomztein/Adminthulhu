@@ -89,7 +89,7 @@ namespace Adminthulhu {
             AddOverload (typeof (string), "Shows all current possible headers of the main channel.");
         }
 
-        public Task<Result> Execute(SocketUserMessage e, List<string> arguments) {
+        public Task<Result> Execute(SocketUserMessage e) {
             string complete = "```";
             foreach (string h in AutomatedTextChannels.headers) {
                 complete += "\n" + h;

@@ -15,7 +15,7 @@ namespace Adminthulhu
             requiredPermission = Permissions.Type.UseAdvancedCommands;
 
             commandsInSet = new Command [ ] {
-                new IsNull (), new If (), new Not (), new And (), new Or (), new For (), new Wait (), new Split (),
+                new IsNull (), new If (), new Not (), new And (), new Or (), new For (), new Foreach (), new Wait (), new Split (),
             };
         }
 
@@ -110,16 +110,43 @@ namespace Adminthulhu
                 command = "for";
                 shortHelp = "Loop given command a set times.";
 
-                AddOverload (typeof (object), "Loop given command the given amount of times.");
+                AddOverload (typeof (object), "Loop given command the given amount of times with the iteration variable name \"for\".");
+                AddOverload (typeof (object), "Loop given command the given amount of times with a custom iteration variable name.");
             }
 
             public async Task<Result> Execute(SocketUserMessage e, int amount, string command) {
+                return await Execute (e, "for", amount, command);
+            }
+
+            public async Task<Result> Execute(SocketUserMessage e, string varName, int amount, string command) {
                 if (command.Length > 1 && command [ 1 ].IsTrigger ()) {
                     string cmd;
                     List<string> args = Utility.ConstructArguments (GetParenthesesArgs (command), out cmd);
                     for (int i = 0; i < amount; i++) {
-                        CommandVariables.Set (e.Id, "for", i, true);
+                        CommandVariables.Set (e.Id, varName, i, true);
                         await Program.FindAndExecuteCommand (e, cmd.Substring (1), args, Program.commands, 1, false, true);
+                    }
+                }
+                return new Result (null, "");
+            }
+        }
+
+        public class Foreach : Command {
+            public Foreach() {
+                command = "foreach";
+                shortHelp = "Loop a given command for each item in an array.";
+
+                AddOverload (typeof (object), "Loop given command for each item in the given array, with the a custom item variable name.");
+            }
+
+            public async Task<Result> Execute(SocketUserMessage e, string varName, string command, params object [ ] array) {
+                string outCmd;
+                List<string> outArgs;
+
+                if (TryIsolateWrappedCommand (command, out outCmd, out outArgs)) {
+                    foreach (object obj in array) {
+                        CommandVariables.Set (e.Id, varName, obj, true);
+                        await Program.FindAndExecuteCommand (e, outCmd, outArgs, Program.commands, 1, false, false);
                     }
                 }
                 return new Result (null, "");
@@ -159,7 +186,7 @@ namespace Adminthulhu
                 command = "split";
                 shortHelp = "Split command flow";
 
-                AddOverload (typeof (object), "Splits the command chain into two given branches though commands as arguments.");
+                AddOverload (typeof (object), "Splits the command chain into given branches though commands as arguments.");
             }
 
             public Task<Result> Execute(SocketUserMessage e, params string[] paths) {

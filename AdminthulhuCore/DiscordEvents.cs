@@ -24,7 +24,7 @@ namespace Adminthulhu {
         public static float percentageForEventActive = 0.75f;
 
         public void LoadConfiguration() {
-            percentageForEventActive = BotConfiguration.GetSetting ("Events.PersentageForEventActive", "", percentageForEventActive);
+            percentageForEventActive = BotConfiguration.GetSetting ("Events.PersentageForEventActive", this, percentageForEventActive);
         }
 
         public static void SaveEvents () {
@@ -448,7 +448,7 @@ namespace Adminthulhu {
             }
 
             combinedEvents += "```";
-            return TaskResult ("", combinedEvents);
+            return TaskResult (null, combinedEvents);
         }
     }
 

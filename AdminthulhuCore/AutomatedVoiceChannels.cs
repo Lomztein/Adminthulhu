@@ -72,22 +72,22 @@ namespace Adminthulhu {
 
         public void LoadConfiguration() {
             ResetData ();
-            extraChannelNames = BotConfiguration.GetSetting<string [ ]> ("Voice.ExtraChannelNames", "ExtraVoiceChannelNames", new string [ ] { "EXTRA_CHANNEL_1;EXTRA_CHANNEL_SHORT_NAME_1", "EXTRA_CHANNEL_1;EXTRA_CHANNEL_SHORT_NAME_2" });
-            loadedChannels = BotConfiguration.GetSetting ("Voice.DefaultChannels", "DefaultVoiceChannels", new VoiceChannel [ ] { new VoiceChannel (0, "DEFAULT_CHANNEL_NAME_1;SHORT_NAME_1", 0), new VoiceChannel (1, "DEFAULT_CHANNEL_NAME_2;SHORT_NAME_2", 0) });
-            afkChannel = BotConfiguration.GetSetting ("Voice.AFKChannel", "AFKChannel", new VoiceChannel (2, "AFK_CHANNEL_NAME", int.MaxValue - 1));
-            autoAddChannels = BotConfiguration.GetSetting ("Voice.AutoAddChannels", "AutoAddVoiceChannels", autoAddChannels);
-            autoRenameChannels = BotConfiguration.GetSetting ("Voice.AutoRenameChannels", "AutoRenameVoiceChannels", autoRenameChannels);
-            shortenChannelNames = BotConfiguration.GetSetting ("Voice.ShortenChannelNames", "ShortenVoiceChannelNames", shortenChannelNames);
-            enableVoiceChannelTags = BotConfiguration.GetSetting ("Voice.ChannelTagsEnabled", "VoiceChannelTagsEnabled", enableVoiceChannelTags);
-            younglingRoleID = BotConfiguration.GetSetting ("Roles.YounglingID", "YounglingRoleID", younglingRoleID);
-            internationalRoleID = BotConfiguration.GetSetting ("Roles.InternationalID", "", internationalRoleID);
-            musicBotID = BotConfiguration.GetSetting ("Misc.MusicBotID", "MusicBotID", musicBotID);
-            postRebootChannelName = BotConfiguration.GetSetting ("Voice.PostRebootChannelName", "", postRebootChannelName);
-            randomizeNameQueue = BotConfiguration.GetSetting ("Voice.RandomizeNameQueue", "", randomizeNameQueue);
+            extraChannelNames = BotConfiguration.GetSetting<string [ ]> ("Voice.ExtraChannelNames", this, new string [ ] { "EXTRA_CHANNEL_1;EXTRA_CHANNEL_SHORT_NAME_1", "EXTRA_CHANNEL_1;EXTRA_CHANNEL_SHORT_NAME_2" });
+            loadedChannels = BotConfiguration.GetSetting ("Voice.DefaultChannels", this, new VoiceChannel [ ] { new VoiceChannel (0, "DEFAULT_CHANNEL_NAME_1;SHORT_NAME_1", 0), new VoiceChannel (1, "DEFAULT_CHANNEL_NAME_2;SHORT_NAME_2", 0) });
+            afkChannel = BotConfiguration.GetSetting ("Voice.AFKChannel", this, new VoiceChannel (2, "AFK_CHANNEL_NAME", int.MaxValue - 1));
+            autoAddChannels = BotConfiguration.GetSetting ("Voice.AutoAddChannels", this, autoAddChannels);
+            autoRenameChannels = BotConfiguration.GetSetting ("Voice.AutoRenameChannels", this, autoRenameChannels);
+            shortenChannelNames = BotConfiguration.GetSetting ("Voice.ShortenChannelNames", this, shortenChannelNames);
+            enableVoiceChannelTags = BotConfiguration.GetSetting ("Voice.ChannelTagsEnabled", this, enableVoiceChannelTags);
+            younglingRoleID = BotConfiguration.GetSetting ("Roles.YounglingID", this, younglingRoleID);
+            internationalRoleID = BotConfiguration.GetSetting ("Roles.InternationalID", this, internationalRoleID);
+            musicBotID = BotConfiguration.GetSetting ("Misc.MusicBotID", this, musicBotID);
+            postRebootChannelName = BotConfiguration.GetSetting ("Voice.PostRebootChannelName", this, postRebootChannelName);
+            randomizeNameQueue = BotConfiguration.GetSetting ("Voice.RandomizeNameQueue", this, randomizeNameQueue);
 
             foreach (VoiceChannelTag tag in voiceChannelTags) {
-                tag.enabled = BotConfiguration.GetSetting ("Voice.Tags." + tag.name + ".Enabled", "", tag.enabled);
-                tag.tagEmoji = BotConfiguration.GetSetting ("Voice.Tags." + tag.name + ".Emoji", "", tag.tagEmoji);
+                tag.enabled = BotConfiguration.GetSetting ("Voice.Tags." + tag.name + ".Enabled", this, tag.enabled);
+                tag.tagEmoji = BotConfiguration.GetSetting ("Voice.Tags." + tag.name + ".Emoji", this, tag.tagEmoji);
             }
 
             foreach (VoiceChannel channel in loadedChannels) {

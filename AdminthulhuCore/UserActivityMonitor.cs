@@ -25,11 +25,11 @@ namespace Adminthulhu {
         public static ulong inactiveUserRole = 273017511468072960;
 
         public void LoadConfiguration() {
-            activeThresholdDays = BotConfiguration.GetSetting ("Activity.ActiveThresholdDays", "ActivityActiveThresholdDays", 7);
-            presentThresholdDays = BotConfiguration.GetSetting ("Activity.PresentThresholdDays", "ActivityPresentThresholdDays", 14);
-            activeUserRole = BotConfiguration.GetSetting<ulong> ("Roles.ActiveID", "ActiveRoleID", 0);
-            presentUserRole = BotConfiguration.GetSetting<ulong> ("Roles.PresentID", "PresentRoleID", 0);
-            inactiveUserRole = BotConfiguration.GetSetting<ulong> ("Roles.InactiveID", "InactiveRoleID", 0);
+            activeThresholdDays = BotConfiguration.GetSetting ("Activity.ActiveThresholdDays", this, 7);
+            presentThresholdDays = BotConfiguration.GetSetting ("Activity.PresentThresholdDays", this, 14);
+            activeUserRole = BotConfiguration.GetSetting<ulong> ("Roles.ActiveID", this, 0);
+            presentUserRole = BotConfiguration.GetSetting<ulong> ("Roles.PresentID", this, 0);
+            inactiveUserRole = BotConfiguration.GetSetting<ulong> ("Roles.InactiveID", this, 0);
         }
 
         public async Task Initialize(DateTime time) {

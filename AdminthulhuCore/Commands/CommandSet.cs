@@ -84,7 +84,9 @@ namespace Adminthulhu {
         private void FeedRecursiveData (Command c) {
             c.helpPrefix = helpPrefix + command + " ";
             c.Initialize ();
-            c.isAdminOnly = isAdminOnly;
+            if (!c.isAdminOnly)
+                c.isAdminOnly = isAdminOnly;
+
             c.requiredPermission = requiredPermission;
         }
 

@@ -26,5 +26,7 @@ namespace Adminthulhu
             }
             return result;
         }
+
+        public static string Capitalize(this string input) => input.Substring (0, 1).ToUpper () + input.Substring (1);
     }
 }

@@ -10,10 +10,10 @@ namespace Adminthulhu
     public class AutoCommands
     {
         public enum Event {
-            Null = -1, JoinedVoice, LeftVoice, EventStarted, EventEnded, MessageRecieved, MessageDeleted, MessageEdited, UserJoined, UserLeft, UserBirthday, HourPassed, DayPassed, Count
+            Null = -1, JoinedVoice, LeftVoice, EventStarted, EventEnded, MessageRecieved, MessageDeleted, MessageEdited, UserJoined, UserLeft, UserBirthday, HourPassed, DayPassed, UserStricken, UserStrikeRaised, Count
         }
         public static string [ ] args = new string [ ] {
-            "User ID, Voice channel ID", "User ID, Voice channel ID", "Event name", "Event name", "Message content", "", "Message content", "User ID", "User ID", "User ID", "Time", "Time",
+            "User ID, Voice channel ID", "User ID, Voice channel ID", "Event name", "Event name", "Message content, Channel ID", "Channel ID", "New message content, Channel ID", "User ID", "User ID", "User ID", "Time", "Time", "User ID, Time", "User ID"
         };
 
         public static Dictionary<Event, AutocEvent> autocEvents = new Dictionary<Event, AutocEvent> ();

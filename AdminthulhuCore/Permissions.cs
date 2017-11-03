@@ -86,7 +86,7 @@ namespace Adminthulhu
         public void LoadConfiguration() {
             defaultPermissions = new Dictionary<Type, State> ();
             for (int i = 0; i < (int)Type.Count; i++) {
-                defaultPermissions.Add ((Type)i, BotConfiguration.GetSetting ("Permissions." + ((Type)i).ToString () + "Default", "", State.Inherit));
+                defaultPermissions.Add ((Type)i, BotConfiguration.GetSetting ("Permissions." + ((Type)i).ToString () + "Default", this, State.Inherit));
             }
         }
     }

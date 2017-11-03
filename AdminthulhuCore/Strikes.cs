@@ -26,6 +26,8 @@ namespace Adminthulhu
         }
 
         public static bool IsStricken(ulong userID) {
+            if (strikes == null)
+                return false;
             return strikes.ContainsKey (userID);
         }
 
@@ -79,6 +81,7 @@ namespace Adminthulhu
             }
 
             Program.messageControl.SendMessage (socketUser, strikeGivenMessage.Replace ("{STRIKEREASON}", strikeReason).Replace ("{STRIKERAISEDATE}", strikes[user].strikeDate.Add(strikes[user].strikeTime).ToString ()));
+            AutoCommands.RunEvent (AutoCommands.Event.UserStricken, user.ToString (), time.ToString (), strikeReason);
 
             Save ();
         }
@@ -92,15 +95,16 @@ namespace Adminthulhu
                 strikes.Remove (user);
 
                 Program.messageControl.SendMessage (socketUser, strikeRaisedMessage);
+                AutoCommands.RunEvent (AutoCommands.Event.UserStricken, user.ToString());
             }
 
             Save ();
         }
 
         public void LoadConfiguration() {
-            strikeRoleID = BotConfiguration.GetSetting<ulong> ("Roles.StrikeID", "StrikeRoleID", 0);
-            strikeGivenMessage = BotConfiguration.GetSetting ("Strikes.OnGivenMessage", "", "Sorry, but you've recieved a strike due to {STRIKEREASON}. This strike will automatically be raised on {STRIKERAISEDATE}");
-            strikeRaisedMessage = BotConfiguration.GetSetting ("Strikes.OnRaisedMessage", "", "You've done your time, and your strike has now been risen.");
+            strikeRoleID = BotConfiguration.GetSetting<ulong> ("Roles.StrikeID", this, 0);
+            strikeGivenMessage = BotConfiguration.GetSetting ("Strikes.OnGivenMessage", this, "Sorry, but you've recieved a strike due to {STRIKEREASON}. This strike will automatically be raised on {STRIKERAISEDATE}");
+            strikeRaisedMessage = BotConfiguration.GetSetting ("Strikes.OnRaisedMessage", this, "You've done your time, and your strike has now been risen.");
         }
 
         public class Strike {

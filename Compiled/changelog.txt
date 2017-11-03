@@ -1,9 +1,13 @@
-﻿Command code cleanup!
- * Cleaned up and improved command execution code.
-	- Fixed commands which take in a params type parameter, effectively fixing a lot of broken commands, including all custom. 
-	- Code is much cleaner, now looks more like a house-of-cardbox than a house-of-cards.
-	- Wrapping curly brackets around text is now synonymous to using !var getl <name>, for instance "{arg0}" = "!var getl arg0"
- * Fixed opt-in/out usersettings commands being broken. 
- * Added experimental command caching feature, which will cache all ~200 commands. This allows you to type !sin instead of !math sin, however !math sin still works fine. It currently just executes the first one found in case of conflicts.
- * Fixed birthdays not giving numbers the correct suffix under certain conditions.
- * Fixed !math graph effectively crashing the bot when typing in limited-range functions.
+﻿An update of minor polishes and commands!
+ * Heavily optimized configuration loading code.
+ * !setconfig now automatically reloads only the affected configuration keys. No longer is !reloadconfig neccesary after changing something. 
+ * All admin commands moved into a single command set.
+ * Fixed a few commands using the old argument system.
+ * Fixed an issue with command variables.
+ * Fixed automated quotes adding multiple of the same quite.
+ * Added !misc log, which logs stuff to the console.
+ * Added !flow foreach, which runs a loop for each item in a given array.
+ * Added a buttload of new Discord related commands.
+ * Added new autoc events for when a user is stricken and lifted.
+
+There are still more commands I want to add, but I'm out of time for now, so I figured just to push this patch out.

@@ -10,7 +10,7 @@ using Discord.Rest;
 
 namespace Adminthulhu
 {
-    class Program : IConfigurable {
+    public class Program : IConfigurable {
 
         public static string commandTrigger = "!";
         public static string commandTriggerHidden = "/";
@@ -18,12 +18,12 @@ namespace Adminthulhu
         public static Command [ ] commands = new Command [ ] {
             new CCommandList (), new CSetColor (), new CRollTheDice (),
             new CFlipCoin (), new CRandomGame (), new CQuote (), new CEmbolden (),
-            new CAddHeader (), new CShowHeaders (), new CKarma (), new CReport (),
+            new CShowHeaders (), new CKarma (), new CReport (),
             new VoiceCommands (), new EventCommands (), new UserSettingsCommands (), new HangmanCommands (),
-            new GameCommands (), new StrikeCommandSet (), new CAddEventGame (), new CRemoveEventGame (), new CHighlightEventGame (),
-            new CAcceptYoungling (), new CReloadConfiguration (), new CCreateBook (), new CSetYoungling (), new CCreatePoll (), new CCheckPatch (),
-            new CSetSetting (), new CDisplayFile (), new CUrbanDictionary (), new CPrint (), new PermissionCommands (),
-            new DiscordCommandSet (), new MiscCommandSet (), new FlowCommandSet (), new MathCommandSet (), new VariableCommandSet (), new CommandChain.CustomCommandSet (), new AutocCommandSet (), new CCallStack (),
+            new GameCommands (), new CUrbanDictionary (), new CPrint (), new AdminCommandSet (),
+
+            new DiscordCommandSet (), new MiscCommandSet (), new FlowCommandSet (), new MathCommandSet (), new VariableCommandSet (),
+            new CommandChain.CustomCommandSet (), new AutocCommandSet (), new CCallStack (),
         };
         public static List<Command> quickCommands = new List<Command> ();
 
@@ -78,23 +78,23 @@ namespace Adminthulhu
         }
 
         public void LoadConfiguration() {
-            mainTextChannelName = BotConfiguration.GetSetting ("Server.MainTextChannelName", "MainTextChannelName", "general");
-            dumpTextChannelName = BotConfiguration.GetSetting ("Server.DumpTextChannelName", "DumpTextChannelName", "dump");
-            serverName = BotConfiguration.GetSetting ("Server.Name", "ServerName", "Discord Server");
-            serverID = BotConfiguration.GetSetting<ulong> ("Server.ID", "ServerID", 0);
+            mainTextChannelName = BotConfiguration.GetSetting ("Server.MainTextChannelName", this, "general");
+            dumpTextChannelName = BotConfiguration.GetSetting ("Server.DumpTextChannelName", this, "dump");
+            serverName = BotConfiguration.GetSetting ("Server.Name", this, "Discord Server");
+            serverID = BotConfiguration.GetSetting<ulong> ("Server.ID", this, 0);
 
-            onUserJoinMessage = BotConfiguration.GetSetting ("Server.Messages.OnUserJoin", "", onUserJoinMessage);
-            onUserJoinFromInviteMessage = BotConfiguration.GetSetting ("Server.Messages.OnUserJoinFromInvite", "", onUserJoinFromInviteMessage);
-            onUserLeaveMessage = BotConfiguration.GetSetting ("Server.Messages.OnUserLeave", "", onUserLeaveMessage);
-            onUserBannedMessage = BotConfiguration.GetSetting ("Server.Messages.OnUserBanned", "", onUserBannedMessage);
-            onUserUnbannedMessage = BotConfiguration.GetSetting ("Server.Messages.OnUserUnbanned", "", onUserUnbannedMessage);
-            onUserChangedNameMessage = BotConfiguration.GetSetting ("Server.Messages.OnUserChangedName", "", onUserChangedNameMessage);
-            onPatchedAnnounceChannel = BotConfiguration.GetSetting ("Server.Messages.OnPatchedAnnounceChannel", "", (ulong)0);
+            onUserJoinMessage = BotConfiguration.GetSetting ("Server.Messages.OnUserJoin", this, onUserJoinMessage);
+            onUserJoinFromInviteMessage = BotConfiguration.GetSetting ("Server.Messages.OnUserJoinFromInvite", this, onUserJoinFromInviteMessage);
+            onUserLeaveMessage = BotConfiguration.GetSetting ("Server.Messages.OnUserLeave", this, onUserLeaveMessage);
+            onUserBannedMessage = BotConfiguration.GetSetting ("Server.Messages.OnUserBanned", this, onUserBannedMessage);
+            onUserUnbannedMessage = BotConfiguration.GetSetting ("Server.Messages.OnUserUnbanned", this, onUserUnbannedMessage);
+            onUserChangedNameMessage = BotConfiguration.GetSetting ("Server.Messages.OnUserChangedName", this, onUserChangedNameMessage);
+            onPatchedAnnounceChannel = BotConfiguration.GetSetting ("Server.Messages.OnPatchedAnnounceChannel", this, (ulong)0);
 
-            commandTrigger = BotConfiguration.GetSetting ("Command.Trigger", "","!");
-            commandTriggerHidden = BotConfiguration.GetSetting ("Command.HiddenTrigger", "", "/");
+            commandTrigger = BotConfiguration.GetSetting ("Command.Trigger", this, "!");
+            commandTriggerHidden = BotConfiguration.GetSetting ("Command.HiddenTrigger", this, "/");
 
-            phrases = BotConfiguration.GetSetting ("Misc.ResponsePhrases", "ResponsePhrases", new Phrase [ ] { new Phrase ("Neat!", 0, 100, "Very!", 0, ""), new Phrase ("Neato", 0, 100, "", 0, "🌯") });
+            phrases = BotConfiguration.GetSetting ("Misc.ResponsePhrases", this, new Phrase [ ] { new Phrase ("Neat!", 0, 100, "Very!", 0, ""), new Phrase ("Neato", 0, 100, "", 0, "🌯") });
         }
 
         public async Task Start(string [ ] args) {
@@ -150,7 +150,7 @@ namespace Adminthulhu
 
                 if (e.Author.Id != discordClient.CurrentUser.Id) {
                     FindPhraseAndRespond (e);
-                    AutoCommands.RunEvent (AutoCommands.Event.MessageRecieved, e.Content);
+                    AutoCommands.RunEvent (AutoCommands.Event.MessageRecieved, e.Content, e.Channel.Id.ToString ());
                 }
 
                 if (e.Content.Length > 0 && hideTrigger) {
@@ -161,13 +161,13 @@ namespace Adminthulhu
 
             discordClient.MessageUpdated += async (cache, message, channel) => {
                 Logging.Log (Logging.LogType.CHAT, "Message edited: " + Utility.GetChannelName (message as SocketMessage) + " " + message.Content);
-                AutoCommands.RunEvent (AutoCommands.Event.MessageDeleted, message.Content);
+                AutoCommands.RunEvent (AutoCommands.Event.MessageDeleted, message.Content, message.Channel.Id.ToString ());
             };
 
             discordClient.MessageDeleted += async (cache, channel) => {
                 IMessage message = await cache.GetOrDownloadAsync ();
                 Logging.Log (Logging.LogType.CHAT, "Message deleted: " + Utility.GetChannelName (channel as SocketGuildChannel));
-                AutoCommands.RunEvent (AutoCommands.Event.MessageDeleted);
+                AutoCommands.RunEvent (AutoCommands.Event.MessageDeleted, channel.Id.ToString ());
             };
 
             discordClient.UserJoined += async (e) => {
@@ -261,6 +261,7 @@ namespace Adminthulhu
 
             discordClient.Ready += () => {
                 Logging.Log (Logging.LogType.BOT, "Bot is ready and running!");
+
                 return Task.CompletedTask;
             };
 
@@ -289,7 +290,7 @@ namespace Adminthulhu
                     }
                 }
             }
-
+  
             BotConfiguration.PostInit ();
             BakeQuickCommands ();
 

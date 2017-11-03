@@ -405,6 +405,8 @@ namespace Adminthulhu {
             public Graph() {
                 command = "graph";
                 shortHelp = "Draw a graph of a function.";
+
+                AddOverload (typeof (object), "Draw a graph of the given function within the given range.");
             }
 
             public async Task<Result> Execute(SocketUserMessage e, double xrange, double yrange, string yequals) {

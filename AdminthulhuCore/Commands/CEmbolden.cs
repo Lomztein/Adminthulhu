@@ -26,21 +26,20 @@ namespace Adminthulhu {
             specifics.Add ('b', "🅱");
         }
 
-        public Task<Result> Execute(SocketUserMessage e, List<string> arguments) {
+        public Task<Result> Execute(SocketUserMessage e, string input) {
 
-            string inText = arguments [ 0 ];
             string outText = "";
 
-            if (inText == "?")
+            if (input == "?")
                 return TaskResult ("", "");
 
-            for (int i = 0; i < inText.Length; i++) {
-                if (inText [ i ] == ' ') {
+            for (int i = 0; i < input.Length; i++) {
+                if (input [ i ] == ' ') {
                     outText += "  ";
                 } else {
-                    char letter = inText.ToLower () [ i ];
+                    char letter = input.ToLower () [ i ];
                     if (available.Contains (letter)) {
-                        outText += ":regional_indicator_" + inText.ToLower () [ i ] + ": ";
+                        outText += ":regional_indicator_" + input.ToLower () [ i ] + ": ";
                     } else if (specifics.ContainsKey (letter)) {
                         outText += specifics [ letter ];
                     } else if (numbers.Contains (letter)) {

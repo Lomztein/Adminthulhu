@@ -21,11 +21,11 @@ namespace Adminthulhu
         private SocketRole presentRole;
 
         public void LoadConfiguration() {
-            younglingRoleID = BotConfiguration.GetSetting<ulong> ("Roles.YounglingID", "YounglingRoleID", 0);
-            onKickedDM = BotConfiguration.GetSetting ("Activity.Younglings.OnKickedDM", "", "Sorry, but you've been kicked from my server due to early inactivity. If you feel this was a mistake, feel free to use this invite link: {INVITELINK}");
-            onAcceptedDM = BotConfiguration.GetSetting ("Activity.Younglings.OnAcceptedDM", "", "Congratulations, you now have full membership of my server!");
-            onAcceptedPublicAnnouncement = BotConfiguration.GetSetting ("Activity.Younglings.OnAcceptedPublicAnnouncement", "", "Congratulations to {USERNAME} as they've today been granted permanemt membership of this server!");
-            daysActiveRequired = BotConfiguration.GetSetting ("Activity.Younglings.DaysActiveRequired", "", daysActiveRequired);
+            younglingRoleID = BotConfiguration.GetSetting<ulong> ("Roles.YounglingID", this, 0);
+            onKickedDM = BotConfiguration.GetSetting ("Activity.Younglings.OnKickedDM", this, "Sorry, but you've been kicked from my server due to early inactivity. If you feel this was a mistake, feel free to use this invite link: {INVITELINK}");
+            onAcceptedDM = BotConfiguration.GetSetting ("Activity.Younglings.OnAcceptedDM", this, "Congratulations, you now have full membership of my server!");
+            onAcceptedPublicAnnouncement = BotConfiguration.GetSetting ("Activity.Younglings.OnAcceptedPublicAnnouncement", this, "Congratulations to {USERNAME} as they've today been granted permanemt membership of this server!");
+            daysActiveRequired = BotConfiguration.GetSetting ("Activity.Younglings.DaysActiveRequired", this, daysActiveRequired);
         }
 
         public Task Initialize(DateTime time) {

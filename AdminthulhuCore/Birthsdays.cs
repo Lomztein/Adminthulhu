@@ -126,8 +126,8 @@ namespace Adminthulhu {
         }
 
         public void LoadConfiguration() {
-            onBirthdayAnnouncementMessage = BotConfiguration.GetSetting ("Birthdays.OnBirthdayAnnouncementMessage", "", onBirthdayAnnouncementMessage);
-            onBirthdayCongratulationsDM = BotConfiguration.GetSetting ("Birthdays.OnBirthdayCongratulationsDM", "", onBirthdayCongratulationsDM);
+            onBirthdayAnnouncementMessage = BotConfiguration.GetSetting ("Birthdays.OnBirthdayAnnouncementMessage", this, onBirthdayAnnouncementMessage);
+            onBirthdayCongratulationsDM = BotConfiguration.GetSetting ("Birthdays.OnBirthdayCongratulationsDM", this, onBirthdayCongratulationsDM);
         }
 
         public class Date {
