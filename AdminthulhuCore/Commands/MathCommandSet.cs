@@ -463,7 +463,7 @@ namespace Adminthulhu {
                                 if (res.Item2) { // Is the result defined?
                                     int dist = ycur - yprev;
                                     int sign = Math.Sign (dist);
-                                    dist = Math.Abs (dist);
+                                    dist = Math.Min (Math.Abs (dist), X_RES);
                                     if (dist == 0)
                                         dist = 1;
 

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
+using System.Text.RegularExpressions;
 
 namespace Adminthulhu {
     public class Phrase {
@@ -22,10 +23,9 @@ namespace Adminthulhu {
             ulong sender = e.Author.Id;
             ulong locChannel = e.Channel.Id;
 
-            if (message.Length < inputText.Length)
-                return false;
+            Regex regex = new Regex (inputText); // Arguably a bad name, but can't change because JSON.
 
-            if (inputText == "" || message.Substring (0, inputText.Length).ToUpper () == inputText.ToUpper ()) {
+            if (regex.IsMatch (message)) {
                 if (user == 0 || sender == user) {
                     if (channel == 0 || locChannel == channel) {
 

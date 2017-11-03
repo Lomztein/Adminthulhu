@@ -275,23 +275,27 @@ namespace Adminthulhu
             Logging.Log (Logging.LogType.BOT, "Connecting to Discord..");
             await discordClient.LoginAsync (TokenType.Bot, token);
             await discordClient.StartAsync ();
+            BotConfiguration.PostInit ();
 
             await Utility.AwaitFullBoot ();
 
-            if (args.Length > 0 && args [ 0 ] == "true" && onPatchedAnnounceChannel != 0) {
-                using (HttpClient client = new HttpClient ()) {
-                    string changelog = await client.GetStringAsync (AutoPatcher.url + "changelog.txt");
-                    string version = await client.GetStringAsync (AutoPatcher.url + "version.txt");
-                    string total = $"Succesfully installed new patch, changelog for {version}:\n{changelog}";
+            try {
+                if (args.Length > 0 && args [ 0 ] == "true" && onPatchedAnnounceChannel != 0) {
+                    using (HttpClient client = new HttpClient ()) {
+                        string changelog = await client.GetStringAsync (AutoPatcher.url + "changelog.txt");
+                        string version = await client.GetStringAsync (AutoPatcher.url + "version.txt");
+                        string total = $"Succesfully installed new patch, changelog for {version}:\n{changelog}";
 
-                    SocketGuildChannel patchNotesChannel = Utility.GetServer ().GetChannel (onPatchedAnnounceChannel);
-                    if (patchNotesChannel != null) {
-                        messageControl.SendMessage (patchNotesChannel as ISocketMessageChannel, total, true, "```");
+                        SocketGuildChannel patchNotesChannel = Utility.GetServer ().GetChannel (onPatchedAnnounceChannel);
+                        if (patchNotesChannel != null) {
+                            messageControl.SendMessage (patchNotesChannel as ISocketMessageChannel, total, true, "```");
+                        }
                     }
                 }
+            } catch (Exception e) {
+                Logging.Log (e);
             }
-  
-            BotConfiguration.PostInit ();
+
             BakeQuickCommands ();
 
             await Task.Delay (-1);
@@ -324,6 +328,15 @@ namespace Adminthulhu
         public static bool FullyBooted () {
             if (hasBooted)
                 return hasBooted;
+
+            if (serverID == 0 && discordClient.Guilds.Count == 1) {
+                serverID = discordClient.Guilds.ElementAt (0).Id;
+                serverName = Utility.GetServer ().Name;
+
+                BotConfiguration.SetSetting ("Server.ID", serverID);
+                BotConfiguration.SetSetting ("Server.Name", serverName);
+                BotConfiguration.SaveSettings ();
+            }
 
             if (Utility.GetServer () != null) {
                 if (Utility.GetServer ().Channels.Count != 0) { // Why this is neccesary is beyond me, but I'll take it.

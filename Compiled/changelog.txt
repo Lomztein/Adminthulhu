@@ -1,13 +1,5 @@
-﻿An update of minor polishes and commands!
- * Heavily optimized configuration loading code.
- * !setconfig now automatically reloads only the affected configuration keys. No longer is !reloadconfig neccesary after changing something. 
- * All admin commands moved into a single command set.
- * Fixed a few commands using the old argument system.
- * Fixed an issue with command variables.
- * Fixed automated quotes adding multiple of the same quite.
- * Added !misc log, which logs stuff to the console.
- * Added !flow foreach, which runs a loop for each item in a given array.
- * Added a buttload of new Discord related commands.
- * Added new autoc events for when a user is stricken and lifted.
-
-There are still more commands I want to add, but I'm out of time for now, so I figured just to push this patch out.
+﻿A minor hotfix to fix a critical issue during setup.
+ * Fixed generated config file never being saved if server ID wasn't manually set.
+ * Server ID is now set automatically if not already set.
+ * Phrases now use RegEx expressions. T'was a minor thing.
+ * Limited maximum interpolation distance for !math graph to avoid near-infinite loops.
