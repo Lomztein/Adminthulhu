@@ -6,8 +6,7 @@ using System.IO;
 using Newtonsoft.Json.Linq;
 using Discord.WebSocket;
 
-namespace Adminthulhu
-{
+namespace Adminthulhu {
     public class UrbanDictionary {
 
         public const string URL = "http://api.urbandictionary.com/v0/define?term={word}";
@@ -26,9 +25,9 @@ namespace Adminthulhu
                             .WithDescription (response.definition)
                             .WithFooter ($"Defined by {response.author}. Souce: www.urbandictionary.com");
                         if (response.example.Length > 0)
-                            builder.AddField("Example", response.example);
+                            builder.AddField ("Example", response.example);
 
-                            builder.AddField ("Votes", response.thumbsUp.ToString () + "↑ / " + response.thumbsDown.ToString() + "↓");
+                        builder.AddField ("Votes", response.thumbsUp.ToString () + "↑ / " + response.thumbsDown.ToString () + "↓");
 
                         if (response.soundUrl.Length > 0)
                             builder.AddField ("Sound", response.soundUrl.Singlify ("\n", 3));
@@ -62,7 +61,7 @@ namespace Adminthulhu
             public int thumbsDown;
 
             public Definition(JObject jObject) {
-                success = jObject [ "result_type" ].ToObject<string>() != "no_results";
+                success = jObject [ "result_type" ].ToObject<string> () != "no_results";
 
                 if (success) {
                     tags = jObject [ "tags" ].ToObject<string [ ]> ();
@@ -93,7 +92,10 @@ namespace Adminthulhu
 
         public async Task<Result> Execute(SocketUserMessage e, string word) {
             Embed embed = await UrbanDictionary.GetDefinition (word);
-            Program.messageControl.SendEmbed (e.Channel as ITextChannel, embed);
+            if (allowInMain)
+                Program.messageControl.SendEmbed (e.Channel, embed);
+
+            Console.WriteLine ("what");
             return new Result (embed, "");
         }
     }

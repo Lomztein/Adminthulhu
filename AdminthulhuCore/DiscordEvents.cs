@@ -98,7 +98,7 @@ namespace Adminthulhu {
                 if (startingEvent.eventMemberIDs.Count > 0) {
                     string members;
                     Embed eventEmbed = ConstructEmbed (startingEvent, out members);
-                    Program.messageControl.SendEmbed (Utility.GetMainChannel () as ITextChannel, eventEmbed,  members);
+                    Program.messageControl.SendEmbed (Utility.GetMainChannel () as SocketTextChannel, eventEmbed,  members);
                     Voice.CreateTemporaryChannel (startingEvent.name, startingEvent.duration);
                     ongoingEvents.Add (startingEvent);
                 } else {

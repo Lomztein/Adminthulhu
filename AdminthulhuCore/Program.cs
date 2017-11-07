@@ -383,7 +383,12 @@ namespace Adminthulhu
                 if (commandList [ i ].command == commandName) {
                     if (arguements.Count > 0 && arguements [ 0 ] == "?") {
                         Command command = commandList [ i ];
-                        messageControl.SendMessage (e, command.GetHelp (e), false);
+                        if (command is CommandSet) {
+                            messageControl.SendMessage (e, command.GetHelp (e), command.allowInMain);
+                        } else {
+                            messageControl.SendEmbed (e.Channel, command.GetHelpEmbed (e, UserConfiguration.GetSetting<bool> (e.Author.Id, "AdvancedCommandsMode")));
+                        }
+                        return null;
                     } else {
                         FoundCommandResult result = new FoundCommandResult (await commandList [ i ].TryExecute (e as SocketUserMessage, depth, arguements.ToArray ()), commandList [ i ]);
                         if (result != null) {

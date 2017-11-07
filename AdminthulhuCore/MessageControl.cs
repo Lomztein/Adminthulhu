@@ -209,7 +209,7 @@ namespace Adminthulhu {
             return finalMessage;
         }
 
-        public async Task<IUserMessage> SendEmbed(ITextChannel channel, Embed embed, string text = "") {
+        public async Task<IUserMessage> SendEmbed(ISocketMessageChannel channel, Embed embed, string text = "") {
             return await channel.SendMessageAsync (text, false, embed);
         }
 

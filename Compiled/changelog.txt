@@ -1,5 +1,7 @@
-﻿A minor hotfix to fix a critical issue during setup.
- * Fixed generated config file never being saved if server ID wasn't manually set.
- * Server ID is now set automatically if not already set.
- * Phrases now use RegEx expressions. T'was a minor thing.
- * Limited maximum interpolation distance for !math graph to avoid near-infinite loops.
+﻿Nothing major today, just a small QoL patch.
+ * Fixed a very minor issue with manual tampering with autoc files.
+ * Fixed some command requirements not being set properly in sets.
+ * Fixed command help occasionally showing twice.
+ * Added a new command help embed, arguably more user friendly and a lot easier on the eyes.
+ * Added !settings advcommands, which toggles if command help shows return and argument types.
+ * Very minor internal changes.

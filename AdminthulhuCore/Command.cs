@@ -236,6 +236,61 @@ namespace Adminthulhu {
             }
         }
 
+        public Embed GetHelpEmbed(SocketMessage e, bool advanced) {
+            EmbedBuilder builder = new EmbedBuilder ();
+            if (!commandEnabled) {
+                builder.WithTitle ("Not enabled on this server.");
+                return builder.Build ();
+            }
+
+            builder.WithAuthor (Utility.GetUserName (Utility.GetServer ().GetUser (Program.discordClient.CurrentUser.Id)) + " Command Help") // lolwhat.
+                .WithTitle ($"Command \"{helpPrefix}{command}\"")
+                .WithDescription (shortHelp);
+
+            // This is quite similar to GetArgs and GetHelp together, and the other functions are obsolete due to this.
+            MethodInfo [ ] methods = GetType ().GetMethods ().Where (x => x.Name == "Execute").ToArray ();
+            for (int i = 0; i < methods.Length; i++) {
+                if (overloads.Count <= i) {
+                    builder.AddField ("Undefined overload", "Blame that lazy bastard of a dev.");
+                } else {
+                    MethodInfo info = methods [ i ];
+                    Overload ol = overloads [ i ];
+
+                    string olText = advanced ? $"{ol.returnType.Name} => " : helpPrefix + command;
+
+                    ParameterInfo [ ] parameters = info.GetParameters ();
+
+                    olText += " (";
+                    for (int j = 1; j < parameters.Length; j++) { // Remember to ignore first parameter, it being the SocketUserMessage.
+                        ParameterInfo pInfo = parameters [ j ];
+                        olText += advanced ? pInfo.ParameterType.Name + " " + pInfo.Name : pInfo.Name;
+
+                        if (j != parameters.Length - 1)
+                            olText += "; ";
+                    }
+                    olText += ")";
+
+                    builder.AddField (olText, ol.description);
+                }
+            }
+
+            string footer = string.Empty;
+            if (isAdminOnly)
+                footer += " - ADMIN ONLY";
+            if (allowInMain)
+                footer += " - ALLOWED IN MAIN";
+            if (availableInDM && !availableOnServer)
+                footer += " - ONLY IN DM";
+            if (availableInDM && availableOnServer)
+                footer += " - AVAILABLE IN DM";
+            if (requiredPermission != Permissions.Type.Null)
+                footer += " - REQUIRIES PERMISSION: " + requiredPermission.ToString ().ToUpper ();
+
+            builder.WithColor (CSetColor.GetUserColor (Program.discordClient.CurrentUser.Id).Color);
+            builder.WithFooter (footer);
+            return builder.Build ();
+        }
+
         public virtual string GetShortHelp () {
             string text = "`" + shortHelp + helpPrefix + command + "`";
             return text;

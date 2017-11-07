@@ -32,6 +32,8 @@ namespace Adminthulhu
         private static void AddEventIfNonExisting (Event eve) {
             if (!autocEvents.ContainsKey (eve))
                 autocEvents.Add (eve, new AutocEvent ());
+            else if (autocEvents [ eve ].autocs == null)
+                autocEvents [ eve ] = new AutocEvent ();
         }
 
         public static void RunEvent(Event eve, params string[] arguments) {

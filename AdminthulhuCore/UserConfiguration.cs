@@ -110,7 +110,7 @@ namespace Adminthulhu {
             catagory = Category.Utility;
 
             commandsInSet = new Command [ ] { new CSetBirthday (), new CSetCulture (), new CToggleRole (), new CToggleInternational (), new CAutomaticLooking (),
-            new CToggleSnooping (), new CAutoManageGameRoles () };
+            new CToggleSnooping (), new CAutoManageGameRoles (), new ToggleAdvancedCommandMode () };
         }
 
         public class CSetBirthday : UserSettingsCommandBase {
@@ -159,6 +159,24 @@ namespace Adminthulhu {
                 bool result = UserConfiguration.ToggleBoolean (e.Author.Id, "AutoLooking");
                 return TaskResult (result, "Autolooking on voice channels enabled: " + result.ToString ());
             }
+        }
+
+
+        public class ToggleAdvancedCommandMode : UserSettingsCommandBase {
+
+            public ToggleAdvancedCommandMode() {
+                command = "advcommands";
+                shortHelp = "Toggle advanced command mode.";
+                AddOverload (typeof (bool), "Toggles advanced command help mode, shows return and input types.");
+                key = "AdvancedCommandsMode";
+                superDefaultValue = false;
+            }
+
+            public Task<Result> Execute(SocketUserMessage e) {
+                bool result = UserConfiguration.ToggleBoolean (e.Author.Id, "AdvancedCommandsMode");
+                return TaskResult (result, "Advanced commands mode enabled: " + result.ToString ());
+            }
+
         }
 
         public class CToggleSnooping : UserSettingsCommandBase {
