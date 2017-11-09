@@ -40,7 +40,7 @@ namespace Adminthulhu
         public static string avatarPath = "avatar.jpg";
 
         public static void Main (string[] args) {
-            new Program ().ErrorCatcher (args);
+                new Program ().ErrorCatcher (args); // This was possibly one of my worst ideas ever, on top of that it doesn't even work.
         }
 
         public static DiscordSocketClient discordClient;
@@ -136,16 +136,7 @@ namespace Adminthulhu
 
                 bool hideTrigger = false;
                 if (e.Content.Length > 0 && ContainsCommandTrigger (e.Content, out hideTrigger)) {
-                    string message = e.Content;
-
-                    if (message.Length > 0) {
-
-                        message = message.Substring (1);
-                        string command = "";
-                        List<string> arguments = Utility.ConstructArguments (message, out command);
-
-                        FindAndExecuteCommand (e, command, arguments, commands, 0, true, true);
-                    }
+                    await FindAndExecuteCommand (e, e.Content, commands, 0, true, true);  
                 }
 
                 if (e.Author.Id != discordClient.CurrentUser.Id) {
@@ -378,7 +369,14 @@ namespace Adminthulhu
             return null;
         }
 
-        public static async Task<FoundCommandResult> FindAndExecuteCommand(SocketMessage e, string commandName, List<string> arguements, Command [ ] commandList, int depth, bool printMessage, bool allowQuickCommands) {
+        public static async Task<FoundCommandResult> FindAndExecuteCommand (SocketMessage e, string fullCommand, Command [ ] commandList, int depth, bool printMessage, bool allowQuickCommands) {
+            string cmd = "";
+            List<string> arguments = Utility.ConstructArguments (fullCommand.Substring (1), out cmd);
+
+            return await FindAndExecuteCommand (e, cmd, arguments, commands, 0, true, true);
+        }
+
+        public static async Task<FoundCommandResult> FindAndExecuteCommand (SocketMessage e, string commandName, List<string> arguements, Command [ ] commandList, int depth, bool printMessage, bool allowQuickCommands) {
             for (int i = 0; i < commandList.Length; i++) {
                 if (commandList [ i ].command == commandName) {
                     if (arguements.Count > 0 && arguements [ 0 ] == "?") {

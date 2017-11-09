@@ -60,13 +60,15 @@ namespace Adminthulhu
                 AddOverload (typeof (object), shortHelp);
             }
 
-            public async Task<Result> Execute(SocketUserMessage e, params object[] parameters) {
-                string cmd;
-                List<string> args = Utility.ConstructArguments (chain, out cmd);
-                for (int i = 0; i < parameters.Length; i++) {
-                    CommandVariables.Set (e.Id, "arg" + i, parameters [ i ], true);
+            public async Task<Result> Execute(SocketUserMessage e) {
+                return await Execute (e);
+            }
+
+            public async Task<Result> Execute(SocketUserMessage e, params object[] arguments) {
+                for (int i = 0; i < arguments.Length; i++) {
+                    CommandVariables.Set (e.Id, "arg" + i, arguments [ i ], true);
                 }
-                Program.FoundCommandResult result = await Program.FindAndExecuteCommand (e, cmd.Substring (1), args, Program.commands, 0, false, true);
+                Program.FoundCommandResult result = await Program.FindAndExecuteCommand (e, chain, Program.commands, 0, false, true);
                 return result.result;
             }
 

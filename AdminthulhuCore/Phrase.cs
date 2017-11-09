@@ -23,9 +23,8 @@ namespace Adminthulhu {
             ulong sender = e.Author.Id;
             ulong locChannel = e.Channel.Id;
 
-            Regex regex = new Regex (inputText); // Arguably a bad name, but can't change because JSON.
 
-            if (regex.IsMatch (message)) {
+            if (inputText == "" || message.Substring (0, inputText.Length).ToUpper () == inputText.ToUpper ()) {
                 if (user == 0 || sender == user) {
                     if (channel == 0 || locChannel == channel) {
 

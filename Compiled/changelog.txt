@@ -1,7 +1,5 @@
-﻿Nothing major today, just a small QoL patch.
- * Fixed a very minor issue with manual tampering with autoc files.
- * Fixed some command requirements not being set properly in sets.
- * Fixed command help occasionally showing twice.
- * Added a new command help embed, arguably more user friendly and a lot easier on the eyes.
- * Added !settings advcommands, which toggles if command help shows return and argument types.
- * Very minor internal changes.
+﻿Another quite small QoL patch, I'm running out of stuff to do here guys!
+ * Fixed command chains without arguments not working.
+ * Reverted phrases to before they used RegEx, since it seems RegEx doesn't play well with the JSON config.
+ * Added a new karma overload, !karma (int amount) shows top karma hoarders on a server.
+ * Added automatic conversion of mentions to objects, for instance !discord user kick !discord user find <USER> is the same as !discord user kick @<USER>. This works for text channels and roles as well.

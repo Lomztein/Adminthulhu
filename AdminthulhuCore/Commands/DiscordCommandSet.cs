@@ -29,7 +29,8 @@ namespace Adminthulhu
                 shortHelp = "User related commands.";
 
                 commandsInSet = new Command [ ] {
-                    new Find (), new Random (), new Name (), new Online (), new Kick (), new Nickname (), new AddRole (), new RemoveRole (), new DM (), new Move (), new SetVoice (), new IsStricken (),
+                    new Find (), new Random (), new Name (), new Online (), new Kick (), new Nickname (),
+                    new AddRole (), new RemoveRole (), new DM (), new Move (), new SetVoice (), new IsStricken (),
                 };
             }
 
@@ -137,8 +138,8 @@ namespace Adminthulhu
 
                 public async Task<Result> Execute(SocketUserMessage e, SocketGuildUser user, string reason) {
                     if (CanKick ()) {
-                        await user.KickAsync (reason);
                         Program.SetKickReason (user.Id, "Kicked from server. " + reason);
+                        await user.KickAsync (reason);
                         return new Result (true, $"Succesfully kicked **{user.Username}** from the server.");
                     } else {
                         return new Result (true, $"Unable to kick - Bot does not have the correct permission.");

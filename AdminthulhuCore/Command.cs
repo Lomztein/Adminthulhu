@@ -52,10 +52,7 @@ namespace Adminthulhu {
                 if (stringObj.Length > 0) {
                     if (stringObj [ 0 ].IsTrigger ()) {
 
-                        string cmd;
-                        List<string> args = Utility.ConstructArguments (stringObj.Substring (1), out cmd);
-
-                        Program.FoundCommandResult foundCommandResult = await Program.FindAndExecuteCommand (e, cmd, args, Program.commands, depth + 1, false, true);
+                        Program.FoundCommandResult foundCommandResult = await Program.FindAndExecuteCommand (e, stringObj, Program.commands, depth + 1, false, true);
                         if (foundCommandResult.result != null) {
                             result = foundCommandResult.result.value;
                         }
@@ -65,6 +62,10 @@ namespace Adminthulhu {
                             string varName = stringObj.Substring (1, endIndex - 1);
                             result = CommandVariables.Get (e.Id, varName);
                         }
+                    } else if (stringObj [ 0 ] == '<') {
+                        IMentionable mentionable = Utility.ConvertMentionToObject (stringObj);
+                        if (mentionable != null)
+                            result = mentionable;
                     }
                 }
 

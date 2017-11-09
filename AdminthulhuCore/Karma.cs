@@ -88,6 +88,34 @@ namespace Adminthulhu {
             downvotesToDelete = BotConfiguration.GetSetting("Karma.DownvotesToDelete", this, downvotesToDelete);
         }
 
+        public static string GetTopKarma(int amount, out SocketGuildUser[] topUsers) {
+            var items = from pair in data.karmaCollection
+                        orderby pair.Value descending
+                        select pair;
+
+            topUsers = new SocketGuildUser [ amount ];
+
+            if (items.Count () == 0) {
+                topUsers = new SocketGuildUser [ 0 ];
+                return "No users has ever been given karma.";
+            }
+
+            string combined = string.Empty;
+            int count = Math.Min (items.Count (), amount);
+            for (int i = 0; i < count; i++) {
+                var item = items.ElementAt (i);
+
+                SocketGuildUser user = Utility.GetServer ().GetUser (item.Key);
+                string part = Utility.UniformStrings ($"{(i+1)} - {Utility.GetUserName (user)}", item.Value.ToString () + " karma.", " - ");
+                combined += part + "\n";
+
+                topUsers [ i ] = user;
+            }
+
+            return combined;
+        }
+
+        // I don't particularly like this autoquoting stuff, neither the idea and especially not the execution.
         public class Data {
             public Dictionary<ulong, long> karmaCollection;
             public Dictionary<ulong, long> trackedMessages;
@@ -114,11 +142,18 @@ namespace Adminthulhu {
             catagory = Category.Fun;
 
             AddOverload (typeof (long), "Shows your own karma.");
+            AddOverload (typeof (SocketGuildUser[]), "Shows top karma for given amount of people.");
             AddOverload (typeof (long), "Shows karma of user given by name.");
         }
 
         public Task<Result> Execute(SocketUserMessage e) {
             return Execute (e, Utility.GetUserName (e.Author as SocketGuildUser));
+        }
+
+        public Task<Result> Execute(SocketUserMessage e, int amount) {
+            SocketGuildUser [ ] topUsers;
+            string result = Karma.GetTopKarma (amount, out topUsers);
+            return TaskResult (topUsers, $"```{result}```");
         }
 
         public Task<Result> Execute(SocketUserMessage e, string name) {
