@@ -50,8 +50,6 @@ namespace Adminthulhu {
 
         // This feels very wrong..
         public static T GetSetting<T>(string key, IConfigurable gettingConfigurable, T fallback) {
-            Logging.Log (Logging.LogType.CONFIG, $"Loading configuration key: {key}");
-
             if (gettingConfigurable != null) {
                 if (!allEntries.ContainsKey (key)) // This seems borderline useless and very slow. Fits the rest I guess then lel.
                     allEntries.Add (key, new Entry (key, gettingConfigurable));
@@ -66,7 +64,6 @@ namespace Adminthulhu {
             for (int i = 0; i < path.Length; i++) {
                 if (i != path.Length - 1) {
                     if (dict.ContainsKey (path [ i ])) {
-                        //Console.WriteLine ("Did suboptimal stuff.");
                         try { // Avoid trying to cast when its much more likely to require JSON parsing, since casting is quite slow.
                             dict = JsonConvert.DeserializeObject<Dictionary<string, object>> (dict[path[i]].ToString ());
                         } catch (Exception) {

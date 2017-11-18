@@ -22,19 +22,29 @@ namespace Adminthulhu {
                             try {
                                 decrypt = Encryption.OldDecrypt (contents);
                                 data = JsonConvert.DeserializeObject<T> (decrypt);
+
+                                reader.Close ();
                                 return (T)data;
                             } catch {
                                 decrypt = Encryption.Decrypt (contents);
                                 data = JsonConvert.DeserializeObject<T> (decrypt);
+
+                                reader.Close ();
                                 return (T)data;
                             }
                         } catch {
                             try {
                                 data = JsonConvert.DeserializeObject<T> (contents);
+
+                                reader.Close ();
                                 return (T)data;
                             } catch {
+
+                                reader.Close ();
                                 Logging.Log (Logging.LogType.CRITICAL, "File " + path + " was found, but could not be loaded. Continuing now can erase the previous file.");
                             }
+                        } finally {
+                            reader.Close ();
                         }
                     }
                 } else {
@@ -53,6 +63,7 @@ namespace Adminthulhu {
                     string jsonString = JsonConvert.SerializeObject (obj, format ? Formatting.Indented : Formatting.None);
                     string postEncrypt = encrypt ? Encryption.Encrypt (jsonString) : jsonString;
                     writer.Write (postEncrypt);
+                    writer.Close ();
                 }
             } catch (Exception e) {
                 Logging.Log (Logging.LogType.EXCEPTION, "Error: Failed to save file: " + e.Message);
@@ -75,6 +86,7 @@ namespace Adminthulhu {
                     }
                 }
 
+                reader.Close ();
                 return con.ToArray ();
             }
         }

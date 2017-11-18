@@ -231,7 +231,6 @@ namespace Adminthulhu {
             object obj;
             try {
                 try {
-                    Type curType = input.GetType ();
                     obj = (T)Convert.ChangeType (input, typeof (T));
                 } catch (Exception) {
                     obj = (T)input;

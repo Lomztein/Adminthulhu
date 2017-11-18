@@ -17,9 +17,6 @@ namespace Adminthulhu
         public static string onAcceptedDM;
         public static string onAcceptedPublicAnnouncement;
 
-        private SocketRole younglingRole;
-        private SocketRole presentRole;
-
         public void LoadConfiguration() {
             younglingRoleID = BotConfiguration.GetSetting<ulong> ("Roles.YounglingID", this, 0);
             onKickedDM = BotConfiguration.GetSetting ("Activity.Younglings.OnKickedDM", this, "Sorry, but you've been kicked from my server due to early inactivity. If you feel this was a mistake, feel free to use this invite link: {INVITELINK}");
@@ -41,17 +38,17 @@ namespace Adminthulhu
 
         public static void OnUserJoined(SocketGuildUser user) {
             if (joinDate != null)
-                AddYoungling (user);
+                AddYoungling (user, DateTime.Now);
             SaveData ();
         }
 
-        public static void AddYoungling(SocketGuildUser user) {
+        public static void AddYoungling(SocketGuildUser user, DateTime time) {
             SocketRole role = Utility.GetServer ().GetRole (younglingRoleID);
             Utility.SecureAddRole (user, role);
 
             if (joinDate.ContainsKey (user.Id))
                 joinDate.Remove (user.Id);
-            joinDate.Add (user.Id, DateTime.Now);
+            joinDate.Add (user.Id, time);
             SaveData ();
         }
 
@@ -64,10 +61,9 @@ namespace Adminthulhu
         }
 
         public async Task OnMinutePassed(DateTime time) {
-            if (presentRole == null)
-                presentRole = Utility.GetServer ().GetRole (UserActivityMonitor.presentUserRole);
-            if (younglingRole == null)
-                younglingRole = Utility.GetServer ().GetRole (younglingRoleID);
+            SocketRole presentRole = Utility.GetServer ().GetRole (UserActivityMonitor.presentUserRole);
+            SocketRole younglingRole = Utility.GetServer ().GetRole (younglingRoleID);
+
             List<ulong> toRemove = new List<ulong> ();
 
             foreach (var pair in joinDate) { // A bit of optimization, so it doesn't test any unneccesary users.
@@ -169,7 +165,7 @@ namespace Adminthulhu
             SocketGuildUser user = Utility.GetServer ().GetUser (userID);
             if (user != null) {
                 SocketRole younglingRole = Utility.GetServer ().GetRole (Younglings.younglingRoleID);
-                Younglings.AddYoungling (user);
+                Younglings.AddYoungling (user, time);
                 return TaskResult (user, $"Succesfully set {Utility.GetUserName (user)} as youngling at set time.");
             } else {
                 return TaskResult (null, "Failed to set youngling - User not found.");
