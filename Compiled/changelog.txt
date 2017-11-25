@@ -1,4 +1,6 @@
-﻿Very small patch, though I'm using it as an excuse to send a message.
- * Possibly fixed younglings again. thi- fo- sixth times the charm!
-
-As I've already mentioned on the hub server, the Discord.NET which this bot is based on seems to be on a freeze. From what I've heard, this is due to some C# stuff not yet available for .NET Core, something quite critial for many bots. Point is that the API is getting outdated, which might cause strange issues to occur. You should still report these issues though, just in case they are on my end. Channel catagories aren't supported due to this, and consequently I'm unable to implement what I've been wanting to for a while, the "Forum".
+﻿A patch full of minor QoL improvements once more, seems to be all we're getting recently.
+ * Mentions as command arguments now return null if mentioned object somehow didn't exist.
+ * Added a large amount of command overloads for easier use, most notably for !event create.
+ * Added !event get command, which just gets the event object for whatever usage you want.
+ * Fixed a critical issue with asynchronous commands softcrashing the bot, this most notably affected commands using a questionaire.
+ * Added the ability to set bot application culture manually, this can affect certain parsing and printing, most notably of dates.

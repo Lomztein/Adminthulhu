@@ -71,7 +71,13 @@ namespace Adminthulhu
                 strikes [ user ].strikeTime.Add (span);
                 strikes [ user ].reason += ", " + strikeReason;
             } else {
-                strikes.Add (user, new Strike () { reason = strikeReason, strikeDate = time, strikeTime = span }); // Well these names are not confusing. I suppose this is why we make constructors.
+                Strike newStrike = new Strike () {
+                    reason = strikeReason,
+                    strikeDate = time,
+                    strikeTime = span
+                };
+
+                strikes.Add (user, newStrike); // Well these names are not confusing. I suppose this is why we make constructors.
             }
             SocketGuildUser socketUser = Utility.GetServer ().GetUser (user);
             SocketRole role = GetRole ();
@@ -130,18 +136,38 @@ namespace Adminthulhu
             public CAddStrike() {
                 command = "add";
                 shortHelp = "Strike someone unlawful.";
-                AddOverload (typeof (ulong), "Strike a user who've broken a rule.");
+                AddOverload (typeof (void), "Strike a user by ID who've broken a rule.");
+                AddOverload (typeof (void), "Strike a user who've broken a rule.");
+                AddOverload (typeof (void), "Strike a user by name who've broken a rule.");
             }
 
             public Task<Result> Execute(SocketUserMessage e, ulong id, string timespan, string reason) {
+                SocketGuildUser user = Utility.GetServer ().GetUser (id);
+                return Execute (e, user, timespan, reason);
+            }
+
+            public Task<Result> Execute(SocketUserMessage e, SocketGuildUser user, string timespan, string reason) {
                 TimeSpan span;
 
-                if (Utility.TryParseSimpleTimespan (timespan, out span)) {
-                    Strikes.AddStrike (id, e.CreatedAt.ToLocalTime ().DateTime, span, reason);
-                    return TaskResult (id, "Succesfully stroke user by ID.");
+                if (user != null) {
+                    if (Strikes.IsStricken (user.Id)) {
+                        if (Utility.TryParseSimpleTimespan (timespan, out span)) {
+                            Strikes.AddStrike (user.Id, e.CreatedAt.ToLocalTime ().DateTime, span, reason);
+                            return TaskResult (null, "Succesfully stroke user by ID.");
+                        } else {
+                            return TaskResult (null, "Failed to add strike - Could not parse timespan.");
+                        }
+                    } else {
+                        return TaskResult (null, "Failed to add strike - User not striken.");
+                    }
                 } else {
-                    return TaskResult (0, "Failed to add strike - Could not parse timespan.");
+                    return TaskResult (null, "Failed to add strike - User not a part of this endlessly vast reality we call home.");
                 }
+            }
+
+            public Task<Result> Execute(SocketUserMessage e, string username, string timespan, string reason) {
+                SocketGuildUser user = Utility.FindUserByName (Utility.GetServer (), username);
+                return Execute (e, user, timespan, reason);
             }
         }
 
@@ -150,12 +176,32 @@ namespace Adminthulhu
             public CRemoveStrike() {
                 command = "remove";
                 shortHelp = "Raise strike.";
-                AddOverload (typeof (ulong), "Raises a strike from someone who doesn't deserve it anymore.");
+                AddOverload (typeof (void), "Raises a strike from someone given by ID.");
+                AddOverload (typeof (void), "Raises a strike from someone who doesn't deserve it anymore.");
+                AddOverload (typeof (void), "Raises a strike from someone given by name.");
             }
 
-            public Task<Result>Execute(SocketUserMessage e, ulong id) {
-                    Strikes.RaiseStrike (id);
-                return TaskResult (id, "Succesfully gave " + id + " a strike.");
+            public Task<Result> Execute(SocketUserMessage e, ulong id) {
+                SocketGuildUser user = Utility.GetServer ().GetUser (id);
+                return Execute (e, user);
+            }
+
+            public Task<Result>Execute(SocketUserMessage e, SocketGuildUser user) {
+                if (user != null) {
+                    if (Strikes.IsStricken (user.Id)) {
+                        Strikes.RaiseStrike (user.Id);
+                        return TaskResult (null, "Succesfully lifted **" + Utility.GetUserName (user) + "**'s strike.");
+                    } else {
+                        return TaskResult (null, "Failed to lift **" + Utility.GetUserName (user) + "**'s strike - user isn't stricken.");
+                    }
+                } else {
+                    return TaskResult (null, "Failed to lift **" + Utility.GetUserName (user) + "**'s strike - user isn't stricken.");
+                }
+            }
+
+            public Task<Result> Execute(SocketUserMessage e, string username) {
+                SocketGuildUser user = Utility.FindUserByName (Utility.GetServer(), username);
+                return Execute (e, user);
             }
         }
     }

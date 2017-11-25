@@ -51,7 +51,6 @@ namespace Adminthulhu {
 
                 if (stringObj.Length > 0) {
                     if (stringObj [ 0 ].IsTrigger ()) {
-
                         Program.FoundCommandResult foundCommandResult = await Program.FindAndExecuteCommand (e, stringObj, Program.commands, depth + 1, false, true);
                         if (foundCommandResult.result != null) {
                             result = foundCommandResult.result.value;
@@ -64,8 +63,7 @@ namespace Adminthulhu {
                         }
                     } else if (stringObj [ 0 ] == '<') {
                         IMentionable mentionable = Utility.ConvertMentionToObject (stringObj);
-                        if (mentionable != null)
-                            result = mentionable;
+                        result = mentionable;
                     }
                 }
 
@@ -75,8 +73,8 @@ namespace Adminthulhu {
             return converted;
         }
 
-        // Don't look at this, it became a bit fucky after command chaining was implemented.
         public async Task<FindMethodResult> FindMethod(params object [ ] arguments) {
+            // All end-command code is written as "Execute" functions, in order for the reflection to easily find it. Alternatively use attributes.
             MethodInfo [ ] infos = GetType ().GetMethods ().Where (x => x.Name == "Execute").ToArray ();
             dynamic parameterList = new List<object> ();
 
@@ -87,14 +85,17 @@ namespace Adminthulhu {
                 bool isMethod = paramInfo.Length - 1 == arguments.Length || (anyParams && arguments.Length >= paramInfo.Length); // Have to off-by-one since all commands gets the SocketUserMessage parsed through.
 
                 if (isMethod == true) {
+                    // Go through all parameters except the first one.
                     for (int i = 1; i < paramInfo.Length; i++) {
                         try {
                             int argIndex = i - 1;
                             object arg = arguments [ argIndex ];
 
+                            // Is the parameter given the params attribute? If so then pack all the remaining arguments into an array.
                             if (paramInfo [ i ].IsDefined (typeof (ParamArrayAttribute)) && !arguments [ argIndex ].GetType ().IsArray) {
                                 Type elementType = paramInfo [ i ].ParameterType.GetElementType ();
 
+                                // Since lists are easier to work with, but not quite straightforward to create dynamically, do this.
                                 dynamic dyn = Activator.CreateInstance (typeof (List<>).MakeGenericType (elementType));
                                 for (int j = argIndex; j < arguments.Length; j++) {
                                     TryAddToParams (ref dyn, arguments [ j ], elementType);

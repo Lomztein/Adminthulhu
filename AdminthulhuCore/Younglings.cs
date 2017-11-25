@@ -134,6 +134,8 @@ namespace Adminthulhu
             catagory = Category.Admin;
 
             AddOverload (typeof (SocketGuildUser), "Instantly accepts a youngling by ID.");
+            AddOverload (typeof (SocketGuildUser), "Instantly accepts a youngling by name.");
+            AddOverload (typeof (SocketGuildUser), "Instantly accepts a youngling.");
         }
 
         public Task<Result> Execute(SocketUserMessage e, ulong userID) {
@@ -150,6 +152,15 @@ namespace Adminthulhu
                 return TaskResult (null, "Failed to accept youngling - user not found");
             }
         }
+
+        public Task<Result> Execute(SocketUserMessage e, string username) {
+            SocketGuildUser user = Utility.FindUserByName (Utility.GetServer (), username);
+            return Execute (e, user.Id);
+        }
+
+        public Task<Result> Execute(SocketUserMessage e, SocketGuildUser user) {
+            return Execute (e, user.Id);
+        }
     }
 
     public class CSetYoungling : Command {
@@ -159,6 +170,8 @@ namespace Adminthulhu
             catagory = Category.Admin;
 
             AddOverload (typeof (SocketGuildUser), "Forces a user by ID to become a yougling, as if they've joined at the given date.");
+            AddOverload (typeof (SocketGuildUser), "Forces a user by name to become a yougling, as if they've joined at the given date.");
+            AddOverload (typeof (SocketGuildUser), "Forces a given user to become a yougling, as if they've joined at the given date.");
         }
 
         public Task<Result> Execute(SocketUserMessage e, ulong userID, DateTime time) {
@@ -170,6 +183,15 @@ namespace Adminthulhu
             } else {
                 return TaskResult (null, "Failed to set youngling - User not found.");
             }
+        }
+
+        public Task<Result> Execute(SocketUserMessage e, string username, DateTime time) {
+            SocketGuildUser user = Utility.FindUserByName (Utility.GetServer (), username);
+            return Execute (e, user.Id, time);
+        }
+
+        public Task<Result> Execute(SocketUserMessage e, SocketGuildUser user, DateTime time) {
+            return Execute (e, user.Id, time);
         }
     }
 }

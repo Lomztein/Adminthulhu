@@ -7,6 +7,7 @@ using Discord;
 using Discord.WebSocket;
 using System.Net.Http;
 using Discord.Rest;
+using System.Globalization;
 
 namespace Adminthulhu
 {
@@ -53,6 +54,7 @@ namespace Adminthulhu
         public static string dumpTextChannelName = "";
         public static string serverName = "";
         public static ulong serverID = 0;
+        public static string cultureName = "en-US";
 
         public static string[] onUserJoinMessage = new string [ ] { "**{USERNAME}** has joined this server!" };
         public static string[] onUserJoinFromInviteMessage = new string [ ] { "**{USERNAME}** has joined this server by the help of {INVITERNAME}!" };
@@ -82,6 +84,10 @@ namespace Adminthulhu
             dumpTextChannelName = BotConfiguration.GetSetting ("Server.DumpTextChannelName", this, "dump");
             serverName = BotConfiguration.GetSetting ("Server.Name", this, "Discord Server");
             serverID = BotConfiguration.GetSetting<ulong> ("Server.ID", this, 0);
+            cultureName = BotConfiguration.GetSetting ("Server.CultureName", this, cultureName);
+            CultureInfo cultureInfo = new CultureInfo (cultureName);
+            CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
+            CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
 
             onUserJoinMessage = BotConfiguration.GetSetting ("Server.Messages.OnUserJoin", this, onUserJoinMessage);
             onUserJoinFromInviteMessage = BotConfiguration.GetSetting ("Server.Messages.OnUserJoinFromInvite", this, onUserJoinFromInviteMessage);
@@ -136,7 +142,7 @@ namespace Adminthulhu
 
                 bool hideTrigger = false;
                 if (e.Content.Length > 0 && ContainsCommandTrigger (e.Content, out hideTrigger)) {
-                    await FindAndExecuteCommand (e, e.Content, commands, 0, true, true);  
+                    FindAndExecuteCommand (e, e.Content, commands, 0, true, true);  
                 }
 
                 if (e.Author.Id != discordClient.CurrentUser.Id) {

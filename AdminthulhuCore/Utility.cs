@@ -252,6 +252,11 @@ namespace Adminthulhu {
         }
 
         public static bool TryParseSimpleTimespan(string input, out TimeSpan result) {
+            if (string.IsNullOrEmpty (input)) {
+                result = TimeSpan.Zero;
+                return true;
+            }
+
             int count;
 
             if (int.TryParse (input.Substring (0, input.Length - 1), out count)) {
