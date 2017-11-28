@@ -26,7 +26,7 @@ namespace Adminthulhu {
                 if (userGames == null)
                     userGames = new Dictionary<ulong, List<string>> ();
 
-                Program.discordClient.GuildMemberUpdated += (before, after) => {
+                Program.discordClient.UserUpdated += (before, after) => {
 
                     try {
                         if (!UserConfiguration.GetSetting<bool> (after.Id, "AllowSnooping"))
@@ -87,7 +87,8 @@ namespace Adminthulhu {
         }
 
         public static void ChangeGameRole(SocketUser user, string gameName, bool add) {
-            if (gameRoles.ContainsKey (gameName) && UserConfiguration.GetSetting<bool> (user.Id, "AutoManageGameRoles")) {
+            // When you need to use containskey, but want it to ignore case /shrug
+            if (gameRoles.Where (x => x.Key.ToUpper () == gameName).Count () != 0 && UserConfiguration.GetSetting<bool> (user.Id, "AutoManageGameRoles")) {
                 ulong roleID = gameRoles [ gameName ];
                 SocketRole role = Utility.GetServer ().GetRole (roleID);
                 if (role != null) {
@@ -138,9 +139,11 @@ namespace Adminthulhu {
         public void LoadConfiguration() {
             enabled = BotConfiguration.GetSetting("Games.Enabled", this, enabled);
 
-            gameRoles = new Dictionary<string, ulong> ();
-            gameRoles.Add ("GAME NAME #1", 0);
-            gameRoles.Add ("GAME NAME #2", 0); // Dictionaries are bitches to defaultize. Defaultize?
+            gameRoles = new Dictionary<string, ulong> {
+                { "GAME NAME #1", 0 },
+                { "GAME NAME #2", 0 }
+            };
+
             gameRoles = BotConfiguration.GetSetting("Games.GameRoles", this, gameRoles);
         }
     }

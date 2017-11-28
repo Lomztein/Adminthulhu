@@ -90,9 +90,18 @@ namespace Adminthulhu {
                 value = _value;
             }
         }
+
+        public class OptInRole {
+            public string name;
+            public ulong roleID;
+
+            public OptInRole(string _name, ulong _roleID) {
+                name = _name; roleID = _roleID;
+            }
+        }
     }
 
-    public class UserSettingsCommandBase : Command { // It is said that names close to each other is a bad idea. /shrug
+    public abstract class UserSettingsCommandBase : Command { // It is said that names close to each other is a bad idea. /shrug
 
         public string key;
         public object superDefaultValue; // The value default from the code.
@@ -109,8 +118,44 @@ namespace Adminthulhu {
             shortHelp = "User settings command set.";
             catagory = Category.Utility;
 
-            commandsInSet = new Command [ ] { new CSetBirthday (), new CSetCulture (), new CToggleRole (), new CToggleInternational (), new CAutomaticLooking (),
-            new CToggleSnooping (), new CAutoManageGameRoles (), new ToggleAdvancedCommandMode () };
+            commandsInSet = new Command [ ] { new CSetBirthday (), new CSetCulture (), new CAutomaticLooking (),
+            new CToggleSnooping (), new CAutoManageGameRoles (), new ToggleAdvancedCommandMode (), new RoleSet () };
+        }
+
+        public class RoleSet : CommandSet, IConfigurable {
+            public RoleSet() {
+                command = "roles";
+                shortHelp = "Togglable roles.";
+                catagory = Category.Utility;
+
+                commandsInSet = new Command [0];
+            }
+
+            public override void Initialize() {
+                base.Initialize ();
+            }
+
+            public override void LoadConfiguration() {
+                base.LoadConfiguration ();
+
+                Dictionary<string, ulong> togglables = new Dictionary<string, ulong> ();
+                togglables.Add ("International", 0);
+                togglables.Add ("NSFW", 1);
+
+                togglables = BotConfiguration.GetSetting ("UserSettings.Togglables", this, togglables);
+
+                commandsInSet = new Command [ 0 ];
+                List<Command> tCommands = new List<Command> ();
+                foreach (var entry in togglables) {
+                    CToggleRole cmd = new CToggleRole ();
+                    cmd.command = entry.Key.ToLower ();
+                    cmd.roleID = entry.Value;
+
+                    tCommands.Add (cmd);
+                }
+
+                AddProceduralCommands (tCommands.ToArray ());
+            }
         }
 
         public class CSetBirthday : UserSettingsCommandBase {
@@ -121,13 +166,13 @@ namespace Adminthulhu {
                 key = "Birthday";
                 superDefaultValue = null;
 
-                AddOverload (typeof (DateTime), "Set your birthday date to <date>, so we know when to congratulate you!");
+                AddOverload (typeof (void), "Set your birthday date to <date>, so we know when to congratulate you!");
             }
 
             public Task<Result> Execute(SocketUserMessage e, DateTime parse) {
                 Birthdays.SetBirthday (e.Author.Id, parse);
                 CultureInfo info = new CultureInfo (UserConfiguration.GetSetting<string> (e.Author.Id, "Culture"));
-                return TaskResult (parse, "You have succesfully set your birthday to **" + parse.ToString (info) + "**.");
+                return TaskResult (null, "You have succesfully set your birthday to **" + parse.ToString (info) + "**.");
             }
         }
 
@@ -136,13 +181,18 @@ namespace Adminthulhu {
                 command = "culture";
                 shortHelp = "Set culture.";
                 key = "Culture";
-                superDefaultValue = "da-DK";
+                superDefaultValue = "en-US";
                 AddOverload (typeof (CultureInfo), "Sets your preferred culture to <culture [language-COUNTRY]>. Used for proper formatting of stuff such as datetime.");
             }
 
             public Task<Result> Execute(SocketUserMessage e, CultureInfo info) {
                 UserConfiguration.SetSetting (e.Author.Id, "Culture", info);
                 return TaskResult (info, "Successfully sat culture to " + info.DisplayName);
+            }
+
+            public override void Initialize() {
+                base.Initialize ();
+                superDefaultValue = Program.cultureName;
             }
         }
 
@@ -213,12 +263,12 @@ namespace Adminthulhu {
         /// <summary>
         /// A generic command, defaults to NSFW.
         /// </summary>
-        public class CToggleRole : Command, IConfigurable {
+        public class CToggleRole : Command {
             public ulong roleID = 0;
             public CToggleRole() {
-                command = "nsfw";
-                shortHelp = "Toggle NSFW access.";
-                AddOverload (typeof (bool), "Toggles access to NSFW channels, by toggling the  role on you.");
+                command = "toggle_role_base";
+                shortHelp = "Command for role toggling a role.";
+                AddOverload (typeof (bool), "Toggles the given role.");
             }
 
             public async Task<Result> Execute(SocketUserMessage e) {
@@ -230,26 +280,6 @@ namespace Adminthulhu {
                     await Utility.SecureAddRole (e.Author as SocketGuildUser, role);
                     return new Result(true, $"Succesfully added {command} role.");
                 }
-            }
-
-            public override void LoadConfiguration() {
-                base.LoadConfiguration ();
-                roleID = BotConfiguration.GetSetting ("Roles.NSFWID", this, (ulong)0);
-            }
-        }
-
-        public class CToggleInternational : CToggleRole, IConfigurable {
-            public CToggleInternational() {
-                command = "international";
-                shortHelp = "Toggle international marker";
-                roleID = 0;
-
-                AddOverload (typeof (bool), "Toggles the international marker on you. The international marker lets people know you don't speak this servers home language.");
-            }
-
-            public override void LoadConfiguration() {
-                base.LoadConfiguration ();
-                roleID = BotConfiguration.GetSetting ("Roles.InternationalID", this, (ulong)0);
             }
         }
     }

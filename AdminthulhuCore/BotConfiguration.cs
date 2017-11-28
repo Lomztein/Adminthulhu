@@ -125,12 +125,17 @@ namespace Adminthulhu {
         }
 
         public static List<Entry> RegexSearchEntries(string pattern) {
-            Regex regex = new Regex (pattern);
             List<Entry> matches = new List<Entry> ();
-            foreach (var entry in allEntries) {
-                if (regex.IsMatch (entry.Key)) {
-                    matches.Add (entry.Value);
+            try {
+                Regex regex = new Regex (pattern);
+                foreach (var entry in allEntries) {
+                    if (regex.IsMatch (entry.Key)) {
+                        matches.Add (entry.Value);
+                    }
                 }
+                return matches;
+            } catch (Exception e) {
+                Logging.Log (e);
             }
             return matches;
         }

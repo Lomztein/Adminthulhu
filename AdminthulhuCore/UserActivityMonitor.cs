@@ -172,4 +172,21 @@ namespace Adminthulhu {
             return Task.CompletedTask;
         }
     }
+
+
+    public class SetLastActivity : Command {
+
+        public SetLastActivity() {
+            command = "setlastactivity";
+            shortHelp = "Set the last activity.";
+            AddOverload (typeof (void), "Set the last activity of a user, for debugging reasons.");
+            isAdminOnly = true;
+        }
+
+        public Task<Result> Execute(SocketUserMessage e, SocketGuildUser user, DateTime time) {
+            UserActivityMonitor.RecordActivity (user.Id, time, true);
+            return TaskResult (null, "Succesfully set activity of user!");
+        }
+
+    }
 }

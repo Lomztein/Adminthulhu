@@ -1,6 +1,12 @@
-﻿A patch full of minor QoL improvements once more, seems to be all we're getting recently.
- * Mentions as command arguments now return null if mentioned object somehow didn't exist.
- * Added a large amount of command overloads for easier use, most notably for !event create.
- * Added !event get command, which just gets the event object for whatever usage you want.
- * Fixed a critical issue with asynchronous commands softcrashing the bot, this most notably affected commands using a questionaire.
- * Added the ability to set bot application culture manually, this can affect certain parsing and printing, most notably of dates.
+﻿General polising stuff, some new stuff.
+ * People should now be warned if they are about to be kicked for youngling-stage inactivity.
+ * Added dynamic opt-in role commands, take from configuration and can have as many roles as needed.
+ * Fixed a very stupid issue with command execution.
+ * Fixed possible crashes when entering in invalid regex expressions for !setconfig.
+ * Fixed a typo in the WeeklyEvent.EveryXWeeks config entry, you might want to reset it.
+ * Added the possibility to replace certain game names with others with automated voice channel names.
+ * Fixed !admin addheader's Execute method being broken.
+ * Added !misc log command, this logs stuff to the console.
+ * Added a command used for debugging, should probably be removed.
+
+I've been thinking of the possibility to load command plugins from files, which would allow people to create and share custom commands in so-called Command Packs. This would basicly just be an extension of the current custom commands, but with the possibility of placing commands in command sets, as well as custom command sets.

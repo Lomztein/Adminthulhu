@@ -15,7 +15,7 @@ namespace Adminthulhu
             requiredPermission = Permissions.Type.UseAdvancedCommands;
 
             commandsInSet = new Command [ ] {
-                new GetVariable (),
+                new GetVariable (), new Log (),
             };
         }
 

@@ -10,19 +10,23 @@ namespace Adminthulhu
     public class Younglings : IClockable, IConfigurable {
 
         public static ulong younglingRoleID = 316171882867064843;
-        private static Dictionary<ulong, DateTime> joinDate;
+        private static Dictionary<ulong, Youngling> joinDate;
         public static uint daysActiveRequired = 14;
 
         public static string onKickedDM;
         public static string onAcceptedDM;
         public static string onAcceptedPublicAnnouncement;
+        public static string onRemindDM;
+        public static int capraPopFlySprawlsYeekYoungin = 2; // This is your fault, Fred.
 
         public void LoadConfiguration() {
             younglingRoleID = BotConfiguration.GetSetting<ulong> ("Roles.YounglingID", this, 0);
             onKickedDM = BotConfiguration.GetSetting ("Activity.Younglings.OnKickedDM", this, "Sorry, but you've been kicked from my server due to early inactivity. If you feel this was a mistake, feel free to use this invite link: {INVITELINK}");
             onAcceptedDM = BotConfiguration.GetSetting ("Activity.Younglings.OnAcceptedDM", this, "Congratulations, you now have full membership of my server!");
             onAcceptedPublicAnnouncement = BotConfiguration.GetSetting ("Activity.Younglings.OnAcceptedPublicAnnouncement", this, "Congratulations to {USERNAME} as they've today been granted permanemt membership of this server!");
+            onRemindDM = BotConfiguration.GetSetting ("Activity.Younglings.OnRemindDM", this, "Heads up! You will soon be kicked from my server in 2 days due to inactivity! To avoid this, please send a message in any channel or join a voice channel.");
             daysActiveRequired = BotConfiguration.GetSetting ("Activity.Younglings.DaysActiveRequired", this, daysActiveRequired);
+            capraPopFlySprawlsYeekYoungin = BotConfiguration.GetSetting ("Activity.Younglings.RemindBeforeKickDays", this, capraPopFlySprawlsYeekYoungin);
         }
 
         public Task Initialize(DateTime time) {
@@ -31,7 +35,7 @@ namespace Adminthulhu
 
             LoadData ();
             if (joinDate == null)
-                joinDate = new Dictionary<ulong, DateTime> ();
+                joinDate = new Dictionary<ulong, Youngling> ();
 
             return Task.CompletedTask;
         }
@@ -48,7 +52,7 @@ namespace Adminthulhu
 
             if (joinDate.ContainsKey (user.Id))
                 joinDate.Remove (user.Id);
-            joinDate.Add (user.Id, time);
+            joinDate.Add (user.Id, new Youngling (time));
             SaveData ();
         }
 
@@ -57,11 +61,11 @@ namespace Adminthulhu
         }
 
         public static void LoadData() {
-            joinDate = SerializationIO.LoadObjectFromFile <Dictionary<ulong, DateTime>> (Program.dataPath + "younglings" + Program.gitHubIgnoreType);
+            joinDate = SerializationIO.LoadObjectFromFile <Dictionary<ulong, Youngling>> (Program.dataPath + "younglings" + Program.gitHubIgnoreType);
         }
 
         public async Task OnMinutePassed(DateTime time) {
-            SocketRole presentRole = Utility.GetServer ().GetRole (UserActivityMonitor.presentUserRole);
+            SocketRole activeRole = Utility.GetServer ().GetRole (UserActivityMonitor.activeUserRole);
             SocketRole younglingRole = Utility.GetServer ().GetRole (younglingRoleID);
 
             List<ulong> toRemove = new List<ulong> ();
@@ -70,7 +74,7 @@ namespace Adminthulhu
                 SocketGuildUser user = Utility.GetServer ().GetUser (pair.Key);
 
                 if (user != null) {
-                    if (user.Roles.Contains (younglingRole) && user.Roles.Contains (presentRole)) {
+                    if (user.Roles.Contains (younglingRole) && !user.Roles.Contains (activeRole)) {
                         try {
                             Program.SetKickReason (user.Id, "Kicked due to youngling-stage inactivity.");
                             RestInviteMetadata metadata = await Utility.GetMainChannel ().CreateInviteAsync (null, 1, false, true);
@@ -81,13 +85,21 @@ namespace Adminthulhu
                         }
                     }
 
+
+
                     if (user.Roles.Contains (younglingRole)) {
-                        bool pastYounglingStage = UserActivityMonitor.GetLastActivity (user.Id) > pair.Value.AddDays (daysActiveRequired);
+                        bool pastYounglingStage = UserActivityMonitor.GetLastActivity (user.Id) > pair.Value.joinDate.AddDays (daysActiveRequired);
+                        bool remindAboutKick = UserActivityMonitor.GetLastActivity (user.Id) < DateTime.Now.AddDays (-(UserActivityMonitor.activeThresholdDays - capraPopFlySprawlsYeekYoungin));
+
                         if (pastYounglingStage) {
                             await Utility.SecureRemoveRole (user, younglingRole);
                             await Program.messageControl.SendMessage (user, onAcceptedDM);
                             Program.messageControl.SendMessage (Utility.GetMainChannel () as SocketTextChannel, onAcceptedPublicAnnouncement.Replace ("{USERNAME}", Utility.GetUserName (user)), true);
                             toRemove.Add (user.Id);
+                        }
+                        if (remindAboutKick && pair.Value.reminded == false) {
+                            pair.Value.reminded = true;
+                            await Program.messageControl.SendMessage (user, onRemindDM);
                         }
                     } else {
                         toRemove.Add (user.Id);
@@ -124,6 +136,15 @@ namespace Adminthulhu
             Program.messageControl.SendMessage (Utility.GetMainChannel () as SocketTextChannel, onAcceptedPublicAnnouncement.Replace ("{USERNAME}", Utility.GetUserName (user)), true);
             joinDate.Remove (user.Id);
         }
+
+        public class Youngling {
+            public DateTime joinDate;
+            public bool reminded;
+
+            public Youngling(DateTime _joinDate) {
+                joinDate = _joinDate;
+            } 
+        }
     }
 
     public class CAcceptYoungling : Command {
@@ -134,8 +155,8 @@ namespace Adminthulhu
             catagory = Category.Admin;
 
             AddOverload (typeof (SocketGuildUser), "Instantly accepts a youngling by ID.");
-            AddOverload (typeof (SocketGuildUser), "Instantly accepts a youngling by name.");
             AddOverload (typeof (SocketGuildUser), "Instantly accepts a youngling.");
+            AddOverload (typeof (SocketGuildUser), "Instantly accepts a youngling by name.");
         }
 
         public Task<Result> Execute(SocketUserMessage e, ulong userID) {
@@ -153,12 +174,12 @@ namespace Adminthulhu
             }
         }
 
-        public Task<Result> Execute(SocketUserMessage e, string username) {
-            SocketGuildUser user = Utility.FindUserByName (Utility.GetServer (), username);
+        public Task<Result> Execute(SocketUserMessage e, SocketGuildUser user) {
             return Execute (e, user.Id);
         }
 
-        public Task<Result> Execute(SocketUserMessage e, SocketGuildUser user) {
+        public Task<Result> Execute(SocketUserMessage e, string username) {
+            SocketGuildUser user = Utility.FindUserByName (Utility.GetServer (), username);
             return Execute (e, user.Id);
         }
     }
@@ -170,8 +191,8 @@ namespace Adminthulhu
             catagory = Category.Admin;
 
             AddOverload (typeof (SocketGuildUser), "Forces a user by ID to become a yougling, as if they've joined at the given date.");
-            AddOverload (typeof (SocketGuildUser), "Forces a user by name to become a yougling, as if they've joined at the given date.");
             AddOverload (typeof (SocketGuildUser), "Forces a given user to become a yougling, as if they've joined at the given date.");
+            AddOverload (typeof (SocketGuildUser), "Forces a user by name to become a yougling, as if they've joined at the given date.");
         }
 
         public Task<Result> Execute(SocketUserMessage e, ulong userID, DateTime time) {
@@ -185,12 +206,12 @@ namespace Adminthulhu
             }
         }
 
-        public Task<Result> Execute(SocketUserMessage e, string username, DateTime time) {
-            SocketGuildUser user = Utility.FindUserByName (Utility.GetServer (), username);
+        public Task<Result> Execute(SocketUserMessage e, SocketGuildUser user, DateTime time) {
             return Execute (e, user.Id, time);
         }
 
-        public Task<Result> Execute(SocketUserMessage e, SocketGuildUser user, DateTime time) {
+        public Task<Result> Execute(SocketUserMessage e, string username, DateTime time) {
+            SocketGuildUser user = Utility.FindUserByName (Utility.GetServer (), username);
             return Execute (e, user.Id, time);
         }
     }

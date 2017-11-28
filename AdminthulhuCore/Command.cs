@@ -258,16 +258,17 @@ namespace Adminthulhu {
                     MethodInfo info = methods [ i ];
                     Overload ol = overloads [ i ];
 
-                    string olText = advanced ? $"{ol.returnType.Name} => " : helpPrefix + command;
-
-                    ParameterInfo [ ] parameters = info.GetParameters ();
+                    var parameters = GetDescriptiveOverloadParameters (i);
+                    string olText = advanced ? $"{parameters.returnType} => " : helpPrefix + command;
 
                     olText += " (";
-                    for (int j = 1; j < parameters.Length; j++) { // Remember to ignore first parameter, it being the SocketUserMessage.
-                        ParameterInfo pInfo = parameters [ j ];
-                        olText += advanced ? pInfo.ParameterType.Name + " " + pInfo.Name : pInfo.Name;
+                    for (int j = 1; j < parameters.types.Length; j++) { // Remember to ignore first parameter, it being the SocketUserMessage.
+                        Type type = parameters.types[j];
+                        string name = parameters.names [ j ];
 
-                        if (j != parameters.Length - 1)
+                        olText += advanced ? type.Name + " " + name : name;
+
+                        if (j != parameters.types.Length - 1)
                             olText += "; ";
                     }
                     olText += ")";
@@ -298,10 +299,29 @@ namespace Adminthulhu {
             return text;
         }
 
+        /// <summary>
+        /// This is supposed to be used with the autodocumentation functions, NOT with any actual functionalitety, since it doesn't return any parameter metadata, only type and name.
+        /// </summary>
+        /// <param name="overloadIndex"></param>
+        /// <returns></returns>
+        public virtual (Type [ ] types, string [ ] names, string returnType) GetDescriptiveOverloadParameters(int overloadIndex) {
+            List<Type> paramTypes = new List<Type> ();
+            List<string> paramNames = new List<string> ();
+
+            MethodInfo info = GetType ().GetMethods ().Where (x => x.Name == "Execute").ElementAt (overloadIndex);
+
+            foreach (var param in info.GetParameters ()) {
+                paramTypes.Add (param.ParameterType);
+                paramNames.Add (param.Name);
+            }
+
+            return (paramTypes.ToArray (), paramNames.ToArray (), overloads[overloadIndex].returnType);
+        }
+
         public virtual void AddArgs(ref string description) {
             MethodInfo [ ] methods = GetType ().GetMethods ().Where (x => x.Name == "Execute").ToArray ();
             for (int i = 0; i < methods.Length; i++) {
-                description += $"{overloads[i].returnType.Name} {GetCommand ()} "; // I have no idea whats going on there.
+                description += $"{overloads[i].returnType} {GetCommand ()} "; // I have no idea whats going on there.
                 ParameterInfo [ ] paramInfos = methods [ i].GetParameters ();
                 for (int j = 1; j < paramInfos.Length; j++) {
                     description += $"<{paramInfos[j].Name} {paramInfos[j].ParameterType.Name}>";
@@ -392,11 +412,11 @@ namespace Adminthulhu {
         }
 
         public class Overload {
-            public Type returnType;
+            public string returnType;
             public string description;
 
             public Overload(Type _returnType, string _description) {
-                returnType = _returnType;
+                returnType = _returnType.Name;
                 description = _description;
             }
         }
@@ -435,6 +455,8 @@ namespace Adminthulhu {
                 }
             }
         }
+
+        public override string ToString() => helpPrefix + command;
 
         /*public class Request {
 

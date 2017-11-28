@@ -379,7 +379,7 @@ namespace Adminthulhu
             string cmd = "";
             List<string> arguments = Utility.ConstructArguments (fullCommand.Substring (1), out cmd);
 
-            return await FindAndExecuteCommand (e, cmd, arguments, commands, 0, true, true);
+            return await FindAndExecuteCommand (e, cmd, arguments, commandList, depth, printMessage, allowQuickCommands);
         }
 
         public static async Task<FoundCommandResult> FindAndExecuteCommand (SocketMessage e, string commandName, List<string> arguements, Command [ ] commandList, int depth, bool printMessage, bool allowQuickCommands) {

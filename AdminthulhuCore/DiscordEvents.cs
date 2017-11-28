@@ -12,11 +12,7 @@ namespace Adminthulhu {
     // Not to be confused with C# events, this class handles planned day events for Discord servers.
     public class DiscordEvents : IClockable, IConfigurable {
 
-        public static Thread timeThread;
         public static List<Event> upcomingEvents = new List<Event>();
-
-        public DateTime lastMesauredTime;
-        public int checkDelay = 1000; // The time between each check in milliseconds.
 
         public static string eventFileName = "events";
         public static List<Event> ongoingEvents = new List<Event> ();
@@ -167,6 +163,12 @@ namespace Adminthulhu {
                 if (e.name.ToLower () == eventName.ToLower ())
                     return e;
             }
+
+            foreach (Event e in ongoingEvents) {
+                if (e.name.ToLower () == eventName.ToLower ())
+                    return e;
+            }
+
             return null;
         }
 
@@ -246,9 +248,53 @@ namespace Adminthulhu {
                 eventState = EventState.Awaiting;
             }
 
+            public override string ToString() => name;
+
             [AttributeUsage (AttributeTargets.Field, AllowMultiple = false, Inherited = false)]
             public class EditableAttribute : Attribute { }
 
+            public class RepeatDays {
+
+                public bool [ ] days = new bool [ 7 ];
+                public bool Any {
+                    get => days.Any (x => x == true);
+                }
+
+                public bool Monday {
+                    get => days [ 1 ];
+                    set => days [ 1 ] = value;
+                }
+
+                public bool Tuesday {
+                    get => days [ 2 ];
+                    set => days [ 2 ] = value;
+                }
+
+                public bool Wednesday {
+                    get => days [ 3 ];
+                    set => days [ 3 ] = value;
+                }
+
+                public bool Thursday {
+                    get => days [ 4 ];
+                    set => days [ 4 ] = value;
+                }
+
+                public bool Friday {
+                    get => days [ 5 ];
+                    set => days [ 5 ] = value;
+                }
+
+                public bool Saturday {
+                    get => days [ 6 ];
+                    set => days [ 6 ] = value;
+                }
+
+                public bool Sunday {
+                    get => days [ 0 ];
+                    set => days [ 0 ] = value;
+                }
+            }
         }
     }
 
@@ -348,10 +394,10 @@ namespace Adminthulhu {
                 results = await MessageControl.CreateQuestionnaire (e.Author.Id, e.Channel,
                    new MessageControl.QE ("Input event name.", typeof (string)),
                    new MessageControl.QE ("Input event date.", typeof (DateTime)),
-                   new MessageControl.QE ("Input event duration.", typeof (string)),
-                   new MessageControl.QE ("Input event URL.", typeof (string)),
                    new MessageControl.QE ("Input event description.", typeof (string)),
-                   new MessageControl.QE ("Input event repeat time.", typeof (string)));
+                   new MessageControl.QE ("Input event duration.", typeof (string)),
+                   new MessageControl.QE ("Input event repeat time.", typeof (string)),
+                   new MessageControl.QE ("Input event URL.", typeof (string)));
             } catch (Exception exception) {
                 Program.messageControl.SendMessage (e, exception.Message, false);
             }

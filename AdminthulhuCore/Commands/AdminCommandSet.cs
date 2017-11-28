@@ -16,7 +16,7 @@ namespace Adminthulhu
             commandsInSet = new Command [ ] {
                 new StrikeCommandSet (), new CAddEventGame (), new CRemoveEventGame (), new CHighlightEventGame (),
                 new CAcceptYoungling (), new CReloadConfiguration (), new CSetYoungling (), new CCreatePoll (), new CCheckPatch (),
-                new CSetSetting (), new CDisplayFile (), new PermissionCommands (), new CAddHeader (),
+                new CSetSetting (), new CDisplayFile (), new PermissionCommands (), new CAddHeader (), new SetLastActivity (),
             };
         }
     }

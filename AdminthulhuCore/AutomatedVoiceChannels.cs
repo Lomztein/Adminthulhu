@@ -26,6 +26,7 @@ namespace Adminthulhu {
         public static ulong younglingRoleID = 0;
         public static string postRebootChannelName = "ERROR - REBOOT CHANNEL;RBC";
         public static bool randomizeNameQueue = false;
+        public static Dictionary<string, string> gameNameReplacements = new Dictionary<string, string> (); 
 
         public static string [ ] extraChannelNames = new string [ ] {
             "Gorgeous Green",
@@ -84,6 +85,10 @@ namespace Adminthulhu {
             musicBotID = BotConfiguration.GetSetting ("Misc.MusicBotID", this, musicBotID);
             postRebootChannelName = BotConfiguration.GetSetting ("Voice.PostRebootChannelName", this, postRebootChannelName);
             randomizeNameQueue = BotConfiguration.GetSetting ("Voice.RandomizeNameQueue", this, randomizeNameQueue);
+
+            gameNameReplacements.Add ("Game name 1", "Game name replacement 1");
+            gameNameReplacements.Add ("Game name 2", "Game name replacement 2");
+            gameNameReplacements = BotConfiguration.GetSetting ("Voice.GameNameReplacements", this, gameNameReplacements);
 
             foreach (VoiceChannelTag tag in voiceChannelTags) {
                 tag.enabled = BotConfiguration.GetSetting ("Voice.Tags." + tag.name + ".Enabled", this, tag.enabled);
@@ -240,7 +245,7 @@ namespace Adminthulhu {
                 string possibleShorten = shortenChannelNames && splitVoice.Length > 1 ? splitVoice [ 1 ] : splitVoice [ 0 ];
                 int mixedLimit = highest >= 2 ? 2 : Utility.ForceGetUsers (voice.Id).Count == 1 ? int.MaxValue : 1; // Nested compact if statements? What could go wrong!
 
-                string gameName = numPlayers.Where (x => x.Value >= mixedLimit).Count () > mixedLimit ? "Mixed Games" : highestGame.Name;
+                string gameName = numPlayers.Where (x => x.Value >= mixedLimit).Count () > mixedLimit ? "Mixed Games" : gameNameReplacements.ContainsKey (highestGame.Name) ? gameNameReplacements[highestGame.Name] : highestGame.Name; // What even is this
 
                 string newName;
                 if (autoRenameChannels) {

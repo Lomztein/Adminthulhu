@@ -71,7 +71,7 @@ namespace Adminthulhu {
             AddOverload (typeof (bool), "Adds a new header <header> to main channel");
         }
 
-        public Task<Result> Execute(string header) {
+        public Task<Result> Execute(SocketUserMessage e, string header) {
             string filePath = Program.dataPath + AutomatedTextChannels.additionalHeaderPath;
             AutomatedTextChannels.AddHeaders (header);
             SerializationIO.SaveTextFile (filePath, header);

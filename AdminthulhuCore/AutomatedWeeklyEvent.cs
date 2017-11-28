@@ -78,7 +78,7 @@ namespace Adminthulhu {
             gamesPerWeek = BotConfiguration.GetSetting ("WeeklyEvent.GamesPerWeek", this, gamesPerWeek);
             announcementsChannelName = BotConfiguration.GetSetting ("Server.AnnouncementsChannelName", this, "announcements");
 
-            everyXWeek = BotConfiguration.GetSetting ("Weekly>Event.EveryXWeek", this, everyXWeek);
+            everyXWeek = BotConfiguration.GetSetting ("WeeklyEvent.EveryXWeek", this, everyXWeek);
             voteStartDay = BotConfiguration.GetSetting ("WeeklyEvent.VoteStartDay", this, voteStartDay);
             voteEndDay = BotConfiguration.GetSetting ("WeeklyEvent.VoteEndDay", this, voteEndDay);
             eventDayName = BotConfiguration.GetSetting ("WeeklyEvent.EventDayName", this, eventDayName);
@@ -184,6 +184,7 @@ namespace Adminthulhu {
             }
             weekIndex++;
             weekIndex %= everyXWeek;
+            SaveData ();
             return Task.CompletedTask; // Lets try without the votes possibly standing in the way. We trust the timer now.
         }
 
