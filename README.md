@@ -1,6 +1,8 @@
 # Adminthulhu
 
-Since this repository has recieved a bit of public attention over the years, it might be time for a README.
+ -- HEADS UP --
+
+This bot has over time become what is often formally described as a "clusterfuck of code". Due to this I've been thinking of doing a rewrite, with a drastically different architecture, something much better for a project like this. Most notably do I want to split the program into multiple modular components, which will allow hosts to pick and choose exactly what kinds of features they want, without the overhead and mess of the remaining 95% of less-than-useful features. This will be done in a seperate repository, and this one will remain as is, and can still be used just fine, albiet in the current buggy state. While I'm unlikely to really do much work on this repository, pull requests for bug fixes are very welcome.
 
  -- INTRODUCTION --
  
