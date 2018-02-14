@@ -1,8 +1,12 @@
 # Adminthulhu
 
- -- HEADS UP --
+## HEADS UP
 
-This bot has over time become what is often formally described as a "clusterfuck of code". Due to this I've been thinking of doing a rewrite, with a drastically different architecture, something much better for a project like this. Most notably do I want to split the program into multiple modular components, which will allow hosts to pick and choose exactly what kinds of features they want, without the overhead and mess of the remaining 95% of less-than-useful features. This will be done in a seperate repository, and this one will remain as is, and can still be used just fine, albiet in the current buggy state. While I'm unlikely to really do much work on this repository, pull requests for bug fixes are very welcome.
+This project has been discontinued, due to becoming what is formally known as a "clusterfuck of code". I mean seriouly, there's litteraly only *one* namespace in the entire codebase, and the codebase itself looks like delicious spaghetti. Due to this I've decided to create a successor instead with an entirely different architecture, in order to avoid becoming more tangled than the inner wiring of my PC. Instead of the mess that this is, the suceessor is build around a modular architecture, with "Modules" loaded during runtime. These modules can be whatever is desired, and anyone can create new ones to add functionality to the bot.
+
+**This bot can still be used of course, but I won't be maintaining it from here on out. The new bot project can be found [here.](https://github.com/Lomztein/ModularDiscordBot)**
+
+Seriously though, *build your own PC's if you can, otherwise someone without a care in the world for it is responsible for the cable management.*
 
  -- INTRODUCTION --
  
