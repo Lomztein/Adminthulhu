@@ -1,6 +1,12 @@
 # Adminthulhu
 
-Since this repository has recieved a bit of public attention over the years, it might be time for a README.
+## HEADS UP
+
+This project has been discontinued, due to becoming what is formally known as a "clusterfuck of code". I mean seriouly, there's litteraly only *one* namespace in the entire codebase, and the codebase itself looks like delicious spaghetti. Due to this I've decided to create a successor instead with an entirely different architecture, in order to avoid becoming more tangled than the inner wiring of my PC. Instead of the mess that this is, the suceessor is build around a modular architecture, with "Modules" loaded during runtime. These modules can be whatever is desired, and anyone can create new ones to add functionality to the bot.
+
+**This bot can still be used of course, but I won't be maintaining it from here on out. The new bot project can be found [here.](https://github.com/Lomztein/ModularDiscordBot)**
+
+Seriously though, *build your own PC's if you can, otherwise someone without a care in the world for it is responsible for the cable management.*
 
  -- INTRODUCTION --
  
