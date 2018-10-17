@@ -14,7 +14,7 @@ namespace Adminthulhu
             shortHelp = "Create a poll.";
             catagory = Category.Utility;
 
-            AddOverload (typeof (IMessage), "Constructs a poll of various options where people can answer.");
+            AddOverload (typeof (MessageControl.Poll.PollOption), "Constructs a poll of various options where people can answer.");
         }
 
         public async Task<Result> Execute(SocketUserMessage e) {
@@ -31,8 +31,10 @@ namespace Adminthulhu
             }
 
             try {
-                IMessage message = await MessageControl.CreatePoll (new MessageControl.Poll ((string)results [ 0 ], e.Channel.Id, 0, DateTime.Parse (results [ 1 ].ToString ()), (int)results [ 2 ], null, options));
-                return new Result(message, "");
+                MessageControl.Poll poll = new MessageControl.Poll ((string)results [ 0 ], e.Channel.Id, 0, DateTime.Parse (results [ 1 ].ToString ()), (int)results [ 2 ], null, options);
+                IMessage message = await MessageControl.CreatePoll (poll);
+                await poll.AwaitEnd ();
+                return new Result(poll.winner, poll.winner.name);
             } catch (Exception exc) {
                 Logging.DebugLog (Logging.LogType.EXCEPTION, exc.Message + " - " + exc.StackTrace);
                 return new Result(null, "");

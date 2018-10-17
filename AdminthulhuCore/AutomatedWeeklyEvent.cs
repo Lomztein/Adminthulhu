@@ -292,7 +292,7 @@ namespace Adminthulhu {
             games = new Game [ gamesPerWeek ];
 
             try {
-                // A C++ programmer would possibly kill me for this memory management.
+                // Optimmized code is overrated anyways.
                 for (int i = 0; i < gamesPerWeek; i++) {
                     int index = rand.Next (0, highlightedGames.Count > 0 ? highlightedGames.Count : possibilities.Count);
                     if (highlightedGames.Count > 0) {

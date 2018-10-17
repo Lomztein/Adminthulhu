@@ -19,7 +19,7 @@ namespace Adminthulhu
         public static Command [ ] commands = new Command [ ] {
             new CCommandList (), new CSetColor (), new CRollTheDice (),
             new CFlipCoin (), new CRandomGame (), new CQuote (), new CEmbolden (),
-            new CShowHeaders (), new CKarma (), new CReport (),
+            new CShowHeaders (), new CKarma (), new CReport (), new CCreatePoll (),
             new VoiceCommands (), new EventCommands (), new UserSettingsCommands (), new HangmanCommands (),
             new GameCommands (), new CUrbanDictionary (), new CPrint (), new AdminCommandSet (),
 
@@ -119,6 +119,7 @@ namespace Adminthulhu
             discordClient = new DiscordSocketClient ();
             messageControl = new MessageControl ();
             karma = new Karma ();
+            new StreamingMonitor ();
 
             LegalJunk.Initialize ();
             Logging.Log (Logging.LogType.BOT, "Loading data..");

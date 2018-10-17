@@ -379,11 +379,11 @@ namespace Adminthulhu {
             return null;
         }
 
-    private static string GetUnicodeEmoji(int index) {
-        return defaultPollUnicodeEmojis [ index ];
-    }
+        private static string GetUnicodeEmoji(int index) {
+            return defaultPollUnicodeEmojis [ index ];
+        }
 
-    public static async Task<IMessage> CreatePoll(Poll poll) {
+        public static async Task<IMessage> CreatePoll(Poll poll) {
             currentPolls.Add (poll);
             await poll.UpdateMessage ();
             return await poll.GetMessage ();
@@ -451,7 +451,7 @@ namespace Adminthulhu {
 
             public async Task AwaitEnd() {
                 int testRepeatTime = 1000 * 60; // Once a minute. Can't think of other ways to do this at the moment.
-                while (DateTime.Now < endDate) {
+                while (winner == null) {
                     Task.Delay (testRepeatTime);
                 }
                 return;
@@ -488,7 +488,7 @@ namespace Adminthulhu {
             }
 
             public void DeclareWinner() {
-                PollOption curHighest;
+                PollOption curHighest = null;
                 int highestNumber = 0;
                 foreach (PollOption option in options) {
                     int locCount = option.CountVotes ();
@@ -497,6 +497,8 @@ namespace Adminthulhu {
                         curHighest = option;
                     }
                 }
+
+                winner = curHighest;
                 onEnded?.Invoke (this);
             }
 
